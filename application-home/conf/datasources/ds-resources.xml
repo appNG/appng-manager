@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="resources">
+		<config>
+			<title>resources</title>
+			<permissions>
+				<permission ref="resource.list" mode="set" />
+			</permissions>
+			<params>
+				<param name="appid" />
+				<param name="resourceType" />
+			</params>
+			<meta-data bindClass="org.appng.api.model.Resource">
+				<field name="name" type="text" readonly="true">
+					<label>name</label>
+				</field>
+				<field name="resourceType" type="text" readonly="true">
+					<label>type</label>
+				</field>
+				<field name="size" type="int" readonly="true">
+					<label>size</label>
+				</field>
+				<field name="version" type="date" readonly="true"
+					format="yyyy-MM-dd HH:mm:ss">
+					<label>version</label>
+				</field>
+				<field type="linkpanel" name="actions">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel location="top" id="others">
+				<link target="/applications/update/${appid}/resource/upload#tab_resources"
+					mode="intern">
+					<label>upload</label>
+					<icon>upload</icon>
+				</link>
+			</linkpanel>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern"
+					target="/applications/update/${appid}/resource/update/${current.id}#tab_resources">
+					<label>view</label>
+					<icon>edit</icon>
+					<condition expression="${'JAR' ne current.resourceType.name()}" />
+					<permissions>
+						<permission ref="resource.edit" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern"
+					target="/applications/update/${appid}&#63;form_action=delete-resource&#38;resourceid=${current.id}#tab_resources">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="resource.delete.confirm" params="#{name}" />
+					<permissions>
+						<permission ref="resource.delete" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="resources">
+			<option name="application" id="${appid}" />
+			<option name="sort" key="name" order="ASC" />
+			<option name="resource" type="${resourceType}" />
+		</bean>
+	</datasource>
+
+	<datasource id="resource">
+		<config>
+			<title>resources</title>
+			<params>
+				<param name="appid" />
+				<param name="id" />
+			</params>
+			<meta-data bindClass="org.appng.application.manager.form.ResourceForm">
+				<field name="name" type="text" readonly="true">
+					<label>name</label>
+				</field>
+				<field name="type" type="text" readonly="true">
+					<label>type</label>
+				</field>
+				<field name="content" type="longtext" format="auto">
+					<label>content</label>
+				</field>
+
+			</meta-data>
+		</config>
+		<bean id="resources">
+			<option name="application" id="${appid}" />
+			<option name="resource" id="${id}" />
+		</bean>
+	</datasource>
+
+</datasources>

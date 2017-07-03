@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="logConfig">
+		<config>
+			<title id="logConfig.edit" />
+			<meta-data bindClass="org.appng.application.manager.business.LogConfig$LogFile">
+				<field name="content" type="longtext" format="auto">
+					<label>log4j.properties</label>
+				</field>
+				<field name="clusterWide" type="checkbox">
+					<label>logconfig.spreadClusterWide</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="logConfig" />
+	</datasource>
+
+	<datasource id="logfile">
+		<config>
+			<title id="logfile" />
+			<template path="logviewer.xsl" />
+			<permissions>
+				<permission ref="platform.logfile" mode="set" />
+			</permissions>
+			<meta-data bindClass="org.appng.application.manager.business.LogConfig$LogFile" />
+			<linkpanel location="both" id="other">
+				<link mode="webservice" target="logViewer">
+					<label>logfile</label>
+					<icon>goto</icon>
+					<permissions>
+						<permission ref="platform.logfile" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="logConfig">
+			<option name="mode" value="location" />
+		</bean>
+	</datasource>
+
+</datasources>

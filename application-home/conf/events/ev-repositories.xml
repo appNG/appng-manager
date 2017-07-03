@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="repositoryEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<action id="uploadArchive">
+		<config>
+			<title id="repository.packageUpload" />
+			<permissions>
+				<permission ref="repository.uploadArchive" mode="set" />
+			</permissions>
+			<params>
+				<param name="repositoryid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'uploadArchive'}" />
+		<datasource id="archive">
+			<params>
+				<param name="repositoryid">${repositoryid}</param>
+			</params>
+		</datasource>
+		<bean id="repositories">
+			<option name="repository" id="${repositoryid}" />
+			<option name="action" id="uploadArchive" />
+		</bean>
+	</action>
+
+	<action id="update">
+		<config>
+			<title>repository.edit</title>
+			<permissions>
+				<permission ref="repository.edit" mode="set" />
+			</permissions>
+			<params>
+				<param name="repositoryid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'update'}" />
+		<datasource id="repository">
+			<params>
+				<param name="repositoryid">${repositoryid}</param>
+			</params>
+		</datasource>
+		<bean id="repositories">
+			<option name="repository" id="${repositoryid}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+
+	<action id="create">
+		<config>
+			<title>repository.create</title>
+			<permissions>
+				<permission ref="repository.create" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'create'}" />
+		<datasource id="new-repository" />
+		<bean id="repositories">
+			<option name="action" id="create" />
+		</bean>
+	</action>
+
+	<action id="delete">
+		<config>
+			<title>repository.delete</title>
+			<permissions>
+				<permission ref="repository.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="repositoryid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'delete-repository'}" />
+		<bean id="repositories">
+			<option name="repository" id="${repositoryid}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+
+	<action id="reload">
+		<config>
+			<title>repository.reload</title>
+			<permissions>
+				<permission ref="repository.reload" mode="set" />
+			</permissions>
+			<params>
+				<param name="repositoryid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'reload' and not empty repositoryid}" />
+		<bean id="repositories">
+			<option name="repository" id="${repositoryid}" />
+			<option name="action" id="reload" />
+		</bean>
+	</action>
+
+	<action id="install">
+		<config>
+			<title>repository.install</title>
+			<permissions>
+				<permission ref="repository.installation" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="repositoryid" />
+				<param name="name" />
+				<param name="version" />
+				<param name="timestamp" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'install'}" />
+		<bean id="installation">
+			<option name="repository" id="${repositoryid}" />
+			<option name="package" packageName="${name}" packageVersion="${version}" packageTimestamp="${timestamp}" />
+			<option name="action" id="${form_action}" />
+		</bean>
+	</action>
+
+	<action id="delete-package">
+		<config>
+			<title>repository.delete.package</title>
+			<permissions>
+				<permission ref="repository.installation" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="repositoryid" />
+				<param name="name" />
+				<param name="version" />
+				<param name="timestamp" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'delete-package'}" />
+		<bean id="installation">
+			<option name="repository" id="${repositoryid}" />
+			<option name="package" packageName="${name}" packageVersion="${version}" packageTimestamp="${timestamp}" />
+			<option name="action" id="${form_action}" />
+		</bean>
+	</action>
+
+</event>

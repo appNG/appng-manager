@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform  http://www.appng.org/schema/platform/appng-platform.xsd ">
+
+	<datasource id="systemEnv">
+		<config>
+			<title>systemEnvironment</title>
+			<permissions>
+				<permission ref="platform.environment" mode="set" />
+			</permissions>
+			<meta-data bindClass="java.util.Map.Entry">
+				<field name="key" type="text" displayLength="60">
+					<label>name</label>
+				</field>
+				<field name="value" type="text" displayLength="1000">
+					<label>value</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="env">
+			<option name="mode" id="env" />
+		</bean>
+	</datasource>
+
+	<datasource id="systemProps">
+		<config>
+			<title>systemProperties</title>
+			<permissions>
+				<permission ref="platform.environment" mode="set" />
+			</permissions>
+			<meta-data bindClass="java.util.Map.Entry">
+				<field name="key" type="text" displayLength="60">
+					<label>name</label>
+				</field>
+				<field name="value" type="text" displayLength="1000">
+					<label>value</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="env">
+			<option name="mode" id="props" />
+		</bean>
+	</datasource>
+
+	<datasource id="jvmArguments">
+		<config>
+			<title>jvmArguments</title>
+			<permissions>
+				<permission ref="platform.environment" mode="set" />
+			</permissions>
+			<meta-data bindClass="java.util.Map.Entry">
+				<field name="key" type="longtext">
+					<label>name</label>
+				</field>
+				<field name="value" type="text" displayLength="1000">
+					<label>value</label>
+				</field>
+			</meta-data>
+			<linkpanel id="links" location="top">
+				<link mode="intern" target="/system&#63;form_action=reloadPlatform">
+					<label>platform.reload</label>
+					<icon>reload</icon>
+					<confirmation id="platform.reload.confirm" />
+					<permissions>
+						<permission ref="platform.reload" mode="set" />
+					</permissions>
+				</link>
+				<link mode="webservice" target="systemReport">
+					<label>systemReport</label>
+					<icon>goto</icon>
+					<permissions>
+						<permission ref="platform.report" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="env">
+			<option name="mode" id="jvm" />
+		</bean>
+	</datasource>
+
+	<datasource id="processor">
+		<config>
+			<title>Processor</title>
+			<permissions>
+				<permission ref="platform.environment" mode="set"/>
+			</permissions>
+			<meta-data bindClass="java.util.Map.Entry">
+				<field name="key" type="longtext">
+					<label>name</label>
+				</field>
+				<field name="value" type="text">
+					<label>value</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="env">
+			<option name="mode" id="proc"/>
+		</bean>
+	</datasource>
+
+	<datasource id="memory">
+		<config>
+			<title>memory</title>
+			<permissions>
+				<permission ref="platform.environment" mode="set" />
+			</permissions>
+			<meta-data bindClass="java.util.Map.Entry">
+				<field name="key" type="longtext">
+					<label>name</label>
+				</field>
+				<field name="value.value" type="text">
+					<label>value</label>
+				</field>
+				<field name="value.level" type="image">
+					<icon condition="${current.value.level == 0}">spacer</icon>
+					<icon condition="${current.value.level == 1}">led_green</icon>
+					<icon condition="${current.value.level == 2}">led_orange</icon>
+					<icon condition="${current.value.level == 3}">led_red</icon>
+				</field>
+			</meta-data>
+			<linkpanel id="links" location="top">
+				<link mode="webservice" target="threadViewer">
+					<label>threads</label>
+					<icon>goto</icon>
+					<permissions>
+						<permission ref="platform.threads" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="env">
+			<option name="mode" id="mem" />
+		</bean>
+	</datasource>
+
+</datasources>

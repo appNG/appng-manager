@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<action xmlns="http://www.appng.org/schema/platform" async="false" eventId="repositoryEvent" id="create">
+    <config>
+        <title id="repository.create">Create repository</title>
+        <permissions>
+            <permission mode="set" ref="repository.create"></permission>
+        </permissions>
+        <params>
+            <param name="form_action">create</param>
+        </params>
+        <meta-data bindClass="org.appng.application.manager.form.RepositoryForm" binding="repository">
+            <field binding="repository.name" type="text" name="name">
+                <label id="name">Name</label>
+                <validation>
+                    <notNull>
+                        <message class="ERROR" ref="repository.name">Field must not be empty</message>
+                    </notNull>
+                    <size max="64" min="0">
+                        <message class="ERROR" ref="repository.name">Enter at most 64 characters</message>
+                    </size>
+                </validation>
+                <messages ref="name">
+                    <message class="ERROR" ref="name">A repository with this name already exists!</message>
+                </messages>
+            </field>
+            <field binding="repository.description" type="text" name="description">
+                <label id="description">Description</label>
+                <validation>
+                    <size max="8192" min="0">
+                        <message class="ERROR" ref="repository.description">Enter at most 8192 characters</message>
+                    </size>
+                </validation>
+            </field>
+            <field binding="repository.repositoryType" type="list:select" name="repositoryType">
+                <label id="type">Type</label>
+            </field>
+            <field binding="repository.uri" type="text" name="uri">
+                <label id="uri">URI</label>
+            </field>
+            <field binding="repository.active" type="checkbox" name="active">
+                <label id="active">active</label>
+            </field>
+        </meta-data>
+    </config>
+    <condition expression="${form_action eq 'create'}"/>
+    <messages>
+        <message ref="create" class="ERROR">Failed to create the repository.</message>
+    </messages>
+    <datasource id="new-repository"/>
+    <userdata/>
+    <data>
+        <selection id="repositoryType">
+            <title id="repositoryType">repositoryType</title>
+            <option selected="false" name="Local Repository" value="LOCAL"/>
+            <option selected="false" name="Published Repository" value="REMOTE"/>
+        </selection>
+        <selection id="repositoryMode">
+            <title id="repositoryMode">repositoryMode</title>
+            <option selected="false" name="All Applications" value="ALL"/>
+            <option selected="false" name="Only Stable-Applications" value="STABLE"/>
+            <option selected="false" name="Only Snapshot-Applications" value="SNAPSHOT"/>
+        </selection>
+        <result>
+            <field type="text" name="name">
+                <value></value>
+            </field>
+            <field type="text" name="description">
+                <value></value>
+            </field>
+            <field type="list:select" name="repositoryType">
+                <value>LOCAL</value>
+            </field>
+            <field type="text" name="uri">
+                <value></value>
+            </field>
+            <field type="checkbox" name="active">
+                <value>false</value>
+            </field>
+        </result>
+    </data>
+    <bean id="repositories">
+        <option name="action" id="create"/>
+    </bean>
+</action>

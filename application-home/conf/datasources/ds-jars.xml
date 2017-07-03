@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="jars">
+		<config>
+			<title>jars</title>
+			<permissions>
+				<permission ref="platform.jarfiles" mode="set" />
+			</permissions>
+			<params>
+				<param name="siteId" />
+			</params>
+			<meta-data bindClass="org.appng.core.model.JarInfo">
+				<field name="applicationName" type="text">
+					<label>application</label>
+					<condition expression="${siteId ne null}" />
+				</field>
+				<field name="fileName" type="text">
+					<sort />
+					<label>name</label>
+				</field>
+				<field name="version" type="date" format="yyyy-MM-dd HH:mm:ss">
+					<sort />
+					<label>changedOn</label>
+				</field>
+				<field name="implementationVersion" type="text" displayLength="20">
+					<sort />
+					<label>version</label>
+				</field>
+				<field name="implementationTitle" type="text" displayLength="20">
+					<sort />
+					<label>title</label>
+				</field>
+				<field name="implementationVendor" type="text" displayLength="25">
+					<sort />
+					<label>vendor</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="jars">
+			<option name="site" id="${siteId}" />
+		</bean>
+	</datasource>
+
+	<datasource id="tomcatJars">
+		<config>
+			<title>jars.tomcat</title>
+			<permissions>
+				<permission ref="platform.jarfiles" mode="set" />
+			</permissions>
+			<meta-data bindClass="org.appng.core.model.JarInfo">
+				<field name="fileName" type="text">
+					<sort />
+					<label id="name" />
+				</field>
+				<field name="version" type="date" format="yyyy-MM-dd HH:mm:ss">
+					<sort />
+					<label id="changedOn" />
+				</field>
+				<field name="implementationVersion" type="text" displayLength="20">
+					<sort />
+					<label id="version" />
+				</field>
+				<field name="implementationTitle" type="text" displayLength="20">
+					<sort />
+					<label id="title" />
+				</field>
+				<field name="implementationVendor" type="text" displayLength="25">
+					<sort />
+					<label id="vendor" />
+				</field>
+			</meta-data>
+		</config>
+		<bean id="jars">
+			<option name="tomcatJars" show="jars" />
+		</bean>
+	</datasource>
+</datasources>

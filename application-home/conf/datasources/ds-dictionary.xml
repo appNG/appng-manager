@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="dictionary">
+		<config>
+			<title>dictionary</title>
+			<params>
+				<param name="appid" />
+			</params>
+			<meta-data bindClass="org.appng.api.model.Property">
+				<field name="name" type="text">
+					<label>name</label>
+				</field>
+				<field name="string" type="text">
+					<label>value</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="dictionary">
+			<option name="application" id="${appid}" />
+		</bean>
+	</datasource>
+
+</datasources>

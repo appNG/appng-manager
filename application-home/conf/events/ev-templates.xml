@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="templateEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<action id="delete">
+		<config>
+			<title>template.delete</title>
+			<permissions>
+				<permission ref="template.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="name" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'deleteTemplate' and not empty name}" />
+		<bean id="templates">
+			<option name="template" templateName="${name}" action="delete"/>
+		</bean>
+	</action>
+
+</event>

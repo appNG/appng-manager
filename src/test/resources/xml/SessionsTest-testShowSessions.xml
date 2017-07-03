@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<datasource xmlns="http://www.appng.org/schema/platform" id="sessions">
+	<config>
+		<title id="sessions">Sessions</title>
+		<permissions>
+			<permission mode="set" ref="session.list"></permission>
+		</permissions>
+		<params>
+			<param name="currentSiteOnly" default="false">false</param>
+			<param name="siteid" />
+			<param name="deleteLink">/system?action=expire&amp;sessid=</param>
+		</params>
+		<meta-data bindClass="org.appng.core.controller.Session">
+			<field binding="shortId" type="text" name="shortId">
+				<sort />
+				<label id="id">ID</label>
+			</field>
+			<field binding="ip" type="text" name="ip">
+				<sort />
+				<label id="IP">IP</label>
+			</field>
+			<field binding="userAgent" displayLength="12" type="text" name="userAgent">
+				<sort />
+				<label id="userAgent">User Agent</label>
+			</field>
+			<field binding="creationTime" format="HH:mm:ss" type="date" name="creationTime">
+				<sort />
+				<label id="created">Created</label>
+			</field>
+			<field binding="lastAccessedTime" format="HH:mm:ss" type="date" name="lastAccessedTime">
+				<sort />
+				<label id="lastAccessed">Last accessed</label>
+			</field>
+			<field binding="expiryDate" format="HH:mm:ss" type="date" name="expiryDate">
+				<sort />
+				<label id="expires">Expires</label>
+			</field>
+			<field binding="domain" type="text" name="domain">
+				<sort />
+				<label id="domain">Domain</label>
+			</field>
+			<field binding="requests" type="text" name="requests">
+				<sort />
+				<label id="requests">Requests</label>
+			</field>
+			<field binding="user" type="text" name="user">
+				<sort />
+				<label id="userName">User-Name</label>
+			</field>
+			<field binding="actions" type="linkpanel" name="actions">
+				<label id="actions">actions</label>
+			</field>
+		</meta-data>
+		<linkpanel location="inline" id="actions">
+			<link target="/system?action=expire&amp;sessid=${current.id}" mode="intern" id="actions[1]">
+				<condition expression="${current.allowExpire}" />
+				<permissions>
+					<permission mode="set" ref="session.expire"></permission>
+				</permissions>
+				<label id="session.expire">Expire</label>
+				<icon>delete</icon>
+			</link>
+		</linkpanel>
+		<linkpanel location="both" id="other">
+			<link target="/system?action=expireAll#tab_memory" mode="intern" id="other[1]">
+				<permissions>
+					<permission mode="set" ref="session.expire"></permission>
+				</permissions>
+				<label id="session.expireAll">Expire all</label>
+				<icon>delete</icon>
+			</link>
+		</linkpanel>
+	</config>
+	<data>
+		<selectionGroup>
+			<selection id="fSess" type="text">
+				<title id="id">ID</title>
+				<option value="" name="fSess" />
+			</selection>
+			<selection id="fAgnt">
+				<title id="userAgent">User Agent</title>
+				<option value="" name="" selected="false" />
+				<option value="Mozilla" name="Mozilla" selected="false" />
+			</selection>
+			<selection id="fCrAf" type="date" format="yyyy-MM-dd HH:mm">
+				<title id="createdAfter">Created after</title>
+				<option value="" name="fCrAf" />
+			</selection>
+			<selection id="fCrBf" type="date" format="yyyy-MM-dd HH:mm">
+				<title id="createdBefore">Created before</title>
+				<option value="" name="fCrBf" />
+			</selection>
+			<selection id="fDmn" type="select">
+				<title id="domain">Domain</title>
+				<option />
+				<option value="localhost" name="localhost" selected="false" />
+			</selection>
+			<selection id="fUsr" type="text">
+				<title id="userName">User-Name</title>
+				<option value="" name="fUsr" />
+			</selection>
+		</selectionGroup>
+		<resultset hits="2" lastchunk="0" firstchunk="0" previouschunk="0" nextchunk="0" chunksize="10" chunkname="sessions"
+			chunk="0">
+			<result>
+				<field type="text" name="shortId">
+					<value>47114711</value>
+				</field>
+				<field type="text" name="ip">
+					<value>127.0.0.1</value>
+				</field>
+				<field type="text" name="userAgent">
+					<value>Mozilla</value>
+				</field>
+				<field type="date" name="creationTime">
+					<value>14:00:00</value>
+				</field>
+				<field type="date" name="lastAccessedTime">
+					<value>15:08:00</value>
+				</field>
+				<field type="date" name="expiryDate">
+					<value>14:30:00</value>
+				</field>
+				<field type="text" name="domain">
+					<value>http://www.example.com</value>
+				</field>
+				<field type="text" name="requests">
+					<value>100</value>
+				</field>
+				<field type="text" name="user">
+					<value>johndoe</value>
+				</field>
+				<linkpanel location="inline" id="actions">
+					<link target="/system?action=expire&amp;sessid=47114711" mode="intern" id="actions[1]">
+						<label id="session.expire">Expire</label>
+						<icon>delete</icon>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field type="text" name="shortId">
+					<value>47124712</value>
+				</field>
+				<field type="text" name="ip">
+					<value>127.0.0.1</value>
+				</field>
+				<field type="text" name="userAgent">
+					<value>Mozilla</value>
+				</field>
+				<field type="date" name="creationTime">
+					<value>15:00:00</value>
+				</field>
+				<field type="date" name="lastAccessedTime">
+					<value></value>
+				</field>
+				<field type="date" name="expiryDate">
+					<value>15:30:00</value>
+				</field>
+				<field type="text" name="domain">
+					<value>http://www.example.com</value>
+				</field>
+				<field type="text" name="requests">
+					<value>1000</value>
+				</field>
+				<field type="text" name="user">
+					<value>johndoe</value>
+				</field>
+				<linkpanel location="inline" id="actions" />
+			</result>
+		</resultset>
+	</data>
+</datasource>

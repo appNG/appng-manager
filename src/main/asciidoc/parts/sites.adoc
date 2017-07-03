@@ -1,0 +1,23 @@
+== Sites
+
+=== Creating a site
+
+=== Editing a site
+
+=== Reloading a site
+
+=== Deleting a site
+
+=== Configuring a site
+
+=== Assigning applications to a site
+
+=== Configuring the applications of a site
+
+=== Managing database connections
+
+=== Managing the site's status
+
+==== Caching
+
+==== Sessions

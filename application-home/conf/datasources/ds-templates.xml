@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="templates">
+		<config>
+			<title>templates</title>
+			<permissions>
+				<permission ref="template.list" mode="set" />
+			</permissions>
+			<params />
+			<meta-data bindClass="org.appng.api.model.Identifier">
+				<field name="id" type="int">
+					<sort />
+					<label>id</label>
+				</field>
+				<field name="name" type="text">
+					<sort />
+					<label>name</label>
+				</field>
+				<field name="description" type="text">
+					<sort />
+					<label>description</label>
+				</field>
+				<field name="packageVersion" type="text">
+					<label>version</label>
+				</field>
+				<field name="actions" type="linkpanel">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/applications&#63;form_action=deleteTemplate&#38;name=#{name}">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="template.delete.confirm" params="#{name}"></confirmation>
+					<permissions>
+						<permission ref="template.delete" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="templates" />
+	</datasource>
+</datasources>

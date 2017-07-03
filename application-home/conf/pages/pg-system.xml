@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<page id="system">
+		<config>
+			<title>system</title>
+			<permissions>
+				<permission ref="page.system" mode="set" />
+			</permissions>
+			<url-schema>
+				<url-params>
+					<url-param name="entity" />
+					<url-param name="action" />
+					<url-param name="id" />
+					<url-param name="entity2id" />
+				</url-params>
+				<get-params>
+					<get-param name="action" />
+					<get-param name="sessid" />
+					<get-param name="form_action" />
+					<get-param name="id" />
+					<!-- session filtering -->
+					<get-param name="fSess" />
+					<get-param name="fAgnt" />
+					<get-param name="fCrAf" />
+					<get-param name="fCrBf" />
+					<get-param name="fDmn" />
+					<get-param name="fUsr" />
+				</get-params>
+				<post-params>
+					<post-param name="form_action" />
+				</post-params>
+			</url-schema>
+		</config>
+		<structure>
+			<section>
+				<title id="environment" />
+				<element folded="false">
+					<datasource id="jvmArguments">
+						<condition expression="${empty entity}" />
+					</datasource>
+				</element>
+				<element folded="${empty sortSystemProps}">
+					<datasource id="systemProps">
+						<condition expression="${empty entity}" />
+					</datasource>
+				</element>
+				<element folded="${empty sortSystemEnv}">
+					<datasource id="systemEnv">
+						<condition expression="${empty entity}" />
+					</datasource>
+				</element>
+			</section>
+			<section>
+				<title id="status" />
+				<element>
+					<datasource id="processor">
+						<condition expression="${empty entity}" />
+					</datasource>
+				</element>
+				<element>
+					<datasource id="memory">
+						<condition expression="${empty entity}" />
+					</datasource>
+				</element>
+				<element>
+					<datasource id="sessions">
+						<params>
+							<param name="deleteLink">/system&#63;action=expire&#38;sessid=</param>
+						</params>
+					</datasource>
+				</element>
+			</section>
+			<section>
+				<element>
+					<datasource id="logfile" />
+				</element>
+				<element>
+					<action eventId="logEvent" id="updateLogConfig" />
+				</element>
+			</section>
+			<section>
+				<element>
+					<datasource id="clusterState">
+						<params>
+							<param name="nodeId">${entity}</param>
+						</params>
+					</datasource>
+				</element>
+				<element>
+					<datasource id="siteState">
+						<params>
+							<param name="nodeId">${entity}</param>
+						</params>
+						<condition expression="${not empty entity}" />
+					</datasource>
+				</element>
+				<element>
+					<datasource id="clusterStateProps">
+						<params>
+							<param name="nodeId">${entity}</param>
+						</params>
+						<condition expression="${not empty entity}" />
+					</datasource>
+				</element>
+				<element>
+					<datasource id="clusterStateEnv">
+						<params>
+							<param name="nodeId">${entity}</param>
+						</params>
+						<condition expression="${not empty entity}" />
+					</datasource>
+				</element>
+			</section>
+
+			<!-- hidden inline actions -->
+			<section hidden="true">
+				<element>
+					<action id="refreshPlatform" eventId="platformEvent" />
+				</element>
+				<element>
+					<action id="expire" eventId="sessionEvent" onSuccess="/system#tab_memory">
+						<params>
+							<param name="action">${action}</param>
+							<param name="sessid">${sessid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="expireAll" eventId="sessionEvent" onSuccess="/system#tab_memory">
+						<params>
+							<param name="action">${action}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<!-- this needs to be the very last action, because the old site and application have been destroyed after execution! -->
+					<action eventId="platformEvent" id="reloadPlatform" onSuccess="/system">
+						<params>
+							<param name="action">${form_action}</param>
+						</params>
+					</action>
+				</element>
+			</section>
+
+		</structure>
+	</page>
+</pages>
+

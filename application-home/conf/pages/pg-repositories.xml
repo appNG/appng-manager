@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<page id="repositories">
+		<config>
+			<title>repositories</title>
+			<permissions>
+				<permission ref="page.repositories" mode="set" />
+			</permissions>
+			<url-schema>
+				<url-params>
+					<url-param name="action" />
+					<url-param name="id" />
+					<url-param name="entity2id" />
+				</url-params>
+				<get-params>
+					<get-param name="form_action" />
+					<get-param name="repositoryid" />
+					<get-param name="propertyid" />
+					<get-param name="packageversion" />
+					<get-param name="packagename" />
+					<get-param name="packagetimestamp" />
+					<get-param name="id" />
+				</get-params>
+				<post-params>
+					<post-param name="form_action" />
+				</post-params>
+			</url-schema>
+		</config>
+		<structure>
+			<!-- application repositories -->
+			<!-- overview -->
+			<section>
+				<element>
+					<datasource id="repositories">
+					</datasource>
+				</element>
+			</section>
+			<section>
+				<element passive="true">
+					<action id="uploadArchive" eventId="repositoryEvent" onSuccess="/repositories/installation/${id}">
+						<params>
+							<param name="repositoryid">${id}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${action eq 'installation' and not empty id}" />
+					</action>
+				</element>
+				<element passive="true">
+					<datasource id="packageVersions">
+						<params>
+							<param name="repositoryid">${id}</param>
+							<param name="packagename">${entity2id}</param>
+						</params>
+						<condition expression="${action eq 'installation' and not empty id  and not empty entity2id}" />
+					</datasource>
+				</element>
+				<element>
+					<datasource id="packages">
+						<params>
+							<param name="repositoryid">${id}</param>
+							<param name="packagename">${entity2id}</param>
+						</params>
+						<condition expression="${action eq 'installation' and not empty id}" />
+					</datasource>
+				</element>
+			</section>
+
+			<!-- create -->
+			<section>
+				<element>
+					<action id="create" onSuccess="/repositories" eventId="repositoryEvent">
+						<condition expression="${action eq 'create'}" />
+					</action>
+				</element>
+			</section>
+
+			<!-- update -->
+			<section>
+				<element>
+					<action id="update" onSuccess="/repositories" eventId="repositoryEvent">
+						<params>
+							<param name="repositoryid">${id}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${action eq 'update'}" />
+					</action>
+				</element>
+			</section>
+
+			<!-- install application -->
+			<section>
+				<element>
+					<action id="install" eventId="repositoryEvent" onSuccess="/repositories/installation/${id}/${packagename}#tab_packages">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="repositoryid">${id}</param>
+							<param name="name">${packagename}</param>
+							<param name="version">${packageversion}</param>
+							<param name="timestamp">${packagetimestamp}</param>
+						</params>
+						<condition expression="${not empty form_action and not empty repositoryid}" />
+					</action>
+				</element>
+			</section>
+
+			<!-- reload repository -->
+			<section>
+				<element>
+					<action id="reload" eventId="repositoryEvent" onSuccess="/repositories" forceForward="true">
+						<params>
+							<param name="repositoryid">${id}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${form_action eq 'reload' and not empty repositoryid}" />
+					</action>
+				</element>
+			</section>
+
+			<!-- hidden inline actions -->
+			<section hidden="true">
+				<element>
+					<action eventId="repositoryEvent" id="delete" onSuccess="/repositories">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="repositoryid">${repositoryid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action eventId="repositoryEvent" id="delete-package" onSuccess="/repositories/installation/${id}/${packagename}#tab_packages">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="repositoryid">${id}</param>
+							<param name="name">${packagename}</param>
+							<param name="version">${packageversion}</param>
+							<param name="timestamp">${packagetimestamp}</param>
+						</params>
+					</action>
+				</element>
+			</section>
+
+		</structure>
+	</page>
+</pages>
+

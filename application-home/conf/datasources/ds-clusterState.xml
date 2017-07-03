@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="clusterStateProps">
+		<config>
+			<title>systemProperties</title>
+			<params>
+				<param name="nodeId" />
+			</params>
+			<meta-data bindClass="java.util.Map.Entry">
+				<field name="key" type="text" displayLength="60">
+					<label>name</label>
+				</field>
+				<field name="value" type="text" displayLength="1000">
+					<label>value</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="clusterState">
+			<option name="mode" value="props" nodeId="${nodeId}" />
+		</bean>
+	</datasource>
+
+	<datasource id="clusterStateEnv">
+		<config>
+			<title>systemEnvironment</title>
+			<params>
+				<param name="nodeId" />
+			</params>
+			<meta-data bindClass="java.util.Map.Entry">
+				<field name="key" type="text" displayLength="60">
+					<label>name</label>
+				</field>
+				<field name="value" type="text" displayLength="1000">
+					<label>value</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="clusterState">
+			<option name="mode" value="env" nodeId="${nodeId}" />
+		</bean>
+	</datasource>
+
+
+	<datasource id="siteState">
+		<config>
+			<title>siteState</title>
+			<params>
+				<param name="nodeId" />
+			</params>
+			<meta-data bindClass="java.util.Map.Entry">
+				<field name="key" type="text">
+					<label id="name" />
+				</field>
+				<field name="value" type="image">
+					<label id="state" />
+					<icon condition="${current.value eq 'STARTED'}">led_green</icon>
+					<icon condition="${current.value eq 'STARTING'}">led_orange</icon>
+					<icon condition="${current.value eq 'STOPPING'}">led_orange</icon>
+					<icon condition="${current.value eq 'STOPPED'}">led_red</icon>
+					<icon condition="${current.value eq 'INACTIVE'}">led_red</icon>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="clusterState">
+			<option name="mode" value="siteState" nodeId="${nodeId}" />
+		</bean>
+	</datasource>
+
+
+	<datasource id="clusterState">
+		<config>
+			<title>clusterState</title>
+			<params>
+				<param name="nodeId" />
+			</params>
+			<meta-data bindClass="org.appng.core.controller.messaging.NodeEvent.NodeState" result-selector="${current.nodeId eq nodeId}">
+				<field name="nodeId" type="text">
+					<label id="nodeId" />
+				</field>
+				<field name="date" type="date" format="MM/dd HH:mm:ss">
+					<label id="lastUpdated" />
+				</field>
+				<field name="heap.max" type="long" format="#,##0 MB">
+					<label id="heap.max" />
+				</field>
+				<field name="heap.used" type="long" format="#,##0 MB">
+					<label id="heap.used" />
+				</field>
+				<field name="heap.usedPercent" type="decimal" format="00.00 %">
+					<label id="heap.usedPercent" />
+				</field>
+				<field name="nonHeap.max" type="long" format="#,##0 MB">
+					<label id="nonHeap.max" />
+				</field>
+				<field name="nonHeap.used" type="long" format="#,##0 MB">
+					<label id="nonHeap.used" />
+				</field>
+				<field name="nonHeap.usedPercent" type="decimal" format="00.00 %">
+					<label id="nonHeap.usedPercent" />
+				</field>
+				<field name="actions" type="linkpanel">
+					<label id="actions" />
+				</field>
+			</meta-data>
+			<linkpanel location="inline" id="actions">
+				<link target="/system/${current.nodeId}#tab_clusterState" mode="intern" default="true">
+					<icon>preview</icon>
+					<label id="show" />
+				</link>
+			</linkpanel>
+			<linkpanel location="both" id="refresh">
+				<link target="/system?action=refresh#tab_clusterState" mode="intern">
+					<label id="refresh" />
+					<icon>reload</icon>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="clusterState" />
+	</datasource>
+</datasources>

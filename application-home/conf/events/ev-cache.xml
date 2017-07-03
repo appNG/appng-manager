@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="cacheEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<action id="clearCache">
+		<config>
+			<title>cache.clear</title>
+			<permissions>
+				<permission ref="cache.clear" mode="set" />
+			</permissions>
+			<params>
+				<param name="action" />
+				<param name="siteid" />
+			</params>
+		</config>
+		<condition expression="${action eq 'clearCache'}" />
+		<bean id="cache">
+			<option name="action" id="clearCache" />
+			<option name="site" id="${siteid}" />
+		</bean>
+	</action>
+	<action id="expireCacheElement">
+		<config>
+			<title>cache.element.expire</title>
+			<permissions>
+				<permission ref="cache.element.expire" mode="set" />
+			</permissions>
+			<params>
+				<param name="action" />
+				<param name="cacheElement" />
+				<param name="siteid" />
+			</params>
+		</config>
+		<condition expression="${action eq 'expireCacheElement' and not empty cacheElement}" />
+		<bean id="cache">
+			<option name="action" id="expireCacheElement" />
+			<option name="cacheElement" id="${cacheElement}" />
+			<option name="site" id="${siteid}" />
+		</bean>
+	</action>
+	<action id="clearCacheStatistics">
+		<config>
+			<title>cache.statistics.clear</title>
+			<permissions>
+				<permission ref="cache.statistics.clear" mode="set" />
+			</permissions>
+			<params>
+				<param name="action" />
+				<param name="siteid" />
+			</params>
+		</config>
+		<condition expression="${action eq 'clearCacheStatistics'}" />
+		<bean id="cache">
+			<option name="action" id="clearCacheStatistics" />
+			<option name="site" id="${siteid}" />
+		</bean>
+	</action>
+</event>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<page id="applications">
+		<config>
+			<title>applications</title>
+			<permissions>
+				<permission ref="page.applications" mode="set" />
+			</permissions>
+			<url-schema>
+				<url-params>
+					<url-param name="action" />
+					<url-param name="appid" />
+					<url-param name="subentity" />
+					<url-param name="subaction" />
+					<url-param name="subentityid" />
+				</url-params>
+				<get-params>
+					<get-param name="form_action" />
+					<get-param name="appid" />
+					<get-param name="roleid" />
+					<get-param name="propertyid" />
+					<get-param name="permissionid" />
+					<get-param name="resourceid" />
+					<get-param name="resourceType" />
+					<get-param name="name" />
+				</get-params>
+				<post-params>
+					<post-param name="form_action" />
+				</post-params>
+			</url-schema>
+		</config>
+		<structure>
+			<!-- applications -->
+			<!-- overview -->
+			<section>
+				<element>
+					<datasource id="applications">
+						<condition expression="${empty action}" />
+					</datasource>
+				</element>
+			</section>
+			<!-- update -->
+			<section>
+				<element>
+					<action eventId="applicationEvent" id="update"
+						onSuccess="/applications#tab_applications">
+						<params>
+							<param name="appid">${appid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${action eq 'update' and not empty appid}" />
+					</action>
+				</element>
+			</section>
+
+			<!-- application properties -->
+			<!-- overview -->
+			<section>
+				<!-- create -->
+				<element passive="true">
+					<action eventId="propertyEvent" id="create-application-property"
+						onSuccess="/applications/update/${appid}#tab_application-properties">
+						<params>
+							<param name="appid">${appid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty appid and subentity eq 'property' and subaction eq 'create'}" />
+					</action>
+				</element>
+				<!-- update -->
+				<element passive="true">
+					<action eventId="propertyEvent" id="update-application-property"
+						onSuccess="/applications/update/${appid}#tab_application-properties">
+						<params>
+							<param name="appid">${appid}</param>
+							<param name="propertyid">${subentityid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty appid and subentity eq 'property' and subaction eq 'update' and not empty subentityid}" />
+					</action>
+				</element>
+				<element>
+					<datasource id="application-properties">
+						<params>
+							<param name="appid">${appid}</param>
+							<param name="propId">${subentityid}</param>
+						</params>
+						<condition expression="${action eq 'update' and not empty appid}" />
+					</datasource>
+				</element>
+			</section>
+
+			<!-- roles -->
+			<section>
+				<!-- create -->
+				<element passive="true">
+					<action eventId="roleEvent" id="create-role"
+						onSuccess="/applications/update/${appid}#tab_roles">
+						<params>
+							<param name="appid">${appid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty appid and subentity eq 'role' and subaction eq 'create'}" />
+					</action>
+				</element>
+				<!-- update -->
+				<element passive="true">
+					<action eventId="roleEvent" id="update-role"
+						onSuccess="/applications/update/${appid}#tab_roles">
+						<params>
+							<param name="appid">${appid}</param>
+							<param name="roleid">${subentityid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty appid and subentity eq 'role' and subaction eq 'update' and not empty subentityid}" />
+					</action>
+				</element>
+				<!-- overview -->
+				<element>
+					<datasource id="roles">
+						<params>
+							<param name="appid">${appid}</param>
+						</params>
+						<condition expression="${not empty appid}" />
+					</datasource>
+				</element>
+			</section>
+			<!-- application permissions -->
+			<section>
+				<!-- create -->
+				<element passive="true">
+					<action id="create-permission" onSuccess="/applications/update/${appid}#tab_permissions"
+						eventId="permissionEvent">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="appid">${appid}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty appid and subentity eq 'permission' and subaction eq 'create'}" />
+					</action>
+				</element>
+				<!-- update -->
+				<element passive="true">
+					<action id="update-permission" onSuccess="/applications/update/${appid}#tab_permissions"
+						eventId="permissionEvent">
+						<condition
+							expression="${action eq 'update' and not empty appid and subentity eq 'permission' and subaction eq 'update' and not empty subentityid}" />
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="appid">${appid}</param>
+							<param name="permissionid">${subentityid}</param>
+						</params>
+					</action>
+				</element>
+				<!-- overview -->
+				<element>
+					<datasource id="permissions">
+						<params>
+							<param name="appid">${appid}</param>
+						</params>
+						<condition expression="${action eq 'update' and not empty appid}" />
+					</datasource>
+				</element>
+			</section>
+
+			<!-- application ressources -->
+			<section>
+				<!--update -->
+				<element passive="true">
+					<action id="update-resource" eventId="applicationResourceEvent"
+						onSuccess="/applications/update/${appid}#tab_resources">
+						<params>
+							<param name="appid">${appid}</param>
+							<param name="id">${subentityid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty appid and subentity eq 'resource' and subaction eq 'update' and not empty subentityid}" />
+					</action>
+				</element>
+				<!-- upload -->
+				<element passive="true">
+					<action id="upload" eventId="applicationResourceEvent"
+						onSuccess="/applications/update/${appid}#tab_resources">
+						<params>
+							<param name="appid">${appid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty appid and subentity eq 'resource' and subaction eq 'upload'}" />
+					</action>
+				</element>
+				<!-- overview -->
+				<element>
+					<datasource id="resources">
+						<params>
+							<param name="appid">${appid}</param>
+							<param name="resourceType">${resourceType}</param>
+						</params>
+						<condition expression="${action eq 'update' and not empty appid}" />
+					</datasource>
+				</element>
+			</section>
+
+			<!-- application dictionary -->
+			<!-- overview -->
+			<section>
+				<element>
+					<datasource id="dictionary">
+						<params>
+							<param name="appid">${appid}</param>
+						</params>
+						<condition expression="${action eq 'update' and not empty appid}" />
+					</datasource>
+				</element>
+			</section>
+
+			<section>
+				<element>
+					<datasource id="templates">
+						<condition expression="${empty action}" />
+					</datasource>
+				</element>
+			</section>
+
+
+			<!-- hidden inline actions -->
+			<section hidden="true">
+				<element>
+					<action id="delete" eventId="applicationEvent" onSuccess="/applications">
+						<params>
+							<param name="appid">${appid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="delete-role" eventId="roleEvent"
+						onSuccess="/applications/update/${appid}#tab_roles">
+						<params>
+							<param name="appid">${appid}</param>
+							<param name="roleid">${roleid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="delete-application-property" eventId="propertyEvent"
+						onSuccess="/applications/update/${appid}#tab_application-properties">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="propertyid">${propertyid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="delete-permission" eventId="permissionEvent"
+						onSuccess="/applications/update/${appid}#tab_permissions">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="appid">${appid}</param>
+							<param name="id">${permissionid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="delete-resource" eventId="applicationResourceEvent"
+						onSuccess="/applications/update/${appid}#tab_resources">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="appid">${appid}</param>
+							<param name="id">${resourceid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="delete" eventId="templateEvent" onSuccess="/applications#tab_templates">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="name">${name}</param>
+						</params>
+					</action>
+				</element>
+			</section>
+		</structure>
+	</page>
+</pages>

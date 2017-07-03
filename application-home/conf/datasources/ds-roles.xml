@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="roles">
+		<config>
+			<title>roles</title>
+			<permissions>
+				<permission ref="role.list" mode="set" />
+			</permissions>
+			<params>
+				<param name="appid" />
+				<param name="roleid" />
+			</params>
+			<meta-data bindClass="org.appng.api.model.Role" result-selector="${current.id eq roleid}">
+				<field name="id" type="int" readonly="true">
+					<label>id</label>
+				</field>
+				<field name="name" type="text">
+					<sort />
+					<label>name</label>
+				</field>
+				<field name="description" type="text">
+					<label>description</label>
+				</field>
+				<field name="application.name" type="text" readonly="true">
+					<label>application</label>
+				</field>
+				<field name="actions" type="linkpanel">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="other" location="both">
+				<link mode="intern" target="/applications/update/${appid}/role/create#tab_roles">
+					<label>role.create</label>
+					<icon>new</icon>
+					<permissions>
+						<permission ref="role.create" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/applications/update/${appid}/role/update/#{id}#tab_roles" default="true">
+					<label>edit</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="role.edit" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern"
+					target="/applications/update/${appid}&#63;form_action=delete-role&#38;roleid=#{id}#tab_roles">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="role.delete.confirm" params="#{name}"/>
+					<permissions>
+						<permission ref="role.delete" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="roles">
+			<option name="application" id="${appid}" />
+		</bean>
+	</datasource>
+
+	<datasource id="role">
+		<config>
+			<title>role</title>
+			<params>
+				<param name="id" />
+			</params>
+			<meta-data binding="role" bindClass="org.appng.application.manager.form.RoleForm">
+				<field name="id" type="int" readonly="true">
+					<label>id</label>
+				</field>
+				<field name="name" type="text">
+					<label>name</label>
+				</field>
+				<field name="description" type="text">
+					<label>description</label>
+				</field>
+				<field name="permissions" type="list:select" binding="permissionIds">
+					<label>permissions</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="roles">
+			<option name="id" id="${id}" />
+		</bean>
+	</datasource>
+
+	<datasource id="new-role">
+		<config>
+			<title>role.create</title>
+			<params>
+				<param name="appid" />
+			</params>
+			<meta-data binding="role" bindClass="org.appng.application.manager.form.RoleForm">
+				<field name="name" type="text">
+					<label>name</label>
+				</field>
+				<field name="description" type="text">
+					<label>description</label>
+				</field>
+				<field name="permissions" type="list:select" binding="permissionIds">
+					<label>permissions</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="roles">
+			<option name="action" id="create" />
+			<option name="application" id="${appid}" />
+		</bean>
+	</datasource>
+
+</datasources>

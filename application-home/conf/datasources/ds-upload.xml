@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="upload">
+		<config>
+			<title>resource.upload</title>
+			<meta-data bindClass="org.appng.application.manager.form.UploadForm">
+				<field name="file" type="file">
+					<label>resource.upload</label>
+				</field>
+				<field name="type" type="list:select">
+					<label>type</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="upload">
+		</bean>
+	</datasource>
+</datasources>

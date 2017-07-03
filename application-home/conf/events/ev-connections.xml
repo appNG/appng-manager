@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="databaseConnectionEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<action id="updateConnection">
+		<config>
+			<title>connection.edit</title>
+			<description />
+			<params>
+				<param name="id" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'updateConnection' and not empty id}" />
+		<datasource id="databaseConnection">
+			<params>
+				<param name="id">${id}</param>
+			</params>
+		</datasource>
+		<bean id="databaseConnections">
+			<option name="connection" id="${id}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+
+	<action id="testConnection">
+		<config>
+			<title>connection.test</title>
+			<params>
+				<param name="form_action" />
+				<param name="id" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'testConnection' and not empty id}" />
+		<bean id="databaseConnections">
+			<option name="action" id="test" />
+			<option name="connection" id="${id}" />
+		</bean>
+	</action>
+	
+	<action id="resetConnection">
+		<config>
+			<title>connection.reset</title>
+			<params>
+				<param name="form_action" />
+				<param name="id" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'resetConnection' and not empty id}" />
+		<bean id="databaseConnections">
+			<option name="action" id="reset" />
+			<option name="connection" id="${id}" />
+		</bean>
+	</action>
+
+	<action id="delete">
+		<config>
+			<title>connection.delete</title>
+			<params>
+				<param name="form_action" />
+				<param name="id" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'deleteConnection' and not empty id}" />
+		<bean id="databaseConnections">
+			<option name="connection" id="${id}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+
+	<action id="executeSql">
+		<config>
+			<title>connection.executeSql</title>
+			<description />
+			<params>
+				<param name="id" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'executeSql' and not empty id}" />
+		<datasource id="sqlStatement">
+			<params>
+				<param name="connectionId">${id}</param>
+			</params>
+		</datasource>
+		<bean id="sqlExecutor">
+			<option name="connection" id="${id}" />
+		</bean>
+	</action>
+
+</event>

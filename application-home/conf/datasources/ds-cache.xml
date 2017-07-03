@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+	<datasource id="cacheStatistics">
+		<config>
+			<title>cache.statistics</title>
+			<permissions>
+				<permission ref="cache.statistics.list" mode="set" />
+			</permissions>
+			<params>
+				<param name="siteid" />
+				<param name="clearLink" />
+			</params>
+			<meta-data bindClass="java.util.Map.Entry">
+				<field name="key" type="longtext">
+					<label>name</label>
+				</field>
+				<field name="value" type="text" displayLength="1000">
+					<label>value</label>
+				</field>
+			</meta-data>
+			<linkpanel location="bottom" id="other">
+				<link target="${clearLink}" mode="intern">
+					<icon>delete</icon>
+					<label id="cache.statistics.clear" />
+					<permissions>
+						<permission ref="cache.statistics.clear" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="cache">
+			<option name="mode" id="statistics" />
+			<option name="site" id="${siteid}" />
+		</bean>
+	</datasource>
+	<datasource id="cacheElements">
+		<config>
+			<title>cache.elements</title>
+			<permissions>
+				<permission ref="cache.elements.list" mode="set" />
+			</permissions>
+			<params>
+				<param name="siteid" />
+				<param name="deleteLink" />
+				<param name="clearLink" />
+			</params>
+			<meta-data bindClass="org.appng.application.manager.business.Cache$CacheEntry">
+				<field name="id" type="text" displayLength="75">
+					<sort />
+					<label>id</label>
+				</field>
+				<field name="type" type="text">
+					<sort />
+					<label>type</label>
+				</field>
+				<field name="size" type="decimal" format="#,##0 KB">
+					<sort />
+					<label>size</label>
+				</field>
+				<field name="hits" type="text">
+					<sort />
+					<label>hitCount</label>
+				</field>
+				<field name="created" type="date" format="HH:mm:ss">
+					<sort />
+					<label>created</label>
+				</field>
+				<field name="expires" type="date" format="HH:mm:ss">
+					<sort />
+					<label>expires</label>
+				</field>
+				<field name="actions" type="linkpanel">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel location="inline" id="actions">
+				<link target="${deleteLink}${current.id}" mode="intern">
+					<icon>delete</icon>
+					<label id="cache.element.expire" />
+					<permissions>
+						<permission ref="cache.element.expire" mode="set" />
+					</permissions>
+				</link>
+				<link target="${current.path}" mode="extern">
+					<icon>preview</icon>
+					<label id="show" />
+				</link>
+			</linkpanel>
+			<linkpanel location="bottom" id="other">
+				<link target="${clearLink}" mode="intern">
+					<icon>delete</icon>
+					<label id="cache.clear" />
+					<permissions>
+						<permission ref="cache.clear" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="cache">
+			<option name="mode" id="entries" />
+			<option name="site" id="${siteid}" />
+		</bean>
+	</datasource>
+</datasources>

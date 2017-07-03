@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="platformEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+	<action id="reloadPlatform">
+		<config>
+			<title>platform.reload</title>
+			<permissions>
+				<permission ref="platform.reload" mode="set" />
+			</permissions>
+			<params>
+				<param name="action" />
+			</params>
+		</config>
+		<condition expression="${action eq 'reloadPlatform'}" />
+		<bean id="sites">
+			<option name="action" id="reloadPlatform" />
+		</bean>
+	</action>
+
+	<action id="refreshPlatform">
+		<config>
+			<title>platform.refresh</title>
+		</config>
+		<bean id="clusterState" />
+	</action>
+
+</event>

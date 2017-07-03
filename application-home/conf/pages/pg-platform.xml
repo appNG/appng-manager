@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<page id="platform">
+		<config>
+			<title>platform</title>
+			<permissions>
+				<permission ref="page.platform" mode="set" />
+			</permissions>
+			<url-schema>
+				<url-params>
+					<url-param name="entity" />
+					<url-param name="action" />
+					<url-param name="id" />
+				</url-params>
+				<get-params>
+					<get-param name="form_action" />
+					<get-param name="propertyid" />
+					<get-param name="id" />
+					<get-param name="expandSql" />
+				</get-params>
+				<post-params>
+					<post-param name="form_action" />
+				</post-params>
+			</url-schema>
+		</config>
+		<structure>
+			<!-- platform properties -->
+
+			<!-- create -->
+			<section>
+				<element passive="true">
+					<action id="create-platform-property" onSuccess="/platform#tab_platformProperties" eventId="propertyEvent">
+						<condition expression="${entity eq 'property' and action eq 'create'}" />
+						<params>
+							<param name="form_action">${form_action}</param>
+						</params>
+					</action>
+				</element>
+				<!-- update -->
+				<element passive="true">
+					<action eventId="propertyEvent" id="update-platform-property" onSuccess="/platform#tab_platformProperties">
+						<params>
+							<param name="propertyid">${id}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${entity eq 'property' and action eq 'update' and not empty id}" />
+					</action>
+				</element>
+				<!-- overview -->
+				<element>
+					<datasource id="platformProperties">
+						<params>
+							<param name="propId">${id}</param>
+						</params>
+					</datasource>
+				</element>
+			</section>
+
+			<!-- Database Connections -->
+			<section>
+				<element passive="true">
+					<action eventId="databaseConnectionEvent" id="updateConnection" onSuccess="/platform#tab_databaseConnections">
+						<params>
+							<param name="id">${id}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${entity eq 'connection' and action eq 'update' and not empty id}" />
+						<permissions>
+							<permission ref="platform.database.edit" mode="set" />
+						</permissions>
+					</action>
+				</element>
+				<element folded="${expandSql ne 'true'}" passive="true">
+					<action eventId="databaseConnectionEvent" id="executeSql"
+						onSuccess="/platform/connection/update/${id}&#63;expandSql=true#tab_databaseConnections">
+						<params>
+							<param name="id">${id}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${entity eq 'connection' and action eq 'update' and not empty id}" />
+						<permissions>
+							<permission ref="platform.database.edit" mode="set" />
+						</permissions>
+					</action>
+				</element>
+				<element>
+					<datasource id="databaseConnections">
+						<params>
+							<param name="editLink">/platform/connection/update/</param>
+							<param name="testLink">/platform&#63;form_action=testConnection&#38;id=</param>
+							<param name="linkTab">#tab_databaseConnections</param>
+							<param name="editTab">#tab_databaseConnections</param>
+						</params>
+						<permissions>
+							<permission ref="platform.databases" mode="set" />
+						</permissions>
+					</datasource>
+				</element>
+			</section>
+
+			<!-- jar's -->
+			<section>
+				<element>
+					<datasource id="jars" />
+				</element>
+				<element>
+					<datasource id="tomcatJars" />
+				</element>
+			</section>
+
+			<!-- dictionary -->
+			<section>
+				<element>
+					<datasource id="dictionary" />
+				</element>
+			</section>
+
+			<!-- hidden inline actions -->
+			<section hidden="true">
+				<element>
+					<action eventId="databaseConnectionEvent" id="testConnection" onSuccess="/platform#tab_databaseConnections">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="id">${id}</param>
+						</params>
+						<permissions>
+							<permission ref="platform.database.test" mode="set" />
+						</permissions>
+					</action>
+				</element>
+				<element>
+					<action eventId="propertyEvent" id="delete-platform-property" onSuccess="/platform#tab_platformProperties">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="propertyid">${propertyid}</param>
+						</params>
+					</action>
+				</element>
+			</section>
+			<!-- hidden inline actions -->
+			<section hidden="true">
+				<element>
+					<!-- this needs to be the very last action, because the old site and application have been destroyed after execution! -->
+					<action eventId="platformEvent" id="reloadPlatform" onSuccess="/platform#tab_platformProperties">
+						<params>
+							<param name="action">${form_action}</param>
+						</params>
+					</action>
+				</element>
+			</section>
+		</structure>
+	</page>
+</pages>
+

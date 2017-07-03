@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="archive">
+		<config>
+			<title>archive</title>
+			<params>
+				<param name="repositoryid" />
+			</params>
+			<meta-data bindClass="org.appng.application.manager.form.PackageUploadForm">
+				<field name="archive" type="file" readonly="${current.repository.repositoryType eq 'REMOTE'}">
+					<label>packageArchive</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="repositories">
+			<option name="repository" id="${repositoryid}" mode="upload"/>
+		</bean>
+	</datasource>
+
+	<datasource id="repositories">
+		<config>
+			<title>repositories</title>
+			<permissions>
+				<permission ref="repository.list" mode="set" />
+			</permissions>
+			<params />
+			<meta-data bindClass="org.appng.core.domain.RepositoryImpl">
+				<field name="id" type="text" readonly="true">
+					<label>id</label>
+				</field>
+				<field name="name" type="text">
+					<label>name</label>
+				</field>
+				<field name="repositoryType" type="text">
+					<label>type</label>
+				</field>
+				<field name="repositoryMode" type="text">
+					<label>mode</label>
+				</field>
+				<field name="published" type="image">
+					<label>published</label>
+					<icon condition="${current.published}">led_orange</icon>
+					<icon condition="${not current.published}"></icon>
+				</field>
+				<field name="uri" type="text" displayLength="60">
+					<label>uri</label>
+				</field>
+				<field name="active" type="image">
+					<label>active</label>
+					<icon condition="${current.active}">led_green</icon>
+					<icon condition="${not current.active}">led_red</icon>
+				</field>
+				<field type="linkpanel" name="actions">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="other" location="both">
+				<link mode="intern" target="/repositories/create#tab_create">
+					<label>repository.create</label>
+					<icon>new</icon>
+					<permissions>
+						<permission ref="repository.create" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/repositories/update/#{id}#tab_update">
+					<label>edit</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="repository.edit" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/repositories&#63;form_action=delete-repository&#38;repositoryid=#{id}">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="repository.delete.confirm" params="#{name}"/>
+					<permissions>
+						<permission ref="repository.delete" mode="set" />
+					</permissions>
+				</link>
+				<link target="/repositories/installation/#{id}&#63;form_action=reload" mode="intern">
+					<label>reload</label>
+					<icon>reload</icon>
+					<confirmation id="repository.reload.confirm" params="#{name}"/>
+					<condition expression="${current.active}" />
+					<permissions>
+						<permission ref="repository.reload" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/repositories/installation/#{id}#tab_packages" default="true">
+					<label>installation</label>
+					<icon>deploy</icon>
+					<condition expression="${current.active}" />
+					<permissions>
+						<permission ref="repository.installation" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="repositories">
+			<option name="sort" key="name" order="ASC" />
+		</bean>
+	</datasource>
+
+	<datasource id="repository">
+		<config>
+			<title>repository</title>
+			<params>
+				<param name="repositoryid" />
+			</params>
+			<meta-data bindClass="org.appng.application.manager.form.RepositoryForm" binding="repository">
+				<field name="id" type="text" readonly="true">
+					<label>id</label>
+				</field>
+				<field name="name" type="text">
+					<label>name</label>
+				</field>
+				<field name="description" type="text">
+					<label>description</label>
+				</field>
+				<field name="version" type="date" readonly="true">
+					<label>version</label>
+				</field>
+				<field name="uri" type="text">
+					<label>uri</label>
+				</field>
+				<field name="remoteRepositoryName" type="text">
+					<label>repository.remoteName</label>
+					<condition expression="${current.repository.repositoryType eq 'REMOTE'}" />
+				</field>
+				<field name="repositoryMode" type="list:select">
+					<label>mode</label>
+					<condition expression="${current.repository.repositoryType eq 'LOCAL'}" />
+				</field>
+				<field name="published" type="checkbox">
+					<label>published</label>
+					<condition expression="${current.repository.repositoryType eq 'LOCAL'}" />
+				</field>
+				<field name="digest" type="text">
+					<label>digest</label>
+				</field>
+				<field name="active" type="checkbox">
+					<label>active</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="repositories">
+			<option name="repository" id="${repositoryid}" />
+		</bean>
+	</datasource>
+
+	<datasource id="new-repository">
+		<config>
+			<title>repository.create</title>
+			<meta-data bindClass="org.appng.application.manager.form.RepositoryForm" binding="repository">
+				<field name="name" type="text">
+					<label>name</label>
+				</field>
+				<field name="description" type="text">
+					<label>description</label>
+				</field>
+				<field name="repositoryType" type="list:select">
+					<label>type</label>
+				</field>
+				<field name="uri" type="text">
+					<label>uri</label>
+				</field>
+				<field name="active" type="checkbox">
+					<label>active</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="repositories">
+			<option name="action" id="create" />
+		</bean>
+	</datasource>
+
+	<datasource id="packages">
+		<config>
+			<title>packages</title>
+			<params>
+				<param name="repositoryid" />
+				<param name="packagename" />
+			</params>
+			<meta-data bindClass="org.appng.core.model.InstallablePackage" result-selector="${current.name eq packagename}">
+				<field name="name" type="text" readonly="true" displayLength="30">
+					<sort prio="0"/>
+					<label>name</label>
+				</field>
+				<field name="displayName" type="text" readonly="true" displayLength="30">
+					<sort/>
+					<label>displayName</label>
+				</field>
+				<field name="type" type="text" readonly="true" displayLength="30">
+					<sort/>
+					<label>type</label>
+				</field>
+				<field name="latestRelease" type="text" readonly="true">
+					<label>latestRelease</label>
+				</field>
+				<field name="latestSnapshot" type="text" readonly="true">
+					<label>latestSnapshot</label>
+				</field>
+				<field name="installedVersion" type="text" readonly="true">
+					<label>installedVersion</label>
+				</field>
+				<field name="installedVersion" type="image">
+					<label></label>
+					<icon condition="${not empty current.installedVersion}">led_green</icon>
+					<icon condition="${empty current.installedVersion}">led_red</icon>
+				</field>
+				<field type="linkpanel" name="actions">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/repositories/installation/${repositoryid}/#{name}#tab_packages" default="true">
+					<label>package.showVersions</label>
+					<icon>edit</icon>
+				</link>
+				<link mode="intern" show-disabled="true"
+					target="/repositories/installation/${repositoryid}&#63;form_action=install&#38;packagename=#{name}&#38;packageversion=#{latestRelease}">
+					<condition expression="${(current.installedVersion ne current.latestRelease) and (not empty current.latestRelease)}" />
+					<label>install.latestrelease</label>
+					<icon>d_release</icon>
+				</link>
+				<link mode="intern" show-disabled="true"
+					target="/repositories/installation/${repositoryid}&#63;form_action=install&#38;packagename=#{name}&#38;packageversion=#{latestSnapshot}">
+					<condition expression="${not empty current.latestSnapshot}" />
+					<label>install.latestsnapshot</label>
+					<icon>d_snapshot</icon>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="installation">
+			<option name="repository" id="${repositoryid}" />
+			<option name="sort" key="name" order="ASC" />
+		</bean>
+	</datasource>
+
+	<datasource id="packageVersions">
+		<config>
+			<title>packageVersions</title>
+			<params>
+				<param name="repositoryid" />
+				<param name="packagename" />
+			</params>
+			<meta-data bindClass="org.appng.core.model.PackageVersion">
+				<field name="name" type="text" readonly="true" hidden="true">
+					<label>name</label>
+				</field>
+				<field name="displayName" type="text" readonly="true" displayLength="30">
+					<label>displayName</label>
+				</field>
+				<field name="longDescription" type="text" readonly="true" displayLength="60">
+					<label>longDescription</label>
+				</field>
+				<field name="packageVersion" type="text" readonly="true" displayLength="15">
+					<label>version</label>
+				</field>
+				<field name="version" type="date" readonly="true" format="yyyy-MM-dd HH:mm:ss" displayLength="20">
+					<label>timestamp</label>
+				</field>
+				<field name="timestamp" type="text" readonly="true" hidden="true">
+					<label>timestamp</label>
+				</field>
+				<field name="installed" type="image">
+					<label></label>
+					<icon condition="${current.installed}">led_green</icon>
+					<icon condition="${not current.installed}">led_red</icon>
+				</field>
+				<field type="linkpanel" name="actions">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" show-disabled="true"
+					target="/repositories/installation/${repositoryid}&#63;form_action=install&#38;packagename=#{name}&#38;packageversion=#{packageVersion}&#38;packagetimestamp=#{timestamp}">
+					<condition expression="${not current.installed}" />
+					<label>install</label>
+					<icon>deploy</icon>
+				</link>
+				<link mode="intern" show-disabled="true"
+					target="/repositories/installation/${repositoryid}&#63;form_action=delete-package&#38;packagename=#{name}&#38;packageversion=#{packageVersion}&#38;packagetimestamp=#{timestamp}">
+					<label>delete</label>
+					<icon>delete</icon>
+					<condition expression="${not current.installed and current.deletable}" />
+					<confirmation id="packageversion.delete.confirm" params="#{name},#{packageVersion},#{timestamp}"/>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="installation">
+			<option name="repository" id="${repositoryid}" />
+			<option name="package" packageName="${packagename}" />
+			<option name="sort" key="name" order="ASC" />
+		</bean>
+	</datasource>
+
+</datasources>

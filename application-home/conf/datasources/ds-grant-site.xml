@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="grantSite">
+		<config>
+			<params>
+				<param name="siteId" />
+				<param name="applicationId" />
+			</params>
+			<meta-data bindClass="org.appng.application.manager.form.GrantForm">
+				<field name="siteApplication.site.name" type="text" readonly="true">
+					<label id="site" />
+				</field>
+				<field name="siteApplication.application.name" type="text" readonly="true">
+					<label id="application" />
+				</field>
+				<field name="grantedBy" type="list:checkbox" readonly="true">
+					<label id="granted.by" />
+					<condition expression="${current.showGrantedBy}" />
+				</field>
+				<field name="siteApplication.grantedSites" binding="grantedSiteIds" type="list:checkbox">
+					<label id="granted.to" />
+				</field>
+			</meta-data>
+		</config>
+		<bean id="grantSites">
+			<option name="ids" siteId="${siteId}" applicationId="${applicationId}" />
+		</bean>
+	</datasource>
+
+</datasources>

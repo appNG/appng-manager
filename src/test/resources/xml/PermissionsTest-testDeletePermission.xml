@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<messages xmlns="http://www.appng.org/schema/platform" ref="delete-permission">
+    <message ref="delete-permission" class="OK">Permission has been deleted.</message>
+</messages>

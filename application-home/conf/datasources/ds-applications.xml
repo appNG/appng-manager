@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="applications">
+		<config>
+			<title>applications</title>
+			<permissions>
+				<permission ref="application.list" mode="set" />
+			</permissions>
+			<params />
+			<meta-data bindClass="org.appng.api.model.Application">
+				<field name="id" type="int" readonly="true">
+					<label>id</label>
+				</field>
+				<field name="name" type="text">
+					<sort />
+					<label>name</label>
+				</field>
+				<field name="displayName" type="text">
+					<sort />
+					<label>displayName</label>
+				</field>
+				<field name="packageVersion" type="text">
+					<sort />
+					<label>version</label>
+				</field>
+				<field name="coreApplication" type="checkbox">
+					<sort />
+					<label>coreApplication</label>
+				</field>
+				<field name="fileBased" type="checkbox">
+					<sort />
+					<label>filebased</label>
+				</field>
+				<field name="actions" type="linkpanel">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/applications/update/#{id}" default="true">
+					<label>edit</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="application.edit" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/applications&#63;form_action=delete&#38;appid=#{id}">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="application.delete.confirm" params="#{name}"></confirmation>
+					<permissions>
+						<permission ref="application.delete" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="applications">
+		</bean>
+	</datasource>
+
+	<datasource id="application">
+		<config>
+			<title>application</title>
+			<params>
+				<param name="appid" />
+			</params>
+			<meta-data bindClass="org.appng.core.domain.ApplicationImpl">
+				<field name="id" type="int" readonly="true">
+					<label>id</label>
+				</field>
+				<field name="name" type="text" readonly="true">
+					<label>name</label>
+				</field>
+				<field name="displayName" type="text">
+					<label>displayName</label>
+				</field>
+				<field name="description" type="longtext">
+					<label>description</label>
+				</field>
+				<field name="longDescription" type="longtext">
+					<label>longDescription</label>
+				</field>
+				<field name="packageVersion" type="text" readonly="true">
+					<label>version</label>
+				</field>
+				<field name="timestamp" type="text" readonly="true">
+					<label>timestamp</label>
+				</field>
+				<field name="appNGVersion" type="text" readonly="true">
+					<label>appNGVersion</label>
+				</field>
+				<field name="coreApplication" type="checkbox">
+					<label>coreApplication</label>
+				</field>
+				<field name="hidden" type="checkbox">
+					<label>hidden</label>
+				</field>
+				<field name="fileBased" type="checkbox">
+					<label>filebased</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="applications">
+			<option name="application" id="${appid}" />
+		</bean>
+	</datasource>
+
+	<!-- select-site-application -->
+	<datasource id="select-site-application">
+		<config>
+			<title>site.configure.applications</title>
+			<params>
+				<param name="siteid" />
+				<param name="appid" />
+				<param name="defaultlink" />
+				<param name="defaultlinkanchor" />
+				<param name="mode" />
+			</params>
+			<meta-data bindClass="org.appng.core.domain.SiteApplication" binding="application" result-selector="${current.application.id eq appid}">
+				<field name="id" type="int" readonly="true">
+					<label>id</label>
+				</field>
+				<field name="name" type="text">
+					<label>name</label>
+				</field>
+				<field name="displayName" type="text">
+					<label>displayName</label>
+				</field>
+				<field name="coreApplication" type="checkbox">
+					<label>coreApplication</label>
+				</field>
+				<field name="fileBased" type="checkbox">
+					<label>filebased</label>
+				</field>
+				<field name="actions" type="linkpanel">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="${defaultlink}?selectedappid=${current.application.id}${defaultlinkanchor}" default="true">
+					<label>select</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="site.application.properties" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="applications">
+			<option name="site" id="${siteid}" mode="${mode}" />
+		</bean>
+	</datasource>
+
+	<!-- select-application -->
+
+	<!-- site specific applications -->
+	<datasource id="site-applications">
+		<config>
+			<title>applications</title>
+			<params>
+				<param name="siteid" />
+			</params>
+			<meta-data bindClass="org.appng.core.domain.SiteApplication">
+				<field name="application.id" type="int">
+					<label>id</label>
+				</field>
+				<field name="application.name" type="text">
+					<label>name</label>
+				</field>
+				<field name="application.applicationVersion" type="text">
+					<label>version</label>
+				</field>
+				<field name="active" type="image">
+					<label>active</label>
+					<icon condition="${!current.active}">led_red</icon>
+					<icon condition="${current.active}">led_green</icon>
+				</field>
+				<field name="reloadRequired" type="image">
+					<label>reloadRequired</label>
+					<icon condition="${!current.reloadRequired}">led_green</icon>
+					<icon condition="${current.reloadRequired}">led_orange</icon>
+				</field>
+				<field name="actions" type="linkpanel">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern"
+					target="/sites/update/${siteid}?form_action=activateApplication&#38;appid=${current.application.id}#tab_site-applications">
+					<condition expression="${!current.active}" />
+					<label>activate</label>
+					<icon>activate</icon>
+					<permissions>
+						<permission ref="site.application.togglestate" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern"
+					target="/sites/update/${siteid}?form_action=deactivateApplication&#38;appid=${current.application.id}#tab_site-applications">
+					<condition expression="${current.active}" />
+					<label>deactivate</label>
+					<icon>deactivate</icon>
+					<confirmation id="application.deactivate.confirm" params="${current.application.name}, ${current.site.name}" />
+					<permissions>
+						<permission ref="site.application.togglestate" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/sites/update/${siteid}/application/grant/${current.application.id}#tab_site-applications">
+					<condition expression="${current.active}" />
+					<label>grant</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="site.application.grant" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern"
+					target="/sites/update/${siteid}?appid=${current.application.name}&#38;sitename=${current.site.name}#tab_site-applications">
+					<condition expression="${current.active}" />
+					<label>beans.show</label>
+					<icon>preview</icon>
+				</link>
+			</linkpanel>
+			<linkpanel location="top" id="reload">
+				<link target="/sites?form_action=reload&#38;siteid=${siteid}" mode="intern">
+					<label>site.reload</label>
+					<icon>reload</icon>
+					<permissions>
+						<permission ref="site.reload" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="applications">
+			<option name="site" id="${siteid}" />
+		</bean>
+	</datasource>
+
+</datasources>

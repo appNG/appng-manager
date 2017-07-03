@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="propertyEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<!-- platform properties -->
+	<action id="create-platform-property">
+		<config>
+			<title>property.create</title>
+			<permissions>
+				<permission ref="platform.property.create" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'create-platform-property'}" />
+		<datasource id="new-property" />
+		<bean id="properties">
+			<option name="action" id="create" />
+		</bean>
+	</action>
+	<action id="update-platform-property">
+		<config>
+			<title>property.edit</title>
+			<permissions>
+				<permission ref="platform.property.edit" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="propertyid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'update-platform-property'}" />
+		<datasource id="property">
+			<params>
+				<param name="id">${propertyid}</param>
+			</params>
+		</datasource>
+		<bean id="properties">
+			<option name="property" id="${propertyid}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+	<action id="delete-platform-property">
+		<config>
+			<title>property.delete</title>
+			<permissions>
+				<permission ref="platform.property.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="propertyid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'delete-platform-property' and not empty propertyid}" />
+		<bean id="properties">
+			<option name="property" id="${propertyid}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+
+	<!-- site properties -->
+	<action id="create-site-property">
+		<config>
+			<title>property.create</title>
+			<permissions>
+				<permission ref="site.property.create" mode="set" />
+			</permissions>
+			<params>
+				<param name="siteid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'create-site-property' and not empty siteid}" />
+		<datasource id="new-property" />
+		<bean id="properties">
+			<option name="action" id="create" />
+			<option name="properties" siteId="${siteid}" applicationId="" />
+		</bean>
+	</action>
+	<action id="update-site-property">
+		<config>
+			<title>property.edit</title>
+			<permissions>
+				<permission ref="site.property.edit" mode="set" />
+			</permissions>
+			<params>
+				<param name="siteid" />
+				<param name="propertyid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'update-site-property'}" />
+		<datasource id="property">
+			<params>
+				<param name="id">${propertyid}</param>
+			</params>
+		</datasource>
+		<bean id="properties">
+			<option name="property" id="${propertyid}" />
+			<option name="siteId" id="${siteid}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+	<action id="delete-site-property">
+		<config>
+			<title>property.delete</title>
+			<permissions>
+				<permission ref="site.property.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="propertyid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'delete-site-property' and not empty propertyid}" />
+		<bean id="properties">
+			<option name="property" id="${propertyid}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+
+	<!-- site application properties -->
+	<action id="create-site-application-property">
+		<config>
+			<title>property.create</title>
+			<permissions>
+				<permission ref="site.application.property.create" mode="set" />
+			</permissions>
+			<params>
+				<param name="siteid" />
+				<param name="appid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'create-site-application-property' and not empty siteid and not empty appid}" />
+		<datasource id="new-property" />
+		<bean id="properties">
+			<option name="action" id="create" />
+			<option name="properties" siteId="${siteid}" applicationId="${appid}" />
+		</bean>
+	</action>
+	<action id="update-site-application-property">
+		<config>
+			<title>property.edit</title>
+			<permissions>
+				<permission ref="site.application.property.edit" mode="set" />
+			</permissions>
+			<params>
+				<param name="appid" />
+				<param name="propertyid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'update-site-application-property'}" />
+		<datasource id="property">
+			<params>
+				<param name="id">${propertyid}</param>
+			</params>
+		</datasource>
+		<bean id="properties">
+			<option name="property" id="${propertyid}" />
+			<option name="applicationId" id="${appid}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+	<action id="delete-site-application-property">
+		<config>
+			<title>property.delete</title>
+			<permissions>
+				<permission ref="site.application.property.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="propertyid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'delete-site-application-property' and not empty propertyid}" />
+		<bean id="properties">
+			<option name="property" id="${propertyid}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+
+	<!-- application properties -->
+	<action id="create-application-property">
+		<config>
+			<title>property.create</title>
+			<permissions>
+				<permission ref="application.property.create" mode="set" />
+			</permissions>
+			<params>
+				<param name="appid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'create-application-property' and not empty appid}" />
+		<datasource id="new-property" />
+		<bean id="properties">
+			<option name="action" id="create" />
+			<option name="properties" siteId="" applicationId="${appid}" />
+		</bean>
+	</action>
+	<action id="update-application-property">
+		<config>
+			<title>property.edit</title>
+			<permissions>
+				<permission ref="application.property.edit" mode="set" />
+			</permissions>
+			<params>
+				<param name="appid" />
+				<param name="propertyid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'update-application-property' and not empty appid and not empty propertyid}" />
+		<datasource id="property">
+			<params>
+				<param name="id">${propertyid}</param>
+			</params>
+		</datasource>
+		<bean id="properties">
+			<option name="property" id="${propertyid}" />
+			<option name="applicationId" id="${appid}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+	<action id="delete-application-property">
+		<config>
+			<title>property.delete</title>
+			<permissions>
+				<permission ref="application.property.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="propertyid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'delete-application-property' and not empty propertyid}" />
+		<bean id="properties">
+			<option name="property" id="${propertyid}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+
+</event>

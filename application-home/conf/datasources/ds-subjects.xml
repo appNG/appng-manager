@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="users">
+		<config>
+			<title>subjects</title>
+			<permissions>
+				<permission ref="subject.list" mode="set" />
+			</permissions>
+			<params>
+				<param name="userid" />
+			</params>
+			<meta-data bindClass="org.appng.api.model.Subject" result-selector="${current.id eq userid}">
+				<field name="id" type="int">
+					<label>id</label>
+				</field>
+				<field name="name" type="text">
+					<sort ignore-case="true" />
+					<label>name</label>
+				</field>
+				<field name="realname" type="text">
+					<sort ignore-case="true" />
+					<label>realname</label>
+				</field>
+				<field name="description" type="text">
+					<label>description</label>
+				</field>
+				<field name="typeName" type="text">
+					<label>userType</label>
+				</field>
+				<field name="language" type="text">
+					<label>language</label>
+				</field>
+				<field type="linkpanel" name="actions">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="other" location="both">
+				<link mode="intern" target="/users/user/create">
+					<label>subject.create</label>
+					<icon>new</icon>
+					<permissions>
+						<permission ref="subject.create" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/users/user/update/#{id}" default="true">
+					<label>edit</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="subject.edit" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/users&#63;form_action=delete&#38;userid=#{id}">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="subject.delete.confirm" params="#{name}" />
+					<permissions>
+						<permission ref="subject.delete" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="subjects">
+		</bean>
+	</datasource>
+
+	<datasource id="user">
+		<config>
+			<title>subject</title>
+			<params>
+				<param name="userid" />
+			</params>
+			<meta-data binding="subject" bindClass="org.appng.application.manager.form.SubjectForm">
+				<field name="id" type="int" readonly="true">
+					<label>id</label>
+				</field>
+				<field name="name" type="text" readonly="true">
+					<label>name</label>
+				</field>
+				<field name="realname" type="text">
+					<label>realname</label>
+				</field>
+				<field name="email" type="text">
+					<label>email</label>
+				</field>
+				<field name="description" type="longtext">
+					<label>description</label>
+				</field>
+				<field name="userType" type="list:select">
+					<label>type</label>
+				</field>
+				<field name="language" type="list:select">
+					<label>language</label>
+				</field>
+				<field name="timeZone" type="list:select">
+					<label>timezone</label>
+				</field>
+				<field name="password" type="password" binding="password">
+					<label>password</label>
+					<condition expression="${current.subject.userType.name() eq 'LOCAL_USER'}" />
+				</field>
+				<field name="passwordConfirmation" type="password" binding="passwordConfirmation">
+					<label>password.confirmation</label>
+					<condition expression="${current.subject.userType.name() eq 'LOCAL_USER'}" />
+				</field>
+				<field name="groups" type="list:checkbox" binding="groupIds">
+					<label>groups</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="subjects">
+			<option name="subject" id="${userid}" />
+		</bean>
+	</datasource>
+
+	<datasource id="new-user">
+		<config>
+			<title>subject.create</title>
+			<meta-data binding="subject" bindClass="org.appng.application.manager.form.SubjectForm">
+				<field name="name" type="text">
+					<label>name</label>
+				</field>
+				<field name="realname" type="text">
+					<label>realname</label>
+				</field>
+				<field name="email" type="text">
+					<label>email</label>
+				</field>
+				<field name="description" type="longtext">
+					<label>description</label>
+				</field>
+				<field name="userType" type="list:select">
+					<label>type</label>
+				</field>
+				<field name="language" type="list:select">
+					<label>language</label>
+				</field>
+				<field name="timeZone" type="list:select">
+					<label>timezone</label>
+				</field>
+				<field name="password" type="password" binding="password">
+					<label>password</label>
+				</field>
+				<field name="passwordConfirmation" type="password" binding="passwordConfirmation">
+					<label>password.confirmation</label>
+				</field>
+				<field name="groups" type="list:checkbox" binding="groupIds">
+					<label>groups</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="subjects">
+			<option name="action" id="create" />
+		</bean>
+	</datasource>
+</datasources>

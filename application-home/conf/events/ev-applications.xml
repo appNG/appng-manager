@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="applicationEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<action id="toggle-applicationstate">
+		<config>
+			<title>application.toggle</title>
+			<permissions>
+				<permission ref="site.application.togglestate" mode="set" />
+			</permissions>
+			<params>
+				<param name="siteid" />
+				<param name="appid" />
+				<param name="applicationstate" />
+			</params>
+		</config>
+		<condition expression="${applicationstate eq 'activateApplication' or applicationstate eq 'deactivateApplication'}" />
+		<bean id="applications">
+			<option name="application" id="${appid}" />
+			<option name="site" id="${siteid}" />
+			<option name="action" id="configure-application" form_action="${applicationstate}" />
+		</bean>
+	</action>
+
+	<action id="update">
+		<config>
+			<title>application.update</title>
+			<permissions>
+				<permission ref="application.edit" mode="set" />
+			</permissions>
+			<params>
+				<param name="appid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'update' and not empty appid}" />
+		<datasource id="application">
+			<params>
+				<param name="appid">${appid}</param>
+			</params>
+		</datasource>
+		<bean id="applications">
+			<option name="application" id="${appid}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+
+	<action id="delete">
+		<config>
+			<title>application.delete</title>
+			<permissions>
+				<permission ref="application.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="appid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'delete' and not empty appid}" />
+		<bean id="applications">
+			<option name="application" id="${appid}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+
+</event>

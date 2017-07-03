@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<page id="users">
+		<config>
+			<title>users</title>
+			<permissions>
+				<permission ref="page.subjects" mode="set" />
+			</permissions>
+			<url-schema>
+				<url-params>
+					<url-param name="entity" />
+					<url-param name="action" />
+					<url-param name="id" />
+				</url-params>
+				<get-params>
+					<get-param name="form_action" />
+					<get-param name="userid" />
+					<get-param name="groupid" />
+					<get-param name="f_type" />
+					<get-param name="f_name" />
+				</get-params>
+				<post-params>
+					<post-param name="form_action" />
+				</post-params>
+			</url-schema>
+		</config>
+		<structure>
+			<section>
+				<!-- create -->
+				<element passive="true">
+					<action eventId="subjectEvent" id="create" onSuccess="/users">
+						<params>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${action eq 'create' and entity eq 'user'}" />
+					</action>
+				</element>
+				<!-- update -->
+				<element passive="true">
+					<action eventId="subjectEvent" id="update" onSuccess="/users">
+						<params>
+							<param name="userid">${id}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${action eq 'update' and entity eq 'user'}" />
+					</action>
+				</element>
+				<!-- overview -->
+				<element>
+					<datasource id="users">
+						<params>
+							<param name="userid">${id}</param>
+						</params>
+					</datasource>
+				</element>
+			</section>
+
+			<section>
+				<!-- create -->
+				<element passive="true">
+					<action eventId="groupEvent" id="createGroup" onSuccess="/users#tab_groups">
+						<params>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${action eq 'create' and entity eq 'group'}" />
+					</action>
+				</element>
+				<!-- update -->
+				<element passive="true">
+					<action eventId="groupEvent" id="updateGroup" onSuccess="/users#tab_groups">
+						<params>
+							<param name="groupid">${id}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${action eq 'update' and entity eq 'group'}" />
+					</action>
+				</element>
+				<!-- overview -->
+				<element>
+					<datasource id="groups">
+						<params>
+							<param name="groupid">${id}</param>
+						</params>
+					</datasource>
+				</element>
+			</section>
+
+
+			<!-- hidden inline actions -->
+			<section hidden="true">
+				<element>
+					<action eventId="subjectEvent" id="delete" onSuccess="/users">
+						<params>
+							<param name="userid">${userid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+					</action>
+				</element>
+			</section>
+			<section hidden="true">
+				<element>
+					<action eventId="groupEvent" id="deleteGroup" onSuccess="/users#tab_groups">
+						<params>
+							<param name="groupid">${groupid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+					</action>
+				</element>
+			</section>
+		</structure>
+	</page>
+</pages>
+

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="subjectEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<action id="create">
+		<config>
+			<title>subject.create</title>
+			<permissions>
+				<permission ref="subject.create" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'create'}" />
+		<datasource id="new-user" />
+		<bean id="subjects">
+			<option name="action" id="create" />
+		</bean>
+	</action>
+
+	<action id="update">
+		<config>
+			<title>subject.edit</title>
+			<permissions>
+				<permission ref="subject.edit" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="userid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'update'}" />
+		<datasource id="user">
+			<params>
+				<param name="userid">${userid}</param>
+			</params>
+		</datasource>
+		<bean id="subjects">
+			<option name="subject" id="${userid}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+
+	<action id="delete">
+		<config>
+			<title>subject.delete</title>
+			<permissions>
+				<permission ref="subject.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="userid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'delete'}" />
+		<bean id="subjects">
+			<option name="subject" id="${userid}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+
+</event>
+	

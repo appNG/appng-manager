@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="applicationResourceEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<action id="update-resource">
+		<config>
+			<title>resource.edit</title>
+			<permissions>
+				<permission ref="resource.edit" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="appid" />
+				<param name="id" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'update-resource' and not empty appid and not empty id}" />
+		<datasource id="resource">
+			<params>
+				<param name="appid">${appid}</param>
+				<param name="id">${id}</param>
+			</params>
+		</datasource>
+		<bean id="resources">
+			<option name="application" id="${appid}" />
+			<option name="resource" id="${id}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+
+	<action id="delete-resource">
+		<config>
+			<title>resource.delete</title>
+			<permissions>
+				<permission ref="resource.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="id" />
+				<param name="appid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'delete-resource' and not empty appid and not empty id}" />
+		<bean id="resources">
+			<option name="resource" id="${id}" />
+			<option name="application" id="${appid}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+
+	<action id="upload">
+		<config>
+			<title>resource.upload</title>
+			<permissions>
+				<permission ref="resource.upload" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="appid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'upload' and not empty appid}" />
+		<datasource id="upload" />
+		<bean id="upload">
+			<option name="application" id="${appid}" />
+		</bean>
+	</action>
+
+</event>

@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="platformProperties">
+		<config>
+			<title>platform.properties</title>
+			<permissions>
+				<permission ref="platform.properties" mode="set" />
+			</permissions>
+			<params>
+				<param name="propId" />
+			</params>
+			<meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
+				<field name="shortName" type="text" displayLength="50">
+					<sort />
+					<label>name</label>
+				</field>
+				<field name="string" type="text" displayLength="40">
+					<label>activeValue</label>
+				</field>
+				<field name="description" type="text" displayLength="30">
+					<label>description</label>
+				</field>
+				<field name="changedValue" type="image">
+					<label></label>
+					<icon condition="${!current.changedValue}">led_orange</icon>
+					<icon condition="${current.changedValue}">led_green</icon>
+				</field>
+				<field type="linkpanel" name="actions">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="other" location="both">
+				<link mode="intern" target="/platform/property/create#tab_platformProperties">
+					<label>property.create</label>
+					<icon>new</icon>
+					<permissions>
+						<permission ref="platform.property.create" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/platform&#63;form_action=reloadPlatform">
+					<label>platform.reload</label>
+					<icon>reload</icon>
+					<confirmation id="platform.reload.confirm" />
+					<permissions>
+						<permission ref="platform.reload" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/platform/property/update/${current.name}#tab_platformProperties" default="true">
+					<label>edit</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="platform.property.edit" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/platform&#63;form_action=delete-platform-property&#38;propertyid=${current.name}#tab_platformProperties">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="property.delete.confirm" params="#{shortName}"/>
+					<permissions>
+						<permission ref="platform.property.delete" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="properties">
+		</bean>
+	</datasource>
+
+	<datasource id="site-properties">
+		<config>
+			<title>site.properties</title>
+			<permissions>
+				<permission ref="site.properties" mode="set" />
+			</permissions>
+			<params>
+				<param name="siteid" />
+				<param name="propId" />
+			</params>
+			<meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
+				<field name="shortName" type="text" displayLength="50">
+					<sort />
+					<label>name</label>
+				</field>
+				<field name="string" type="text" displayLength="40">
+					<label>activeValue</label>
+				</field>
+				<field name="description" type="text" displayLength="30">
+					<label>description</label>
+				</field>
+				<field name="changedValue" type="image">
+					<label></label>
+					<icon condition="${!current.changedValue}">led_orange</icon>
+					<icon condition="${current.changedValue}">led_green</icon>
+				</field>
+				<field type="linkpanel" name="actions">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="other" location="both">
+				<link mode="intern" target="/sites/update/${siteid}/site-property/create#tab_site-properties">
+					<label>property.create</label>
+					<icon>new</icon>
+					<permissions>
+						<permission ref="site.property.create" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/sites/update/${siteid}/site-property/update/${current.name}#tab_site-properties" default="true">
+					<label>edit</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="site.property.edit" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern"
+					target="/sites/update/${siteid}&#63;form_action=delete-site-property&#38;propertyid=${current.name}#tab_site-properties">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="property.delete.confirm" params="#{shortName}" />
+					<permissions>
+						<permission ref="site.property.delete" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="properties">
+			<option name="properties" siteId="${siteid}" />
+		</bean>
+	</datasource>
+
+	<datasource id="application-properties">
+		<config>
+			<title>application.properties</title>
+			<permissions>
+				<permission ref="application.properties" mode="set" />
+			</permissions>
+			<params>
+				<param name="appid" />
+				<param name="propId" />
+			</params>
+			<meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
+				<field name="shortName" type="text" displayLength="50">
+					<sort />
+					<label>name</label>
+				</field>
+				<field name="string" type="text" displayLength="40">
+					<label>activeValue</label>
+				</field>
+				<field name="description" type="text" displayLength="30">
+					<label>description</label>
+				</field>
+				<field name="changedValue" type="image">
+					<label></label>
+					<icon condition="${!current.changedValue}">led_orange</icon>
+					<icon condition="${current.changedValue}">led_green</icon>
+				</field>
+				<field type="linkpanel" name="actions">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="other" location="both">
+				<link mode="intern" target="/applications/update/${appid}/property/create#tab_application-properties">
+					<label>property.create</label>
+					<icon>new</icon>
+					<permissions>
+						<permission ref="application.property.create" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/applications/update/${appid}/property/update/${current.name}#tab_application-properties" default="true">
+					<label>edit</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="application.property.edit" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern"
+					target="/applications/update/${appid}&#63;form_action=delete-application-property&#38;propertyid=${current.name}#tab_application-properties">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="property.delete.confirm" params="#{shortName}" />
+					<permissions>
+						<permission ref="application.property.delete" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="properties">
+			<option name="properties" applicationId="${appid}" />
+		</bean>
+	</datasource>
+
+	<datasource id="site-application-properties">
+		<config>
+			<title>application.properties</title>
+			<permissions>
+				<permission ref="site.application.properties" mode="set" />
+			</permissions>
+			<params>
+				<param name="appid" />
+				<param name="siteid" />
+				<param name="propId" />
+			</params>
+			<meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
+				<field name="shortName" type="text" displayLength="50">
+					<sort />
+					<label>name</label>
+				</field>
+				<field name="string" type="text" displayLength="40">
+					<label>activeValue</label>
+				</field>
+				<field name="description" type="text" displayLength="30">
+					<label>description</label>
+				</field>
+				<field name="changedValue" type="image">
+					<label></label>
+					<icon condition="${!current.changedValue}">led_orange</icon>
+					<icon condition="${current.changedValue}">led_green</icon>
+				</field>
+				<field type="linkpanel" name="actions">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="other" location="both">
+				<link mode="intern" target="/sites/update/${siteid}/app-property/create/${appid}#tab_select-site-application">
+					<label>property.create</label>
+					<icon>new</icon>
+					<permissions>
+						<permission ref="site.application.property.create" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/sites/update/${siteid}/app-property/update/${appid}/${current.name}#tab_select-site-application" default="true">
+					<label>edit</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="site.application.property.edit" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern"
+					target="/sites/update/${siteid}/app-property&#63;form_action=delete-site-application-property&#38;propertyid=${current.name}#tab_select-site-application">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="property.delete.confirm" params="#{shortName}"/>
+					<permissions>
+						<permission ref="site.application.property.delete" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="properties">
+			<option name="properties" siteId="${siteid}" applicationId="${appid}" />
+		</bean>
+	</datasource>
+
+	<datasource id="property">
+		<config>
+			<title>property</title>
+			<params>
+				<param name="id" />
+			</params>
+			<meta-data binding="property" bindClass="org.appng.application.manager.form.PropertyForm">
+				<field name="shortName" type="text" readonly="true">
+					<label>name</label>
+				</field>
+				<field name="string" type="text" readonly="true">
+					<label>activeValue</label>
+				</field>
+				<field name="defaultString" type="text" readonly="true">
+					<label>defaultvalue</label>
+				</field>
+				<field name="actualString" type="text">
+					<label>value</label>
+				</field>
+				<field name="clob" type="longtext" format="auto">
+					<label>clobvalue</label>
+				</field>
+				<field name="description" type="longtext" readonly="true">
+					<label>description</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="properties">
+			<option name="property" id="${id}" />
+		</bean>
+	</datasource>
+
+	<datasource id="new-property">
+		<config>
+			<title>property.create</title>
+			<meta-data binding="property" bindClass="org.appng.application.manager.form.PropertyForm">
+				<field name="name" type="text">
+					<label>name</label>
+				</field>
+				<field name="defaultString" type="text">
+					<label>value</label>
+				</field>
+				<field name="clob" type="longtext">
+					<label>clobvalue</label>
+				</field>
+				<field name="description" type="longtext">
+					<label>description</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="properties">
+			<option name="action" id="create" />
+		</bean>
+	</datasource>
+
+</datasources>

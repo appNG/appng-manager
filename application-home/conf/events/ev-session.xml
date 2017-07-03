@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="sessionEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<action id="expire">
+		<config>
+			<title>session.expire</title>
+			<permissions>
+				<permission ref="session.expire" mode="set" />
+			</permissions>
+			<params>
+				<param name="action" />
+				<param name="sessid" />
+			</params>
+		</config>
+		<condition expression="${action eq 'expire' and not empty sessid}" />
+		<bean id="sessions">
+			<option name="session" id="${sessid}" />
+		</bean>
+	</action>
+
+	<action id="expireAll">
+		<config>
+			<title>session.expireAll</title>
+			<permissions>
+				<permission ref="session.expire" mode="set" />
+			</permissions>
+			<params>
+				<param name="action" />
+				<param name="siteid" />
+			</params>
+		</config>
+		<condition expression="${action eq 'expireAll'}" />
+		<bean id="sessions">
+			<option name="site" id="${siteid}" />
+		</bean>
+	</action>
+</event>
+	

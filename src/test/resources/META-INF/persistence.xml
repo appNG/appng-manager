@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd" version="2.1">
+	<persistence-unit name="mysql-testdb" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source />
+		<class>org.appng.core.domain.DatabaseConnection</class>
+		<class>org.appng.core.domain.SubjectImpl</class>
+		<class>org.appng.core.domain.GroupImpl</class>
+		<class>org.appng.core.domain.SiteImpl</class>
+		<class>org.appng.core.domain.SiteApplication</class>
+		<class>org.appng.core.domain.ApplicationImpl</class>
+		<class>org.appng.core.domain.ResourceImpl</class>
+		<class>org.appng.core.domain.RepositoryImpl</class>
+		<class>org.appng.core.domain.RoleImpl</class>
+		<class>org.appng.core.domain.PermissionImpl</class>
+		<class>org.appng.core.domain.PropertyImpl</class>
+		<properties>
+			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/temp" />
+			<property name="hibernate.dialect" value="org.appng.persistence.dialect.MySqlTextDialect" />
+			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+			<property name="hibernate.connection.username" value="root" />
+			<property name="hibernate.connection.password" value="mysql" />
+			<property name="hibernate.hbm2ddl.auto" value="create" />
+			<property name="hibernate.show_sql" value="true" />
+		</properties>
+	</persistence-unit>
+
+	<persistence-unit name="hsql-testdb" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>org.appng.core.domain.DatabaseConnection</class>
+		<class>org.appng.core.domain.SubjectImpl</class>
+		<class>org.appng.core.domain.GroupImpl</class>
+		<class>org.appng.core.domain.SiteImpl</class>
+		<class>org.appng.core.domain.SiteApplication</class>
+		<class>org.appng.core.domain.ApplicationImpl</class>
+		<class>org.appng.core.domain.ResourceImpl</class>
+		<class>org.appng.core.domain.RepositoryImpl</class>
+		<class>org.appng.core.domain.RoleImpl</class>
+		<class>org.appng.core.domain.PermissionImpl</class>
+		<class>org.appng.core.domain.PropertyImpl</class>
+		<properties>
+			<property name="hibernate.connection.url" value="jdbc:hsqldb:hsql://localhost:9001/hsql-testdb" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />
+			<property name="hibernate.connection.driver_class" value="org.hsqldb.jdbc.JDBCDriver" />
+			<property name="hibernate.connection.username" value="sa" />
+			<property name="hibernate.connection.password" value="" />
+			<property name="hibernate.hbm2ddl.auto" value="" />
+			<property name="hibernate.show_sql" value="" />
+		</properties>
+	</persistence-unit>
+</persistence>

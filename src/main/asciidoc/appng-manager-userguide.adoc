@@ -1,0 +1,15 @@
+= appNG Manager User Manual
+Matthias Müller <matthias.mueller@appng.org>
+Build Version  {project-version} created {localdate}
+:title-logo-image: appng.png
+:toc:
+
+== General
+
+
+include::parts/sites.adoc[]
+include::parts/applications.adoc[]
+include::parts/users-and-groups.adoc[]
+include::parts/platform.adoc[]
+include::parts/repositories.adoc[]
+include::parts/system.adoc[]

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="groupEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<action id="createGroup">
+		<config>
+			<title>group.create</title>
+			<permissions>
+				<permission ref="group.create" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'createGroup'}" />
+		<datasource id="new-group" />
+		<bean id="groups">
+			<option name="action" id="create" />
+		</bean>
+	</action>
+
+	<action id="updateGroup">
+		<config>
+			<title>group.edit</title>
+			<permissions>
+				<permission ref="group.edit" mode="set" />
+			</permissions>
+			<params>
+				<param name="groupid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'updateGroup'}" />
+		<datasource id="group">
+			<params>
+				<param name="groupid">${groupid}</param>
+			</params>
+		</datasource>
+		<bean id="groups">
+			<option name="group" id="${groupid}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+
+	<action id="deleteGroup">
+		<config>
+			<title>group.delete</title>
+			<permissions>
+				<permission ref="group.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="groupid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'deleteGroup'}" />
+		<bean id="groups">
+			<option name="group" id="${groupid}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+
+</event>
+	

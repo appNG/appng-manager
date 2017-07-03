@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applicationRootConfig xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<name><![CDATA[administration]]></name>
+	<config>
+		<permissions>
+			<permission mode="set" ref="debug" />
+		</permissions>
+		<session>
+			<session-params>
+				<session-param name="selectedappid" />
+				<session-param name="f_type" />
+				<session-param name="f_name" />
+				<session-param name="fSess" />
+				<session-param name="fAgnt" />
+				<session-param name="fCrAf" />
+				<session-param name="fCrBf" />
+				<session-param name="fDmn" />
+				<session-param name="fUsr" />
+				<session-param name="fEtr" />
+				<session-param name="fCtpe" />
+			</session-params>
+		</session>
+	</config>
+	<navigation location="top" id="topnav">
+		<link mode="intern" target="/sites">
+			<label>sites</label>
+			<permissions>
+				<permission ref="page.sites" mode="set" />
+			</permissions>
+		</link>
+		<link mode="intern" target="/applications">
+			<label>applications</label>
+			<permissions>
+				<permission ref="page.applications" mode="set" />
+			</permissions>
+		</link>
+		<link mode="intern" target="/users">
+			<label>subjects</label>
+			<permissions>
+				<permission ref="page.subjects" mode="set" />
+			</permissions>
+		</link>
+		<link mode="intern" target="/repositories">
+			<label>repositories</label>
+			<permissions>
+				<permission ref="page.repositories" mode="set" />
+			</permissions>
+		</link>
+		<link mode="intern" target="/platform">
+			<label>platform</label>
+			<permissions>
+				<permission ref="page.platform" mode="set" />
+			</permissions>
+		</link>
+		<link mode="intern" target="/system">
+			<label>system</label>
+			<permissions>
+				<permission ref="page.system" mode="set" />
+			</permissions>
+		</link>
+	</navigation>
+</applicationRootConfig>

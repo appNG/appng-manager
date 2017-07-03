@@ -1,0 +1,10 @@
+== Applications
+
+=== Editing an application
+
+=== Deleting an application
+
+
+== Templates
+
+=== Deleting a template

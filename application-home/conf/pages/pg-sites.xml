@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<page id="sites" type="index">
+		<config>
+			<title>sites</title>
+			<permissions>
+				<permission ref="page.sites" mode="set" />
+			</permissions>
+			<url-schema>
+				<url-params>
+					<url-param name="action" />
+					<url-param name="siteid" />
+					<url-param name="subentity1" />
+					<url-param name="subaction1" />
+					<url-param name="subentityid1" />
+					<url-param name="subentityid2" />
+				</url-params>
+				<get-params>
+					<get-param name="form_action" />
+					<get-param name="selectedappid" />
+					<get-param name="appid" />
+					<get-param name="siteid" />
+					<get-param name="sitename" />
+					<get-param name="conId" />
+					<get-param name="propertyid" />
+					<get-param name="expandSql" />
+					<get-param name="action" />
+					<get-param name="sessid" />
+					<get-param name="cacheElement" />
+					<!-- filter params -->
+					<get-param name="fSess" />
+					<get-param name="fAgnt" />
+					<get-param name="fCrAf" />
+					<get-param name="fCrBf" />
+					<get-param name="fDmn" />
+					<get-param name="fUsr" />
+					<get-param name="fEtr" />
+					<get-param name="fCtpe" />
+				</get-params>
+				<post-params>
+					<post-param name="form_action" />
+				</post-params>
+			</url-schema>
+		</config>
+		<structure>
+			<!-- site -->
+			<!-- overview -->
+			<section>
+				<element>
+					<datasource id="sites">
+						<condition expression="${empty action}" />
+					</datasource>
+				</element>
+			</section>
+			<!-- create -->
+			<section>
+				<element>
+					<action eventId="siteEvent" id="create" onSuccess="/sites">
+						<params>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${action eq 'create'}" />
+					</action>
+				</element>
+			</section>
+			<!-- update -->
+			<section>
+				<element>
+					<action eventId="siteEvent" id="update" onSuccess="/sites">
+						<params>
+							<param name="siteid">${siteid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition expression="${action eq 'update'}" />
+					</action>
+				</element>
+			</section>
+
+			<!-- site properites -->
+			<section>
+				<!-- create -->
+				<element passive="true">
+					<action id="create-site-property" onSuccess="/sites/update/${siteid}#tab_site-properties" eventId="propertyEvent">
+						<params>
+							<param name="siteid">${siteid}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty siteid and subentity1 eq 'site-property' and subaction1 eq 'create'}" />
+					</action>
+				</element>
+				<!-- update -->
+				<element passive="true">
+					<action id="update-site-property" onSuccess="/sites/update/${siteid}#tab_site-properties" eventId="propertyEvent">
+						<params>
+							<param name="siteid">${siteid}</param>
+							<param name="propertyid">${subentityid1}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty siteid and subentity1 eq 'site-property' and subaction1 eq 'update' and not empty subentityid1}" />
+					</action>
+				</element>
+				<!-- overview -->
+				<element>
+					<datasource id="site-properties">
+						<params>
+							<param name="siteid">${siteid}</param>
+							<param name="propId">${subentityid1}</param>
+						</params>
+						<condition expression="${action eq 'update' and not empty siteid}" />
+					</datasource>
+				</element>
+			</section>
+
+			<!-- site application properites -->
+			<!-- overview -->
+			<section>
+				<element>
+					<datasource id="select-site-application">
+						<params>
+							<param name="appid">${selectedappid}</param>
+							<param name="siteid">${siteid}</param>
+							<param name="mode">select</param>
+							<param name="defaultlink">/sites/update/${siteid}</param>
+							<param name="defaultlinkanchor">#tab_select-site-application</param>
+						</params>
+						<condition expression="${action eq 'update'}" />
+					</datasource>
+				</element>
+				<element>
+					<datasource id="site-application-properties">
+						<params>
+							<param name="appid">${selectedappid}</param>
+							<param name="siteid">${siteid}</param>
+							<param name="propId">${subentityid2}</param>
+						</params>
+						<condition expression="${action eq 'update' and not empty selectedappid}" />
+					</datasource>
+				</element>
+				<!-- create -->
+				<element passive="true">
+					<action id="create-site-application-property" onSuccess="/sites/update/${siteid}?selectedappid=${subentityid1}#tab_select-site-application"
+						eventId="propertyEvent">
+						<params>
+							<param name="siteid">${siteid}</param>
+							<param name="appid">${subentityid1}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty siteid and subentity1 eq 'app-property' and subaction1 eq 'create' and not empty subentityid1}" />
+					</action>
+				</element>
+				<!-- update -->
+				<element passive="true">
+					<action id="update-site-application-property" onSuccess="/sites/update/${siteid}?selectedappid=${subentityid1}#tab_select-site-application"
+						eventId="propertyEvent">
+						<params>
+							<param name="appid">${subentityid1}</param>
+							<param name="propertyid">${subentityid2}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty siteid and subentity1 eq 'app-property' and subaction1 eq 'update' and not empty subentityid1 and not empty subentityid2}" />
+					</action>
+				</element>
+			</section>
+
+			<!-- site applications -->
+			<!-- overview -->
+			<section>
+				<element passive="true">
+					<action id="grantSite" eventId="siteEvent">
+						<condition
+							expression="${action eq 'update' and not empty siteid and subentity1 eq 'application' and subaction1 eq 'grant' and not empty subentityid1}" />
+						<params>
+							<param name="siteId">${siteid}</param>
+							<param name="applicationId">${subentityid1}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<datasource id="site-applications">
+						<params>
+							<param name="siteid">${siteid}</param>
+						</params>
+						<condition expression="${action eq 'update' and not empty siteid}" />
+					</datasource>
+				</element>
+				<element>
+					<datasource id="beans">
+						<condition
+							expression="${action eq 'update' and not empty siteid and not empty appid and not empty siteid}" />
+						<params>
+							<param name="application">${appid}</param>
+							<param name="site">${sitename}</param>
+						</params>
+					</datasource>
+				</element>
+			</section>
+
+			<!-- Database Connections -->
+			<section>
+				<element passive="true">
+					<action eventId="databaseConnectionEvent" id="updateConnection" onSuccess="/sites/update/${siteid}#tab_databaseConnections">
+						<params>
+							<param name="id">${subentityid1}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty siteid and subentity1 eq 'database' and subaction1 eq 'update' and not empty subentityid1}" />
+						<permissions>
+							<permission ref="site.database.edit" mode="set" />
+						</permissions>
+					</action>
+				</element>
+				<element passive="true" folded="${expandSql ne 'true'}">
+					<action eventId="databaseConnectionEvent" id="executeSql"
+						onSuccess="/sites/update/${siteid}/database/update/${subentityid1}&#63;expandSql=true#tab_databaseConnections">
+						<params>
+							<param name="id">${subentityid1}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty siteid and subentity1 eq 'database' and subaction1 eq 'update' and not empty subentityid1}" />
+						<permissions>
+							<permission ref="site.database.edit" mode="set" />
+						</permissions>
+					</action>
+				</element>
+				<element>
+					<datasource id="databaseConnections">
+						<params>
+							<param name="siteid">${siteid}</param>
+							<param name="editLink">/sites/update/${siteid}/database/update/</param>
+							<param name="testLink">/sites/update/${siteid}&#63;form_action=testConnection&#38;conId=</param>
+							<param name="resetLink">/sites/update/${siteid}&#63;form_action=resetConnection&#38;conId=</param>
+							<param name="linkTab">#tab_databaseConnections</param>
+							<param name="editTab">#tab_databaseConnections</param>
+						</params>
+						<condition expression="${action eq 'update'}" />
+						<permissions>
+							<permission ref="site.databases" mode="set" />
+						</permissions>
+					</datasource>
+				</element>
+			</section>
+			<section>
+				<title id="status" />
+				<element folded="false">
+					<datasource id="cacheStatistics">
+						<params>
+							<param name="siteid">${siteid}</param>
+							<param name="clearLink">/sites/update/${siteid}&#63;action=clearCacheStatistics</param>
+						</params>
+						<condition expression="${not empty siteid}" />
+					</datasource>
+				</element>
+				<element folded="false">
+					<datasource id="cacheElements">
+						<params>
+							<param name="siteid">${siteid}</param>
+							<param name="deleteLink">/sites/update/${siteid}&#63;action=expireCacheElement&#38;cacheElement=</param>
+							<param name="clearLink">/sites/update/${siteid}&#63;action=clearCache</param>
+						</params>
+						<condition expression="${not empty siteid}" />
+					</datasource>
+				</element>
+				<element folded="false">
+					<datasource id="sessions">
+						<params>
+							<param name="currentSiteOnly">true</param>
+							<param name="siteid">${siteid}</param>
+							<param name="deleteLink">/sites/update/${siteid}&#63;action=expire&#38;sessid=</param>
+						</params>
+						<condition expression="${not empty siteid}" />
+					</datasource>
+				</element>
+			</section>
+			<!-- hidden inline actions -->
+			<section hidden="true">
+				<element>
+					<action eventId="databaseConnectionEvent" id="delete" onSuccess="/sites/update/${siteid}#tab_databaseConnections">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="id">${conId}</param>
+						</params>
+						<permissions>
+							<permission ref="site.databases" mode="set" />
+						</permissions>
+					</action>
+				</element>
+				<element>
+					<action eventId="databaseConnectionEvent" id="testConnection" onSuccess="/sites/update/${siteid}#tab_databaseConnections">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="id">${conId}</param>
+						</params>
+						<permissions>
+							<permission ref="site.database.test" mode="set" />
+						</permissions>
+					</action>
+				</element>
+				<element>
+					<action eventId="databaseConnectionEvent" id="resetConnection" onSuccess="/sites/update/${siteid}#tab_databaseConnections">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="id">${conId}</param>
+						</params>
+						<permissions>
+							<permission ref="site.database.reset" mode="set" />
+						</permissions>
+					</action>
+				</element>
+				<element>
+					<action eventId="siteEvent" id="delete" onSuccess="/sites">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="siteid">${siteid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="reload" eventId="siteEvent" onSuccess="/sites">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="siteid">${siteid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="toggle-applicationstate" onSuccess="/sites/update/${siteid}" eventId="applicationEvent">
+						<params>
+							<param name="siteid">${siteid}</param>
+							<param name="appid">${appid}</param>
+							<param name="applicationstate">${form_action}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action eventId="propertyEvent" id="delete-site-property" onSuccess="/sites/update/${siteid}#tab_site-properties">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="propertyid">${propertyid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action eventId="propertyEvent" id="delete-site-application-property"
+						onSuccess="/sites/update/${siteid}?selectedappid=${selectedappid}#tab_select-site-application">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="propertyid">${propertyid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="expire" eventId="sessionEvent" onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
+						<params>
+							<param name="action">${action}</param>
+							<param name="sessid">${sessid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="expireAll" eventId="sessionEvent" onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
+						<params>
+							<param name="action">${action}</param>
+							<param name="siteid">${siteid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="clearCache" eventId="cacheEvent" onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
+						<params>
+							<param name="action">${action}</param>
+							<param name="siteid">${siteid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="expireCacheElement" eventId="cacheEvent" onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
+						<params>
+							<param name="action">${action}</param>
+							<param name="cacheElement">${cacheElement}</param>
+							<param name="siteid">${siteid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="clearCacheStatistics" eventId="cacheEvent" onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
+						<params>
+							<param name="action">${action}</param>
+							<param name="siteid">${siteid}</param>
+						</params>
+					</action>
+				</element>
+			</section>
+		</structure>
+	</page>
+
+</pages>

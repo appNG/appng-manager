@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="sites">
+		<config>
+			<title>sites</title>
+			<permissions>
+				<permission ref="site.list" mode="set" />
+			</permissions>
+			<params />
+			<meta-data bindClass="org.appng.api.model.Site">
+				<field name="id" type="int" hidden="true">
+					<label>id</label>
+				</field>
+				<field name="name" type="text">
+					<sort />
+					<label>name</label>
+				</field>
+				<field name="host" type="text">
+					<sort />
+					<label>host</label>
+				</field>
+				<field name="domain" type="text">
+					<sort />
+					<label>domain</label>
+				</field>
+				<field name="description" type="text">
+					<label>description</label>
+				</field>
+				<field name="active" type="image">
+					<sort />
+					<label>active</label>
+					<icon condition="${current.active}">led_green</icon>
+					<icon condition="${!current.active}">led_red</icon>
+				</field>
+				<field name="running" type="image">
+					<label>running</label>
+					<icon condition="${current.running}">led_green</icon>
+					<icon condition="${!current.running}">led_red</icon>
+				</field>
+				<field name="startupTime" type="date">
+					<sort />
+					<label>startupTime</label>
+				</field>
+				<field name="actions" type="linkpanel">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="other" location="both">
+				<link mode="intern" target="/sites/create">
+					<label>site.create</label>
+					<icon>new</icon>
+					<permissions>
+						<permission ref="site.create" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/sites/update/#{id}" default="true">
+					<label>edit</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="site.edit" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/sites&#63;form_action=delete&#38;siteid=#{id}">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="site.delete.confirm" params="#{name}" />
+					<permissions>
+						<permission ref="site.delete" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/sites&#63;form_action=reload&#38;siteid=#{id}">
+					<label>reload</label>
+					<icon>reload</icon>
+					<permissions>
+						<permission ref="site.reload" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="sites">
+		</bean>
+	</datasource>
+
+	<datasource id="site">
+		<config>
+			<title>site</title>
+			<params>
+				<param name="siteid" />
+			</params>
+			<meta-data binding="site" bindClass="org.appng.application.manager.form.SiteForm">
+				<field name="id" type="int" readonly="true">
+					<label>id</label>
+				</field>
+				<field name="name" type="text" readonly="true">
+					<label>name</label>
+				</field>
+				<field name="host" type="text">
+					<label>host</label>
+				</field>
+				<field name="domain" type="text">
+					<label>domain</label>
+				</field>
+				<field name="description" type="longtext">
+					<label>description</label>
+				</field>
+				<field name="active" type="checkbox">
+					<label>active</label>
+				</field>
+				<field name="template" type="list:radio" binding="template">
+					<label>template</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="sites">
+			<option name="site" id="${siteid}" />
+		</bean>
+	</datasource>
+
+	<!-- new site -->
+	<datasource id="new-site">
+		<config>
+			<title>site.create</title>
+			<meta-data binding="site" bindClass="org.appng.application.manager.form.SiteForm">
+				<field name="name" type="text">
+					<label>name</label>
+				</field>
+				<field name="host" type="text">
+					<label>host</label>
+				</field>
+				<field name="domain" type="text">
+					<label>domain</label>
+				</field>
+				<field name="description" type="longtext">
+					<label>description</label>
+				</field>
+				<field name="active" type="checkbox">
+					<label>active</label>
+				</field>
+				<field name="createRepository" type="checkbox">
+					<label>site.createRepository</label>
+				</field>
+				<field name="template" type="list:radio" binding="template">
+					<label>template</label>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="sites">
+			<option name="action" id="create" />
+		</bean>
+	</datasource>
+
+</datasources>

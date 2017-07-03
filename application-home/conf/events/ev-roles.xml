@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="roleEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<action id="create-role">
+		<config>
+			<title>role.create</title>
+			<permissions>
+				<permission ref="role.create" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="appid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'create-role' and not empty appid}" />
+		<datasource id="new-role">
+			<params>
+				<param name="appid">${appid}</param>
+			</params>
+		</datasource>
+		<bean id="roles">
+			<option name="action" id="create" />
+			<option name="application" id="${appid}" />
+		</bean>
+	</action>
+
+	<action id="update-role">
+		<config>
+			<title>role.edit</title>
+			<permissions>
+				<permission ref="role.edit" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="appid" />
+				<param name="roleid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'update-role' and not empty appid and not empty roleid}" />
+		<datasource id="role">
+			<params>
+				<param name="id">${roleid}</param>
+			</params>
+		</datasource>
+		<bean id="roles">
+			<option name="application" id="${appid}" />
+			<option name="id" id="${roleid}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+
+	<action id="delete-role">
+		<config>
+			<title>delete.role</title>
+			<permissions>
+				<permission ref="role.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="appid" />
+				<param name="roleid" />
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'delete-role' and not empty appid and not empty roleid}" />
+		<bean id="roles">
+			<option name="id" id="${roleid}" />
+			<option name="application" id="${appid}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+</event>
