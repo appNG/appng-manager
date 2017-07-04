@@ -122,6 +122,9 @@
 						<phase>package</phase>
 					</execution>
 				</executions>
+				<configuration>
+					<sourcepath>src/main/java:target/generated-sources/constants</sourcepath>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
