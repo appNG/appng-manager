@@ -123,6 +123,7 @@
 					</execution>
 				</executions>
 				<configuration>
+					<additionalparam>-Xdoclint:all,-Xdoclint:-html</additionalparam>
 					<sourcepath>src/main/java:target/generated-sources/constants</sourcepath>
 				</configuration>
 			</plugin>
