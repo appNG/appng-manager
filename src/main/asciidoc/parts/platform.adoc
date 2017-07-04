@@ -1,10 +1,41 @@
 == Platform
+The page `Platform` contains all elements regarding the installed appNG platform.
 
 === Configuring the platform
+The first section of the page `Platform` lists the platform properties. A platform property can be created, deleted and edited.
+
+Platform properties are created on first initial startup of the platform. It's default values are defined within the appNG platform. The default value may be overwritten after platform update.
+
+As long as the value or the clob value of a property isn't defined, appNG uses the default value.
+
+==== Edit platform property
+Each property in the list of platform properties offers an action to edit the property. By clicking this action a new form opens where the value or the clob value of a property can be changed.
+
+If the value is defined, appNG will use this new value after platform reload. Empty the value and clob value field again if appNG should use the default again.
+
+=== Delete platform property
+Each property in the list can be deleted. For standard properties this makes no sense because the property will be recreated after platform reload. Other, manually created properties can be deleted.
+
+=== Create platform property
+On top and bottom of the table is a action to create a platform property. The new property has to have an unique name. The given value will be used as default value. Creating a property maybe makes sense to do some hidden configuration for appNG.
 
 === Reloading the platform
+On top and bottom of the table is a action to reload the platform. This action reinitializes the platform configuration and reloads all sites without restarting the whole tomcat instance.
 
 === Managing the platform's database connection
+AppNG stores all it's configuration data like properties, sites, site properties, site application properties, applications properties and maybe entire application resources in a database. The database is a fundamental component of an appNG installation.
+
+The platform page has a section to manage the database connection. On installation there are the three supported types of database connections pre-configured. Only one of them is active.
+
+Supported are:
+
+* MYSQL
+* MSSQL
+* HSQL
+
+This section allows to modify the existing database connections. It is not supported to delete or create database connections. To edit a database connection click on the table row or the edit action within a row. A new form opens where the database connection attributes can be maintained:
+  
+
 ==== Editing a database connection
 
 === JAR-Files

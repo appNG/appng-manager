@@ -1,23 +1,174 @@
 == Sites
+An appNG site is a representation of a domain. An appNG application can have several sites. Each site can have a different template, different configuration of some appNG platform features and a different set of appNG applications. Also appNG applications can be configured differently per site.
+
+
+=== Site Overview
+The main page of the manager application lists all available sites and per site some of the site attributes. It shows if a sit is active and running and the time when the site was started. It also provides a list of actions per site.
 
 === Creating a site
+To create an appNG site, enter the main page in the appNG Manager application. On local host and on a fresh installation this page is available at: http://localhost:8080/manager/manager/appng-manager/sites
+
+This page lists all available sites on this appNG installation. On a fresh installation there is only the initially configured site _manager_. Above and beyond this table is a link _create site_. Click this link to create a new site.
+
+A new form opens where the attributes of the site has to be configured:
+
+
+[width="100%",options="header,footer"]
+|====================
+| Attribute Name | Description
+| Name |  The name of the site. Is used in the appNG url scheme
+| Host |  In simple setups, this value is identical with the domain. In more complex use scenarios it could be necessary that a site is available from a different domain. In such a case, the webserver of your choice has to map domains to host-values and set the request attribute `SERVER_LOCAL_NAME` to the host value of the target site.
+| Domain |  The domain associated with the site
+| Description |  Some additional Information about the site.
+| active |  If a site is active it gets started on appNG start-up or on site reload.
+| Create folder for JSP-contents | Instruct appNG to create a folder in the local file system where jsp files can be stored and processed.
+| Template |  A site must have a template. On a fresh installation, the appNG default template is installed. Other templates can be installed on the platform. The template of choice can be configured per site.
+|====================
+
+
+After the site has been created, a new item is visible in the list of available sites. The site is listed as active if it was created as active site. The site is not running.
+
+To start a new site, the site has to be configured as an active site and the site has to be reloaded. If the site is configured as active, it will be started automatically on next platform start-up.
 
 === Editing a site
+On the main page of the manager application is the list of available sites. Each site has a list of actions. One of the actions is `edit`. Click this link to open the edit page of one site.
+
+This page is partitioned in sections. The first section is similar to the form to create a site. Despite the site name, all attributes can be changed in that form. Changes will be taken into account after site reload.
 
 === Reloading a site
+On the main page of the manager application is the list of available site. Each site has a list of actions. One of the actions is `reload`. Click this link to reload a site.
+
+A site reload is necessary if a site attribute has been changed or if an application configuration in that site has been changed.
 
 === Deleting a site
+On the main page of the manager application is the list of available site. Each site has a list of actions. One of the actions is `delete`. Click this link to delete a site. This action has to be confirmed to avoid deletion by mistake.
 
-=== Configuring a site
+When a site gets deleted, all information such as site attributes, site properties, application properties and application databases get removed. It is not possible to restore any of the deleted data.
+
+
+=== Configuring site properties
+Despite the site attributes, there are a lot of site properties to apply a site specific configuration of some appNG platform features. To change site properties, go to the edit page of a site. The page is partitioned the section to maintain the site properties has the name `Site properties`.
+
+As long as a property value has not been changed for a site, it has the default value defined in the platform. The `value` field in the edit form is empty. If a value has been changed, but it shall become the default again. The value must be set empty again.
+
+A site property has the following attributes:
+
+
+[width="100%",options="header,footer"]
+|====================
+| Attribute Name  | Description
+| Name | The name of the property. Only the short version of the name is shown inside appNG the complete name also contains the property type (platform.site) and the site name. The property `foo` in site `bar` has the full name `platform.site.bar.foo`
+| Active Value | As described in <<Reloading a site>>, a parameter change will be taken into account after site reload. This attribute shows the value of the property as it was when the site was loaded.
+| Default Value | The default value defined by the platform. Can change implicitly on platform update.
+| CLOB Value | A _normal_ value has a limited length of 255 characters. If a bigger value is needed, it must be defined in the CLOB Value field of a property.
+| Description | A short description of the property
+| Changed Value | Is shown in the list of properties. Indicates if a value has been changed for that site or if it still uses the platform default.
+|====================
 
 === Assigning applications to a site
+To assign an application to a site, got to the edit page of a site. On section `Applications` is a table with available applications.
+To assign a new application to a site it has to be installed in the platform. For installing applications on appNG read <<Installing packages>> in chapter <<Repositories>> in this manual.
+
+Once an application is installed it can be assigned to a site. The installed application appears in the table of applications in the section `Application` of the edit page of the site. At the end of the row is a action with the name `Activate`. By clicking this action the application gets activated for that site.
+
+On activation, appNG creates a database connection for the application on that site if the application requires a database and clones the application properties into site application properties.
+
+Once the activation is finished, the application appears as active in the list, but the column `Requires Reload` shows, that the application is not started in the site. Finally the site has to be reloaded to start the application. This can be done directly by the `reload site` link on top of the table.
+
+If the application provides a role marked as admin role, it is automatically assigned to the group `Administrators` in appNG. In this case the application should be visible in the menu of applications for that site after page reload. If not, the administrator role of that application have to be assigned to the group `Administrators`. Read more about that in chapter <<Users and groups>> in this manual. After assigning the role, the application will not be visible immediately because appNG processes the permissions for a user only on login. After log out and log in. The new assigned application should be visible in the applications menu of the site.
+
+=== Grant access to other sites
+Without any additional configuration, a site cannot access an application from another site. In most cases this is not wanted anyway. But if an application provides functionality to be used in different sites it is necessary to grant access for that consuming site.
+
+On the edit page of the site in section `Application` is a table of all available applications. Applications assigned to that site provide the action named `Grant`. By clicking this link, a form appears where other sites can be selected to grant them the right to call this application on this site.
 
 === Configuring the applications of a site
+An appNG application can provide properties to configure the application. Each site has its own application properties. Thus it is possible to have the same application with different configurations in different sites.
+
+The site application property is similar to the site property it has the same attributes. It also has the concept of default value. As long as the value isn't defined for that site, the property will always have the application default value.
+But different to the site property this value can change implicitly when updating the application.
+
+[IMPORTANT]
+====
+ If a new version of an application changes a default value of a property, this default is also updated for all site application properties in all sites as long as this property isn't a clob value.
+====
+
+Unfortunately the handling of default values is not consistent for all kinds of site application properties. Clob values do not have a default value. When assigning an application to a site the value of the clob is copied into the application site property. When the application gets updated and the default for that clob changes the value in the site will not be changed.
+
+
+[IMPORTANT]
+====
+ Changes of the application site properties will be taken into account after next site reload.
+====
+
 
 === Managing database connections
+If an application needs a database, a new database connection is created for each  associated application for each site. Thus an application can have different data on different sites.
+
+The edit site page has a section to manage the database connection for the applications assigned to this site. A database connection has the following attributes:
+
+
+[width="100%",options="header,footer"]
+|====================
+| Attribute Name | Description | Example
+| Type  | The type of the database | MYSQL
+| Name | The name of the database. This is generated and consist of the prefix `appng` followed by site name and application name concatenated by underscore  | appng_manager_testapp
+| JDBC-URL | The jdbc url used to connect to the database | jdbc:mysql://localhost:3306/
+appng_manager_testapp
+| User-Name | The name of the user used to connect to the database. This name is generated on database creation and is assembled by site id and application id  | site1app12
+| Password | A random password generated on database creation  |
+| Driver-Class | The name of the java driver class used to connect to the database | com.mysql.jdbc.Driver
+| Min. number of connections | appNG uses connection pooling to avoid overhead by opening and closing of jdbc connections. This value defines the minimum number of connections with the pool. Default value is 1 | 1
+| Max. number of connections | appNG uses connection pooling to avoid overhead by opening and closing of jdbc connections. This value defines the maximum number of open connections in that pool. Default value is 20 | 20
+| Validation query | appNG want's to check if a database is properly connected. Therefore it needs to execute a query. Default for mysql databases is `select 1` | select 1
+| Description | The Administrator can add some more information about the connection. Per default it contains again the site and application name | manager - testapp
+|====================
+
+[TIP]
+====
+This section also contains a folded form with an input field for SQL queries. Queries from this field are executed on the configured database. This is helpful particularly if there is no native access to the database host. But be aware: "With great power comes great responsibility!"
+====
+
+
 
 === Managing the site's status
 
 ==== Caching
+AppNG provides the feature of integrated caching with ehcache. Per default, the caching is disabled. The caching can be enabled per site. To enable caching, set the site property (see <<Configuring site properties>>)`ehcacheEnabled` true. The site status section contains the cache statistics. It lists the following information:
+
+[width="100%",options="header,footer"]
+|====================
+| Information | Description | Example
+| Average get time | The average get time in seconds. Because ehcache support JDK1.4.2, each get time uses System.currentTimeMilis, rather than nanoseconds. The accuracy is thus limited. |  0.008894
+| Hits | The number of times a requested item was found in the cache. |  1711886
+| Misses | The number of times a requested element was not found in the cache |  65480
+| Name | The name of the cache. It is the prefix `pageCache-` followed by site name | pageCache-manager
+| Size | This number is the actual number of elements in the cache, including expired elements that have not been removed. | 5866
+| Statistics accuracy | Accurately measuring statistics can be expensive. AppNG uses the setting for best effort and acceptable accuracy |  BEST_EFFORT
+| Status | The status of the cache. Can be one of `STATUS_ALIVE`, `STATUS_UNINITIALISED`  or `STATUS_SHUTDOWN` |  STATUS_ALIVE
+|====================
+
+[TIP]
+====
+This section also offers a link to clear the cache statistics. Maybe useful if cache settings have been changed.
+====
+
+There is also a table where all Elements in the cache are listed with their id, which is the request method plus the domain relative path, the type of response, size and some other useful information. It offers also two actions per item to delete it from cache or to view the item.
+
+[TIP]
+====
+At the bottom of the item list is an action to clean the entire cache for that site. That might be useful if some static resources have been changed.
+====
+
+[TIP]
+====
+Cache exceptions as URL path prefixes can be maintained as clob in the site property `ehcacheExceptions`. All request starting with the same prefix (case sensitive) will not be cached.
+====
+
 
 ==== Sessions
+The status sections has a table listing all active sessions for that site. If a session is not the own session, the entry provides an action to manually expire the session immediately.
+
+This table might be useful to check if there are some logged in users in a site before restarting it. Logged in users have user-name shown in the table.
+
+On Bottom of the table is also an action to expire all sessions, except the own session, immediatly.
