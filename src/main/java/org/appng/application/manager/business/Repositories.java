@@ -38,7 +38,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * Provides CRUD-operations for a {@link ApplicationRepositoryImpl}.
+ * Provides CRUD-operations for a {@link org.appng.core.domain.RepositoryImpl}.
  * 
  * @author Matthias Herlitzius
  * 
