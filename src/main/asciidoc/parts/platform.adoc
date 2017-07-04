@@ -33,11 +33,30 @@ Supported are:
 * MSSQL
 * HSQL
 
-This section allows to modify the existing database connections. It is not supported to delete or create database connections. To edit a database connection click on the table row or the edit action within a row. A new form opens where the database connection attributes can be maintained:
-  
-
 ==== Editing a database connection
 
+This section allows to modify the existing database connections. It is not supported to delete or create database connections. To edit a database connection click on the table row or the edit action within a row. A new form opens where the database connection attributes can be maintained:
+
+[width="100%",options="header,footer"]
+|====================
+| Attribute Name | Description
+| Name |  The name of the connection
+| JDBC-URL | The java database connectivity (jdbc) address of the database.
+| User-Name | user name for authentication
+| Password | Password to be used for authentication
+| Driver-Class | Java class to be used to create the jdbc connection
+| managed | flag to indicate if the database is managed by appNG or not. If the database is not managed by appNG the operator of the platform has to take care about creating databases for applications requesting an database of that type as datasource.
+| active | flag to indicate if this connection is the active connection to be used by appNG for that type of database.
+| Min. number of connections | appNG uses connection pooling to avoid overhead by opening and closing of jdbc connections. This value defines the minimum number of connections in that pool. Default value is 1
+| Max. number of connections | appNG uses connection pooling to avoid overhead by opening and closing of jdbc connections. This value defines the maximum number of open connections in that pool. Default value is 20
+| Validation query | appNG want's to check if a database is properly connected. Therefore it needs to execute a query. Default for mysql databases is `select 1`
+| Description | The Administrator can add some more information about the connection. Default is `appNG Root Database`
+|====================
+
+
 === JAR-Files
+The section `JAR-Files` lists all java archive files of the platform and jar files which are contained in the tomcat runtime environment. It shows the file name, version, title and vendor. This might be useful to verify the version of the used libraries. It also might help if a bug has to be reported.
+
 
 === Dictionary
+This section shows the content of the platform dictionary. 
