@@ -94,7 +94,7 @@ On activation, appNG creates a database connection for the application on that s
 
 Once the activation is finished, the application appears as active in the list, but the column `Requires Reload` shows, that the application is not started in the site. Finally the site has to be reloaded to start the application. This can be done directly by the `reload site` link on top of the table.
 
-If the application provides a role marked as admin-role, it is automatically assigned to the group `Administrators` in appNG. In this case the application should be visible in the menu of applications for that site after page reload. If not, the administrator role of that application have to be assigned to the group `Administrators`. Read more about that in chapter <<Users and groups>> in this manual. After assigning the role, the application will not be visible immediately because appNG processes the permissions for a user only on login. After log out and log in. The new assigned application should be visible in the applications menu of the site if this application is not a hidden application.
+If the application provides a role marked as admin-role, it is automatically assigned to the group `Administrators` in appNG. In this case the application should be visible in the menu of applications for that site after page reload. If not, the administrator role of that application has to be assigned to the group `Administrators`. Read more about that in chapter <<Users and groups>> in this manual. After assigning the role, the application will not be visible immediately because appNG processes the permissions for a user only on login. After log out and log in. The new assigned application should be visible in the applications menu of the site if this application is not a hidden application.
 
 === Grant access to other sites
 Without any additional configuration, a site cannot access an application from another site. In most cases this is not wanted anyway. But if an application provides functionality to be used in different sites it is necessary to grant access for that consuming site.
@@ -105,6 +105,7 @@ On the edit page of the site in section `Application` is a table of all availabl
 An appNG application can provide properties to configure the application. Each site has its own application properties. Thus it is possible to have the same application with different configurations in different sites.
 
 The site application property is similar to the site property it has the same attributes. It also has the concept of default value. As long as the value isn't defined for that site, the property will always have the application default value.
+
 But different to the site property this value can change implicitly when updating the application.
 
 [IMPORTANT]
@@ -122,12 +123,12 @@ Unfortunately the handling of default values is not consistent for all kinds of 
 
 
 === Managing database connections
-If an application needs a database, a new database connection is created for each  associated application for each site. Thus an application can have different data on different sites.
+If an application needs a database, a new database connection is created for each associated application for each site. Thus an application has different data on different sites.
 
 The edit site page has a section to manage the database connection for the applications assigned to this site. A database connection has the following attributes:
 
 
-[width="100%",options="header"]
+[cols="20,60,20",width="100%",options="header"]
 |====================
 | Attribute Name | Description | Example
 | Type  | The type of the database | MYSQL
