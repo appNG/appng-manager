@@ -1,19 +1,19 @@
 == Sites
-An appNG site is a representation of a domain. An appNG application can have several sites. Each site can have a different template, different configuration of some appNG platform features and a different set of appNG applications. Also appNG applications can be configured differently per site.
+An appNG site is a representation of a domain. An appNG application can have several sites. Each site can have a different template, different configuration of some appNG platform features and a different set of appNG applications. The same appNG application can be installed twice in different sites but configured differently.
 
 
 === Site Overview
-The main page of the manager application lists all available sites and per site some of the site attributes. It shows if a sit is active and running and the time when the site was started. It also provides a list of actions per site.
+The main page of the manager application lists all available sites and per site some of the site attributes. It shows if a site is active and running and the time when the site was started. It also provides a list of actions per site.
 
 === Creating a site
-To create an appNG site, enter the main page in the appNG Manager application. On local host and on a fresh installation this page is available at: http://localhost:8080/manager/manager/appng-manager/sites
+To create an appNG site, enter the main page in the appNG Manager application.
 
-This page lists all available sites on this appNG installation. On a fresh installation there is only the initially configured site _manager_. Above and beyond this table is a link _create site_. Click this link to create a new site.
+This page lists all available sites on this appNG installation. On a fresh installation there is only the initially configured site _manager_. On top and bottom of this table is a link _create site_.
 
-A new form opens where the attributes of the site has to be configured:
+By clicking this link, a new form opens where the attributes of the site has to be defined:
 
 
-[width="100%",options="header,footer"]
+[width="100%",options="header,footer",cols="30,70"]
 |====================
 | Attribute Name | Description
 | Name |  The name of the site. Is used in the appNG url scheme
@@ -38,16 +38,20 @@ This page is partitioned in sections. The first section is similar to the form t
 === Reloading a site
 On the main page of the manager application is the list of available site. Each site has a list of actions. One of the actions is `reload`. Click this link to reload a site.
 
+Each site has its own class loader holding all classes instantiated for that site and all application within that site. The entire class loader is deleted on site reload and a new class loader will be created. All site properties and site application properties are initialized with the active values from the database. All application resources are loaded and initialized again.
+
 A site reload is necessary if a site attribute has been changed or if an application configuration in that site has been changed.
 
 === Deleting a site
 On the main page of the manager application is the list of available site. Each site has a list of actions. One of the actions is `delete`. Click this link to delete a site. This action has to be confirmed to avoid deletion by mistake.
 
+[WARNING]
+====
 When a site gets deleted, all information such as site attributes, site properties, application properties and application databases get removed. It is not possible to restore any of the deleted data.
-
+====
 
 === Configuring site properties
-Despite the site attributes, there are a lot of site properties to apply a site specific configuration of some appNG platform features. To change site properties, go to the edit page of a site. The page is partitioned the section to maintain the site properties has the name `Site properties`.
+Despite the site attributes, there are a lot of site properties. To change site properties, go to the edit page of a site. The page is partitioned the section to maintain the site properties has the name `Site properties`.
 
 As long as a property value has not been changed for a site, it has the default value defined in the platform. The `value` field in the edit form is empty. If a value has been changed, but it shall become the default again. The value must be set empty again.
 
@@ -67,15 +71,16 @@ A site property has the following attributes:
 
 === Assigning applications to a site
 To assign an application to a site, got to the edit page of a site. On section `Applications` is a table with available applications.
-To assign a new application to a site it has to be installed in the platform. For installing applications on appNG read <<Installing packages>> in chapter <<Repositories>> in this manual.
 
-Once an application is installed it can be assigned to a site. The installed application appears in the table of applications in the section `Application` of the edit page of the site. At the end of the row is a action with the name `Activate`. By clicking this action the application gets activated for that site.
+To assign a new application to a site, it first has to be installed in the platform. For installing applications on appNG read <<Installing packages>> in chapter <<Repositories>> in this manual.
 
-On activation, appNG creates a database connection for the application on that site if the application requires a database and clones the application properties into site application properties.
+Once an application is installed, it can be assigned to a site. The installed application appears in the table of applications in the section `Application` of the edit page of the site. At the end of the row is a action with the name `Activate`. By clicking this action the application gets activated for that site.
+
+On activation, appNG creates a database connection for the application on that site if the application requires a database. AppNG also clones the application properties into site application properties.
 
 Once the activation is finished, the application appears as active in the list, but the column `Requires Reload` shows, that the application is not started in the site. Finally the site has to be reloaded to start the application. This can be done directly by the `reload site` link on top of the table.
 
-If the application provides a role marked as admin role, it is automatically assigned to the group `Administrators` in appNG. In this case the application should be visible in the menu of applications for that site after page reload. If not, the administrator role of that application have to be assigned to the group `Administrators`. Read more about that in chapter <<Users and groups>> in this manual. After assigning the role, the application will not be visible immediately because appNG processes the permissions for a user only on login. After log out and log in. The new assigned application should be visible in the applications menu of the site.
+If the application provides a role marked as admin-role, it is automatically assigned to the group `Administrators` in appNG. In this case the application should be visible in the menu of applications for that site after page reload. If not, the administrator role of that application have to be assigned to the group `Administrators`. Read more about that in chapter <<Users and groups>> in this manual. After assigning the role, the application will not be visible immediately because appNG processes the permissions for a user only on login. After log out and log in. The new assigned application should be visible in the applications menu of the site if this application is not a hidden application.
 
 === Grant access to other sites
 Without any additional configuration, a site cannot access an application from another site. In most cases this is not wanted anyway. But if an application provides functionality to be used in different sites it is necessary to grant access for that consuming site.

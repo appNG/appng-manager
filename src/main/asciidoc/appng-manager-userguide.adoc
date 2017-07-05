@@ -5,7 +5,7 @@ Build Version  {project-version} created {localdate}
 :toc:
 
 == General
-The appNG Manager is an appNG application to configure and maintain an appNG installation. The manager is a mandatory core application of appNG. After installation of appNG, a site _appng_ is available with an installed Manager application. The manager is available on localhost at http://localhost:8080/manager/manager/appng-manager.
+The appNG Manager is an appNG application to configure and maintain an appNG installation and the installed applications. The manager is a mandatory core application of appNG. After installation of appNG, a site _manager_ is available with an installed manager application. The manager is available on localhost at http://localhost:8080/manager/manager/appng-manager.
 
 include::parts/sites.adoc[]
 include::parts/applications.adoc[]

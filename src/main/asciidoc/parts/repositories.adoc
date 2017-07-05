@@ -1,10 +1,31 @@
 == Repositories
-
+AppNG gets its applications to be installed from a repository. A repository can be a local folder where application packages can be copied or uploaded into. A repository also implement some SOAP services that it con provide its packages to other appNG installations as a remote repository.
 === Creating a repository
+On Page `Repository` is a list of all available repositories. On top and bottom of that list is a link to create a repository. By clicking this link, a new form opens where the repository attributes can be defined:
+
+[width="100%",options="header,footer"]
+|====================
+| Attribute Name | Description
+|  Name | Name of the repository
+| Description | Some additional information about the repository
+| Type | Type of the repository. One of `Local Repository` and `Published Repository`
+| URI | Address of the repository. An URL of a remote repository or an address with "file://" for an local repository
+| active | Indicates if this repository shall be active
+|====================
 
 === Editing a repository
+Each repository in the list offers an action to edit the repository configuration. Additionaly to the known attributes on repository creation there are a few more:
+
+[width="100%",options="header,footer"]
+|====================
+| Attribute Name | Description
+| Mode | The repository can offer only snapshot, stable or both types of applications
+| Published | activate this if the repository shall be published as remote repository for other appNG instances.
+| Digest | If this repository shall be published, a digest for authentication can be defined to avoid that anyone could use this as a remote repository. The digest is optional.
+|====================
 
 === Deleting a repository
+
 
 === Reloading a repository
 
