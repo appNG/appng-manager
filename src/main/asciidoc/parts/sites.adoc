@@ -40,7 +40,17 @@ On the main page of the manager application is the list of available site. Each 
 
 Each site has its own class loader holding all classes instantiated for that site and all application within that site. The entire class loader is deleted on site reload and a new class loader will be created. All site properties and site application properties are initialized with the active values from the database. All application resources are loaded and initialized again.
 
-A site reload is necessary if a site attribute has been changed or if an application configuration in that site has been changed.
+If appNG runs in a cluster setup, the site reload is executed first on the node where the action has been executed. If the site has been successfully reloaded, an cluster event is sent by this node to all other nodes in the cluster to reload that site too.
+
+[WARNING]
+====
+In a cluster setup with non-sticky sessions it might happen that a request after triggering the site reload will be processed by another node where the site reload event was not received or where the site reload is ongoing.
+====
+
+[TIP]
+====
+A site reload is always necessary if a site attribute has been changed or if an application configuration in that site has been changed.
+====
 
 === Deleting a site
 On the main page of the manager application is the list of available site. Each site has a list of actions. One of the actions is `delete`. Click this link to delete a site. This action has to be confirmed to avoid deletion by mistake.
@@ -51,14 +61,14 @@ When a site gets deleted, all information such as site attributes, site properti
 ====
 
 === Configuring site properties
-Despite the site attributes, there are a lot of site properties. To change site properties, go to the edit page of a site. The page is partitioned the section to maintain the site properties has the name `Site properties`.
+Despite the site attributes, there are a lot of site properties. To change site properties, go to the edit page of a site. The page is partitioned in sections. The section to maintain the site properties has the name `Site properties`.
 
-As long as a property value has not been changed for a site, it has the default value defined in the platform. The `value` field in the edit form is empty. If a value has been changed, but it shall become the default again. The value must be set empty again.
+As long as a property value has not been changed for a site, appNG uses the default value defined in the platform. The `value` field in the edit form is empty. If the value or the clob value field is not empty, appNG will use this value instead of the default.
 
 A site property has the following attributes:
 
 
-[width="100%",options="header,footer"]
+[width="100%",options="header,footer" cols="30,70"]
 |====================
 | Attribute Name  | Description
 | Name | The name of the property. Only the short version of the name is shown inside appNG the complete name also contains the property type (platform.site) and the site name. The property `foo` in site `bar` has the full name `platform.site.bar.foo`
@@ -68,6 +78,11 @@ A site property has the following attributes:
 | Description | A short description of the property
 | Changed Value | Is shown in the list of properties. Indicates if a value has been changed for that site or if it still uses the platform default.
 |====================
+
+[TIP]
+====
+If a property was changed and it shall use the default again it is necessary to empty the field value. It is also possible to copy just the default value as value. This will have the same effect, but the property would still be shown as changed value.
+====
 
 === Assigning applications to a site
 To assign an application to a site, got to the edit page of a site. On section `Applications` is a table with available applications.
