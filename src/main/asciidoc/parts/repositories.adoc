@@ -4,7 +4,7 @@ AppNG gets its applications to be installed from a repository. A repository can 
 === Creating a repository
 On Page `Repository` is a list of all available repositories. On top and bottom of that list is a link to create a repository. By clicking this link, a new form opens where the repository attributes can be defined:
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 |====================
 | Attribute Name | Description
 |  Name | Name of the repository
@@ -17,7 +17,7 @@ On Page `Repository` is a list of all available repositories. On top and bottom 
 === Editing a repository
 Each repository in the list offers an action to edit the repository configuration. Additionally to the known attributes, there are a few more:
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 |====================
 | Attribute Name | Description
 | Mode | The repository can offer only snapshot, stable or both types of applications
@@ -35,7 +35,7 @@ When the page is rendered, the current list of packages and package versions are
 n entry in the list of repositories offers an action `Installation`. By clicking this action, a new section opens showing a list of all available packages in that repository. It informs about the latest stable and latest snapshot release. It also shows the current installed version.
 
 Depending on the installed version, each entry offers a set of actions:
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 |====================
 | Action | Description
 | Show package versions | By clicking this action a table is shown with all versions of that package available in the repository. Each version on this list can be selected to be installed on the platform. It is also possible to downgrade an installed package, but this is technically only possible if there where no database schema migrations between the actual and the old version.

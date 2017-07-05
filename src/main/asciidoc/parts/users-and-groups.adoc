@@ -1,7 +1,7 @@
 == Users and groups
 AppNG comes with a fine granular user role and permission model. The key elements are:
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 |====================
 | Element | Description
 | permission | The right to see or do something. Is defined by the application in the application.xml file. It can be applied on fields or actions, datasources or entire pages.
@@ -30,7 +30,7 @@ Read more about site properties in <<Configuring site properties>> in this manua
 === Creating a user
 Above and beyond the users list is a link with the action to create a user. When clicking this link a new form opens, where the users attributes can be defined:
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 |====================
 | Attribute  | Description
 | Name | user name as used for the login. Must be unique.
@@ -56,7 +56,7 @@ The overview table provides actions to create, edit and delete a group.
 === Creating a group
 When clicking the `Create group` action on top or bottom of the table, a new form opens where the attributes of the group can be defined:
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 |====================
 | Attribute  | Description
 | Name | Name of the group. Must be unique.

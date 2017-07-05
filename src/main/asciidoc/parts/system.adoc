@@ -7,17 +7,17 @@ Returns the input arguments passed to the Java virtual machine which does not in
 
 ==== System Properties
 Determines the current system properties. It does this by showing all values given by calling the static System method
-[CODE]
-====
+
+....
 java.lang.System.getProperties()
-====
+....
 
 ==== System Environment
 Determines the current system environment. The environment is a system-dependent mapping from names to values which is passed from parent to child processes. AppNG does this by calling
-[CODE]
-====
+
+....
 java.lang.System.getenv()
-====
+....
 
 === Status
 The Status section gives some information about the system status

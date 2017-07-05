@@ -37,7 +37,7 @@ Supported are:
 
 This section allows to modify the existing database connections. It is not supported to delete or create database connections. To edit a database connection click on the table row or the edit action within a row. A new form opens where the database connection attributes can be maintained:
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 |====================
 | Attribute Name | Description
 | Name |  The name of the connection
@@ -59,4 +59,4 @@ The section `JAR-Files` lists all java archive files of the platform and jar fil
 
 
 === Dictionary
-This section shows the content of the platform dictionary. 
+This section shows the content of the platform dictionary.
