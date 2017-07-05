@@ -3,12 +3,10 @@ An appNG site is a representation of a domain. An appNG application can have sev
 
 
 === Site Overview
-The main page of the manager application lists all available sites and per site some of the site attributes. It shows if a site is active and running and the time when the site was started. It also provides a list of actions per site.
+The main page of the manager application lists all available sites. Per entry it shows some of the site attributes. It shows if a site is active and running and the time when the site was started. It also provides a list of actions per site.
 
 === Creating a site
-To create an appNG site, enter the main page in the appNG Manager application.
-
-This page lists all available sites on this appNG installation. On a fresh installation there is only the initially configured site _manager_. On top and bottom of this table is a link _create site_.
+To create an appNG site, enter the main page in the appNG Manager application. This page lists all available sites on this appNG installation. On a fresh installation there is only the initially configured site _manager_. On top and bottom of this table is a link named _create site_.
 
 By clicking this link, a new form opens where the attributes of the site has to be defined:
 
@@ -31,12 +29,12 @@ After the site has been created, a new item is visible in the list of available 
 To start a new site, the site has to be configured as an active site and the site has to be reloaded. If the site is configured as active, it will also be started automatically on next platform start-up.
 
 === Editing a site
-On the main page of the manager application is the list of available sites. Each site has a list of actions. One of the actions is `edit`. Click this link to open the edit page of that site.
+In the list of available sites each site has a list of actions. One of the actions is `edit`. Click this link to open the edit page of that site.
 
 This page is partitioned in sections. The first section is similar to the form to create a site. Despite the site name, all attributes can be changed in that form. Changes will be taken into account after site reload.
 
 === Reloading a site
-On the main page of the manager application is the list of available sites. Each site has a list of actions. One of the actions is `reload`. Click this link to reload a site.
+In the list of available sites each site has a list of actions. One of the actions is `reload`. Click this link to reload a site.
 
 All site properties and site application properties are new initialized with the active values from the database. All application resources are loaded and initialized again.
 
@@ -56,7 +54,7 @@ In a cluster setup with non-sticky sessions it might happen, that a request afte
 
 
 === Deleting a site
-On the main page of the manager application is the list of available site. Each site has a list of actions. One of the actions is `delete`. Click this link to delete a site. This action has to be confirmed to avoid deletion by mistake.
+In the list of available sites each site has a list of actions. One of the actions is `delete`. Click this link to delete a site. This action has to be confirmed to avoid deletion by mistake.
 
 [WARNING]
 ====
@@ -88,11 +86,9 @@ If a property was changed and it shall use the default again it is necessary to 
 ====
 
 === Assigning applications to a site
-To assign an application to a site, got to the edit page of a site. On section `Applications` is a table with available applications.
+To assign a new application to a site, it first has to be installed on the platform. For installing applications on appNG read <<Installing packages>> in chapter <<Repositories>> in this manual.
 
-To assign a new application to a site, it first has to be installed in the platform. For installing applications on appNG read <<Installing packages>> in chapter <<Repositories>> in this manual.
-
-Once an application is installed, it can be assigned to a site. The installed application appears in the table of applications in the section `Application` of the edit page of the site. At the end of the row is a action with the name `Activate`. By clicking this action the application gets activated for that site.
+To assign an application to a site, got to the edit page of a site. On section `Applications` is a table with available applications on the platform. At the end of each entry is a action with the name `Activate` for all applications which are not assigned to this site. By clicking this action the application gets activated for that site.
 
 On activation, appNG creates a database connection for the application on that site if the application requires a database. AppNG also clones the application properties into site application properties.
 
