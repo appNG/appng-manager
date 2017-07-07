@@ -18,9 +18,9 @@ The application has different pages for the different domains of configuration a
 | Sites | Manage sites and application within a site
 | Applications | Remove applications and edit application resources
 | Users | Create users and groups and assign roles
-| Repositories | add repositories and install packages
+| Repositories | Add repositories and install packages
 | Platform | Configure platform properties and manage database connections.
-| System | see system-, environment and cluster setup. View logfile and edit logging properties.
+| System | Monitor system-, environment and cluster setup. View logfile and edit logging properties.
 |====================
 
 <<<
@@ -31,3 +31,4 @@ include::parts/users-and-groups.adoc[]
 include::parts/platform.adoc[]
 include::parts/repositories.adoc[]
 include::parts/system.adoc[]
+include::parts/glossary.adoc[]
