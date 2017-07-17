@@ -200,8 +200,7 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 			dbSupport = new HsqlDbSupport(null);
 			break;
 		}
-		String cleanedSql = sql.replaceAll(StringUtils.CR + StringUtils.LF, StringUtils.SPACE);
-		SqlScript sqlScript = new SqlScript(cleanedSql, dbSupport);
+		SqlScript sqlScript = new SqlScript(sql, dbSupport);
 		List<String> queries = new ArrayList<String>();
 		sqlScript.getSqlStatements().forEach(query -> queries.add(query.getSql()));
 		return queries;
