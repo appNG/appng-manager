@@ -8,7 +8,7 @@
 	<name>appNG Manager</name>
 	<version>1.12.4-SNAPSHOT</version>
 	<description><![CDATA[Global appNG administration]]></description>
-	<url>https://www.appng.org</url>
+	<url>https://appng.org</url>
 
 	<properties>
 		<projectId>MGR</projectId>
@@ -269,59 +269,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>net.sf.squirrel-sql</groupId>
-			<artifactId>fw</artifactId>
-			<version>3.5.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.squirrel-sql.plugins</groupId>
-			<artifactId>mysql</artifactId>
-			<version>3.5.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.squirrel-sql.plugins</groupId>
-			<artifactId>mssql</artifactId>
-			<version>3.5.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.appng</groupId>
 			<artifactId>appng-core</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>xerces</groupId>
-					<artifactId>xercesImpl</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache-web</artifactId>
-			<version>2.0.4</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-tribes</artifactId>
-			<version>7.0.59</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.appng</groupId>

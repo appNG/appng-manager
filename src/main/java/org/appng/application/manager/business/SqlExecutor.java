@@ -24,12 +24,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import net.sourceforge.squirrel_sql.fw.sql.QueryTokenizer;
-import net.sourceforge.squirrel_sql.plugins.mssql.prefs.MSSQLPreferenceBean;
-import net.sourceforge.squirrel_sql.plugins.mssql.tokenizer.MSSQLQueryTokenizer;
-import net.sourceforge.squirrel_sql.plugins.mysql.prefs.MysqlPreferenceBean;
-import net.sourceforge.squirrel_sql.plugins.mysql.tokenizer.MysqlQueryTokenizer;
-
 import org.apache.commons.lang3.StringUtils;
 import org.appng.api.ActionProvider;
 import org.appng.api.DataContainer;
@@ -44,6 +38,11 @@ import org.appng.application.manager.business.SqlExecutor.SqlStatement;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.DatabaseConnection;
 import org.appng.core.domain.DatabaseConnection.DatabaseType;
+import org.flywaydb.core.internal.dbsupport.DbSupport;
+import org.flywaydb.core.internal.dbsupport.SqlScript;
+import org.flywaydb.core.internal.dbsupport.hsql.HsqlDbSupport;
+import org.flywaydb.core.internal.dbsupport.mysql.MySQLDbSupport;
+import org.flywaydb.core.internal.dbsupport.sqlserver.SQLServerDbSupport;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
@@ -82,15 +81,16 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 				databaseConnection.getUserName(), new String(databaseConnection.getPassword()), true);
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		List<String> queries = getQueries(sql, databaseConnection.getType());
-		List<String> results = new ArrayList<String>();
+		StringBuilder results = new StringBuilder();
 		for (String query : queries) {
 			SqlStatement statementResult = processSingleStatement(query, jdbcTemplate);
-			results.add("<div style='background:#F0F0F0;border:1px solid grey'>" + statementResult.getContent()
-					+ "</div>");
-			results.add(statementResult.getResult());
-			results.add("<p/>");
+			results.append("<div style='background:#F0F0F0;border:1px solid grey'>");
+			results.append(statementResult.getContent());
+			results.append("</div>");
+			results.append(statementResult.getResult());
+			results.append("<p/>");
 		}
-		String result = StringUtils.join(results, "");
+		String result = results.toString();
 		sessionParams.put("result" + dcId, result);
 	}
 
@@ -188,25 +188,22 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 	}
 
 	public List<String> getQueries(String sql, DatabaseType type) {
-		QueryTokenizer queryTokenizer = null;
+		DbSupport dbSupport = null;
 		switch (type) {
 		case MYSQL:
-			queryTokenizer = new MysqlQueryTokenizer(new MysqlPreferenceBean());
+			dbSupport = new MySQLDbSupport(null);
 			break;
 		case MSSQL:
-			queryTokenizer = new MSSQLQueryTokenizer(new MSSQLPreferenceBean());
+			dbSupport = new SQLServerDbSupport(null);
 			break;
 		case HSQL:
-			queryTokenizer = new QueryTokenizer(";", "--", true);
+			dbSupport = new HsqlDbSupport(null);
 			break;
 		}
-
-		String script = sql.replaceAll("\\r\\n", " ");
-		queryTokenizer.setScriptToTokenize(script);
+		String cleanedSql = sql.replaceAll(StringUtils.CR + StringUtils.LF, StringUtils.SPACE);
+		SqlScript sqlScript = new SqlScript(cleanedSql, dbSupport);
 		List<String> queries = new ArrayList<String>();
-		for (int i = 0; i < queryTokenizer.getQueryCount(); i++) {
-			queries.add(queryTokenizer.nextQuery());
-		}
+		sqlScript.getSqlStatements().forEach(query -> queries.add(query.getSql()));
 		return queries;
 	}
 
