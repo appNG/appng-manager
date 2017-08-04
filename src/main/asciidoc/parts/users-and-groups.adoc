@@ -1,9 +1,71 @@
 == Users and groups
+AppNG comes with a fine granular user role and permission model. The key elements are:
+
+[width="100%",options="header"]
+|====================
+| Element | Description
+| permission | The right to see or do something. Is defined by the application in the application.xml file. It can be applied on fields or actions, datasources or entire pages.
+| role | An aggregation of permissions of one application. Is defined in the application.xml file.
+| group | An aggregation of roles also from different applications. Created and defined in appNG manager. On installation the group `Administrators` is created by default getting all admins role from all default applications (appng-manager, appng-scheduler)
+| user | An account in appNG. Could be a pure appNG user or user from active directory. A user can have multiple roles. On installation the user `admin` is created which gets assigned to the group `Administrators`
+|====================
+
+Permissions are added to a user by assigning groups to users and roles to groups and permissions to roles. The assignment has always a contributing nature. It will not happen, that an assignment will remove the permission set by another assignment. The user will always have the super-set of all permissions of all groups and roles assigned to him.
+
+The users page shows a list of all configured users.
+
+=== LDAP connectivity
+If the type `LDAP user` or `LDAP Group` is used, the site has to be configured to be able to connect to a LDAP server. This can be configured with the site properties:
+
+* ldapDomain
+* ldapGroupBaseDn
+* ldapHost
+* ldapIdAttribute
+* ldapPassword
+* ldapUser
+* ldapUserBaseDn
+
+Read more about site properties in <<Configuring site properties>> in this manual
 
 === Creating a user
+Above and beyond the users list is a link with the action to create a user. When clicking this link a new form opens, where the users attributes can be defined:
+
+[width="100%",options="header"]
+|====================
+| Attribute  | Description
+| Name | user name as used for the login. Must be unique.
+| Real Name | The persons real name
+| E-mail | E-Mail address of the person
+| Description | Some additional info about the user
+| Type | One of `Local user`, `LDAP User` or `LDAP Group`
+| Language | The preferred language of the user. Shows available appNG languages
+| Timezone | The users timezone
+| Password | must have at least 6 chars and max 64
+| Password Confirmation | must contain the same value than the `Password` field
+| Groups | Select initial groups of the user
+|====================
 
 === Editing a user
+The default action of an entry in the users table is the action to edit a user. This opens a form where nearby all of the users attribute can be changed except the internal ID and the user-name.
+
+=== Group
+On the page `Users` is another section `Groups`. It lists all available groups configured in appNG. On appNG installation, the group Administrators gets created. This is special gorup because if an application defines an admin-role in the application.xml file, this role is automatically assigned to this group. It is also not possible to delete a group.
+
+The overview table provides actions to create, edit and delete a group.
 
 === Creating a group
+When clicking the `Create group` action on top or bottom of the table, a new form opens where the attributes of the group can be defined:
+
+[width="100%",options="header"]
+|====================
+| Attribute  | Description
+| Name | Name of the group. Must be unique.
+| Description | Some additional info about the user
+| Roles | Select roles from different applications to assign them to the group. Only roles of those applications are available, which are assigned to the current site.
+|====================
 
 === Editing a group
+In the overview table of groups is an action per group to edit it. Expect the internal ID, all attributes and the role assignment of the group can be changed.
+
+=== Deleting a group
+In the overview table of groups is an action per group to delete it. The group `Administrators` is a special group and cannot be deleted. After the deletion has been confirmed, the group and all assignments to users gets completely removed.
