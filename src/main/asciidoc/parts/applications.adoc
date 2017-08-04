@@ -1,10 +1,123 @@
+
 == Applications
+The page `Applications` in the appNG manager shows the list of installed applications regardless if an application is assigned or active or not. Each application in that table has the two actions `Edit` and `Delete`.
 
 === Editing an application
+Except the three switches `Core Application`,`Hidden` and `filebased` all information about an application are stored within the xml files of the application package. If something have been changed through the appNG manager it might be overwritten by the next application update.
+
+[WARNING]
+====
+We advise to change information of the application within the application package source files to avoid that important changes gets overwritten by package update.
+====
+
+If it is not possible or not wanted to change the package, this page provides powerful capabilities to modify an installed package divided into the following sections.
+
+==== Udpate Application
+In this section some of the application main attributes can be viewed and changed. The most important switches are at the bottom of the form:
+
+
+[width="100%",options="header"]
+|====================
+| Name | Description
+| Core Application | This indicates an application to be a core application. A core application has the capability to directly call methods of the appNG core service. This is for instance necessary if an application is designed to be the authentication application for a site. This kind of application has to call some of the core service methods.
+| Hidden | An hidden application is not listed in the application menu of the site. It will still appear in the list of assigned application on the edit page of the site.
+| filebased | If appNG runs a single instance, it does not matter if the resources of an application are on file system or not. But in a cluster scenario, it is necessary, that all resources of an application are stored in the database. All cluster nodes are connected to the same database so they all will use the same application resources.
+|====================
+
+
+
+==== Application Properties
+This sections shows all application properties which have been read from the application.xml file on package installation.
+
+An application property offers the method `Edit`. It opens a form where the fiels `value` and `CLOB value` can be changed. But this does not have any effect on properties of assigned application nor does it have any effect on the site application properties to be created on assignment.
+
+An application property can be deleted. This does not have any effect on site application properties of  assigned application, but the deleted property will not be created as site application property when an application gets assigned to a site.
+
+An application property can be created with an unique name. The given value will be set as default value of the property. This new property will not be added to the list of site application properties of already assigned applications, but it will be created as site application property on next application assignment.
+
+[TIP]
+====
+Default values of existing application properties cannot be changed, but the property can be removed and created with the same name. This will effect only application which gets assigned afterwards and will not effect existing site application properties.
+====
+
+On application update, all properties which are contained in the application.xml of the new package gets overwritten. Existing application properties in appNG, with no counterpart in the application.xml file will stay untouched.
+
+==== Roles
+AppNG has a fine granular role and permission model. A permission is a right to see or do something. A role is a set of permissions. An appNG group aggregates roles and roles can be assigned  to appNG users.
+
+Permissions and roles are defined in the application.xml file of an application. The aggregation of permissions and roles can be modified within the appNG manager, but general changes should be done in the application.xml file and changed by an application update.
+
+The roles page shows a list of all available roles of that application. A role can be edited or deleted and a new role can be created.
+
+===== Edit Role
+By clicking the edit action of a role, an form opens where the user can change name and description of a role as well as the assignment of permissions to that role. This change takes effect after next login. It will not take immediately effect for all current logged in users.
+[WARNING]
+====
+Removed permissions of a role gets re-assigned on next application update if the role still has that permission in the application.xml file of the new package. Added permissions will still be assigned to the role after package update even if the role in the new package does not have that permission.
+====
+
+===== Delete Role
+By clicking the delete action in the application roles overview, a role can be deleted. This change takes effect after next login. It will not take immediately effect for all current logged in users.
+[WARNING]
+====
+A deleted role will be created again on package update if the deleted role is still contained in the application.xml file of the new package.
+====
+
+===== Create Role
+By clicking the action `Create role` beyond or above the the overview table, a form opens to define the name and description of the new role. It also gives the possibility to assign permissions to that new role.
+A created role will stay untouched on package update as long as the new package application.xml file does not contain a (new) role with the same name. Otherwise it follows the same mechanism as the update of a role. Where already assigned permissions will not be removed.
+
+==== Permissions
+A permission is the right to see or do something. It can be applied on single elements, actions, datasource or entire pages.
+
+This sections contains a list of all available permissions. The following actions can be done with permissions:
+
+* Change name and description
+* Delete permission (gets re-created after package update if the new package still defines that permission)
+* Create permission (will stay untouched on package update even if the new package still does not have this permission)
+
+==== Resources
+This section lists all available resources which have been installed along with the package. The list can be filtered by type:
+
+[width="100%",options="header"]
+|====================
+| Name  | Description
+| BEANS_XML |  `beans.xml` located in the root directory
+| JAR |  jar-files (`*.jar`) located at `/lib`
+| XML |  XML-sources (`*.xml`) located at `/conf`
+| XSL |  XSL stylesheets (`*.xsl`) located at `/xsl`
+| SQL |  SQL-scripts (`*.sql`) located at `/sql`
+| TPL |  custom (non-XSL) template resources
+| RESOURCE | custom resources, such as .js, .css, .jpg, .png
+| DICTIONARY | dictionaries (`*.properties`) located at `/dictionary`
+| APPLICATION | `application-info.xml` located in the root directory
+| ASSET | Not supported yet
+|====================
+
+Each element in the list can be deleted even if this would lead to the situation where the application cannot startup anymore. All text files can be edited. This maybe is useful to change some bean definition of the application or to change or add entries in the dictionary. New Resources can be added. Can be used to add another dictionary to support another language.
+
+[WARNING]
+====
+All resources getting removed and re-created on package update. That means, all changes done in this resources and all additionally created resources are gone after package update if the new package does not contain the changes or the new resources.
+====
+
+//==== Dictionary
+
 
 === Deleting an application
+The application overview provides an action per application to delete the application. After confirming to delete the application the following actions are done:
+
+* remove the application assignment from inactive sites
+* delete roles
+* delete permissions
+* delete resources
+* delete properties
+
+An application assigned to an active site cannot be removed.
 
 
 == Templates
+Templates are a special kind of package. Templates can be installed or removed. It is not possible to edit or change an installed package. A template is not assigned to a site. A site defines the template to be used for all applications of that site in the edit site form.
 
 === Deleting a template
+In the template overview, a site entry contains the action to delete the template. All resources of the template gets removed on deletion. A template cannot be removed if it is in use by any site no matter if active or not.
