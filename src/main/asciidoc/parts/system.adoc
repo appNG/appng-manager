@@ -1,12 +1,14 @@
+
 == System
-This page shows information about the runtime system of the appNG platform.
+This page shows information about the runtime environment of the appNG platform.
 
 === Environment
+
 ==== JVM Arguments
-Returns the input arguments passed to the Java virtual machine which does not include the arguments to the main method.
+Returns the parameters passed to the Java virtual machine.
 
 ==== System Properties
-Determines the current system properties. It does this by showing all values given by calling the static System method
+Determines the current system properties. It displays all values returned by calling the static System method
 
 ....
 java.lang.System.getProperties()
@@ -20,30 +22,31 @@ java.lang.System.getenv()
 ....
 
 === Status
-The Status section gives some information about the system status
+The Status section displays some information about the system status.
+
 ==== Processor
-Shows the system load average for the last minute  and the number of processors available to the Java virtual machine.
+Shows the system load average for the last minute and the number of processors available to the Java virtual machine.
 
 ==== Memory
 Determines the current memory usage of the heap that is used for object allocation and the current memory usage of non-heap memory that is used by the Java virtual machine.
 
 ==== Sessions
-List all session currently active for the platform. Allows to expire one or all sessions if it is not the session of the current user.
+Lists all sessions currently active on the platform. Allows to expire one or all sessions, besides the session of the current user.
 
 === Logfile
 Shows a tail view of the appNG logfile from the current node. If appNG runs in a cluster setup be aware that there are other logfiles on other nodes.
 
-It also shows the current log4j configuration in an editable text field. Changes on this content can be submitted. This will change the used log4j configuration immediately without platform reload. It is optionally possible to propagate this configuration to all other nodes in the cluster.
+It also shows the current log4j configuration in an editable text field. Changes to the log configuration can be submitted. This will update the current log4j configuration immediately without a platform reload. It is optionally possible to propagate this configuration to all other nodes in the cluster.
 
 === Cluster Status
-This section shows the status of all other nodes in the cluster. A status consists of:
+This section displays the status of all other nodes in the cluster. A status entry consists of:
 
 [width="100%",options="header,footer"]
 |====================
 | Status Item | Description|
-| Node ID | Node Id defined as system property `appng.node.id`. Identifies a node within a cluster.
-| Last Updated | The cluster status is directly called from the other nodes within the cluster. This timestamp shows when the data of this node have been retrieved
-| Memory status | The current memory usage of the heap of that node that is used for object allocation.
+| Node ID | Node id defined as system property `appng.node.id`. Identifies a node within a cluster.
+| Last Updated | The cluster status is directly requested from the other nodes in the cluster. This timestamp shows when the data of the respective node has been retrieved.
+| Memory status | The current memory usage of the heap of the respective node that is used for object allocation.
 |====================
 
 Each entry can be enlaged to show also:

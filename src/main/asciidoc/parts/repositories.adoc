@@ -1,67 +1,85 @@
+
 == Repositories
-AppNG gets its applications to be installed from a repository. A repository can be a local folder where application packages can be copied or uploaded into. A repository also implement some SOAP services that it con provide its packages to other appNG installations as a remote repository.
+appNG applications are installed from a repository. A repository can be a local folder where application packages can be copied to or uploaded into. A repository also implements some SOAP services to provide its applications to other appNG installations as a remote repository.
 
 === Creating a repository
-On Page `Repository` is a list of all available repositories. On top and bottom of that list is a link to create a repository. By clicking this link, a new form opens where the repository attributes can be defined:
+On page `Repository` a list of all available repositories is shown. On top and bottom of that list is a link to create a repository. By clicking this link, a new form opens where the repository attributes can be defined:
 
 [width="100%",options="header"]
 |====================
-| Attribute Name | Description
-|  Name | Name of the repository
-| Description | Some additional information about the repository
-| Type | Type of the repository. One of `Local Repository` and `Published Repository`
-| URI | Address of the repository. An URL of a remote repository or an address with "file:" for an local repository
-| active | Indicates if this repository shall be active
+| Attribute Name | Description | Example
+|  Name | Name of the repository. | `Local` +
+`Remote`
+| Description | Some additional information about the repository. | Local repository +
+appNG central repository
+| Type | Type of the repository. One of `Local Repository` and `Published Repository`. | `Local Repository` +
+`Published Repository`
+| URI | Address of the repository. An URL of a remote repository (prefix: `http:` or `https:`) or the file path to a local repository (prefix: `file:`). | `file:/var/appng/repository` +
+`https://appng.org/service/appng/appng-manager/soap/repositoryService`
+| active | Indicates if this repository is active | `true` +
+`true`
 |====================
 
 === Editing a repository
-Each repository in the list offers an action to edit the repository configuration. Additionally to the known attributes, there are a few more:
+Each repository in the list offers an action to edit the repository configuration. In addition to the above mentioned attributes, further attributes appear depending on the chosen repository type.
+
+==== Local Repository
 
 [width="100%",options="header"]
 |====================
 | Attribute Name | Description
-| Mode | The repository can offer only snapshot, stable or both types of applications
-| Published | activate this if the repository shall be published as remote repository for other appNG instances.
-| Digest | If this repository shall be published, a digest for authentication can be defined to avoid that anyone could use this as a remote repository. The digest is optional.
+| Mode | The repository can offer only snapshots, stables or both kinds of builds.
+| Published | Activate this checkbox if the repository shall be published as remote repository to other appNG instances. The SOAP provider service will be available under the URL `<protocol>://<domain>.<tld>/service/<site-name>/appng-manager/soap/repositoryService`
+| Digest | If this is a published repository, a digest for authentication (shared secret) can be defined to make sure only authorized appNG instances can use it as a remote repository. The digest is optional.
+|====================
+
+==== Remote Repository
+
+[width="100%",options="header"]
+|====================
+| Attribute Name | Description
+| Name of remote repository | Multiple repositories can be published under the same URL. Entering the name of the remote repository is required and identifies the repository in the remote appNG instance to be accessed.
+| Digest | The digest to authenticate against the remote repository. If the remote repository grants anonymous access, this field can be left empty.
+| Upload trusted certificate | Upload the certificate used to verify the contents of the remote repository.
 |====================
 
 === Deleting a repository
-An entry in the list of repositories offers an action to delete a repository. After confirming the deletion, the configuration of that repository gets removed from the appNG database. It does not remove any files on local disk nor does it remove any content from the remote repository.
+Each item in the list of repositories offers an action to delete the respective repository. After confirming the deletion, the configuration of that repository is removed from the appNG database. It does not remove any files in the local file system nor does it remove any applications installed from this repository.
 
 === Reloading a repository
-When the page is rendered, the current list of packages and package versions are determined on disk or per SOAP request from the remote repository. This information is cached by the system to avoid unnecessary overhead. By clicking the action `reload`, this cache is refreshed with new data.
+When the page is rendered, the current list of available applications and their versions are read from the file system or retrieved via a SOAP request from the remote repository. This information is cached by the system to avoid unnecessary overhead. By clicking the action `reload`, this cache is refreshed with the current data.
 
-=== Listing a repositoriy's packages
-n entry in the list of repositories offers an action `Installation`. By clicking this action, a new section opens showing a list of all available packages in that repository. It informs about the latest stable and latest snapshot release. It also shows the current installed version.
+=== Listing the applications of a repository
+Each item in the list of repositories offers an action `Installation`. By clicking this action, a new section opens, showing a list of all available applications in that repository. It informs about the latest stable release and about the latest snapshot build. It also shows the currently installed version.
 
 Depending on the installed version, each entry offers a set of actions:
 [width="100%",options="header"]
 |====================
 | Action | Description
-| Show package versions | By clicking this action a table is shown with all versions of that package available in the repository. Each version on this list can be selected to be installed on the platform. It is also possible to downgrade an installed package, but this is technically only possible if there where no database schema migrations between the actual and the old version.
-| Install latest release | This action can be executed if the latest release is not equal to the current installed release or if the current installed version is a snapshot. By clicking this link, the latest release version of the package from the repository will be installed.
-| Install latest snapshot | This action can be executed if there is a snapshot version available of a package and if the current installed version is not equal to this latest snapshot version. By clicking this link, the latest snapshot version of the package from the repository will be installed.
+| Show application versions | By clicking this action a table is shown with all versions of that application available in the repository. Each version in this list can be selected to be installed on the platform. It is also possible to downgrade an installed application, but this is technically only possible if no database schema migrations have been applied between the actual and the old version.
+| Install latest release | This action can be executed if the latest release is not equal to the currently installed release or if the currently installed version is a snapshot. By clicking this link, the latest release version of the application from the repository will be installed.
+| Install latest snapshot | This action can be executed if there is a snapshot build available of an application and if the currently installed version is not equal to this latest snapshot version. By clicking this link, the latest snapshot build of the application will be installed from the repository.
 |====================
 
 [WARNING]
 ====
-As defined above, the actions `Install latest ...` will only check if the current installed version is *not equal* to the latest version in repository. It does not check if the installed version is probably higher that the latest in repository. If the current package has an higher version that the latest in repository, appNG would downgrade the package by executing this action.
+As defined above, the `Install latest ...` actions will only check if the currently installed version is *not equal* to the latest version in repository. It does not check whether the installed version is higher than the latest version in the repository. If the currently installed application has a higher version than the latest one in the repository, appNG would downgrade the application by executing this action.
 ====
 
 [TIP]
 ====
-Even if a package has been updated, the current running instance in the site will still be the old one. To finally activate the new installed package all sites where the application is assigned to needs to be restarted.
+Even if an application has been updated, the currently running instance in the site will still be the old one. To finally activate the newly installed application all sites where the application is assigned to needs to be restarted.
 ====
 
-=== Uploading packages
+=== Uploading applications
 
-There are two ways to put a package version into a repository. By copying it into the file system folder of the local repository or by uploading the package.
+There are two ways to add an application version to a repository. By copying it into the file system folder of the local repository or by uploading the application.
 
 [WARNING]
 ====
-Copying the package to the local folder in file system does not automatically refresh the repositories cache. Maybe it is not listed immediately.
+Copying the application to the local file system folder does not automatically refresh the repository cache, although appNG should detect the new file. If it is not listed immediately, reloading the repository should help.
 ====
 
-Uploading of a package can only be done in a repository, configured as local repository. The upload form is placed above the list of available package versions of that repository. A application package as `*.zip` file can be selected form the local machine and uploaded to the local repository.
+Application packages can only be uploaded to local repositories. The upload form is placed above the list of available application versions of that repository. An application package (`*.zip` file) can be selected from the local machine to be uploaded to the local repository.
 
-After uploading the file, the repository cache gets refreshed automatically and the package can be installed.
+After uploading the file, the repository cache is automatically refreshed and the application can be installed.

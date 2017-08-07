@@ -5,22 +5,22 @@ Build Version  {project-version} created {localdate}
 :toc:
 
 == General
-The appNG Manager is an appNG application to configure and maintain an appNG installation and the installed applications. The manager is a mandatory core application of appNG. After installation of appNG, a site _manager_ is available with an installed manager application. The manager is available on localhost at
+The appNG Manager is an appNG application to configure and maintain the appNG platform and its installed applications. The manager is a mandatory core application of appNG. After installation of appNG, a site _manager_ is available with an installed manager application. By default, the manager is available on localhost at
 
-http://localhost:8080/manager/manager/appng-manager.
+http://localhost:8080/manager/manager/appng-manager
 
 
-The application has different pages for the different domains of configuration and monitoring:
+The application has different pages to configure and monitor the appNG platform:
 
 [cols="30,70",width="100%",options="header"]
 |====================
 | Page | Description
-| Sites | Manage sites and application within a site
-| Applications | Remove applications and edit application resources
-| Users | Create users and groups and assign roles
-| Repositories | Add repositories and install packages
+| Sites | Manage sites and applications of a site
+| Applications | Manage applications and templates; edit application resources
+| Users | Manage users, groups and role assignments
+| Repositories | Manage application repositories and install applications
 | Platform | Configure platform properties and manage database connections.
-| System | Monitor system-, environment and cluster setup. View logfile and edit logging properties.
+| System | Monitor the system-, environment- and cluster status. View logfile and edit log configuration.
 |====================
 
 <<<

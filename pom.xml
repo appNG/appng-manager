@@ -15,13 +15,13 @@
 		<displayName>Manager</displayName>
 		<longDescription><![CDATA[The Manager is the global administration frontend for appNG. This contains dialogs for administrating users, groups, roles and permissions as well as administration of sites, application, properties and repositories.]]></longDescription>
 		<appNGVersion>${project.parent.version}</appNGVersion>
-		<ascidocPhase>deploy</ascidocPhase>
+		<asciidocPhase>deploy</asciidocPhase>
 	</properties>
 
 	<parent>
 		<groupId>org.appng</groupId>
 		<artifactId>appng-application-parent</artifactId>
-		<version>1.14.2-SNAPSHOT</version>
+		<version>1.14.4</version>
 	</parent>
 
 	<scm>
@@ -175,6 +175,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.0.0</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
@@ -212,54 +213,51 @@
 						<version>1.5.0-alpha.15</version>
 					</dependency>
 				</dependencies>
+				<configuration>
+					<attributes>
+						<icons>font</icons>
+						<pagenums />
+						<toc />
+						<toclevels>3</toclevels>
+						<idprefix />
+						<idseparator>-</idseparator>
+						<numbered>true</numbered>
+						<project-version>${project.version}</project-version>
+						<project-name>${project.name}</project-name>
+					</attributes>
+				</configuration>
 				<executions>
 					<execution>
-						<id>output-pdf</id>
-						<phase>${ascidocPhase}</phase>
-						<goals>
-							<goal>process-asciidoc</goal>
-						</goals>
-						<configuration>
-							<backend>pdf</backend>
-							<outputDirectory>target/generated-docs/pdf</outputDirectory>
-							<sourceDocumentName>appng-manager-userguide.adoc</sourceDocumentName>
-							<sourceHighlighter>coderay</sourceHighlighter>
-							<imagesDir>images</imagesDir>
-							<attributes>
-								<icons>font</icons>
-								<pagenums />
-								<numbered>true</numbered>
-								<toc />
-								<toclevels>3</toclevels>
-								<idprefix />
-								<idseparator>-</idseparator>
-								<numbered>true</numbered>
-								<project-version>${project.version}</project-version>
-								<project-name>${project.name}</project-name>
-							</attributes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>output-html</id>
-						<phase>${ascidocPhase}</phase>
+						<id>html</id>
+						<phase>${asciidocPhase}</phase>
 						<goals>
 							<goal>process-asciidoc</goal>
 						</goals>
 						<configuration>
 							<backend>html5</backend>
-							<outputDirectory>target/generated-docs/html</outputDirectory>
-							<sourceDocumentName>appng-manager-userguide.adoc</sourceDocumentName>
+							<sectids>true</sectids>
 							<sourceHighlighter>coderay</sourceHighlighter>
-							<imagesDir>images</imagesDir>
+							<outputDirectory>${project.build.directory}/generated-docs/html</outputDirectory>
+							<sourceDocumentName>appng-manager-userguide.adoc</sourceDocumentName>
 							<attributes>
 								<linkcss>true</linkcss>
 								<icons>font</icons>
-								<numbered>true</numbered>
 								<sectanchors>true</sectanchors>
 								<stylesheet>appng.css</stylesheet>
-								<project-version>${project.version}</project-version>
-								<project-name>${project.name}</project-name>
 							</attributes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>pdf</id>
+						<phase>${asciidocPhase}</phase>
+						<goals>
+							<goal>process-asciidoc</goal>
+						</goals>
+						<configuration>
+							<backend>pdf</backend>
+							<sourceHighlighter>coderay</sourceHighlighter>
+							<sourceDocumentName>appng-manager-userguide.adoc</sourceDocumentName>
+							<outputDirectory>${project.build.directory}/generated-docs/pdf</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
