@@ -75,9 +75,10 @@
 			<params>
 				<param name="nodeId" />
 			</params>
-			<meta-data bindClass="org.appng.core.controller.messaging.NodeEvent.NodeState" result-selector="${current.nodeId eq nodeId}">
+			<meta-data bindClass="org.appng.application.manager.business.ClusterState.LocalNodeState" result-selector="${current.nodeId eq nodeId}">
 				<field name="nodeId" type="text">
 					<label id="nodeId" />
+					<sort ignore-case="true" order="asc" prio="0"/>
 				</field>
 				<field name="date" type="date" format="MM/dd HH:mm:ss">
 					<label id="lastUpdated" />
