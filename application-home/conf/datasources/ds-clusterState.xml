@@ -104,6 +104,7 @@
 				<field name="current" type="image">
 					<label id="selected" />
 					<icon condition="${current.current}">led_green</icon>
+					<icon condition="${!current.current}">ico_spacer</icon>
 				</field>
 				<field name="actions" type="linkpanel">
 					<label id="actions" />

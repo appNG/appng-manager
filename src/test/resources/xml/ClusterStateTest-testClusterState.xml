@@ -33,6 +33,7 @@
         <field name="current" type="image" binding="current">
             <label id="selected">selected</label>
             <icon condition="${current.current}">led_green</icon>
+            <icon condition="${!current.current}">ico_spacer</icon>
         </field>
         <field name="actions" type="linkpanel" binding="actions">
             <label id="actions">actions</label>
