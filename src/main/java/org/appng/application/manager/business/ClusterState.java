@@ -123,6 +123,7 @@ public class ClusterState implements DataProvider, ActionProvider<Void> {
 		if (log.isDebugEnabled()) {
 			log.debug("local node is {}", localNode);
 		}
+		localNode.setCurrent(true);
 		return localNode;
 	}
 
@@ -143,6 +144,7 @@ public class ClusterState implements DataProvider, ActionProvider<Void> {
 		private final Properties props;
 		private final Map<String, String> env;
 		private final Map<String, SiteState> siteStates;
+		private boolean current = false;
 
 		public LocalNodeState(NodeState nodeState) {
 			this(nodeState.getNodeId(), nodeState.getDate(), nodeState.getHeap(), nodeState.getNonHeap(),

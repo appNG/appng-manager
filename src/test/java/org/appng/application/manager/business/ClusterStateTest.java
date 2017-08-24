@@ -26,7 +26,7 @@ import org.mockito.Mockito;
 public class ClusterStateTest extends AbstractTest {
 
 	static {
-		WritingXmlValidator.writeXml = true;
+		WritingXmlValidator.writeXml = false;
 	}
 
 	@Test

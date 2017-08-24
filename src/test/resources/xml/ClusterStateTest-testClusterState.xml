@@ -30,6 +30,10 @@
         <field name="nonHeap.usedPercent" type="decimal" format="00.00 %" binding="nonHeap.usedPercent">
             <label id="nonHeap.usedPercent">Percentage</label>
         </field>
+        <field name="current" type="image" binding="current">
+            <label id="selected">selected</label>
+            <icon condition="${current.current}">led_green</icon>
+        </field>
         <field name="actions" type="linkpanel" binding="actions">
             <label id="actions">actions</label>
         </field>
