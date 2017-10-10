@@ -96,7 +96,7 @@ If the application provides a role marked as admin role, it is automatically ass
 After assigning the role, the application will not be visible immediately because appNG processes the permissions for a user only during login. After logging out and in again, the menu entry for that new assigned application should be visible in the menu of the respective site.
 
 ==== Deactivating applications of a site
-To unassign an application from a site, go to the edit page of a site. In the section `Applications` a list of all available applications is shown. For each application assigned to that site an action `Deactivate` is available. By clicking this action the application is deassigned for that site. 
+To unassign an application from a site, go to the edit page of a site. In the section `Applications` a list of all available applications is shown. For each application assigned to that site an action `Deactivate` is available. By clicking this action the application is deassigned for that site.
 
 [WARNING]
 ====
@@ -204,3 +204,5 @@ If appNG runs in a cluster environment, it depends on the cluster setup whether 
 This table might be useful to check if there are authenticated users in a site before restarting it. For authenticated users their user-name appears in the respective column.
 
 On the bottom of the table an action is available to expire all sessions, except the current user session,  immediately.
+
+include::./site-properties.adoc[]

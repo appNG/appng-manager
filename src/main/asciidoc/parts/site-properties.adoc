@@ -1,0 +1,84 @@
+=== Site properties
+A site can be configured using an manageable amount of properties. These can be roughly devided into the following categories:
+
+* Backend +
+Configures the management backend itself
+* Caching +
+Configures caching using Ehcache
+* Content +
+Properties for configuring content delivery from a site's repository
+* Indexing/Searching +
+Configures Lucene indexing and searching features
+* UI +
+Affects the behavior of the management user interface
+
+[IMPORTANT]
+====
+After changing site properties, you must perform a site reload to apply these changes.
+====
+
+A detailed list of the available properties can be found here:
+
+[cols="15,10,10,40,15",width="100%",options="header,footer"]
+|====================
+| Name | Type | Category | Description | Default
+|appendTabId|boolean|UI|If set to `true`, the name of the currently selected tab is being appended to the URL as a get-parameter. Addresses the issue that IE loses the anchor on a redirect.|`false`
+|assetsDir|text|Content|A semicolon-separated list of folder-names (relative to `wwwDir`) containing static resources such as images or pdfs|`/assets`
+|authApplication|text|Backend|The name of the application which is responsible for the authentication|`appng-authentication`
+|authLoginPage|text|Backend|The names of the login-pages (comma-separated) within the application defined in `authApplication`. The number of comma-separated pages must be the same as in `authLoginRef`, because `authLoginRef[n]` refers to `authLoginPage[n]`!|`webform`
+|authLoginRef|text|Backend|The action names (comma-separated) for the pages defined in `authLoginPage`. The number of comma-separated names must be the same as in `authLoginPage`, because `authLoginRef[n]` refers to `authLoginPage[n]`!|`webform`
+|authLogoutActionName|text|Backend|The name for the parameter defining the action on the `authLogoutPage`|`action`
+|authLogoutActionValue|text|Backend|The value for the parameter defining the action on the `authLogoutPage`|`logout`
+|authLogoutPage|text|Backend|The name of the logout-page within the application defined in `authApplication`|`webform`
+|authLogoutRef|text|Backend|The reference-path for the logout-action|`webform/logout`
+|csrfProtectionEnabled|boolean|Backend|Set to `true` to enable CSRF-protection for this site|`false`
+|csrfProtectedMethods|text|Backend|a comma-separated list of HTTP-methods to enable CSRF protection for|`POST,PUT`
+|csrfProtectedPaths|text|Backend|a comma-separated list of path-prefixes to enable CSRF protection for|`/manager`
+|DatasourceConfigurer|text|Backend|The fully qualified name of a class implementing `org.appng.core.repository.config.DatasourceConfigurer`, which is responsible for JDBC connection-pooling. Supported are `org.appng.core.repository.config.HikariCPConfigurer` and `org.appng.core.repository.config.TomcatJdbcConfigurer`|`org.appng.core.repository.config.HikariCPConfigurer`
+|defaultPage|text|Content|The name of the default-page (without extension) relative to one of the directories defined in `documentDir`|`index`
+|defaultPageSize|int|UI|The default page size (items per page)|`25`
+|defaultApplication|text|Backend|The application to be called after a successful login|`appng-manager`
+|documentDir|text|Content|A semicolon-separated list of folder-names (relative to `wwwDir`) containing JSP-files and static resources|`/de`
+|ehcacheEnabled|boolean|Caching|Set to `true` to enable Ehcache for this site|`false`
+|ehcacheExceptions|multilined text|Caching|URL path prefixes which are never cached. Contains one prefix per line.|`/manager`
+|ehcacheBlockingTimeout|int|Caching|The time, in milliseconds, to wait for the filter before a `LockTimeoutException` is thrown|`10000`
+|ehcacheStatistics|boolean|Caching|Set to `true` to enable Ehcache statistics|`false`
+|ehcacheClearOnShutdown|boolean|Caching|Whether or not the Ehcache is cleared on a site shutdown/reload|`true`
+|encoding|text|Content|The encoding for file-resources|`UTF-8`
+|enforcePrimaryDomain|boolean|Backend|Set to `true` to enforce the protocol used by the site (http or https)|`false`
+|errorPage|text|Content|The name of the default error-page (without extension) relative to `wwwDir`|`error`
+|errorPages|text|Content|The name of the error-page per document-directory (see `documentDir`), multiple entries separated by a pipe (\|)|`/de=fehler\|/en=error`
+|host|text|Backend|The host of the site. For convenience only, do not change!|The host of the site
+|indexConfig|text|Indexing|For each directory defined in `documentDir`, there can be defined which locale and which Lucene-analyzer to use for indexing.|`/de;de;GermanAnalyzer\|/assets;de;GermanAnalyzer`
+|indexDir|text|Indexing|The folder containing the Lucene-Index, relative to `wwwDir`|`/index`
+|indexFileSystemQueueSize|int|Indexing|the queue size used per directory when indexing the file system|`2500`
+|indexFileTypes|text|Indexing|A list of comma-separated file-extensions (without leading dot) which are being indexed|`jsp,pdf,doc`
+|indexQueueSize|int|Indexing|The queue size used for document indexing|`1000`
+|indexTimeout|int|Indexing|The timeout in milliseconds for indexing|`5000`
+|ldapDomain|text|Backend|The Domain for the LDAP authentication|`EXAMPLE`
+|ldapGroupBaseDn|text|Backend|The base-DN for LDAP-groups|`OU=Groups,DC=example,DC=com`
+|ldapHost|text|Backend|The LDAP host|`ldap:<host>:<port>`
+|ldapIdAttribute|text|Backend|The name of the LDAP-attribute containing the user-id used for authentication|`sAMAccountName`
+|ldapPassword|text|Backend|Password of the LDAP service-user|`secret`
+|ldapUser|text|Backend|The name of the LDAP service-user|`serviceUser`
+|ldapUserBaseDn|text|Backend|The base-DN for LDAP-users|`OU=Users,DC=example,DC=com`
+|locale|text|UI|The default locale for the site. Use one of `java.util.Locale.getAvailableLocales()`|`Locale.getDefault().getLanguage()`
+|mailDisabled|boolean|Backend|Set to `true` to disable mailing and log the e-mails instead.|`true`
+|mailHost|text|Backend|The mail-host to use|`localhost`
+|mailPort|int|Backend|The mail-port to use|`25`
+|manager-path|text|UI|The path-suffix for the appNG-Webapplication|`/manager`
+|name|text|Backend|The name of the site. For convenience only, do not change!|
+|rewriteConfig|text|Content|the location of the rewrite rules for UrlRewriteFilter (http://tuckey.org/urlrewrite), relative to `siteRootDir`.|`/meta/conf/urlrewrite.xml`
+|searchChunkSize|int|Content|The chunksize (items per page) for the search-tag|`20`
+|searchMaxHits|int|Content|The maximum number of hits for the search-tag|`100`
+|serviceOutputFormat|text|Backend|The output format to be used when actions/datasources are being called through service URLs|`html`
+|serviceOutputType|text|Backend|The output type to be used when actions/datasources are being called through service URLs|`service`
+|service-path|text|Backend|The path-suffix for the services offered by appNG (such as Webservices, SOAP, Actions, Datasources)|`/service`
+|siteRootDir|text|Backend|The absolute path to the site's root-directory|
+|supportedLanguages|text|Backend|A comma-separated list of the languages supported by the site |`en, de`
+|tagPrefix|text|Content|The prefix used for the appNG JSP-tags.|`appNG`
+|template|text|Backend|The name of the template to use|`appng`
+|timeZone|text|UI|The default timezone for the site. Use one of `java.util.TimeZone.getAvailableIDs()`.|`TimeZone.getDefault().getID()`
+|wwwDir|text|Content|The name of the folder containing the web-contents, relative to `repositoryPath` configured at the platform|`/www`
+|xssExceptions|multilined text|Backend|URL path prefixes where XSS protection is omitted. Contains one prefix per line. Supports blank lines and comments (#).|
+|====================
