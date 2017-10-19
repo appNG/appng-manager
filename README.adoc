@@ -4,4 +4,4 @@ image::https://www.aiticon.com/assets/images/appng_logo_760px.jpg[]
 
 == Welcome to appNG Manager
 
-The appNG Manager is an appNG core application, providing a web-based interface to administer appNG and to access other appNG applications.
+The appNG Manager is an appNG privileged application, providing a web-based interface to administer appNG and to access other appNG applications.

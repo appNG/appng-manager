@@ -3,7 +3,7 @@
 The page `Applications` shows the list of all installed applications. Each application in that list offers the two actions `Edit` and `Delete`.
 
 === Editing an application
-Besides the three switches `Core Application`, `Hidden` and `filebased` all information about an application is stored within the XML files of the application package. If something has been changed through the appNG manager, it might be overwritten by the next application update.
+Besides the three switches `Privileged Application`, `Hidden` and `filebased` all information about an application is stored within the XML files of the application package. If something has been changed through the appNG manager, it might be overwritten by the next application update.
 
 [WARNING]
 ====
