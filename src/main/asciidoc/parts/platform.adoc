@@ -54,7 +54,7 @@ This section allows to modify the existing database connections. It is not suppo
 | Password | The password used to authenticate the database user.  | `Xoos9Eeng1ku`
 | Driver-Class | The name of the `java.sql.Driver` implementation used to connect to the database. | `com.mysql.jdbc.Driver`
 | managed | Flag to indicate whether the database is managed by appNG or not. If the database is not managed by appNG, a database administrator has to take care of creating databases for the platform as well as for applications requesting a database. | `true`
-| active | Flag to indicate whether this connection can be used by appNG.
+| active | Flag to indicate whether this connection can be used by appNG.|`yes` 
 | Min. number of connections | appNG uses connection pooling to avoid the overhead by opening and closing JDBC connections. This value defines the minimum number of connections in the pool. Default value is `1`. | `1`
 | Max. number of connections | This value defines the maximum number of open JDBC connections in that pool. Default value is `20`. | `20`
 | Validation query | appNG checks if the database is properly connected. Therefore it needs to execute a query. Default for mysql databases is `select 1`. | `select 1`
