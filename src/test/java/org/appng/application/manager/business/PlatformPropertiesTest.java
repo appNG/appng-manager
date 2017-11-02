@@ -56,8 +56,8 @@ public class PlatformPropertiesTest extends AbstractTest {
 		form.getProperty().setClob("foo");
 		CallableAction action = getCreateAction().getCallableAction(form);
 		FieldProcessor fp = action.perform();
-		assertError(fp.getField("property.defaultString"), "Please set the value or the clob-value.");
-		assertError(fp.getField("property.clob"), "Please set the value or the clob-value.");
+		assertError(fp.getField("property.defaultString"), "Please set the value or the multilined value.");
+		assertError(fp.getField("property.clob"), "Please set the value or the multilined value.");
 	}
 
 	private void assertError(FieldDef field, String message) {
@@ -106,8 +106,8 @@ public class PlatformPropertiesTest extends AbstractTest {
 		property.setClob("aa");
 		CallableAction action = getUpdateAction(new PropertyForm(property));
 		FieldProcessor fp = action.perform();
-		assertError(fp.getField("property.actualString"), "Please set the value or the clob-value.");
-		assertError(fp.getField("property.clob"), "Please set the value or the clob-value.");
+		assertError(fp.getField("property.actualString"), "Please set the value or the multilined value.");
+		assertError(fp.getField("property.clob"), "Please set the value or the multilined value.");
 	}
 
 	protected CallableAction getUpdateAction(PropertyForm form) throws ProcessingException {

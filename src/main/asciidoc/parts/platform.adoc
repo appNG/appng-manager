@@ -7,14 +7,16 @@ The first section of the page `Platform` lists the platform properties. A platfo
 
 Platform properties are created during the first (initial) startup of the platform. The default values are defined within the appNG platform. The default value may be overwritten during a platform update.
 
-As long as the value or the CLOB value of a property is not defined, appNG uses the default value.
+As long as the value or the multilined value of a property is not defined, appNG uses the default value.
 
 === Platform properties
 
-==== Edit platform property
-Each property in the list of platform properties offers an action to edit it. By clicking this action a new form opens where the value or the CLOB value of a property can be changed. Note that it is not possible to save the property if both fields are filled.
+include::./platform-properties.adoc[]
 
-If the value or CLOB value is defined, appNG will use this new value after a platform reload. Empty the value or CLOB value field if appNG should use the default again.
+==== Edit platform property
+Each property in the list of platform properties offers an action to edit it. By clicking this action a new form opens where the value or the multilined value of a property can be changed. Note that it is not possible to save the property if both fields are filled.
+
+If the value or multilined value is defined, appNG will use this new value after a platform reload. Empty the value or multilined value field if appNG should use the default again.
 
 ==== Create platform property
 On top and bottom of the table an action to create a platform property is displayed. The new property has to have an unique name. The given value will be used as default value. Creating a property can be used to activate and configure features for appNG not available in the default configuration. Properties can also be used as feature toggles to activate and configure new features during appNG platform development.

@@ -1,5 +1,4 @@
-=== Site properties
-A site can be configured using an manageable amount of properties. These can be roughly devided into the following categories:
+A site can be configured using an manageable amount of properties. These can be roughly divided into the following categories:
 
 * Backend +
 Configures the management backend itself
@@ -19,7 +18,7 @@ After changing site properties, you must perform a site reload to apply these ch
 
 A detailed list of the available properties can be found here:
 
-[cols="15,10,10,40,15",width="100%",options="header,footer"]
+[cols="15,10,10,45,20",width="100%",options="header,footer"]
 |====================
 | Name | Type | Category | Description | Default
 |appendTabId|boolean|UI|If set to `true`, the name of the currently selected tab is being appended to the URL as a get-parameter. Addresses the issue that IE loses the anchor on a redirect.|`false`
@@ -32,8 +31,8 @@ A detailed list of the available properties can be found here:
 |authLogoutPage|text|Backend|The name of the logout-page within the application defined in `authApplication`|`webform`
 |authLogoutRef|text|Backend|The reference-path for the logout-action|`webform/logout`
 |csrfProtectionEnabled|boolean|Backend|Set to `true` to enable CSRF-protection for this site|`false`
-|csrfProtectedMethods|text|Backend|a comma-separated list of HTTP-methods to enable CSRF protection for|`POST,PUT`
-|csrfProtectedPaths|text|Backend|a comma-separated list of path-prefixes to enable CSRF protection for|`/manager`
+|csrfProtectedMethods|text|Backend|a comma-separated list of HTTP-methods to enable CSRF protection for (see `csrfProtectionEnabled`)|`POST,PUT`
+|csrfProtectedPaths|text|Backend|a comma-separated list of path-prefixes to enable CSRF protection for (see `csrfProtectionEnabled`)|`/manager`
 |DatasourceConfigurer|text|Backend|The fully qualified name of a class implementing `org.appng.core.repository.config.DatasourceConfigurer`, which is responsible for JDBC connection-pooling. Supported are `org.appng.core.repository.config.HikariCPConfigurer` and `org.appng.core.repository.config.TomcatJdbcConfigurer`|`org.appng.core.repository.config.HikariCPConfigurer`
 |defaultPage|text|Content|The name of the default-page (without extension) relative to one of the directories defined in `documentDir`|`index`
 |defaultPageSize|int|UI|The default page size (items per page)|`25`

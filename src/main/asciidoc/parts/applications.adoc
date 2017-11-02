@@ -41,7 +41,7 @@ Installing applications in `filebased` mode might make development and debugging
 ==== Application Properties
 This section shows all application properties which have been read from the `application.xml` file during application installation.
 
-An application property offers the method `Edit`. It opens a form where the fields `value` and `CLOB value` can be changed. But this does not have any effect on properties of assigned applications nor does it have any effect on the site-specific application properties to be created on assignment.
+An application property offers the method `Edit`. It opens a form where the fields `value` and `Multilined value` can be changed. But this does not have any effect on properties of assigned applications nor does it have any effect on the site-specific application properties to be created on assignment.
 
 An application property can be deleted. This does not have any effect on site-specific application properties of assigned application, but the deleted property will not be created as site application property when an application gets assigned to a site.
 

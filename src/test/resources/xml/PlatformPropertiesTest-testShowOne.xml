@@ -19,7 +19,7 @@
                 <label id="value">Value</label>
             </field>
             <field name="clob" type="longtext" format="auto" binding="property.clob">
-                <label id="clobvalue">CLOB value</label>
+                <label id="clobvalue">Multilined value</label>
             </field>
             <field name="description" type="longtext" readonly="true" binding="property.description">
                 <label id="description">Description</label>
