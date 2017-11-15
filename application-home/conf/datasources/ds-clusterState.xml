@@ -75,8 +75,9 @@
 			<params>
 				<param name="nodeId" />
 			</params>
-			<meta-data bindClass="org.appng.core.controller.messaging.NodeEvent.NodeState" result-selector="${current.nodeId eq nodeId}">
+			<meta-data bindClass="org.appng.application.manager.business.ClusterState.LocalNodeState" result-selector="${current.nodeId eq nodeId}">
 				<field name="nodeId" type="text">
+					<sort ignore-case="true" order="asc" prio="0" />
 					<label id="nodeId" />
 				</field>
 				<field name="date" type="date" format="MM/dd HH:mm:ss">
@@ -99,6 +100,11 @@
 				</field>
 				<field name="nonHeap.usedPercent" type="decimal" format="00.00 %">
 					<label id="nonHeap.usedPercent" />
+				</field>
+				<field name="current" type="image">
+					<label id="selected" />
+					<icon condition="${current.current}">led_green</icon>
+					<icon condition="${!current.current}">ico_spacer</icon>
 				</field>
 				<field name="actions" type="linkpanel">
 					<label id="actions" />

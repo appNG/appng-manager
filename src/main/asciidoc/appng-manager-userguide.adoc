@@ -1,11 +1,29 @@
 = appNG Manager User Manual
-Matthias Müller <matthias.mueller@appng.org>
+Claus Stümke <claus.stuemke@appng.org>
 Build Version  {project-version} created {localdate}
-:title-logo-image: appng.png
+:title-logo-image: images/appng.png
 :toc:
 
 == General
+The appNG Manager is an appNG application to configure and maintain the appNG platform and its installed applications. The manager is a mandatory privileged application of appNG. After installation of appNG, a site _manager_ is available with an installed manager application. By default, the manager is available on localhost at
 
+http://localhost:8080/manager/manager/appng-manager
+
+
+The application has different pages to configure and monitor the appNG platform:
+
+[cols="30,70",width="100%",options="header"]
+|====================
+| Page | Description
+| Sites | Manage sites and applications of a site
+| Applications | Manage applications and templates; edit application resources
+| Users | Manage users, groups and role assignments
+| Repositories | Manage application repositories and install applications
+| Platform | Configure platform properties and manage database connections.
+| System | Monitor the system-, environment- and cluster status. View logfile and edit log configuration.
+|====================
+
+<<<
 
 include::parts/sites.adoc[]
 include::parts/applications.adoc[]

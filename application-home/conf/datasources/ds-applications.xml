@@ -25,9 +25,9 @@
 					<sort />
 					<label>version</label>
 				</field>
-				<field name="coreApplication" type="checkbox">
+				<field name="privileged" type="checkbox">
 					<sort />
-					<label>coreApplication</label>
+					<label>privileged</label>
 				</field>
 				<field name="fileBased" type="checkbox">
 					<sort />
@@ -90,8 +90,8 @@
 				<field name="appNGVersion" type="text" readonly="true">
 					<label>appNGVersion</label>
 				</field>
-				<field name="coreApplication" type="checkbox">
-					<label>coreApplication</label>
+				<field name="privileged" type="checkbox">
+					<label>privileged</label>
 				</field>
 				<field name="hidden" type="checkbox">
 					<label>hidden</label>
@@ -127,8 +127,8 @@
 				<field name="displayName" type="text">
 					<label>displayName</label>
 				</field>
-				<field name="coreApplication" type="checkbox">
-					<label>coreApplication</label>
+				<field name="privileged" type="checkbox">
+					<label>privileged</label>
 				</field>
 				<field name="fileBased" type="checkbox">
 					<label>filebased</label>

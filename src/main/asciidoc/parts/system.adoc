@@ -1,15 +1,56 @@
+
 == System
+This page shows information about the runtime environment of the appNG platform.
 
 === Environment
+
 ==== JVM Arguments
+Returns the parameters passed to the Java virtual machine.
+
 ==== System Properties
+Determines the current system properties. It displays all values returned by calling the static System method
+
+....
+java.lang.System.getProperties()
+....
+
 ==== System Environment
+Determines the current system environment. The environment is a system-dependent mapping from names to values which is passed from parent to child processes. AppNG does this by calling
+
+....
+java.lang.System.getenv()
+....
 
 === Status
+The Status section displays some information about the system status.
+
+==== Processor
+Shows the system load average for the last minute and the number of processors available to the Java virtual machine.
+
 ==== Memory
+Determines the current memory usage of the heap that is used for object allocation and the current memory usage of non-heap memory that is used by the Java virtual machine.
+
 ==== Sessions
+Lists all sessions currently active on the platform. Allows to expire one or all sessions, besides the session of the current user.
 
 === Logfile
-==== Editing the logging configuration
+Shows a tail view of the appNG logfile from the current node. If appNG runs in a cluster setup be aware that there are other logfiles on other nodes.
+
+It also shows the current log4j configuration in an editable text field. Changes to the log configuration can be submitted. This will update the current log4j configuration immediately without a platform reload. It is optionally possible to propagate this configuration to all other nodes in the cluster.
 
 === Cluster Status
+This section displays the status of all other nodes in the cluster. A status entry consists of:
+
+[width="100%",options="header,footer"]
+|====================
+| Status Item | Description|
+| Node ID | Node id defined as system property `appng.node.id`. Identifies a node within a cluster.
+| Last Updated | The cluster status is directly requested from the other nodes in the cluster. This timestamp shows when the data of the respective node has been retrieved.
+| Memory status | The current memory usage of the heap of the respective node that is used for object allocation.
+|====================
+
+Each entry can be enlaged to show also:
+
+* List and status of all sites of that node.
+* System properties of that node as shown in the <<Environment>> page of that node.
+* System Environment of that node as shown in the <<Environment>> page of that node.

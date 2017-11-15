@@ -64,7 +64,7 @@
 				<param name="groupid" />
 			</params>
 			<meta-data binding="group" bindClass="org.appng.application.manager.form.GroupForm">
-				<field name="name" type="text">
+				<field name="name" type="text" readonly="${current.group.defaultAdmin}">
 					<label>name</label>
 				</field>
 				<field name="description" type="text">

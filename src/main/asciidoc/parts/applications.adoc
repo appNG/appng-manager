@@ -1,10 +1,142 @@
+
 == Applications
+The page `Applications` shows the list of all installed applications. Each application in that list offers the two actions `Edit` and `Delete`.
 
 === Editing an application
+Besides the three switches `Privileged Application`, `Hidden` and `filebased` all information about an application is stored within the XML files of the application package. If something has been changed through the appNG manager, it might be overwritten by the next application update.
+
+[WARNING]
+====
+We advise to update information of the application within the application package source files to avoid that important changes are overwritten after application updates.
+====
+
+This feature provides powerful possibilities to modify an installed application, which is useful for quickly testing small changes without deploying a new version of the application. 
+
+==== Update Application
+In this section some of the main application attributes can be viewed and updated. The most important switches are at the bottom of the form:
+
+[width="100%",options="header"]
+|====================
+| Name | Description
+| Privileged Application | A privileged application has elevated access rights in the appNG platform. This is for instance necessary if an application is designed to provide the authentication service for a site.
+| Hidden | An hidden application is not listed in the application menu of the site. It will still appear in the list of assigned application on the edit page of the site. This is useful if an application has no user interface.
+| filebased | If appNG runs as single instance, it does not matter whether the application resources are stored in the file system or in the database. But in a cluster scenario, it is necessary, that all resources of an application are stored in the database. All cluster nodes are connected to the same database so they will all use the same application resources.
+|====================
+
+[NOTE]
+====
+If the `filebased` property is toggled, appNG automatically migrates application resources from the database to the file system and vice versa.
+====
+
+[WARNING]
+====
+After toggling the `filebased` property, resource migration in a cluster setup only applies to the current node. I.e. if `filebased` is activated, the application resources are moved from the database to the filesystem of the current node. All other nodes will fail to run the application, as they can not access the application resources any more. *Make sure applications are never installed `filebased` in your cluster!*
+====
+
+[TIP]
+====
+Installing applications in `filebased` mode might make development and debugging in a local development environment easier.
+====
+
+==== Application Properties
+This section shows all application properties which have been read from the `application.xml` file during application installation.
+
+An application property offers the method `Edit`. It opens a form where the fields `value` and `Multilined value` can be changed. But this does not have any effect on properties of assigned applications nor does it have any effect on the site-specific application properties to be created on assignment.
+
+An application property can be deleted. This does not have any effect on site-specific application properties of assigned application, but the deleted property will not be created as site application property when an application gets assigned to a site.
+
+An application property can be created with an unique name. The given value will be set as the default value of the property. This new property will not be added to the list of site-specific application properties of already assigned applications, but it will be created as site-specific application property for upcoming application assignments.
+
+[TIP]
+====
+Default values of existing application properties cannot be changed, but the property can be removed and created with the same name. This will affect only site-specific application properties of applications, which are assigned afterwards and will not affect the existing ones.
+====
+
+During an application update, all properties which are part of the `application.xml` of the new application package are overwritten. Existing application properties in appNG, with no counterpart in the `application.xml` file, will stay untouched.
+
+==== Roles
+appNG has a fine-grained role and permission model. A permission is the right to see or do something. A role is a set of permissions. An appNG group aggregates roles, and groups can be assigned to appNG users.
+
+Permissions and roles are defined in the `application.xml` file of an application. The aggregation of permissions and roles can be modified within the appNG manager, but general changes should be done in the `application.xml` file and changed by an application update.
+
+The `Roles` page shows the list of all available roles of that application. A role can be edited or deleted and a new role can be created.
+
+===== Edit Role
+By clicking the edit action of a role, a form opens where the user can change the name and description of a role as well as the assignment of permissions to that role. This change takes effect after next login. It will not take immediate effect for currently authenticated users.
+
+[WARNING]
+====
+Removed permissions of a role are re-assigned during the next application update, if the role still has that permission in the `application.xml` file of the new application package. Added permissions will still be assigned to the role after an application update, even if the role in the new application package does not have that permission.
+====
+
+===== Delete Role
+By clicking the delete action in the application roles overview, a role can be deleted. This change takes effect after the next login. It will not take immediate effect for currently authenticated users.
+
+[WARNING]
+====
+A deleted role will be created again on package update, if the deleted role is still part of the `application.xml` file of the new application package.
+====
+
+[TIP]
+====
+If the roles shipped together with the application do not meet your requirements, create your own roles. They will not be modified during an application update. See <<Create Role>>.
+====
+
+===== Create Role
+By clicking the action `Create role` below or above the overview table, a form opens to define the name and description of the new role. It also gives the possibility to assign permissions to that new role.
+A created role will stay untouched on application updates as long as the new `application.xml` file of the application package does not contain a (new) role with the same name. Otherwise, the role is updated as described above.
+
+==== Permissions
+A permission is the right to see or do something. Permissions can be applied to a lot of elements like actions, datasources, pages, linkpanels and fields. Furthermore, application developers can test a permission programmatically.
+
+A permission must be used either in the source XML (which describes the structure of the application and the user interface), or in the application source code, to have any effect.
+We suggest to not change the permissions of an application, unless an application developer advised you to do so.
+
+==== Resources
+This section lists all available resources which have been installed along with the package. The list can be filtered by type:
+
+[width="100%",options="header"]
+|====================
+| Name  | Description
+| BEANS_XML |  `beans.xml` located in the root directory
+| JAR |  JAR files (`*.jar`) located at `/lib`
+| XML |  XML sources (`*.xml`) located at `/conf`
+| XSL |  XSL stylesheets (`*.xsl`) located at `/xsl`
+| SQL |  SQL scripts (`*.sql`) located at `/sql`
+| TPL |  custom (non-XSL) template resources
+| RESOURCE | custom resources, such as .js, .css, .jpg, .png
+| DICTIONARY | dictionaries (`*.properties`) located at `/dictionary`
+| APPLICATION | `application.xml` located in the root directory
+| ASSET | Not supported yet
+|====================
+
+The path statements describe the location of the files, relative to the application package respectively the application root folder.
+
+Each element in the list can be deleted, even if this would lead to a situation where the application cannot startup anymore. All text files can be edited, which is useful during rapid prototyping. Furthermore, this function may be handy to apply a quick-fix. However, this should be the exemption, since the regular development workflow is omitted. New Resources can be uploaded. E.g. another dictionary file can be added to support another language.
+
+[WARNING]
+====
+All resources are removed and re-created on application update. That means, all changes applied to the resources and all additionally created resources are gone after the application update. If application resources have been edited or added, and if you want to keep these changes, make sure the new application contains the changes or the new resources.
+====
+
+//==== Dictionary
 
 === Deleting an application
+The application overview provides an action per application to delete the application. After confirming to delete the application, the following actions are executed:
 
+* remove the application assignment from inactive sites
+* delete roles
+* delete permissions
+* delete resources
+* delete properties
+
+[NOTE]
+====
+An application assigned to an active site cannot be removed.
+====
 
 == Templates
+Templates can be installed on or removed from the appNG platform. It is not possible to edit or change the contents of an installed template package. A site chooses the template to be used for all applications of that site in the edit site form.
 
 === Deleting a template
+In the template overview, an action to delete each template is available. All resources of the template are removed during deletion. A template cannot be removed if it is in use by any site no matter if active or not.
