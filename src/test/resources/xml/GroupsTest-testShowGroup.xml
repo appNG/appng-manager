@@ -6,7 +6,7 @@
             <param name="groupid">1</param>
         </params>
         <meta-data binding="group" bindClass="org.appng.application.manager.form.GroupForm">
-            <field name="name" type="text" binding="group.name">
+            <field name="name" type="text" readonly="false" binding="group.name">
                 <label id="name">Name</label>
             </field>
             <field name="description" type="text" binding="group.description">
