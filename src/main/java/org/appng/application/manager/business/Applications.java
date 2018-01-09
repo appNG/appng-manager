@@ -97,6 +97,11 @@ public class Applications extends ServiceAware implements DataProvider, ActionPr
 				String message = request.getMessage(okMessage, applicationId);
 				fp.addOkMessage(message);
 			}
+			if (null != errorMessage) {
+				String message = request.getMessage(errorMessage, applicationId);
+				fp.addErrorMessage(message);
+				log.error(message);
+			}
 		} catch (BusinessException ex) {
 			String message = request.getMessage(errorMessage, applicationId);
 			log.error(message, ex);
