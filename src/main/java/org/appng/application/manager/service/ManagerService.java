@@ -550,7 +550,7 @@ public class ManagerService extends CoreService implements Service {
 			Integer id = form.getId();
 			Application application = applicationRepository.findOne(appId);
 			boolean fileBased = application.isFileBased();
-			String reloadMessage = request.getMessage(MessageConstants.RELOAD_PLATFORM);
+			String reloadMessage = request.getMessage(MessageConstants.RELOAD_SITE);
 			File appRootFolder = getApplicationRootFolder(environment);
 			Resources resourceHolder = getResources(application, null, appRootFolder);
 			Resource resource = resourceHolder.getResource(id);
@@ -629,7 +629,7 @@ public class ManagerService extends CoreService implements Service {
 					resource.calculateChecksum();
 					resourceRepository.save(resource);
 				}
-				String reloadMessage = request.getMessage(MessageConstants.RELOAD_PLATFORM);
+				String reloadMessage = request.getMessage(MessageConstants.RELOAD_SITE);
 				fp.addNoticeMessage(reloadMessage);
 				fp.addOkMessage(okMessage);
 			} else {
@@ -944,7 +944,7 @@ public class ManagerService extends CoreService implements Service {
 			getRequest().setPropertyValues(form, new SiteForm(currentSite), fp.getMetaData());
 
 			if (isActive ^ wasActiveBefore) {
-				String message = request.getMessage(MessageConstants.RELOAD_PLATFORM);
+				String message = request.getMessage(MessageConstants.RELOAD_SITE);
 				fp.addNoticeMessage(message);
 			}
 

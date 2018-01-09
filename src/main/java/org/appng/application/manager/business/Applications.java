@@ -89,7 +89,7 @@ public class Applications extends ServiceAware implements DataProvider, ActionPr
 				if (migrationStatus.isErroneous()) {
 					okMessage = null;
 				} else {
-					String reloadMessage = request.getMessage(MessageConstants.RELOAD_PLATFORM);
+					String reloadMessage = request.getMessage(MessageConstants.RELOAD_SITE);
 					fp.addNoticeMessage(reloadMessage);
 				}
 			}

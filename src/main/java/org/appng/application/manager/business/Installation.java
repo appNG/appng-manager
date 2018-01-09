@@ -73,7 +73,7 @@ public class Installation extends ServiceAware implements DataProvider, ActionPr
 				errorMessage = MessageConstants.PACKAGE_INSTALL_ERROR;
 				service.installPackage(repositoryId, packageName, packageVersion, packageTimestamp, fp);
 				okMessage = MessageConstants.PACKAGE_INSTALLED;
-				String reloadMessage = request.getMessage(MessageConstants.RELOAD_PLATFORM);
+				String reloadMessage = request.getMessage(MessageConstants.RELOAD_SITE);
 				fp.addNoticeMessage(reloadMessage);
 			} else if (ACTION_DELETE_PACKAGE.equals(action)) {
 				errorMessage = MessageConstants.PACKAGE_DELETE_ERROR;
