@@ -16,18 +16,39 @@ Permissions are added to a user by assigning groups to users and roles to groups
 The users page shows a list of all configured users.
 
 === LDAP connectivity
-If the type `LDAP user` or `LDAP Group` is used, the site has to be configured to be able to connect to a LDAP server. This can be configured with the following site properties:
+If the type `LDAP user` or `LDAP Group` is used, authentication will use an external LDAP server.
+
+In case of `LDAP user` the username is mapped to an LDAP principal and a simple bind is done against the LDAP server. The user is authenticated, if the bind succeeds. Note that the configured `LDAP user` name and the one entered in the login mask, are the same, when using `LDAP user`.
+
+In case of `LDAP Group` the configured name is interpreted as an LDAP group, which is resolved to the actual usernames. This comprises three steps:
+
+. The username entered in the login mask is used to bind in the same way as described for `LDAP user` above.
+. The configured `LDAP Group` name is mapped to members by looking up the `member` attributes of the object `cn=<name>,_ldapGroupBaseDn_`. This step makes use of the service credentials configured via `ldapUser` and `ldapPassword`, to execute the lookup.
+. The username entered in the login mask must be present in the `_ldapIdAttribute_` of at least one member object, found in the previous step, in order to be successful.
+
+.Principal Mapping
+How usernames are mapped to ldap principals depends on the value of `ldapPrincipalScheme`:
+
+* "`DN`" : results in `_ldapIdAttribute_=<username>,_ldapUserBaseDn_`
+* "`UPN`": results in `<username>@_ldapDomain_`
+* "`SAM`": results in `_ldapDomain_\<username>`
+
+The schemes "`UPN`" and "`SAM`" are Windows AD specific (see  https://msdn.microsoft.com/en-us/library/cc223499.aspx[MSDN on supported authentication methods in AD]).
+The default value is "`SAM`" to remain backward compatibility with older appNG versions
 
 [width="100%",options="header"]
 |====================
-| Property  | Description | Example
-| `ldapDomain` | The Domain for the LDAP authentication | `EXAMPLE`
-| `ldapGroupBaseDn` | The base-DN for LDAP-groups | `OU=Groups,DC=example,DC=com`
-| `ldapHost` | The LDAP host | `ldap:<host>:<port>`
-| `ldapIdAttribute` | The name of the LDAP-attribute containing the user-id used for authentication | `sAMAccountName`
-| `ldapPassword` | Password of the LDAP service-user | `secret`
-| `ldapUser` | The name of the LDAP service-user | `serviceUser`
-| `ldapUserBaseDn` | The base-DN for LDAP-users | `OU=Users,DC=example,DC=com`
+| Property              | Description | Example
+| `ldapDomain`          | The Netbios Domain name to use, when "SAM" is used as principal scheme | `EXAMPLE`
+| `ldapGroupBaseDn`     | The base-DN for LDAP-groups |`OU=Groups,DC=example,DC=com`
+| `ldapHost`            | The LDAP host in provider URL format (`ldap[s]://<host>:<port>`). Note that you might need to add CA certificates to the truststore of the executing JVM if you enable "`ldaps`". | `ldap:<host>:<port>`
+| `ldapIdAttribute`     | The name of the LDAP-attribute containing the user-id used for authentication | `sAMAccountName`
+| `ldapPassword`        | Password of the LDAP service-user | `secret`
+| `ldapPrincipalScheme` | How the LDAP principal is built from a given username when logging in: "`DN`", "`UPN`" or "`SAM`" as described above. | SAM
+| `ldapStartTls`        | Use STARTTLS for the LDAP connection. If you set this to `true` the value of `ldapHost` should begin with `ldap:` (not `ldaps:`), because STARTTLS and LDAP over SSL (which is used when `ldaps:` is in place) are mutually exclusive.|`false`
+| `ldapUser`            | The name of the LDAP service-user for general LDAP lookups. If the value is a Distinguished Name (e.g. "`cn=Service User,dc=mycompany,dc=com`") it will be used directly as LDAP principal. Otherwise the principal will be derived according to the value specified in `ldapPrincipalScheme`. | `serviceUser`
+| `ldapUserBaseDn`      | The base-DN which is used to map a plain username to a Distinguished Name, if "DN" is used as principal scheme. | `OU=Users,DC=example,DC=com`
+and LDAP over SSL (which is used when "`ldaps:`" is in place) are mutually exclusive.|`false`
 |====================
 
 Read more about site properties in <<Configuring site properties>> in this manual.
