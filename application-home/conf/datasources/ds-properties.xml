@@ -13,7 +13,7 @@
 			</params>
 			<meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
 				<field name="shortName" type="text" displayLength="50">
-					<sort />
+					<sort name="name" />
 					<label>name</label>
 				</field>
 				<field name="string" type="text" displayLength="40">
@@ -59,7 +59,7 @@
 				<link mode="intern" target="/platform&#63;form_action=delete-platform-property&#38;propertyid=${current.name}#tab_platformProperties">
 					<label>delete</label>
 					<icon>delete</icon>
-					<confirmation id="property.delete.confirm" params="#{shortName}"/>
+					<confirmation id="property.delete.confirm" params="#{shortName}" />
 					<permissions>
 						<permission ref="platform.property.delete" mode="set" />
 					</permissions>
@@ -82,7 +82,7 @@
 			</params>
 			<meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
 				<field name="shortName" type="text" displayLength="50">
-					<sort />
+					<sort name="name" />
 					<label>name</label>
 				</field>
 				<field name="string" type="text" displayLength="40">
@@ -145,7 +145,7 @@
 			</params>
 			<meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
 				<field name="shortName" type="text" displayLength="50">
-					<sort />
+					<sort name="name" />
 					<label>name</label>
 				</field>
 				<field name="string" type="text" displayLength="40">
@@ -209,7 +209,7 @@
 			</params>
 			<meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
 				<field name="shortName" type="text" displayLength="50">
-					<sort />
+					<sort name="name" />
 					<label>name</label>
 				</field>
 				<field name="string" type="text" displayLength="40">
@@ -248,7 +248,7 @@
 					target="/sites/update/${siteid}/app-property&#63;form_action=delete-site-application-property&#38;propertyid=${current.name}#tab_select-site-application">
 					<label>delete</label>
 					<icon>delete</icon>
-					<confirmation id="property.delete.confirm" params="#{shortName}"/>
+					<confirmation id="property.delete.confirm" params="#{shortName}" />
 					<permissions>
 						<permission ref="site.application.property.delete" mode="set" />
 					</permissions>

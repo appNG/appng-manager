@@ -71,7 +71,7 @@ public class PlatformPropertiesTest extends AbstractTest {
 
 	@Test
 	public void testShowAll() throws ProcessingException, IOException {
-		addParameter("sortPlatformProperties", "id:asc");
+		addParameter("sortPlatformProperties", "shortName:asc");
 		initParameters();
 		CallableDataSource dataSource = getDataSource("platformProperties").getCallableDataSource();
 		dataSource.perform("test");

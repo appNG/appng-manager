@@ -10,7 +10,7 @@
         </params>
         <meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
             <field name="shortName" type="text" displayLength="50" binding="shortName">
-                <sort/>
+                <sort order="asc" name="name" prio="0" />
                 <label id="name">Name</label>
             </field>
             <field name="string" type="text" displayLength="40" binding="string">

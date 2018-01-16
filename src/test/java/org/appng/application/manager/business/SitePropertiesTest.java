@@ -56,7 +56,7 @@ public class SitePropertiesTest extends AbstractTest {
 
 	@Test
 	public void testShowAll() throws ProcessingException, IOException {
-		addParameter("sortSite-properties", "id:asc");
+		addParameter("sortSite-properties", "shortName:asc");
 		initParameters();
 		CallableDataSource dataSource = getDataSource("site-properties").withParam("siteid", "1")
 				.getCallableDataSource();

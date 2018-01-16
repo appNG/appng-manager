@@ -54,7 +54,7 @@ public class ApplicationPropertiesTest extends AbstractTest {
 
 	@Test
 	public void testShowAll() throws ProcessingException, IOException {
-		addParameter("sortApplication-properties", "id:asc");
+		addParameter("sortApplication-properties", "shortName:asc");
 		initParameters();
 		CallableDataSource dataSource = getDataSource("application-properties").withParam("appid", "1")
 				.getCallableDataSource();
