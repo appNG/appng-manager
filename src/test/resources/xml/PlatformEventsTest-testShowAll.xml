@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<datasource xmlns="http://www.appng.org/schema/platform" id="platformEvents">
+    <config>
+        <title id="events">Events</title>
+        <params/>
+        <meta-data bindClass="org.appng.core.domain.PlatformEvent">
+            <field name="created" type="date" format="yyyy-MM-dd HH:mm:ss,SS" binding="created">
+                <sort/>
+                <label id="created">Created</label>
+            </field>
+            <field name="type" type="text" binding="type">
+                <label id="type">Type</label>
+            </field>
+            <field name="event" type="longtext" displayLength="120" binding="event">
+                <label id="event">Event</label>
+            </field>
+            <field name="user" type="text" binding="user">
+                <label id="user">User</label>
+            </field>
+            <field name="host" type="text" binding="host">
+                <label id="host">Host</label>
+            </field>
+            <field name="hostName" type="text" binding="hostName">
+                <label id="hostName">Host name</label>
+            </field>
+            <field name="servletPath" type="text" binding="servletPath">
+                <label id="servletPath">servletPath</label>
+            </field>
+        </meta-data>
+    </config>
+    <data>
+        <selectionGroup>
+            <selection id="fAf" type="date" format="yyyy-MM-dd HH:mm:ss">
+                <title id="createdAfter">Created after</title>
+                <option value="" name="fAf"/>
+            </selection>
+            <selection id="fBf" type="date" format="yyyy-MM-dd HH:mm:ss">
+                <title id="createdBefore">Created before</title>
+                <option value="" name="fBf"/>
+            </selection>
+            <selection id="fTps" type="checkbox">
+                <title id="type">Type</title>
+                <option value="CREATE" name="CREATE" selected="false"/>
+                <option value="UPDATE" name="UPDATE" selected="false"/>
+                <option value="DELETE" name="DELETE" selected="false"/>
+                <option value="INFO" name="INFO" selected="false"/>
+                <option value="ERROR" name="ERROR" selected="false"/>
+                <option value="WARN" name="WARN" selected="false"/>
+            </selection>
+            <selection id="fTxt" type="text">
+                <title id="event">Event</title>
+                <option value="" name="fTxt"/>
+            </selection>
+            <selection id="fUsr" type="text">
+                <title id="user">User</title>
+                <option value="" name="fUsr"/>
+            </selection>
+            <selection id="fHst" type="text">
+                <title id="host">Host</title>
+                <option value="" name="fHst"/>
+            </selection>
+            <selection id="fHstNm" type="text">
+                <title id="hostName">Host name</title>
+                <option value="" name="fHstNm"/>
+            </selection>
+        </selectionGroup>
+        <resultset chunk="0" chunkname="platformEvents" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="-1" hits="0"/>
+    </data>
+</datasource>

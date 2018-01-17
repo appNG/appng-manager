@@ -110,6 +110,18 @@
 				</element>
 			</section>
 
+			<!-- platform events -->
+			<section hidden="true">
+				<element>
+					<datasource id="eventFilter" />
+				</element>
+			</section>
+			<section>
+				<element>
+					<datasource id="platformEvents" />
+				</element>
+			</section>
+
 			<!-- dictionary -->
 			<section>
 				<element>
