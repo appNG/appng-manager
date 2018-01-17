@@ -416,8 +416,6 @@ public class ManagerService extends CoreService implements Service {
 	/**
 	 * Returns a {@link Packages}-object from a certain repository. {@link Packages} are made available to other appNG
 	 * instances via the {@link RepositoryService}.
-	 * 
-	 * @throws BusinessException
 	 */
 	public Packages searchPackages(FieldProcessor fp, String repositoryName, String digest) throws BusinessException {
 		try {
@@ -432,8 +430,6 @@ public class ManagerService extends CoreService implements Service {
 	/**
 	 * Returns a {@link PackageVersions}-object from a certain repository. {@link PackageVersions} are made available to
 	 * other appNG instances via the {@link RepositoryService}.
-	 * 
-	 * @throws BusinessException
 	 */
 	public PackageVersions searchPackageVersions(FieldProcessor fp, String repositoryName, String packageName, String digest)
 			throws BusinessException {
@@ -477,8 +473,6 @@ public class ManagerService extends CoreService implements Service {
 
 	/**
 	 * Installs a {@link PackageArchive} in order to use it within the platform.
-	 * 
-	 * @throws BusinessException
 	 */
 	public void installPackage(Integer repositoryId, String name, String version, String timestamp, FieldProcessor fp)
 			throws BusinessException {
