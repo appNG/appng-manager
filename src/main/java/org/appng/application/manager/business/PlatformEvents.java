@@ -44,6 +44,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
+import lombok.Data;
+
 @Service
 public class PlatformEvents implements DataProvider {
 
@@ -66,18 +68,18 @@ public class PlatformEvents implements DataProvider {
 		SelectionGroup group = new SelectionGroup();
 		List<Selection> selections = group.getSelections();
 
-		selections.add(selectionFactory.getDateSelection("fAf", "createdAfter", filter.getfAf(), FDF));
-		selections.add(selectionFactory.getDateSelection("fBf", "createdBefore", filter.getfBf(), FDF));
+		selections.add(selectionFactory.getDateSelection("fAf", "createdAfter", filter.getFAf(), FDF));
+		selections.add(selectionFactory.getDateSelection("fBf", "createdBefore", filter.getFBf(), FDF));
 
 		Selection typeFilter = selectionFactory.fromEnum("fTps", "type", PlatformEvent.Type.values(),
 				filter.eventTypes());
 		typeFilter.setType(SelectionType.CHECKBOX);
 		selections.add(typeFilter);
 
-		selections.add(selectionFactory.getTextSelection("fTxt", "event", filter.getfTxt()));
-		selections.add(selectionFactory.getTextSelection("fUsr", "user", filter.getfUsr()));
-		selections.add(selectionFactory.getTextSelection("fHst", "host", filter.getfHst()));
-		selections.add(selectionFactory.getTextSelection("fHstNm", "hostName", filter.getfHstNm()));
+		selections.add(selectionFactory.getTextSelection("fTxt", "event", filter.getFTxt()));
+		selections.add(selectionFactory.getTextSelection("fUsr", "user", filter.getFUsr()));
+		selections.add(selectionFactory.getTextSelection("fHst", "host", filter.getFHst()));
+		selections.add(selectionFactory.getTextSelection("fHstNm", "hostName", filter.getFHstNm()));
 
 		DataContainer dataContainer = new DataContainer(fieldProcessor);
 		dataContainer.getSelectionGroups().add(group);
@@ -86,6 +88,7 @@ public class PlatformEvents implements DataProvider {
 		return dataContainer;
 	}
 
+	@Data
 	@Component("eventFilter")
 	@RequestScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 	public class EventFilter implements DataProvider {
@@ -112,62 +115,6 @@ public class PlatformEvents implements DataProvider {
 
 		public List<PlatformEvent.Type> eventTypes() {
 			return fTps.stream().map(t -> PlatformEvent.Type.valueOf(t)).collect(Collectors.toList());
-		}
-
-		public Date getfBf() {
-			return fBf;
-		}
-
-		public void setfBf(Date fBf) {
-			this.fBf = fBf;
-		}
-
-		public Date getfAf() {
-			return fAf;
-		}
-
-		public void setfAf(Date fAf) {
-			this.fAf = fAf;
-		}
-
-		public String getfTxt() {
-			return fTxt;
-		}
-
-		public void setfTxt(String fTxt) {
-			this.fTxt = fTxt;
-		}
-
-		public String getfUsr() {
-			return fUsr;
-		}
-
-		public void setfUsr(String fUsr) {
-			this.fUsr = fUsr;
-		}
-
-		public String getfHst() {
-			return fHst;
-		}
-
-		public void setfHst(String fHst) {
-			this.fHst = fHst;
-		}
-
-		public String getfHstNm() {
-			return fHstNm;
-		}
-
-		public void setfHstNm(String fHstNm) {
-			this.fHstNm = fHstNm;
-		}
-
-		public List<String> getfTps() {
-			return fTps;
-		}
-
-		public void setfTps(List<String> fTps) {
-			this.fTps = fTps;
 		}
 
 	}

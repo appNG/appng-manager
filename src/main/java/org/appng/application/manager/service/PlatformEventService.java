@@ -39,13 +39,13 @@ public class PlatformEventService {
 
 	public Page<PlatformEvent> getEvents(Pageable pageable, EventFilter eventFilter) {
 		SearchQuery<PlatformEvent> query = platformEventRepository.createSearchQuery();
-		query.greaterEquals("created", eventFilter.getfAf());
-		query.lessEquals("created", eventFilter.getfBf());
-		query.equals("host", StringUtils.trimToNull(eventFilter.getfHst()));
-		query.equals("hostName", StringUtils.trimToNull(eventFilter.getfHstNm()));
-		query.equals("user", StringUtils.trimToNull(eventFilter.getfUsr()));
+		query.greaterEquals("created", eventFilter.getFAf());
+		query.lessEquals("created", eventFilter.getFBf());
+		query.equals("host", StringUtils.trimToNull(eventFilter.getFHst()));
+		query.equals("hostName", StringUtils.trimToNull(eventFilter.getFHstNm()));
+		query.equals("user", StringUtils.trimToNull(eventFilter.getFUsr()));
 		query.in("type", eventFilter.eventTypes());
-		query.contains("event", StringUtils.trimToNull(eventFilter.getfTxt()));
+		query.contains("event", StringUtils.trimToNull(eventFilter.getFTxt()));
 		return platformEventRepository.search(query, pageable);
 	}
 }
