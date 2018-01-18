@@ -15,7 +15,7 @@
 			</meta-data>
 		</config>
 		<bean id="repositories">
-			<option name="repository" id="${repositoryid}" mode="upload"/>
+			<option name="repository" id="${repositoryid}" mode="upload" />
 		</bean>
 	</datasource>
 
@@ -76,7 +76,7 @@
 				<link mode="intern" target="/repositories&#63;form_action=delete-repository&#38;repositoryid=#{id}">
 					<label>delete</label>
 					<icon>delete</icon>
-					<confirmation id="repository.delete.confirm" params="#{name}"/>
+					<confirmation id="repository.delete.confirm" params="#{name}" />
 					<permissions>
 						<permission ref="repository.delete" mode="set" />
 					</permissions>
@@ -84,7 +84,7 @@
 				<link target="/repositories/installation/#{id}&#63;form_action=reload" mode="intern">
 					<label>reload</label>
 					<icon>reload</icon>
-					<confirmation id="repository.reload.confirm" params="#{name}"/>
+					<confirmation id="repository.reload.confirm" params="#{name}" />
 					<condition expression="${current.active}" />
 					<permissions>
 						<permission ref="repository.reload" mode="set" />
@@ -187,15 +187,15 @@
 			</params>
 			<meta-data bindClass="org.appng.core.model.InstallablePackage" result-selector="${current.name eq packagename}">
 				<field name="name" type="text" readonly="true" displayLength="30">
-					<sort prio="0"/>
+					<sort prio="0" />
 					<label>name</label>
 				</field>
 				<field name="displayName" type="text" readonly="true" displayLength="30">
-					<sort/>
+					<sort />
 					<label>displayName</label>
 				</field>
 				<field name="type" type="text" readonly="true" displayLength="30">
-					<sort/>
+					<sort />
 					<label>type</label>
 				</field>
 				<field name="latestRelease" type="text" readonly="true">
@@ -255,11 +255,14 @@
 				<field name="displayName" type="text" readonly="true" displayLength="30">
 					<label>displayName</label>
 				</field>
-				<field name="longDescription" type="text" readonly="true" displayLength="60">
+				<field name="longDescription" type="text" readonly="true" displayLength="45">
 					<label>longDescription</label>
 				</field>
 				<field name="packageVersion" type="text" readonly="true" displayLength="15">
 					<label>version</label>
+				</field>
+				<field name="appNGVersion" type="text">
+					<label id="appNGVersion" />
 				</field>
 				<field name="version" type="date" readonly="true" format="yyyy-MM-dd HH:mm:ss" displayLength="20">
 					<label>timestamp</label>
@@ -288,7 +291,7 @@
 					<label>delete</label>
 					<icon>delete</icon>
 					<condition expression="${not current.installed and current.deletable}" />
-					<confirmation id="packageversion.delete.confirm" params="#{name},#{packageVersion},#{timestamp}"/>
+					<confirmation id="packageversion.delete.confirm" params="#{name},#{packageVersion},#{timestamp}" />
 				</link>
 			</linkpanel>
 		</config>
