@@ -75,6 +75,7 @@ A detailed list of the available properties can be found here:
 |service-path|text|Backend|The path-suffix for the services offered by appNG (such as Webservices, SOAP, Actions, Datasources)|`/service`
 |siteRootDir|text|Backend|The absolute path to the site's root-directory|
 |supportedLanguages|text|Backend|A comma-separated list of the languages supported by the site |`en, de`
+|supportReloadFile|boolean|Backend|If `true`, a site reload is performed when a file named `.reload` is created in the site's root directory.|`false`
 |tagPrefix|text|Content|The prefix used for the appNG JSP-tags.|`appNG`
 |template|text|Backend|The name of the template to use|`appng`
 |timeZone|text|UI|The default timezone for the site. Use one of `java.util.TimeZone.getAvailableIDs()`.|`TimeZone.getDefault().getID()`
