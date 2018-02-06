@@ -1,1 +1,5 @@
 == Contributing to appNG Manager
+
+First of all, we would like to thank you for your interest and commitment to contribute to and improve appNG and its related projects.
+
+Please refer to the appNG Contributing Guide, located at https://github.com/appNG/appng/blob/master/CONTRIBUTING.adoc
