@@ -24,7 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 public class DataBaseConnectionsTest extends AbstractTest {
 
 	static {
-		WritingXmlValidator.writeXml = true;
+		WritingXmlValidator.writeXml = false;
 	}
 
 	@Test

@@ -29,7 +29,7 @@
                 <label id="userName">User-Name</label>
             </field>
             <field name="databaseSize" type="decimal" format="#.##" binding="databaseSize">
-                <label id="size">Size</label>
+                <label id="sizeMB">Size (MB)</label>
             </field>
             <field name="active" type="image" binding="active">
                 <label id="active">active</label>

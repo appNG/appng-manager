@@ -32,7 +32,7 @@
 					<label>userName</label>
 				</field>
 				<field name="databaseSize" type="decimal">
-					<label id="size" />
+					<label id="sizeMB" />
 				</field>
 				<field name="active" type="image">
 					<label>active</label>
