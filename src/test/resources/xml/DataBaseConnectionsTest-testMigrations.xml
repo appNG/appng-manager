@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<datasource xmlns="http://www.appng.org/schema/platform" id="migrations">
+    <config>
+        <title id="migrations">Migrations</title>
+        <params>
+            <param name="id">1</param>
+        </params>
+        <meta-data bindClass="org.flywaydb.core.api.MigrationInfo">
+            <field name="installedRank" type="int" format="#" binding="installedRank">
+                <label id="migration.installedRank">Rank</label>
+            </field>
+            <field name="installedOn" type="date" format="yyyy-MM-dd HH:mm:ss" binding="installedOn">
+                <label id="migration.installedOn">Date</label>
+            </field>
+            <field name="version.version" type="text" binding="version.version">
+                <label id="migration.version">Version</label>
+            </field>
+            <field name="description" type="text" binding="description">
+                <label id="migration.description">Name</label>
+            </field>
+            <field name="checksum" type="text" binding="checksum">
+                <label id="migration.checksum">Checksum</label>
+            </field>
+            <field name="installedBy" type="text" binding="installedBy">
+                <label id="migration.installedBy">User</label>
+            </field>
+            <field name="state.displayName" type="text" binding="state.displayName">
+                <label id="migration.state">State</label>
+            </field>
+        </meta-data>
+    </config>
+    <data paginate="false">
+        <resultset chunk="0" chunkname="migrations" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="10">
+            <result>
+                <field name="installedRank" type="int">
+                    <value></value>
+                </field>
+                <field name="installedOn" type="date">
+                    <value></value>
+                </field>
+                <field name="version.version" type="text">
+                    <value>1.0</value>
+                </field>
+                <field name="description" type="text">
+                    <value>appNG initial setup</value>
+                </field>
+                <field name="checksum" type="text">
+                    <value>1411118267</value>
+                </field>
+                <field name="installedBy" type="text">
+                    <value></value>
+                </field>
+                <field name="state.displayName" type="text">
+                    <value>Pending</value>
+                </field>
+            </result>
+            <result>
+                <field name="installedRank" type="int">
+                    <value></value>
+                </field>
+                <field name="installedOn" type="date">
+                    <value></value>
+                </field>
+                <field name="version.version" type="text">
+                    <value>1.1</value>
+                </field>
+                <field name="description" type="text">
+                    <value>Quartz initial setup</value>
+                </field>
+                <field name="checksum" type="text">
+                    <value>1129524243</value>
+                </field>
+                <field name="installedBy" type="text">
+                    <value></value>
+                </field>
+                <field name="state.displayName" type="text">
+                    <value>Pending</value>
+                </field>
+            </result>
+            <result>
+                <field name="installedRank" type="int">
+                    <value></value>
+                </field>
+                <field name="installedOn" type="date">
+                    <value></value>
+                </field>
+                <field name="version.version" type="text">
+                    <value>1.2</value>
+                </field>
+                <field name="description" type="text">
+                    <value>add template</value>
+                </field>
+                <field name="checksum" type="text">
+                    <value>1088238598</value>
+                </field>
+                <field name="installedBy" type="text">
+                    <value></value>
+                </field>
+                <field name="state.displayName" type="text">
+                    <value>Pending</value>
+                </field>
+            </result>
+            <result>
+                <field name="installedRank" type="int">
+                    <value></value>
+                </field>
+                <field name="installedOn" type="date">
+                    <value></value>
+                </field>
+                <field name="version.version" type="text">
+                    <value>1.2.1</value>
+                </field>
+                <field name="description" type="text">
+                    <value>add repository strict</value>
+                </field>
+                <field name="checksum" type="text">
+                    <value>-780205616</value>
+                </field>
+                <field name="installedBy" type="text">
+                    <value></value>
+                </field>
+                <field name="state.displayName" type="text">
+                    <value>Pending</value>
+                </field>
+            </result>
+            <result>
+                <field name="installedRank" type="int">
+                    <value></value>
+                </field>
+                <field name="installedOn" type="date">
+                    <value></value>
+                </field>
+                <field name="version.version" type="text">
+                    <value>1.2.2</value>
+                </field>
+                <field name="description" type="text">
+                    <value>add repository digest</value>
+                </field>
+                <field name="checksum" type="text">
+                    <value>-222577107</value>
+                </field>
+                <field name="installedBy" type="text">
+                    <value></value>
+                </field>
+                <field name="state.displayName" type="text">
+                    <value>Pending</value>
+                </field>
+            </result>
+            <result>
+                <field name="installedRank" type="int">
+                    <value></value>
+                </field>
+                <field name="installedOn" type="date">
+                    <value></value>
+                </field>
+                <field name="version.version" type="text">
+                    <value>1.2.3</value>
+                </field>
+                <field name="description" type="text">
+                    <value>set resource bytes not null</value>
+                </field>
+                <field name="checksum" type="text">
+                    <value>-652001277</value>
+                </field>
+                <field name="installedBy" type="text">
+                    <value></value>
+                </field>
+                <field name="state.displayName" type="text">
+                    <value>Pending</value>
+                </field>
+            </result>
+            <result>
+                <field name="installedRank" type="int">
+                    <value></value>
+                </field>
+                <field name="installedOn" type="date">
+                    <value></value>
+                </field>
+                <field name="version.version" type="text">
+                    <value>1.3.0</value>
+                </field>
+                <field name="description" type="text">
+                    <value>add type to template</value>
+                </field>
+                <field name="checksum" type="text">
+                    <value>727633006</value>
+                </field>
+                <field name="installedBy" type="text">
+                    <value></value>
+                </field>
+                <field name="state.displayName" type="text">
+                    <value>Pending</value>
+                </field>
+            </result>
+            <result>
+                <field name="installedRank" type="int">
+                    <value></value>
+                </field>
+                <field name="installedOn" type="date">
+                    <value></value>
+                </field>
+                <field name="version.version" type="text">
+                    <value>1.3.1</value>
+                </field>
+                <field name="description" type="text">
+                    <value>add global admin role</value>
+                </field>
+                <field name="checksum" type="text">
+                    <value>1230735742</value>
+                </field>
+                <field name="installedBy" type="text">
+                    <value></value>
+                </field>
+                <field name="state.displayName" type="text">
+                    <value>Pending</value>
+                </field>
+            </result>
+            <result>
+                <field name="installedRank" type="int">
+                    <value></value>
+                </field>
+                <field name="installedOn" type="date">
+                    <value></value>
+                </field>
+                <field name="version.version" type="text">
+                    <value>1.3.2</value>
+                </field>
+                <field name="description" type="text">
+                    <value>add repository accepted certs</value>
+                </field>
+                <field name="checksum" type="text">
+                    <value>1710103480</value>
+                </field>
+                <field name="installedBy" type="text">
+                    <value></value>
+                </field>
+                <field name="state.displayName" type="text">
+                    <value>Pending</value>
+                </field>
+            </result>
+            <result>
+                <field name="installedRank" type="int">
+                    <value></value>
+                </field>
+                <field name="installedOn" type="date">
+                    <value></value>
+                </field>
+                <field name="version.version" type="text">
+                    <value>2.0.0</value>
+                </field>
+                <field name="description" type="text">
+                    <value>add platform event</value>
+                </field>
+                <field name="checksum" type="text">
+                    <value>1137969222</value>
+                </field>
+                <field name="installedBy" type="text">
+                    <value></value>
+                </field>
+                <field name="state.displayName" type="text">
+                    <value>Pending</value>
+                </field>
+            </result>
+        </resultset>
+    </data>
+</datasource>

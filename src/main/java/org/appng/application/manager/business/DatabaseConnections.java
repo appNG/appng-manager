@@ -15,6 +15,10 @@
  */
 package org.appng.application.manager.business;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.appng.api.ActionProvider;
 import org.appng.api.DataContainer;
 import org.appng.api.DataProvider;
@@ -26,6 +30,8 @@ import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.DatabaseConnection;
+import org.flywaydb.core.api.MigrationInfo;
+import org.flywaydb.core.api.MigrationInfoService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
@@ -67,12 +73,21 @@ public class DatabaseConnections extends ServiceAware implements DataProvider, A
 
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
-		Integer dcId = request.convert(options.getOptionValue(ID, ID), Integer.class);
-		Integer siteId = request.convert(options.getOptionValue(OPT_SITE, ID), Integer.class);
+		Integer dcId = options.getInteger(ID, ID);
+		Integer siteId = options.getInteger(OPT_SITE, ID);
 		DataContainer dataContainer = new DataContainer(fp);
 		if (null == dcId) {
 			Page<DatabaseConnection> connections = getService().getDatabaseConnections(siteId, fp);
 			dataContainer.setPage(connections);
+		} else if ("migrations".equals(options.getString(ID, "mode"))) {
+			DatabaseConnection databaseConnection = getService().getDatabaseConnection(dcId, true);
+			MigrationInfoService migrationInfoService = databaseConnection.getMigrationInfoService();
+			if (null != migrationInfoService) {
+				List<MigrationInfo> migrations = Arrays.asList(migrationInfoService.all());
+				dataContainer.setItems(migrations);
+			} else {
+				dataContainer.setItems(new ArrayList<>());
+			}
 		} else {
 			DatabaseConnection connection = getService().getDatabaseConnection(dcId, true);
 			dataContainer.setItem(connection);

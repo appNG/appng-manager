@@ -217,6 +217,15 @@
 						</permissions>
 					</action>
 				</element>
+				<element folded="true" passive="true">
+					<datasource id="migrations">
+						<params>
+							<param name="id">${subentityid1}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty siteid and subentity1 eq 'database' and subaction1 eq 'update' and not empty subentityid1}" />
+					</datasource>
+				</element>
 				<element passive="true" folded="${expandSql ne 'true'}">
 					<action eventId="databaseConnectionEvent" id="executeSql"
 						onSuccess="/sites/update/${siteid}/database/update/${subentityid1}&#63;expandSql=true#tab_databaseConnections">
