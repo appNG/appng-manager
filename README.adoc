@@ -9,4 +9,4 @@ The appNG Manager is an appNG privileged application, providing a web-based inte
 
 === User Guide
 
-The user guide can be found at https://appng.org/appng-manager/docs/{docVersion}/reference/html/appng-manager-userguide.html^
+The user guide can be found at https://appng.org/appng-manager/docs/{docVersion}/reference/html/appng-manager-userguide.html
