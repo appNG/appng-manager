@@ -15,6 +15,7 @@
  */
 package org.appng.application.manager.service;
 
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.appng.application.manager.business.PlatformEvents.EventFilter;
@@ -23,6 +24,7 @@ import org.appng.core.repository.PlatformEventRepository;
 import org.appng.persistence.repository.SearchQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,13 +41,33 @@ public class PlatformEventService {
 
 	public Page<PlatformEvent> getEvents(Pageable pageable, EventFilter eventFilter) {
 		SearchQuery<PlatformEvent> query = platformEventRepository.createSearchQuery();
-		query.greaterEquals("created", eventFilter.getFAf());
-		query.lessEquals("created", eventFilter.getFBf());
-		query.equals("host", StringUtils.trimToNull(eventFilter.getFHst()));
-		query.equals("hostName", StringUtils.trimToNull(eventFilter.getFHstNm()));
-		query.equals("user", StringUtils.trimToNull(eventFilter.getFUsr()));
+		query.greaterEquals("created", eventFilter.getEA());
+		query.lessEquals("created", eventFilter.getEB());
+		query.equals("origin", StringUtils.trimToNull(eventFilter.getEH()));
+		query.equals("hostName", StringUtils.trimToNull(eventFilter.getEN()));
+		query.equals("user", StringUtils.trimToNull(eventFilter.getEU()));
 		query.in("type", eventFilter.eventTypes());
-		query.contains("event", StringUtils.trimToNull(eventFilter.getFTxt()));
+		query.contains("event", StringUtils.trimToNull(eventFilter.getEX()));
 		return platformEventRepository.search(query, pageable);
+	}
+
+	public List<PlatformEvent> getEvents(EventFilter eventFilter) {
+		return getEvents(new PageRequest(0, Integer.MAX_VALUE), eventFilter).getContent();
+	}
+
+	public List<String> getUsers() {
+		return platformEventRepository.findDistinctUsers();
+	}
+	
+	public List<String> getApplications() {
+		return platformEventRepository.findDistinctApplications();
+	}
+	
+	public List<String> getHostNames() {
+		return platformEventRepository.findDistinctHostNames();
+	}
+	
+	public List<String> getOrigins() {
+		return platformEventRepository.findDistinctOrigins();
 	}
 }

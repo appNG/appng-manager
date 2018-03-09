@@ -4,41 +4,39 @@
         <title id="events">Events</title>
         <params/>
         <meta-data bindClass="org.appng.core.domain.PlatformEvent">
-            <field name="created" type="date" format="yyyy-MM-dd HH:mm:ss,SS" binding="created">
+            <field name="created" type="date" format="yy/MM/dd HH:mm:ss" binding="created">
                 <sort/>
                 <label id="created">Created</label>
             </field>
             <field name="type" type="text" binding="type">
                 <label id="type">Type</label>
             </field>
-            <field name="event" type="longtext" displayLength="120" binding="event">
+            <field name="event" type="longtext" displayLength="80" binding="event">
                 <label id="event">Event</label>
             </field>
             <field name="user" type="text" binding="user">
                 <label id="user">User</label>
             </field>
-            <field name="host" type="text" binding="host">
+            <field name="application" type="text" binding="application">
+                <label id="application">Application</label>
+            </field>
+            <field name="origin" type="text" binding="origin">
                 <label id="host">Host</label>
             </field>
             <field name="hostName" type="text" binding="hostName">
                 <label id="hostName">Host name</label>
             </field>
-            <field name="servletPath" type="text" binding="servletPath">
-                <label id="servletPath">servletPath</label>
+            <field name="context" type="text" binding="context">
+                <label id="context">context</label>
+            </field>
+            <field name="requestId" type="text" displayLength="18" binding="requestId">
+                <label id="requestId">requestId</label>
             </field>
         </meta-data>
     </config>
     <data>
         <selectionGroup>
-            <selection id="fAf" type="date" format="yyyy-MM-dd HH:mm:ss">
-                <title id="createdAfter">Created after</title>
-                <option value="" name="fAf"/>
-            </selection>
-            <selection id="fBf" type="date" format="yyyy-MM-dd HH:mm:ss">
-                <title id="createdBefore">Created before</title>
-                <option value="" name="fBf"/>
-            </selection>
-            <selection id="fTps" type="checkbox">
+            <selection id="eT" type="checkbox">
                 <title id="type">Type</title>
                 <option value="CREATE" name="CREATE" selected="false"/>
                 <option value="UPDATE" name="UPDATE" selected="false"/>
@@ -47,21 +45,29 @@
                 <option value="ERROR" name="ERROR" selected="false"/>
                 <option value="WARN" name="WARN" selected="false"/>
             </selection>
-            <selection id="fTxt" type="text">
+            <selection id="eX" type="text">
                 <title id="event">Event</title>
-                <option value="" name="fTxt"/>
+                <option value="" name="eX"/>
             </selection>
-            <selection id="fUsr" type="text">
+            <selection id="eU" type="select">
                 <title id="user">User</title>
-                <option value="" name="fUsr"/>
+                <option value="" name=""/>
             </selection>
-            <selection id="fHst" type="text">
+            <selection id="eH" type="select">
                 <title id="host">Host</title>
-                <option value="" name="fHst"/>
+                <option value="" name=""/>
             </selection>
-            <selection id="fHstNm" type="text">
+            <selection id="eN" type="select">
                 <title id="hostName">Host name</title>
-                <option value="" name="fHstNm"/>
+                <option value="" name=""/>
+            </selection>
+            <selection id="eA" type="date" format="yyyy-MM-dd HH:mm:ss">
+                <title id="createdAfter">Created after</title>
+                <option value="" name="eA"/>
+            </selection>
+            <selection id="eB" type="date" format="yyyy-MM-dd HH:mm:ss">
+                <title id="createdBefore">Created before</title>
+                <option value="" name="eB"/>
             </selection>
         </selectionGroup>
         <resultset chunk="0" chunkname="platformEvents" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="-1" hits="0"/>

@@ -19,6 +19,14 @@
 					<get-param name="propertyid" />
 					<get-param name="id" />
 					<get-param name="expandSql" />
+					<!-- event filtering -->
+					<get-param name="eA" />
+					<get-param name="eB" />
+					<get-param name="eT" />
+					<get-param name="eX" />
+					<get-param name="eU" />
+					<get-param name="eH" />
+					<get-param name="eN" />
 				</get-params>
 				<post-params>
 					<post-param name="form_action" />

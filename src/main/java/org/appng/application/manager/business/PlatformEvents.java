@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.appng.api.ApplicationException;
 import org.appng.api.BusinessException;
@@ -32,6 +33,8 @@ import org.appng.api.Request;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.api.support.SelectionFactory;
+import org.appng.application.manager.MessageConstants;
+import org.appng.application.manager.builder.SelectionBuilder;
 import org.appng.application.manager.service.PlatformEventService;
 import org.appng.core.domain.PlatformEvent;
 import org.appng.xml.platform.Selection;
@@ -68,18 +71,27 @@ public class PlatformEvents implements DataProvider {
 		SelectionGroup group = new SelectionGroup();
 		List<Selection> selections = group.getSelections();
 
-		selections.add(selectionFactory.getDateSelection("fAf", "createdAfter", filter.getFAf(), FDF));
-		selections.add(selectionFactory.getDateSelection("fBf", "createdBefore", filter.getFBf(), FDF));
-
-		Selection typeFilter = selectionFactory.fromEnum("fTps", "type", PlatformEvent.Type.values(),
+		Selection typeFilter = selectionFactory.fromEnum("eT", MessageConstants.TYPE, PlatformEvent.Type.values(),
 				filter.eventTypes());
 		typeFilter.setType(SelectionType.CHECKBOX);
 		selections.add(typeFilter);
 
-		selections.add(selectionFactory.getTextSelection("fTxt", "event", filter.getFTxt()));
-		selections.add(selectionFactory.getTextSelection("fUsr", "user", filter.getFUsr()));
-		selections.add(selectionFactory.getTextSelection("fHst", "host", filter.getFHst()));
-		selections.add(selectionFactory.getTextSelection("fHstNm", "hostName", filter.getFHstNm()));
+		selections.add(selectionFactory.getTextSelection("eX", MessageConstants.EVENT, filter.getEX()));
+
+		List<String> users = platformEventEventService.getUsers();
+		Selection userSelection =  getStringSelection("eU", users, filter.getEU(), MessageConstants.USER);
+		selections.add(userSelection);
+
+		List<String> hostNames = platformEventEventService.getOrigins();
+		Selection hostSelection = getStringSelection("eH", hostNames, filter.getEH(), MessageConstants.HOST);
+		selections.add(hostSelection);
+
+		List<String> hosts = platformEventEventService.getHostNames();
+		Selection hostNameSelection = getStringSelection("eN", hosts, filter.getEN(), MessageConstants.HOST_NAME);
+		selections.add(hostNameSelection);
+
+		selections.add(selectionFactory.getDateSelection("eA", MessageConstants.CREATED_AFTER, filter.getEA(), FDF));
+		selections.add(selectionFactory.getDateSelection("eB", MessageConstants.CREATED_BEFORE, filter.getEB(), FDF));
 
 		DataContainer dataContainer = new DataContainer(fieldProcessor);
 		dataContainer.getSelectionGroups().add(group);
@@ -88,18 +100,30 @@ public class PlatformEvents implements DataProvider {
 		return dataContainer;
 	}
 
+	private Selection getStringSelection(String id, List<String> values, String selected, String label) {
+		SelectionBuilder<String> builder = new SelectionBuilder<String>(id);
+		return builder.label(label).options(values).select(selected).type(SelectionType.SELECT)
+				.defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).build();
+	}
+
 	@Data
 	@Component("eventFilter")
 	@RequestScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
-	public class EventFilter implements DataProvider {
-
-		private Date fBf;
-		private Date fAf;
-		private String fTxt;
-		private String fUsr;
-		private String fHst;
-		private String fHstNm;
-		private List<String> fTps = new ArrayList<>();
+	public static class EventFilter implements DataProvider {
+		/** before */
+		private Date eB;
+		/** after */
+		private Date eA;
+		/** text */
+		private String eX;
+		/** user */
+		private String eU;
+		/** host */
+		private String eH;
+		/** hostnames */
+		private String eN;
+		/** types */
+		private List<String> eT = new ArrayList<>();
 
 		public DataContainer getData(Site site, Application application, Environment environment, Options options,
 				Request request, FieldProcessor fp) {
@@ -114,7 +138,8 @@ public class PlatformEvents implements DataProvider {
 		}
 
 		public List<PlatformEvent.Type> eventTypes() {
-			return fTps.stream().map(t -> PlatformEvent.Type.valueOf(t)).collect(Collectors.toList());
+			return eT.stream().filter(t -> StringUtils.isNotBlank(t)).map(t -> PlatformEvent.Type.valueOf(t))
+					.collect(Collectors.toList());
 		}
 
 	}

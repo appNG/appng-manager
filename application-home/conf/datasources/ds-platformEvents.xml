@@ -8,27 +8,33 @@
 			<!--permissions> <permission ref="platformEvent.list" mode="set" /> </permissions -->
 			<params />
 			<meta-data bindClass="org.appng.core.domain.PlatformEvent">
-				<field name="created" type="date" format="yyyy-MM-dd HH:mm:ss,SS">
+				<field name="created" type="date" format="yy/MM/dd HH:mm:ss">
 					<sort order="desc" prio="0" />
 					<label id="created" />
 				</field>
 				<field name="type" type="text">
 					<label id="type" />
 				</field>
-				<field name="event" type="longtext" displayLength="120">
+				<field name="event" type="longtext" displayLength="80">
 					<label id="event" />
 				</field>
 				<field name="user" type="text">
 					<label id="user" />
 				</field>
-				<field name="host" type="text">
+				<field name="application" type="text">
+					<label id="application" />
+				</field>
+				<field name="origin" type="text">
 					<label id="host" />
 				</field>
 				<field name="hostName" type="text">
 					<label id="hostName" />
 				</field>
-				<field name="servletPath" type="text">
-					<label id="servletPath" />
+				<field name="context" type="text">
+					<label id="context" />
+				</field>
+				<field name="requestId" type="text" displayLength="18">
+					<label id="requestId" />
 				</field>
 			</meta-data>
 		</config>
@@ -40,13 +46,13 @@
 		<config>
 			<title />
 			<meta-data bindClass="org.appng.application.manager.business.PlatformEvents.EventFilter">
-				<field name="fTps" type="list:checkbox" />
-				<field name="fTxt" type="text" />
-				<field name="fUsr" type="text" />
-				<field name="fHst" type="text" />
-				<field name="fHstNm" type="text" />
-				<field name="fBf" type="date" />
-				<field name="fAf" type="date" />
+				<field name="eT" type="list:checkbox" />
+				<field name="eX" type="text" />
+				<field name="eU" type="text" />
+				<field name="eH" type="text" />
+				<field name="eN" type="text" />
+				<field name="eB" type="date" />
+				<field name="eA" type="date" />
 			</meta-data>
 		</config>
 		<bean id="eventFilter" />

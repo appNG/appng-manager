@@ -44,6 +44,7 @@ import org.appng.application.manager.form.UploadForm;
 import org.appng.core.controller.AppngCache;
 import org.appng.core.domain.DatabaseConnection;
 import org.appng.core.domain.PermissionImpl;
+import org.appng.core.domain.PlatformEvent.Type;
 import org.appng.core.domain.RepositoryImpl;
 import org.appng.core.domain.SiteApplication;
 import org.appng.core.model.JarInfo;
@@ -227,5 +228,7 @@ public interface Service {
 	void deleteTemplate(String name, FieldProcessor fp);
 
 	List<Identifier> listTemplates();
+
+	void createEvent(Type type, String message);
 
 }

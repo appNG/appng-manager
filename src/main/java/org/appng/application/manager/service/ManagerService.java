@@ -84,6 +84,7 @@ import org.appng.core.domain.ApplicationImpl;
 import org.appng.core.domain.DatabaseConnection;
 import org.appng.core.domain.GroupImpl;
 import org.appng.core.domain.PermissionImpl;
+import org.appng.core.domain.PlatformEvent.Type;
 import org.appng.core.domain.PropertyImpl;
 import org.appng.core.domain.RepositoryImpl;
 import org.appng.core.domain.ResourceImpl;
@@ -563,6 +564,8 @@ public class ManagerService extends CoreService implements Service {
 				FileUtils.write(original, form.getContent(), ResourceForm.ENCODING, false);
 				okMessage = request.getMessage(MessageConstants.RESOURCE_UPDATED_FILEBASED, fileName,
 						FileUtils.sizeOf(original));
+				createEvent(Type.UPDATE,
+						String.format("Resource %s of Application %s", fileName, application.getName()));
 			} else {
 				errorMessage = request.getMessage(MessageConstants.RESOURCE_UPDATED_DATABASED_ERROR, fileName);
 				ResourceImpl dbResource = resourceRepository.findOne(resource.getId());
@@ -1214,6 +1217,8 @@ public class ManagerService extends CoreService implements Service {
 				siteApplication.setActive(true);
 				siteApplication.setMarkedForDeletion(false);
 				siteApplication.setReloadRequired(!siteApplication.isReloadRequired());
+				auditableListener.createEvent(Type.INFO,
+						String.format("Assigned application %s to site %s", application.getName(), site.getName()));
 			} else {
 				migrationStatus = assignApplicationToSite(site, application, true);
 				switch (migrationStatus) {
@@ -1254,10 +1259,11 @@ public class ManagerService extends CoreService implements Service {
 					break;
 				}
 			} else {
+				auditableListener.createEvent(Type.INFO, String.format("Removed application %s from site %s",
+						siteApplication.getApplication().getName(), site.getName()));
 				siteApplication.setActive(false);
 				siteApplication.setMarkedForDeletion(true);
 				siteApplication.setReloadRequired(!siteApplication.isReloadRequired());
-				liveApplication.setMarkedForDeletion(true);
 			}
 		}
 		return migrationStatus;
@@ -1732,6 +1738,10 @@ public class ManagerService extends CoreService implements Service {
 
 	public List<Identifier> listTemplates() {
 		return templateService.getInstalledTemplates();
+	}
+
+	public void createEvent(Type type, String message) {
+		auditableListener.createEvent(type, message);
 	}
 
 }
