@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.appng.application.manager.business;
+package org.appng.application.manager.business.webservice;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -49,6 +49,8 @@ import org.appng.api.SiteProperties;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.api.model.Subject;
+import org.appng.application.manager.business.Environment;
+import org.appng.application.manager.business.LogConfig;
 import org.appng.application.manager.service.Service;
 import org.appng.tools.os.Command;
 import org.appng.tools.os.OperatingSystem;

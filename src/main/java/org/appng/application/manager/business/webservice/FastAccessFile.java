@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.appng.application.manager.business;
+package org.appng.application.manager.business.webservice;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -22,26 +22,20 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.io.IOUtils;
-
-public class FastAccessFile {
+class FastAccessFile {
 
 	public static final char LF = '\n';
 	private ByteBuffer cb;
 	private long size;
 
 	public FastAccessFile(File file) throws IOException {
-		FileInputStream is = null;
-		try {
-			is = new FileInputStream(file);
-			FileChannel fc = is.getChannel();
+		try (FileInputStream is = new FileInputStream(file); FileChannel fc = is.getChannel();) {
 			size = fc.size();
 			cb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-		} finally {
-			IOUtils.closeQuietly(is);
 		}
 	}
 
@@ -86,7 +80,7 @@ public class FastAccessFile {
 				}
 			}
 			try {
-				return sb.toString("UTF-8");
+				return sb.toString(StandardCharsets.UTF_8.name());
 			} catch (UnsupportedEncodingException e) {
 			}
 			return sb.toString();
