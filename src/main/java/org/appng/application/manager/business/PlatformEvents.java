@@ -30,6 +30,7 @@ import org.appng.api.Environment;
 import org.appng.api.FieldProcessor;
 import org.appng.api.Options;
 import org.appng.api.Request;
+import org.appng.api.Scope;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.api.support.SelectionFactory;
@@ -95,6 +96,7 @@ public class PlatformEvents implements DataProvider {
 
 		DataContainer dataContainer = new DataContainer(fieldProcessor);
 		dataContainer.getSelectionGroups().add(group);
+		environment.setAttribute(Scope.SESSION, "eventFilter", filter.copy());
 		Page<PlatformEvent> events = platformEventEventService.getEvents(fieldProcessor.getPageable(), filter);
 		dataContainer.setPage(events);
 		return dataContainer;
@@ -137,11 +139,22 @@ public class PlatformEvents implements DataProvider {
 			}
 		}
 
+		public EventFilter copy() {
+			EventFilter copy = new EventFilter();
+			copy.setEA(eA);
+			copy.setEB(eB);
+			copy.setEH(eH);
+			copy.setEN(eN);
+			copy.setET(eT);
+			copy.setEU(eU);
+			copy.setEX(eX);
+			return copy;
+		}
+
 		public List<PlatformEvent.Type> eventTypes() {
 			return eT.stream().filter(t -> StringUtils.isNotBlank(t)).map(t -> PlatformEvent.Type.valueOf(t))
 					.collect(Collectors.toList());
 		}
 
 	}
-
 }

@@ -97,8 +97,8 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 		try {
 			if (ACTION_CREATE.equals(action)) {
 				errorMessage = MessageConstants.PROPERTY_CREATE_ERROR;
-				Integer siteId = request.convert(options.getOption(PROPERTIES).getAttribute("siteId"), Integer.class);
-				Integer applicationId = request.convert(options.getOption(PROPERTIES).getAttribute("applicationId"),
+				Integer siteId = request.convert(options.getOption(PROPERTIES).getString("siteId"), Integer.class);
+				Integer applicationId = request.convert(options.getOption(PROPERTIES).getString("applicationId"),
 						Integer.class);
 				service.createProperty(propertyForm, siteId, applicationId, fp);
 				okMessage = MessageConstants.PROPERTY_CREATED;

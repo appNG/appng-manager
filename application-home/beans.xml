@@ -18,8 +18,23 @@
 				<property name="alwaysUseMessageFormat" value="true" />
 				<property name="basename" value="timezones" />
 				<property name="defaultEncoding" value="UTF-8" />
-				<property name="useCodeAsDefaultMessage" value="true"/>
+				<property name="useCodeAsDefaultMessage" value="true" />
 			</bean>
+		</property>
+	</bean>
+
+	<bean id="mailTransport" class="org.appng.mail.impl.DefaultTransport">
+		<constructor-arg value="${site.mailHost:localhost}" />
+		<constructor-arg value="${site.mailPort:25}" />
+		<property name="disableSend" value="${site.mailDisabled:true}" />
+	</bean>
+
+	<bean id="platformEventReportJob" class="org.appng.application.manager.PlatformEventReportJob">
+		<property name="jobDataMap">
+			<map>
+				<entry key="runOnce" value="true" />
+				<entry key="intervall" value="DAY" />
+			</map>
 		</property>
 	</bean>
 
