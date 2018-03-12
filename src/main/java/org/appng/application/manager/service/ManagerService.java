@@ -244,8 +244,7 @@ public class ManagerService extends CoreService implements Service {
 			SiteImpl site = siteRepository.findOne(siteId);
 			if (null != site) {
 				if (!site.equals(currentSite) && !site.getHost().equals(host)) {
-					deleteSite(environment, site, fp, request, MessageConstants.SITE_ALIAS_DELETED,
-							MessageConstants.SITE_DELETE_ERROR);
+					deleteSite(request.getEnvironment(), site);
 				} else {
 					throw new BusinessException("Can not delete current site " + site.getName(),
 							MessageConstants.SITE_CURRENT_DELETE_ERROR, site.getName());
