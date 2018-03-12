@@ -36,6 +36,7 @@ import org.appng.api.model.Site;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.business.LogConfig.LogFile;
 import org.appng.application.manager.service.ServiceAware;
+import org.appng.core.domain.PlatformEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -61,6 +62,7 @@ public class LogConfig extends ServiceAware implements DataProvider, ActionProvi
 				File configFile = getConfigFile();
 				String content = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
 				logFile.setContent(content);
+				getService().createEvent(PlatformEvent.Type.INFO, "Changed " + LOG4J_PROPS);
 			} catch (IOException e) {
 				throw new ApplicationException(e);
 			}
@@ -68,7 +70,7 @@ public class LogConfig extends ServiceAware implements DataProvider, ActionProvi
 		return container;
 	}
 
-	File getConfigFile() {
+	public File getConfigFile() {
 		return new File(rootPath, LOG4J_PROPS);
 	}
 
@@ -78,8 +80,8 @@ public class LogConfig extends ServiceAware implements DataProvider, ActionProvi
 		try {
 			String currentContent = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
 			String newContent = formBean.getContent();
-			String separator = System.getProperty("line.separator");
-			newContent = newContent.replaceAll(Constants.NEW_LINE, separator);
+			String separator = System.lineSeparator();
+			newContent = newContent.replaceAll("\r\n", separator);
 
 			LogConfigChangedEvent logConfigChangedEvent = new LogConfigChangedEvent(site.getName(), newContent,
 					configFile.getAbsolutePath());
