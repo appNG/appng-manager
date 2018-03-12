@@ -42,18 +42,17 @@ import org.appng.api.Request;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.tools.ui.StringNormalizer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Lazy
 @Component("env")
 @Scope("request")
 public class Environment implements DataProvider {
-
-	private static final Logger log = LoggerFactory.getLogger(ClusterState.class);
 
 	@SuppressWarnings("unchecked")
 	public DataContainer getData(Site site, Application application, org.appng.api.Environment environment,

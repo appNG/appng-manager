@@ -29,11 +29,11 @@ import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.PermissionImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Provides CRUD-operations for a {@link PermissionImpl}.
@@ -42,11 +42,11 @@ import org.springframework.stereotype.Component;
  * 
  */
 
+@Slf4j
 @Lazy
 @Component
 @Scope("request")
 public class Permissions extends ServiceAware implements ActionProvider<PermissionImpl>, DataProvider {
-	private static final Logger log = LoggerFactory.getLogger(Permissions.class);
 
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
 			PermissionImpl permission, FieldProcessor fp) {

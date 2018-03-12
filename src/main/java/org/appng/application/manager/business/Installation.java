@@ -31,11 +31,11 @@ import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.model.InstallablePackage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -43,12 +43,11 @@ import org.springframework.stereotype.Component;
  * 
  */
 
+@Slf4j
 @Lazy
 @Component
 @Scope("request")
 public class Installation extends ServiceAware implements DataProvider, ActionProvider<Void> {
-
-	private static final Logger log = LoggerFactory.getLogger(Installation.class);
 
 	public static final String REPOSITORY = "repository";
 	private static final String PACKAGE_OPTION = "package";

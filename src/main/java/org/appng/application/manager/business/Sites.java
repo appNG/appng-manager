@@ -32,11 +32,11 @@ import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.SiteImpl;
 import org.appng.core.service.InitializerService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Provides CRUD-operations for a {@link SiteImpl}, furthermore supports reloading a site.
@@ -45,12 +45,12 @@ import org.springframework.stereotype.Component;
  * 
  */
 
+@Slf4j
 @Lazy
 @Component
 @Scope("request")
 public class Sites extends ServiceAware implements DataProvider, ActionProvider<SiteForm> {
 
-	private static final Logger log = LoggerFactory.getLogger(Sites.class);
 	public static final String SITE = "site";
 
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,

@@ -44,19 +44,17 @@ import org.appng.core.controller.messaging.NodeEvent.MemoryUsage;
 import org.appng.core.controller.messaging.NodeEvent.NodeState;
 import org.appng.core.controller.messaging.RequestNodeState;
 import org.appng.core.controller.messaging.SiteStateEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @org.springframework.context.annotation.Scope("request")
 public class ClusterState implements DataProvider, ActionProvider<Void> {
-
-	private static final Logger log = LoggerFactory.getLogger(ClusterState.class);
 
 	public DataContainer getData(Site site, Application application, org.appng.api.Environment environment,
 			Options options, Request request, FieldProcessor fieldProcessor) {

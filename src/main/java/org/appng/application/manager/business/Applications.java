@@ -30,11 +30,11 @@ import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.ApplicationImpl;
 import org.appng.core.service.MigrationService.MigrationStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Provides CRUD-operations for a {@link ApplicationImpl}.
@@ -46,9 +46,8 @@ import org.springframework.stereotype.Component;
 @Lazy
 @Component
 @Scope("request")
+@Slf4j
 public class Applications extends ServiceAware implements DataProvider, ActionProvider<ApplicationImpl> {
-
-	private static final Logger log = LoggerFactory.getLogger(Applications.class);
 
 	private static final String FORM_ACTION = "form_action";
 	private static final String DEACTIVATE_APPLICATION = "deactivateApplication";

@@ -29,11 +29,11 @@ import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.form.RoleForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Provides CRUD-operations for a {@link org.appng.core.domain.RoleImpl}.
@@ -42,11 +42,11 @@ import org.springframework.stereotype.Component;
  * 
  */
 
+@Slf4j
 @Lazy
 @Component
 @Scope("request")
 public class Roles extends ServiceAware implements DataProvider, ActionProvider<RoleForm> {
-	private static final Logger log = LoggerFactory.getLogger(Roles.class);
 
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
 			RoleForm roleForm, FieldProcessor fp) {

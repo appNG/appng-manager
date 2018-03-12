@@ -31,11 +31,11 @@ import org.appng.application.manager.form.RepositoryForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.forms.FormUpload;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Provides CRUD-operations for a {@link org.appng.core.domain.RepositoryImpl}.
@@ -44,13 +44,14 @@ import org.springframework.stereotype.Component;
  * 
  */
 
+@Slf4j
 @Lazy
 @Component
 @Scope("request")
 public class Repositories extends ServiceAware implements DataProvider, ActionProvider<RepositoryForm> {
 
 	private static final String UPLOAD = "upload";
-	private static final Logger log = LoggerFactory.getLogger(Repositories.class);
+
 	private static final String ACTION_UPLOAD_ARCHIVE = "uploadArchive";
 	public static final String REPOSITORY = "repository";
 
