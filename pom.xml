@@ -298,6 +298,7 @@
 							<outputDirectory>${project.build.directory}/generated-docs/html</outputDirectory>
 							<sourceDocumentName>appng-manager-userguide.adoc</sourceDocumentName>
 							<attributes>
+								<toc>left</toc>
 								<linkcss>true</linkcss>
 								<icons>font</icons>
 								<sectanchors>true</sectanchors>
