@@ -38,8 +38,20 @@ public class SessionsTest extends AbstractTest {
 	public void testShowSessions() throws Exception {
 		setSessions();
 		environment.setAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID, "47124712");
-		CallableDataSource siteDatasource = getDataSource("sessions").withParam("deleteLink",
-				"/system?action=expire&sessid=").getCallableDataSource();
+		CallableDataSource siteDatasource = getDataSource("sessions")
+				.withParam("deleteLink", "/system?action=expire&sessid=").getCallableDataSource();
+		siteDatasource.perform("test");
+		validate(siteDatasource.getDatasource());
+	}
+
+	@Test
+	public void testShowSessionsfiltered() throws Exception {
+		addParameter("fAgnt", "Mozilla");
+		initParameters();
+		Session first = setSessions().get(0);
+		Mockito.when(first.getUserAgent()).thenReturn(null);
+		environment.setAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID, "47124712");
+		CallableDataSource siteDatasource = getDataSource("sessions").getCallableDataSource();
 		siteDatasource.perform("test");
 		validate(siteDatasource.getDatasource());
 	}
@@ -70,7 +82,7 @@ public class SessionsTest extends AbstractTest {
 		Assert.assertFalse(sessionC.isExpired());
 	}
 
-	private void setSessions() throws ParseException {
+	private List<Session> setSessions() throws ParseException {
 		List<Session> sessions = new ArrayList<Session>();
 		Session sessionA = Mockito.mock(Session.class);
 		Mockito.when(sessionA.getId()).thenReturn("47114711");
@@ -106,5 +118,6 @@ public class SessionsTest extends AbstractTest {
 		Mockito.when(sessionB.clone()).thenReturn(sessionB);
 		sessions.add(sessionB);
 		environment.setAttribute(Scope.PLATFORM, "sessions", sessions);
+		return sessions;
 	}
 }

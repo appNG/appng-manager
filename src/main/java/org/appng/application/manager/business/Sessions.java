@@ -139,7 +139,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 			}
 
 			doAdd &= StringUtils.isBlank(fSessid) || session.getId().toLowerCase().startsWith(fSessid.toLowerCase());
-			doAdd &= StringUtils.isBlank(fAgnt) || session.getUserAgent().startsWith(fAgnt);
+			doAdd &= StringUtils.isBlank(fAgnt) || StringUtils.startsWith(session.getUserAgent(),fAgnt);
 
 			boolean nameMatches = FilenameUtils.wildcardMatch(session.getUser(), fUsr, IOCase.INSENSITIVE);
 			doAdd &= StringUtils.isBlank(fUsr) || nameMatches;
