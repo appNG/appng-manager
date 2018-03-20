@@ -51,7 +51,8 @@ public class SessionsTest extends AbstractTest {
 		Session first = setSessions().get(0);
 		Mockito.when(first.getUserAgent()).thenReturn(null);
 		environment.setAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID, "47124712");
-		CallableDataSource siteDatasource = getDataSource("sessions").getCallableDataSource();
+		CallableDataSource siteDatasource = getDataSource("sessions")
+				.withParam("deleteLink", "/system?action=expire&sessid=").getCallableDataSource();
 		siteDatasource.perform("test");
 		validate(siteDatasource.getDatasource());
 	}
