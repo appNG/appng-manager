@@ -45,7 +45,7 @@ public class SessionsTest extends AbstractTest {
 	}
 
 	@Test
-	public void testShowSessionsfiltered() throws Exception {
+	public void testShowSessionsFiltered() throws Exception {
 		addParameter("fAgnt", "Mozilla");
 		initParameters();
 		Session first = setSessions().get(0);
