@@ -33,10 +33,10 @@
                 <label id="context">Context</label>
             </field>
             <field name="requestId" type="text" displayLength="9" binding="requestId">
-                <label id="requestId">requestId</label>
+                <label id="request">Request</label>
             </field>
             <field name="sessionId" type="text" displayLength="11" binding="sessionId">
-                <label id="sessionId">sessionId</label>
+                <label id="session">Session</label>
             </field>
         </meta-data>
         <linkpanel id="other" location="both">

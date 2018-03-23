@@ -36,10 +36,10 @@
 					<label id="context" />
 				</field>
 				<field name="requestId" type="text" displayLength="9">
-					<label id="requestId" />
+					<label id="request" />
 				</field>
 				<field name="sessionId" type="text" displayLength="11">
-					<label id="sessionId" />
+					<label id="session" />
 				</field>
 			</meta-data>
 			<linkpanel location="both" id="other">
