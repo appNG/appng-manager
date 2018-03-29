@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 the original author or authors.
+ * Copyright 2011-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,13 +31,13 @@ import org.appng.application.manager.form.PropertyForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.PropertyImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Provides CRUD-operations for a {@link PropertyImpl}.
@@ -46,11 +46,12 @@ import org.springframework.stereotype.Component;
  * 
  */
 
+@Slf4j
 @Lazy
 @Component
 @Scope("request")
 public class Properties extends ServiceAware implements ActionProvider<PropertyForm>, DataProvider {
-	private static final Logger log = LoggerFactory.getLogger(Properties.class);
+
 	private static final String PROPERTY = "property";
 	private static final String PROPERTIES = "properties";
 
@@ -97,8 +98,8 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 		try {
 			if (ACTION_CREATE.equals(action)) {
 				errorMessage = MessageConstants.PROPERTY_CREATE_ERROR;
-				Integer siteId = request.convert(options.getOption(PROPERTIES).getAttribute("siteId"), Integer.class);
-				Integer applicationId = request.convert(options.getOption(PROPERTIES).getAttribute("applicationId"),
+				Integer siteId = request.convert(options.getOption(PROPERTIES).getString("siteId"), Integer.class);
+				Integer applicationId = request.convert(options.getOption(PROPERTIES).getString("applicationId"),
 						Integer.class);
 				service.createProperty(propertyForm, siteId, applicationId, fp);
 				okMessage = MessageConstants.PROPERTY_CREATED;

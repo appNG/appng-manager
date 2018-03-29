@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 the original author or authors.
+ * Copyright 2011-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,10 @@
 package org.appng.application.manager.business;
 
 import org.appng.api.support.CallableAction;
-import org.appng.testsupport.TestBase;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.springframework.test.context.ContextConfiguration;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@ContextConfiguration(locations = { "classpath:/beans-test.xml", TestBase.TESTCONTEXT_CORE, TestBase.TESTCONTEXT_JPA })
+@ContextConfiguration(locations = { "classpath:/beans-test.xml"})
 public class SqlExecutorTest extends AbstractTest {
 
 	@Test

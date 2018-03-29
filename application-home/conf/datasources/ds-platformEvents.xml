@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="platformEvents">
+		<config>
+			<title>events</title>
+			<permissions>
+				<permission ref="platform.events" mode="set" />
+			</permissions>
+			<params />
+			<meta-data bindClass="org.appng.core.domain.PlatformEvent">
+				<field name="created" type="date" format="yy/MM/dd HH:mm:ss">
+					<sort order="desc" prio="0" />
+					<label id="created" />
+				</field>
+				<field name="type" type="text">
+					<label id="type" />
+				</field>
+				<field name="event" type="longtext" displayLength="80">
+					<label id="event" />
+				</field>
+				<field name="user" type="text">
+					<label id="user" />
+				</field>
+				<field name="application" type="text">
+					<label id="application" />
+				</field>
+				<field name="origin" type="text">
+					<label id="host" />
+				</field>
+				<field name="hostName" type="text">
+					<label id="hostName" />
+				</field>
+				<field name="context" type="text" displayLength="15">
+					<label id="context" />
+				</field>
+				<field name="requestId" type="text" displayLength="9">
+					<label id="request" />
+				</field>
+				<field name="sessionId" type="text" displayLength="11">
+					<label id="session" />
+				</field>
+			</meta-data>
+			<linkpanel location="both" id="other">
+				<link target="platformEventExport" mode="webservice">
+					<icon>goto</icon>
+					<label id="events.export" />
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="platformEvents">
+		</bean>
+	</datasource>
+
+	<datasource id="eventFilter">
+		<config>
+			<title />
+			<meta-data bindClass="org.appng.application.manager.business.PlatformEvents.EventFilter">
+				<field name="eT" type="list:checkbox" />
+				<field name="eX" type="text" />
+				<field name="eU" type="text" />
+				<field name="eH" type="text" />
+				<field name="eN" type="text" />
+				<field name="eB" type="date" />
+				<field name="eA" type="date" />
+			</meta-data>
+		</config>
+		<bean id="eventFilter" />
+	</datasource>
+
+</datasources>

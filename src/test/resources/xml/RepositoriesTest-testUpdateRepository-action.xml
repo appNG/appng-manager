@@ -50,7 +50,7 @@
                 <label id="digest">Digest</label>
             </field>
             <field name="active" type="checkbox" binding="repository.active">
-                <label id="active">active</label>
+                <label id="active">Active</label>
             </field>
         </meta-data>
     </config>

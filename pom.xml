@@ -6,7 +6,7 @@
 	<artifactId>appng-manager</artifactId>
 	<packaging>jar</packaging>
 	<name>appNG Manager</name>
-	<version>1.12.4</version>
+	<version>1.13.0</version>
 	<description><![CDATA[Global appNG administration]]></description>
 	<url>https://appng.org</url>
 
@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.appng</groupId>
 		<artifactId>appng-application-parent</artifactId>
-		<version>1.15.0</version>
+		<version>1.17.0</version>
 	</parent>
 
 	<scm>
@@ -190,27 +190,45 @@
 				<artifactId>maven-release-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
+				<groupId>org.appng</groupId>
+				<artifactId>appng-maven-plugin</artifactId>
+				<version>${appNGVersion}</version>
 				<executions>
 					<execution>
-						<phase>generate-sources</phase>
+						<id>applicationConstants</id>
 						<goals>
-							<goal>java</goal>
+							<goal>generateApplicationConstants</goal>
 						</goals>
+						<configuration>
+							<filePath>application-home/application.xml</filePath>
+							<targetClass>org.appng.application.manager.ManagerSettings</targetClass>
+							<outfolder>${application.constants.generatedOutputFolder}</outfolder>
+						</configuration>
+					</execution>
+					<execution>
+						<id>messageConstants</id>
+						<goals>
+							<goal>generateMessageConstants</goal>
+						</goals>
+						<configuration>
+							<filePath>application-home/dictionary/manager-messages.properties</filePath>
+							<targetClass>org.appng.application.manager.MessageConstants</targetClass>
+							<outfolder>target/generated-sources/constants</outfolder>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<classpathScope>compile</classpathScope>
-					<executable>java</executable>
-					<mainClass>org.appng.tools.file.PropertyConstantCreator</mainClass>
-					<arguments>
-						<argument>application-home/dictionary/manager-messages.properties</argument>
-						<argument>org.appng.application.manager.MessageConstants</argument>
-						<argument>target/generated-sources/constants</argument>
-					</arguments>
-				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.appng</groupId>
+						<artifactId>appng-xmlapi</artifactId>
+						<version>${appNGVersion}</version>
+					</dependency>
+					<dependency>
+						<groupId>commons-io</groupId>
+						<artifactId>commons-io</artifactId>
+						<version>2.6</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -229,6 +247,25 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<header>license-header.txt</header>
+					<failIfMissing>true</failIfMissing>
+					<mapping>
+						<java>SLASHSTAR_STYLE</java>
+					</mapping>
+					<includes>
+						<include>src/main/java/**/*.java</include>
+						<include>src/test/java/**/*.java</include>
+					</includes>
+					<excludes>
+						<exclude>**/package-info.java</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -280,6 +317,7 @@
 							<outputDirectory>${project.build.directory}/generated-docs/html</outputDirectory>
 							<sourceDocumentName>appng-manager-userguide.adoc</sourceDocumentName>
 							<attributes>
+								<toc>left</toc>
 								<linkcss>true</linkcss>
 								<icons>font</icons>
 								<sectanchors>true</sectanchors>

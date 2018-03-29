@@ -92,7 +92,7 @@
 			<!-- install application -->
 			<section>
 				<element>
-					<action id="install" eventId="repositoryEvent" onSuccess="/repositories/installation/${id}/${packagename}#tab_packages">
+					<action id="install" eventId="repositoryEvent" onSuccess="/repositories/installation/${id}/${packagename}#tab_packages" forceForward="true">
 						<params>
 							<param name="form_action">${form_action}</param>
 							<param name="repositoryid">${id}</param>

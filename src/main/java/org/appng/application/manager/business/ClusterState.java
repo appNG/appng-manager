@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 the original author or authors.
+ * Copyright 2011-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,31 +32,29 @@ import org.appng.api.DataContainer;
 import org.appng.api.DataProvider;
 import org.appng.api.FieldProcessor;
 import org.appng.api.Options;
-import org.appng.api.Platform;
 import org.appng.api.Request;
 import org.appng.api.Scope;
 import org.appng.api.messaging.Messaging;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.api.model.Site.SiteState;
+import org.appng.application.manager.MessageConstants;
 import org.appng.core.controller.messaging.NodeEvent;
 import org.appng.core.controller.messaging.NodeEvent.MemoryUsage;
 import org.appng.core.controller.messaging.NodeEvent.NodeState;
 import org.appng.core.controller.messaging.RequestNodeState;
 import org.appng.core.controller.messaging.SiteStateEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @org.springframework.context.annotation.Scope("request")
 public class ClusterState implements DataProvider, ActionProvider<Void> {
-
-	private static final Logger log = LoggerFactory.getLogger(ClusterState.class);
 
 	public DataContainer getData(Site site, Application application, org.appng.api.Environment environment,
 			Options options, Request request, FieldProcessor fieldProcessor) {
@@ -73,13 +71,10 @@ public class ClusterState implements DataProvider, ActionProvider<Void> {
 
 		boolean clusterAvailable = null != nodeStates;
 		if (!clusterAvailable) {
-			// TODO use Messaging.isEnabled(environment) from APPNG-2034
-			org.appng.api.model.Properties platformConfig = environment.getAttribute(Scope.PLATFORM,
-					Platform.Environment.PLATFORM_CONFIG);
-			if (platformConfig.getBoolean(Platform.Property.MESSAGING_ENABLED)) {
-				fieldProcessor.addErrorMessage(request.getMessage("cluster.notAvailable"));
+			if (Messaging.isEnabled(environment)) {
+				fieldProcessor.addErrorMessage(request.getMessage(MessageConstants.CLUSTER_NOT_AVAILABLE));
 			} else {
-				fieldProcessor.addNoticeMessage(request.getMessage("cluster.disabled"));
+				fieldProcessor.addNoticeMessage(request.getMessage(MessageConstants.CLUSTER_DISABLED));
 			}
 		} else if (StringUtils.isNotBlank(nodeId)) {
 			NodeState nodeState = nodeStates.get(nodeId);
@@ -116,10 +111,8 @@ public class ClusterState implements DataProvider, ActionProvider<Void> {
 		MemoryUsage nonHeap = nodeEvent.new MemoryUsage(memoryMXBean.getNonHeapMemoryUsage());
 		Map<String, SiteState> siteStates = environment.getAttribute(Scope.PLATFORM, SiteStateEvent.SITE_STATE);
 
-		String localNodeId = System.getProperty(Messaging.APPNG_NODE_ID);
-		// TODO use Messaging.getNodeId(environment) from APPNG-2034
-		LocalNodeState localNode = new LocalNodeState(localNodeId, new Date(), heap, nonHeap, System.getProperties(),
-				System.getenv(), siteStates);
+		LocalNodeState localNode = new LocalNodeState(Messaging.getNodeId(environment), new Date(), heap, nonHeap,
+				System.getProperties(), System.getenv(), siteStates);
 		if (log.isDebugEnabled()) {
 			log.debug("local node is {}", localNode);
 		}

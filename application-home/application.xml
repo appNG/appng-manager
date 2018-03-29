@@ -85,6 +85,7 @@
 			<permission id="platform.environment" />
 			<permission id="platform.report" />
 			<permission id="platform.threads" />
+			<permission id="platform.events" />
 			<!-- databases -->
 			<permission id="platform.databases" />
 			<permission id="platform.database.edit" />
@@ -273,6 +274,7 @@
 		<permission id="platform.environment">Show the java.lang.System environment and properties</permission>
 		<permission id="platform.report">Download the platform-report as zipfile</permission>
 		<permission id="platform.threads">Show thread informations</permission>
+		<permission id="platform.events">Show and export platform events</permission>
 		<!-- databases -->
 		<permission id="platform.databases">Show the platform databases</permission>
 		<permission id="platform.database.edit">Edit a platform database</permission>
@@ -311,6 +313,11 @@
 	<properties>
 		<property id="clusterInterfaceName"
 			description="the name of the network interface who's first assigned IP address is used as system property appng.node.id in case it was not set an JVM startup">eth0</property>
+		<property id="eventReportReceivers" description="a semicolon separted list of receviers for PlatformEventReportJob (if empty, all users with 'Administrators' group are used)"></property>
+		<property id="eventReportSender" description="the sender for the event report email">report@example.com</property>
+		<property id="eventReportSubject" description="the subject for the event report email">appNG event report</property>
+		<property id="eventReportText" description="the text for the event report email">See attached file for a report of the recent appNG platform events.</property>
+		<property id="eventReportTypes" description="the event types to be inlcuded in the even report email (CREATE, UPDATE, DELETE, INFO, ERROR, WARN)">CREATE UPDATE DELETE INFO ERROR WARN</property>
 	</properties>
 
 </application>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 the original author or authors.
+ * Copyright 2011-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,11 @@ import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.model.InstallablePackage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -43,12 +43,11 @@ import org.springframework.stereotype.Component;
  * 
  */
 
+@Slf4j
 @Lazy
 @Component
 @Scope("request")
 public class Installation extends ServiceAware implements DataProvider, ActionProvider<Void> {
-
-	private static final Logger log = LoggerFactory.getLogger(Installation.class);
 
 	public static final String REPOSITORY = "repository";
 	private static final String PACKAGE_OPTION = "package";
@@ -73,7 +72,7 @@ public class Installation extends ServiceAware implements DataProvider, ActionPr
 				errorMessage = MessageConstants.PACKAGE_INSTALL_ERROR;
 				service.installPackage(repositoryId, packageName, packageVersion, packageTimestamp, fp);
 				okMessage = MessageConstants.PACKAGE_INSTALLED;
-				String reloadMessage = request.getMessage(MessageConstants.RELOAD_PLATFORM);
+				String reloadMessage = request.getMessage(MessageConstants.RELOAD_SITE);
 				fp.addNoticeMessage(reloadMessage);
 			} else if (ACTION_DELETE_PACKAGE.equals(action)) {
 				errorMessage = MessageConstants.PACKAGE_DELETE_ERROR;

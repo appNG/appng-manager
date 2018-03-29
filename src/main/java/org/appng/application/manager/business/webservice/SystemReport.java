@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 the original author or authors.
+ * Copyright 2011-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.appng.application.manager.business;
+package org.appng.application.manager.business.webservice;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,6 +41,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.appng.api.ApplicationException;
 import org.appng.api.AttachmentWebservice;
 import org.appng.api.BusinessException;
+import org.appng.api.Environment;
 import org.appng.api.Platform;
 import org.appng.api.Request;
 import org.appng.api.RequestUtil;
@@ -48,7 +49,7 @@ import org.appng.api.Scope;
 import org.appng.api.SiteProperties;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
-import org.appng.api.model.Subject;
+import org.appng.application.manager.business.LogConfig;
 import org.appng.application.manager.service.Service;
 import org.appng.tools.os.Command;
 import org.appng.tools.os.OperatingSystem;
@@ -84,16 +85,13 @@ public class SystemReport implements AttachmentWebservice {
 	@Value("${platform." + Platform.Property.PLATFORM_ROOT_PATH + "}")
 	private String rootPath;
 
-	public byte[] processRequest(Site site, Application application, org.appng.api.Environment environment,
-			Request request) throws BusinessException {
-
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Subject subject = environment.getSubject();
-		if (subject != null && subject.isAuthenticated()
-				&& request.getPermissionProcessor().hasPermission(PERM_REPORT)) {
-			ArchiveOutputStream os = null;
-			try {
-				os = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP, out);
+	public byte[] processRequest(Site site, Application application, Environment environment, Request request)
+			throws BusinessException {
+		if (environment.isSubjectAuthenticated() && request.getPermissionProcessor().hasPermission(PERM_REPORT)) {
+			try (
+					final ByteArrayOutputStream out = new ByteArrayOutputStream();
+					final ArchiveOutputStream os = new ArchiveStreamFactory()
+							.createArchiveOutputStream(ArchiveStreamFactory.ZIP, out);) {
 				((ZipArchiveOutputStream) os).setLevel(Deflater.BEST_COMPRESSION);
 
 				addProperties(os, "system-properties" + EXT_PROPERTIES, System.getProperties());
@@ -119,18 +117,14 @@ public class SystemReport implements AttachmentWebservice {
 				addArchiveEntry(os, logViewer.getLogfile());
 				addArchiveEntry(os, logConfig.getConfigFile());
 				addArchiveEntry(os, new File(rootPath, "WEB-INF/conf/appNG" + EXT_PROPERTIES));
-
+				return out.toByteArray();
 			} catch (IOException e) {
 				throw new ApplicationException(e);
 			} catch (ArchiveException e) {
 				throw new ApplicationException(e);
-			} finally {
-				IOUtils.closeQuietly(os);
-				IOUtils.closeQuietly(out);
 			}
 		}
-
-		return out.toByteArray();
+		return new byte[0];
 	}
 
 	private void addFile(ArchiveOutputStream os, File srcFile, String currentFolder)
@@ -149,7 +143,7 @@ public class SystemReport implements AttachmentWebservice {
 
 	private void addProperties(ArchiveOutputStream os, String name, Map<?, ?> map) throws IOException {
 		ByteArrayOutputStream propsOut = new ByteArrayOutputStream();
-		for (Entry<String, ?> entry : Environment.getSortedEntries(map)) {
+		for (Entry<String, ?> entry : org.appng.application.manager.business.Environment.getSortedEntries(map)) {
 			propsOut.write((entry.getKey() + "=" + entry.getValue() + Constants.NEW_LINE).getBytes());
 		}
 		addArchiveEntry(os, name, new ByteArrayInputStream(propsOut.toByteArray()), null);
@@ -181,7 +175,7 @@ public class SystemReport implements AttachmentWebservice {
 			IOUtils.copy(is, os);
 			os.closeArchiveEntry();
 		} catch (IOException e) {
-			IOUtils.closeQuietly(is);
+			is.close();
 			throw e;
 		}
 	}

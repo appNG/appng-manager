@@ -22,7 +22,7 @@
                 <label id="description">Description</label>
             </field>
             <field name="active" type="checkbox" binding="site.active">
-                <label id="active">active</label>
+                <label id="active">Active</label>
             </field>
             <field name="template" type="list:radio" binding="template">
                 <label id="template">Template</label>

@@ -31,6 +31,9 @@
 				<field name="userName" type="text">
 					<label>userName</label>
 				</field>
+				<field name="databaseSize" type="decimal">
+					<label id="sizeMB" />
+				</field>
 				<field name="active" type="image">
 					<label>active</label>
 					<icon condition="${current.active}">led_green</icon>
@@ -57,7 +60,7 @@
 					<label>delete</label>
 					<icon>delete</icon>
 					<condition expression="${not empty deleteLink}" />
-					<confirmation id="connection.delete.confirm" params="#{name}"/>
+					<confirmation id="connection.delete.confirm" params="#{name}" />
 				</link>
 				<link mode="intern" target="${testLink}#{id}${linkTab}">
 					<label>test</label>
@@ -67,7 +70,7 @@
 					<label>reset</label>
 					<icon>reload</icon>
 					<condition expression="${not empty resetLink}" />
-					<confirmation id="connection.confirm.reset" params="#{name}"/>
+					<confirmation id="connection.confirm.reset" params="#{name}" />
 				</link>
 			</linkpanel>
 		</config>
@@ -76,6 +79,40 @@
 		</bean>
 	</datasource>
 
+	<datasource id="migrations">
+		<config>
+			<title id="migrations" />
+			<params>
+				<param name="id" />
+			</params>
+			<meta-data bindClass="org.flywaydb.core.api.MigrationInfo">
+				<field name="installedRank" type="int">
+					<label id="migration.installedRank" />
+				</field>
+				<field name="installedOn" type="date">
+					<label id="migration.installedOn" />
+				</field>
+				<field name="version.version" type="text">
+					<label id="migration.version" />
+				</field>
+				<field name="description" type="text">
+					<label id="migration.description" />
+				</field>
+				<field name="checksum" type="text">
+					<label id="migration.checksum" />
+				</field>
+				<field name="installedBy" type="text">
+					<label id="migration.installedBy" />
+				</field>
+				<field name="state.displayName" type="text">
+					<label id="migration.state" />
+				</field>
+			</meta-data>
+		</config>
+		<bean id="databaseConnections">
+			<option name="id" id="${id}" mode="migrations" />
+		</bean>
+	</datasource>
 
 	<datasource id="databaseConnection">
 		<config>

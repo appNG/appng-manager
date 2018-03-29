@@ -19,6 +19,14 @@
 					<get-param name="propertyid" />
 					<get-param name="id" />
 					<get-param name="expandSql" />
+					<!-- event filtering -->
+					<get-param name="eA" />
+					<get-param name="eB" />
+					<get-param name="eT" />
+					<get-param name="eX" />
+					<get-param name="eU" />
+					<get-param name="eH" />
+					<get-param name="eN" />
 				</get-params>
 				<post-params>
 					<post-param name="form_action" />
@@ -72,6 +80,14 @@
 						</permissions>
 					</action>
 				</element>
+				<element folded="true" passive="true">
+					<datasource id="migrations">
+						<params>
+							<param name="id">${id}</param>
+						</params>
+						<condition expression="${entity eq 'connection' and action eq 'update' and not empty id}" />
+					</datasource>
+				</element>
 				<element folded="${expandSql ne 'true'}" passive="true">
 					<action eventId="databaseConnectionEvent" id="executeSql"
 						onSuccess="/platform/connection/update/${id}&#63;expandSql=true#tab_databaseConnections">
@@ -107,6 +123,18 @@
 				</element>
 				<element>
 					<datasource id="tomcatJars" />
+				</element>
+			</section>
+
+			<!-- platform events -->
+			<section hidden="true">
+				<element>
+					<datasource id="eventFilter" />
+				</element>
+			</section>
+			<section>
+				<element>
+					<datasource id="platformEvents" />
 				</element>
 			</section>
 

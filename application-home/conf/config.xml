@@ -20,6 +20,22 @@
 				<session-param name="fUsr" />
 				<session-param name="fEtr" />
 				<session-param name="fCtpe" />
+				<!-- event filter -->
+				<session-param name="fTps" />
+				<session-param name="fTxt" />
+				<session-param name="fUsr" />
+				<session-param name="fHst" />
+				<session-param name="fHstNm" />
+				<session-param name="fBf" />
+				<session-param name="fAf" />
+				<!-- event filtering -->
+				<session-param name="eA" />
+				<session-param name="eB" />
+				<session-param name="eT" />
+				<session-param name="eX" />
+				<session-param name="eU" />
+				<session-param name="eH" />
+				<session-param name="eN" />
 			</session-params>
 		</session>
 	</config>

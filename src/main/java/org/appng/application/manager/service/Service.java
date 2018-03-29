@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 the original author or authors.
+ * Copyright 2011-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ import org.appng.application.manager.form.UploadForm;
 import org.appng.core.controller.AppngCache;
 import org.appng.core.domain.DatabaseConnection;
 import org.appng.core.domain.PermissionImpl;
+import org.appng.core.domain.PlatformEvent.Type;
 import org.appng.core.domain.RepositoryImpl;
 import org.appng.core.domain.SiteApplication;
 import org.appng.core.model.JarInfo;
@@ -227,5 +228,7 @@ public interface Service {
 	void deleteTemplate(String name, FieldProcessor fp);
 
 	List<Identifier> listTemplates();
+
+	void createEvent(Type type, String message);
 
 }

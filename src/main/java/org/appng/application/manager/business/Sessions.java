@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 the original author or authors.
+ * Copyright 2011-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,7 +139,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 			}
 
 			doAdd &= StringUtils.isBlank(fSessid) || session.getId().toLowerCase().startsWith(fSessid.toLowerCase());
-			doAdd &= StringUtils.isBlank(fAgnt) || session.getUserAgent().startsWith(fAgnt);
+			doAdd &= StringUtils.isBlank(fAgnt) || StringUtils.startsWith(session.getUserAgent(),fAgnt);
 
 			boolean nameMatches = FilenameUtils.wildcardMatch(session.getUser(), fUsr, IOCase.INSENSITIVE);
 			doAdd &= StringUtils.isBlank(fUsr) || nameMatches;

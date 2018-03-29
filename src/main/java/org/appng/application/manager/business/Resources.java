@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 the original author or authors.
+ * Copyright 2011-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.form.ResourceForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * ApplicationResources action class reads all resources of a application
@@ -45,12 +45,11 @@ import org.springframework.stereotype.Component;
  * 
  */
 
+@Slf4j
 @Lazy
 @Component
 @Scope("request")
 public class Resources extends ServiceAware implements ActionProvider<ResourceForm>, DataProvider {
-
-	private static final Logger log = LoggerFactory.getLogger(Resources.class);
 
 	private static final String TYPE = "type";
 	private static final String RESOURCE = "resource";
