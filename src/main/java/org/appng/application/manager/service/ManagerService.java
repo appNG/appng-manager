@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 the original author or authors.
+ * Copyright 2011-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.io.FileUtils;
@@ -110,6 +111,7 @@ import org.appng.core.xml.repository.PackageVersions;
 import org.appng.core.xml.repository.Packages;
 import org.appng.forms.FormUpload;
 import org.appng.persistence.repository.SearchQuery;
+import org.appng.xml.application.PackageInfo;
 import org.appng.xml.platform.Label;
 import org.appng.xml.platform.Option;
 import org.appng.xml.platform.Selection;
@@ -224,7 +226,8 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public String deleteResource(Integer applicationId, Integer resourceId, FieldProcessor fp) throws BusinessException {
+	public String deleteResource(Integer applicationId, Integer resourceId, FieldProcessor fp)
+			throws BusinessException {
 		try {
 			if (null != applicationId) {
 				String resourceName = deleteResource(request.getEnvironment(), applicationId, resourceId);
@@ -416,8 +419,6 @@ public class ManagerService extends CoreService implements Service {
 	/**
 	 * Returns a {@link Packages}-object from a certain repository. {@link Packages} are made available to other appNG
 	 * instances via the {@link RepositoryService}.
-	 * 
-	 * @throws BusinessException
 	 */
 	public Packages searchPackages(FieldProcessor fp, String repositoryName, String digest) throws BusinessException {
 		try {
@@ -432,11 +433,9 @@ public class ManagerService extends CoreService implements Service {
 	/**
 	 * Returns a {@link PackageVersions}-object from a certain repository. {@link PackageVersions} are made available to
 	 * other appNG instances via the {@link RepositoryService}.
-	 * 
-	 * @throws BusinessException
 	 */
-	public PackageVersions searchPackageVersions(FieldProcessor fp, String repositoryName, String packageName, String digest)
-			throws BusinessException {
+	public PackageVersions searchPackageVersions(FieldProcessor fp, String repositoryName, String packageName,
+			String digest) throws BusinessException {
 		try {
 			Repository repository = getRepository(repositoryName, digest);
 			return repository.getPackageVersions(packageName);
@@ -446,8 +445,8 @@ public class ManagerService extends CoreService implements Service {
 		return null;
 	}
 
-	public PackageArchive getPackageArchive(String repositoryName, String name, String version, String timestamp, String digest)
-			throws BusinessException {
+	public PackageArchive getPackageArchive(String repositoryName, String name, String version, String timestamp,
+			String digest) throws BusinessException {
 		Repository repository = getRepository(repositoryName, digest);
 		return repository.getPackageArchive(name, version, timestamp);
 	}
@@ -459,7 +458,8 @@ public class ManagerService extends CoreService implements Service {
 				boolean digestOk = false;
 				if (StringUtils.isBlank(repository.getDigest())) {
 					String defaultDigest = getPlatformConfig().getString(Platform.Property.REPOSITORY_DEFAULT_DIGEST);
-					digestOk = StringUtils.equals(StringUtils.trimToEmpty(defaultDigest), StringUtils.trimToEmpty(digest));
+					digestOk = StringUtils.equals(StringUtils.trimToEmpty(defaultDigest),
+							StringUtils.trimToEmpty(digest));
 				} else {
 					digestOk = StringUtils.equals(repository.getDigest(), digest);
 				}
@@ -477,13 +477,22 @@ public class ManagerService extends CoreService implements Service {
 
 	/**
 	 * Installs a {@link PackageArchive} in order to use it within the platform.
-	 * 
-	 * @throws BusinessException
 	 */
 	public void installPackage(Integer repositoryId, String name, String version, String timestamp, FieldProcessor fp)
 			throws BusinessException {
 		try {
 			Boolean isFilebased = getPlatformConfig().getBoolean(Platform.Property.FILEBASED_DEPLOYMENT);
+			PackageVersions packageVersions = getRepository(repositoryId).getPackageVersions(name);
+			List<PackageInfo> versions = packageVersions.getPackage().stream()
+					.filter(p -> p.getVersion().equals(version) && p.getTimestamp().equals(timestamp)).limit(1)
+					.collect(Collectors.toList());
+			String appngVer = environment.getAttribute(Scope.PLATFORM, Platform.Environment.APPNG_VERSION);
+			String pkAppngVer = versions.get(0).getAppngVersion();
+			if (pkAppngVer.compareTo(appngVer) > 0) {
+				String versionMismatch = request.getMessage(MessageConstants.PACKAGE_APP_NG_VERSION_MISMATCH,
+						pkAppngVer, appngVer);
+				fp.addNoticeMessage(versionMismatch);
+			}
 			installPackage(repositoryId, name, version, timestamp, false, false, isFilebased);
 		} catch (Exception e) {
 			getRequest().handleException(fp, e);
@@ -550,7 +559,7 @@ public class ManagerService extends CoreService implements Service {
 			Integer id = form.getId();
 			Application application = applicationRepository.findOne(appId);
 			boolean fileBased = application.isFileBased();
-			String reloadMessage = request.getMessage(MessageConstants.RELOAD_PLATFORM);
+			String reloadMessage = request.getMessage(MessageConstants.RELOAD_SITE);
 			File appRootFolder = getApplicationRootFolder(environment);
 			Resources resourceHolder = getResources(application, null, appRootFolder);
 			Resource resource = resourceHolder.getResource(id);
@@ -599,8 +608,8 @@ public class ManagerService extends CoreService implements Service {
 			FormUpload uploadFile = form.getFile();
 			File file = uploadFile.getFile();
 			String originalFilename = uploadFile.getOriginalFilename();
-			okMessage = request
-					.getMessage(MessageConstants.RESOURCE_UPLOADED, originalFilename, FileUtils.sizeOf(file));
+			okMessage = request.getMessage(MessageConstants.RESOURCE_UPLOADED, originalFilename,
+					FileUtils.sizeOf(file));
 
 			errorMessage = request.getMessage(MessageConstants.RESOURCE_UPLOAD_ERROR, originalFilename);
 			if (type.isValidFileName(originalFilename)) {
@@ -631,7 +640,7 @@ public class ManagerService extends CoreService implements Service {
 					resource.calculateChecksum();
 					resourceRepository.save(resource);
 				}
-				String reloadMessage = request.getMessage(MessageConstants.RELOAD_PLATFORM);
+				String reloadMessage = request.getMessage(MessageConstants.RELOAD_SITE);
 				fp.addNoticeMessage(reloadMessage);
 				fp.addOkMessage(okMessage);
 			} else {
@@ -673,8 +682,8 @@ public class ManagerService extends CoreService implements Service {
 
 	private Selection getPermissionSelection(Integer appId, RoleImpl role) {
 		Set<Permission> permissionsFromRole = role.getPermissions();
-		List<PermissionImpl> allPermissions = permissionRepository.findByApplicationId(appId, new Sort(Direction.ASC,
-				"name"));
+		List<PermissionImpl> allPermissions = permissionRepository.findByApplicationId(appId,
+				new Sort(Direction.ASC, "name"));
 		Map<String, List<Permission>> permissionGroups = new HashMap<String, List<Permission>>();
 		Pattern pattern = Pattern.compile("([^\\.]+)((.)*)");
 		for (Permission permission : allPermissions) {
@@ -699,8 +708,8 @@ public class ManagerService extends CoreService implements Service {
 						permissionsFromRole);
 				permissionSelection.getOptionGroups().add(group);
 			} else {
-				List<Option> options = selectionFactory.fromNamed(permissionGroup, permissionGroup, permissions,
-						permissionsFromRole).getOptions();
+				List<Option> options = selectionFactory
+						.fromNamed(permissionGroup, permissionGroup, permissions, permissionsFromRole).getOptions();
 				permissionSelection.getOptions().addAll(options);
 			}
 		}
@@ -737,8 +746,8 @@ public class ManagerService extends CoreService implements Service {
 				new Object[] { name, role.getApplication().getId() });
 		if (!isUnique) {
 			fp.addErrorMessage(fp.getField("role.name"), request.getMessage(MessageConstants.ROLE_EXISTS));
-			throw new BusinessException("a role " + role.getName() + " already exists for application "
-					+ role.getApplication().getName());
+			throw new BusinessException(
+					"a role " + role.getName() + " already exists for application " + role.getApplication().getName());
 		}
 	}
 
@@ -814,7 +823,8 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public void updateApplication(Environment env, Application application, FieldProcessor fp) throws BusinessException {
+	public void updateApplication(Environment env, Application application, FieldProcessor fp)
+			throws BusinessException {
 		try {
 			if (application.getId() != null) {
 				ApplicationImpl currentApplication = applicationRepository.findOne(application.getId());
@@ -946,7 +956,7 @@ public class ManagerService extends CoreService implements Service {
 			getRequest().setPropertyValues(form, new SiteForm(currentSite), fp.getMetaData());
 
 			if (isActive ^ wasActiveBefore) {
-				String message = request.getMessage(MessageConstants.RELOAD_PLATFORM);
+				String message = request.getMessage(MessageConstants.RELOAD_SITE);
 				fp.addNoticeMessage(message);
 			}
 
@@ -995,8 +1005,8 @@ public class ManagerService extends CoreService implements Service {
 			String filterParamType = "f_type";
 			String filterParamName = "f_name";
 			String typeFormRequest = request.getParameter(filterParamType);
-			UserType userType = null != typeFormRequest && UserType.names().contains(typeFormRequest) ? UserType
-					.valueOf(typeFormRequest) : null;
+			UserType userType = null != typeFormRequest && UserType.names().contains(typeFormRequest)
+					? UserType.valueOf(typeFormRequest) : null;
 			String name = request.getParameter(filterParamName);
 
 			SearchQuery<SubjectImpl> searchQuery = subjectRepository.createSearchQuery();
@@ -1147,8 +1157,8 @@ public class ManagerService extends CoreService implements Service {
 				}
 				if (!StringUtils.isEmpty(subjectForm.getPassword())
 						&& !StringUtils.isEmpty(subjectForm.getPasswordConfirmation())) {
-					updated = updatePassword(subjectForm.getPassword().toCharArray(), subjectForm
-							.getPasswordConfirmation().toCharArray(), currentSubject);
+					updated = updatePassword(subjectForm.getPassword().toCharArray(),
+							subjectForm.getPasswordConfirmation().toCharArray(), currentSubject);
 				}
 				assignGroupsToSubject(subject.getId(), subjectForm.getGroupIds(), fp);
 				getRequest().setPropertyValues(subjectForm, new SubjectForm(currentSubject), fp.getMetaData());
@@ -1244,15 +1254,15 @@ public class ManagerService extends CoreService implements Service {
 				DatabaseConnection connection = siteApplication.getDatabaseConnection();
 				switch (migrationStatus) {
 				case ERROR:
-					fp.addOkMessage(request.getMessage(MessageConstants.MIGRATION_DB_DELETE_FAILED,
-							connection.getJdbcUrl()));
+					fp.addOkMessage(
+							request.getMessage(MessageConstants.MIGRATION_DB_DELETE_FAILED, connection.getJdbcUrl()));
 					break;
 				case DB_MIGRATED:
 					fp.addOkMessage(request.getMessage(MessageConstants.MIGRATION_DB_DELETED, connection.getJdbcUrl()));
 					break;
 				case DB_SUPPORTED:
-					fp.addOkMessage(request.getMessage(MessageConstants.MIGRATION_DB_NOT_DELETED,
-							connection.getJdbcUrl()));
+					fp.addOkMessage(
+							request.getMessage(MessageConstants.MIGRATION_DB_NOT_DELETED, connection.getJdbcUrl()));
 					break;
 				default:
 					break;
@@ -1314,8 +1324,8 @@ public class ManagerService extends CoreService implements Service {
 			}
 			data.setItem(permission);
 		} else {
-			SearchQuery<PermissionImpl> query = new SearchQuery<PermissionImpl>(PermissionImpl.class).equals(
-					"application.id", appId);
+			SearchQuery<PermissionImpl> query = new SearchQuery<PermissionImpl>(PermissionImpl.class)
+					.equals("application.id", appId);
 			Page<PermissionImpl> permissions = permissionRepository.search(query, fp.getPageable());
 			data.setPage(permissions);
 		}
@@ -1496,7 +1506,8 @@ public class ManagerService extends CoreService implements Service {
 		return getTypeSelection(RepositoryMode.class, repositoryMode, "repositoryMode", "repositoryMode");
 	}
 
-	private <E extends Enum<E>> Selection getTypeSelection(final Class<E> clazz, final E type, String id, String title) {
+	private <E extends Enum<E>> Selection getTypeSelection(final Class<E> clazz, final E type, String id,
+			String title) {
 		NameProvider<E> nameProvider = new NameProvider<E>() {
 			public String getName(E instance) {
 				return request.getMessage(clazz.getSimpleName() + "." + instance.name());
@@ -1527,8 +1538,8 @@ public class ManagerService extends CoreService implements Service {
 			SiteImpl site = siteRepository.findOne(siteId);
 			jarInfos = environment.getAttribute(Scope.PLATFORM, site.getName() + "." + EnvironmentKeys.JAR_INFO_MAP);
 		} else {
-			jarInfos = environment.getAttribute(Scope.PLATFORM, Platform.Environment.PLATFORM_CONFIG + "."
-					+ EnvironmentKeys.JAR_INFO_MAP);
+			jarInfos = environment.getAttribute(Scope.PLATFORM,
+					Platform.Environment.PLATFORM_CONFIG + "." + EnvironmentKeys.JAR_INFO_MAP);
 		}
 		if (null != jarInfos) {
 			Collections.sort(jarInfos);
@@ -1622,8 +1633,8 @@ public class ManagerService extends CoreService implements Service {
 		List<SiteImpl> allSites = siteRepository.findAll(new Sort("name"));
 		allSites.remove(grantedSite);
 		for (SiteImpl site : new ArrayList<SiteImpl>(allSites)) {
-			SiteApplication granted = siteApplicationRepository.findByApplicationNameAndGrantedSitesName(
-					application.getName(), site.getName());
+			SiteApplication granted = siteApplicationRepository
+					.findByApplicationNameAndGrantedSitesName(application.getName(), site.getName());
 			if (null != granted && !granted.equals(siteApplication)) {
 				allSites.remove(site);
 				grantedBy.add(site);

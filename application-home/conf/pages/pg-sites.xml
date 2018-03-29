@@ -341,7 +341,7 @@
 					</action>
 				</element>
 				<element>
-					<action id="toggle-applicationstate" onSuccess="/sites/update/${siteid}" eventId="applicationEvent">
+					<action id="toggle-applicationstate" onSuccess="/sites/update/${siteid}#tab_site-applications" eventId="applicationEvent" forceForward="false">
 						<params>
 							<param name="siteid">${siteid}</param>
 							<param name="appid">${appid}</param>
