@@ -63,7 +63,7 @@
                 </validation>
             </field>
             <field name="active" type="checkbox" binding="site.active">
-                <label id="active">active</label>
+                <label id="active">Active</label>
             </field>
             <field name="createRepository" type="checkbox" binding="site.createRepository">
                 <label id="site.createRepository">Create folder for JSP-contents</label>

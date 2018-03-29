@@ -31,12 +31,12 @@
             <label id="nonHeap.usedPercent">Percentage</label>
         </field>
         <field name="current" type="image" binding="current">
-            <label id="selected">selected</label>
+            <label id="selected">Selected</label>
             <icon condition="${current.current}">led_green</icon>
             <icon condition="${!current.current}">ico_spacer</icon>
         </field>
         <field name="actions" type="linkpanel" binding="actions">
-            <label id="actions">actions</label>
+            <label id="actions">Actions</label>
         </field>
     </meta-data>
     <linkpanel id="actions" location="inline">

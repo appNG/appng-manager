@@ -32,12 +32,12 @@
                 <label id="sizeMB">Size (MB)</label>
             </field>
             <field name="active" type="image" binding="active">
-                <label id="active">active</label>
+                <label id="active">Active</label>
                 <icon condition="${current.active}">led_green</icon>
                 <icon condition="${not current.active}">led_red</icon>
             </field>
             <field name="actions" type="linkpanel" binding="actions">
-                <label id="actions">actions</label>
+                <label id="actions">Actions</label>
             </field>
         </meta-data>
         <linkpanel id="create" location="both"/>

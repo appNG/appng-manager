@@ -48,7 +48,7 @@
 				<label id="userName">User-Name</label>
 			</field>
 			<field binding="actions" type="linkpanel" name="actions">
-				<label id="actions">actions</label>
+				<label id="actions">Actions</label>
 			</field>
 		</meta-data>
 		<linkpanel location="inline" id="actions">

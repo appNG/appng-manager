@@ -35,7 +35,7 @@
                 <label id="uri">URI</label>
             </field>
             <field binding="repository.active" type="checkbox" name="active">
-                <label id="active">active</label>
+                <label id="active">Active</label>
             </field>
         </meta-data>
     </config>
