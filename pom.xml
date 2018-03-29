@@ -6,7 +6,7 @@
 	<artifactId>appng-manager</artifactId>
 	<packaging>jar</packaging>
 	<name>appNG Manager</name>
-	<version>1.13.0</version>
+	<version>1.13.1-SNAPSHOT</version>
 	<description><![CDATA[Global appNG administration]]></description>
 	<url>https://appng.org</url>
 
