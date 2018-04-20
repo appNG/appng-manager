@@ -74,6 +74,7 @@ There are certain events that occur within the appNG platform that are written t
 
 Events that are recorded include:
 
+* starting/stopping the platform
 * starting/stopping a site
 * assigning/removing an application to/from a site
 * user log-in and log-out, session expiration
