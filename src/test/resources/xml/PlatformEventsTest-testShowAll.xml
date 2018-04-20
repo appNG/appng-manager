@@ -65,6 +65,10 @@
                 <title id="user">User</title>
                 <option value="" name=""/>
             </selection>
+            <selection id="eAp" type="select">
+                <title id="application">Application</title>
+                <option value="" name=""/>
+            </selection>
             <selection id="eH" type="select">
                 <title id="host">Host</title>
                 <option value="" name=""/>

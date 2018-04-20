@@ -46,6 +46,7 @@ public class PlatformEventService {
 		query.equals("origin", StringUtils.trimToNull(eventFilter.getEH()));
 		query.equals("hostName", StringUtils.trimToNull(eventFilter.getEN()));
 		query.equals("user", StringUtils.trimToNull(eventFilter.getEU()));
+		query.equals("application",StringUtils.trimToNull(eventFilter.getEAp()));
 		query.in("type", eventFilter.eventTypes());
 		query.contains("event", StringUtils.trimToNull(eventFilter.getEX()));
 		return platformEventRepository.search(query, pageable);

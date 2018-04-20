@@ -60,6 +60,7 @@
 				<field name="eT" type="list:checkbox" />
 				<field name="eX" type="text" />
 				<field name="eU" type="text" />
+				<field name="eAp" type="text" />
 				<field name="eH" type="text" />
 				<field name="eN" type="text" />
 				<field name="eB" type="date" />

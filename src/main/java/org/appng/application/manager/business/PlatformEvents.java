@@ -15,6 +15,7 @@
  */
 package org.appng.application.manager.business;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -83,6 +84,10 @@ public class PlatformEvents implements DataProvider {
 		Selection userSelection =  getStringSelection("eU", users, filter.getEU(), MessageConstants.USER);
 		selections.add(userSelection);
 
+		List<String> applications = platformEventEventService.getApplications();
+		Selection applicationSelection =  getStringSelection("eAp", applications, filter.getEAp(), MessageConstants.APPLICATION);
+		selections.add(applicationSelection);
+
 		List<String> hostNames = platformEventEventService.getOrigins();
 		Selection hostSelection = getStringSelection("eH", hostNames, filter.getEH(), MessageConstants.HOST);
 		selections.add(hostSelection);
@@ -111,7 +116,7 @@ public class PlatformEvents implements DataProvider {
 	@Data
 	@Component("eventFilter")
 	@RequestScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
-	public static class EventFilter implements DataProvider {
+	public static class EventFilter implements DataProvider, Serializable {
 		/** before */
 		private Date eB;
 		/** after */
@@ -124,6 +129,8 @@ public class PlatformEvents implements DataProvider {
 		private String eH;
 		/** hostnames */
 		private String eN;
+		/** application */
+		private String eAp;
 		/** types */
 		private List<String> eT = new ArrayList<>();
 
