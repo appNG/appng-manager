@@ -69,5 +69,40 @@ appNG can use database connections to different types of database servers at the
 === JAR-Files
 The section `JAR-Files` lists all Java archive files of the platform and JAR files which are provided by the Tomcat runtime environment. File name, version, title and vendor are displayed. This is useful to verify the version of the used libraries. It also helps to include library versions in bug reports. The information displayed here is read from the `META-INF/MANIFEST.MF` of the respective library. If information is missing for a certain library, its `MANIFEST.MF` is probably not well-maintained.
 
+=== Events
+There are certain events that occur within the appNG platform that are written to an event log. This event log can be shown, filtered and exported.
+
+Events that are recorded include:
+
+* starting/stopping the platform
+* starting/stopping a site
+* assigning/removing an application to/from a site
+* user log-in and log-out, session expiration
+* creating/dropping databases
+* creating/modifing any of appNG's core components +
+(sites, applications, users, groups, roles, permissions, resources and database connections)
+
+A platform event has the following attributes:
+
+[cols="20,60,20",width="100%",options="header"]
+|====================
+| Attribute Name | Description | Example
+|Created|The date and time when the event occurred.|`18/04/17 12:37:49`
+|Type|The type of the event. One of `CREATE`, `UPDATE`, `DELETE`, `INFO`,`ERROR`,`WARN`.|`INFO`
+|Event|A text describing the event.|`Loaded site manager`
+|Appplication|The application that triggered the event. One of `appNG`, `appNG CLI` or `appNGizer`|`appNG`
+|Context|The context the event was executed in, depending onthe application that triggered the event. +
+If it was triggered by `appNG` or `appNGizer`, the context is the relative URL path that caused the event. +
+If triggered by `appNG CLI`, the context is the CLI command that caused the event|`/manager/manager/appng-manager/sites` +
+`batch -f ./install.list`
+|User|The user that triggered the event. This is either a user that was signed in at the appNG Manager, `appNG platform` (in case no specifix user could be determined), +
+`appNGizer` (when triggered by the same) or, in case of an CLI command, the name of the system user that executed the command. |`appNG Administrator`
+|Host|The remote host  or IP that triggered the event. May contain an IPv4 or IPv6 address or a host name.|`127.0.0.1`
+|Host name|The local host name of the appNG server where the event was triggered at.|`appng-node1.example.com`
+|Request|A universally unique identifier (UUID) for the request that triggered the event. Multiple events can be triggered by the same request.|`ba81aa7b-069b-4ed4-954e-7050f3a59da6`
+|Session|The first 8 characters of the HTTP session, if applicable (only the case when triggered by `appNG` or `appNGizer`).|`D809E5C5`
+|====================
+
+
 === Dictionary
 This section shows the content of the platform dictionary.
