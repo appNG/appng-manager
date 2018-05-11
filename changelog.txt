@@ -1,0 +1,48 @@
+Release Notes - appNG Manager - Version 1.13.1 (2018-05-11)
+-----------------------------------------------------------
+* [MGR-48] - Release version 1.13.1
+* [MGR-47] - Align TOC of userguide at the left
+* [MGR-46] - Filter platform events by application
+* [MGR-45] - Provide a changelog.txt
+* [MGR-44] - Add section about platform events to user manual
+
+Release Notes - appNG Manager - Version 1.13.0 (2018-03-29)
+-----------------------------------------------------------
+* [MGR-42] - Missing labels/ use uppercase
+* [MGR-40] - Release 1.13.0
+* [MGR-41] - Merge Changes from 1.12.x Branch
+* [MGR-39] - Error when sorting sites with startup-time
+* [MGR-38] - Possible NPE when filtering for user agent
+* [MGR-37] - Move TOC of documentation to the left
+* [MGR-36] - Remove call of deprecated CoreService.deleteSite()
+* [MGR-35] - Use static utility methods from o.a.a.m.Messaging
+* [MGR-34] - Use @Slf4j
+* [MGR-33] - Move Webservices to own package
+* [MGR-32] - Provide a link to the user guide in README
+* [MGR-31] - Show database sizes and schema migration information for databaseconnection
+* [MGR-29] - Add supportReloadFile to appNG Manager documentation
+* [MGR-28] - Add the appNG version to the list of package versions
+* [MGR-27] - Fix JavaDoc Warnings
+* [MGR-26] - Provide a DataSource to show and filter platform events
+* [MGR-25] - Sorting properties fails with an error
+* [MGR-24] - Wrong tab selected after toggling the application state on a site
+* [MGR-23] - Typo in confirmation message when removing an application from a site
+* [MGR-21] - Update license header to 2018
+* [MGR-20] - Minor update to messages.properties
+* [MGR-19] - Prepare 1.13.x development branch
+* [MGR-16] - Replace "Reload platform..." message with "Reload site"
+* [MGR-8]  - add "contributing" file
+
+Release Notes - appNG Manager - Version 1.12.4 (2017-11-15)
+-----------------------------------------------------------
+* [MGR-14] - Release version 1.12.4
+* [MGR-13] - Documentation of platform and site properties
+* [MGR-12] - The Cluster Status should also include the current cluster node
+* [MGR-11] - Rename core application --> privileged
+* [MGR-9]  - Use Flyway for SQL Parsing, cleanup pom.xml
+* [MGR-3]  - Editing group "Administrators" should be suppressed
+
+Release Notes - appNG Manager - Version 1.12.3 (2017-07-04)
+-----------------------------------------------------------
+* [MGR-2]  - Build Release 1.12.3 and deploy to Maven Central
+* [MGR-5]  - add license header

@@ -30,6 +30,7 @@
 				<session-param name="fAf" />
 				<!-- event filtering -->
 				<session-param name="eA" />
+				<session-param name="eAp" />
 				<session-param name="eB" />
 				<session-param name="eT" />
 				<session-param name="eX" />

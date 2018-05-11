@@ -20,6 +20,7 @@
 					<get-param name="id" />
 					<get-param name="expandSql" />
 					<!-- event filtering -->
+					<get-param name="eAp" />
 					<get-param name="eA" />
 					<get-param name="eB" />
 					<get-param name="eT" />
