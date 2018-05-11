@@ -1,3 +1,11 @@
+Release Notes - appNG Manager - Version 1.13.1 (2018-05-11)
+-----------------------------------------------------------
+* [MGR-48] - Release version 1.13.1
+* [MGR-47] - Align TOC of userguide at the left
+* [MGR-46] - Filter platform events by application
+* [MGR-45] - Provide a changelog.txt
+* [MGR-44] - Add section about platform events to user manual
+
 Release Notes - appNG Manager - Version 1.13.0 (2018-03-29)
 -----------------------------------------------------------
 * [MGR-42] - Missing labels/ use uppercase
