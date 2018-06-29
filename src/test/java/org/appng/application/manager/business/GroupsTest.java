@@ -118,6 +118,18 @@ public class GroupsTest extends AbstractTest {
 	}
 
 	@Test
+	public void testUpdateAdminGroup() throws Exception {
+		GroupForm groupForm = getAdminGroup();
+
+		CallableAction callableAction = getAction(GROUP_EVENT, "updateGroup").withParam("groupid", "4")
+				.withParam(FORM_ACTION, "updateGroup").getCallableAction(groupForm);
+
+		FieldProcessor fieldProcessor = callableAction.perform();
+		validate(callableAction.getAction(), "-action");
+		validate(fieldProcessor.getMessages(), "-messages");
+	}
+
+	@Test
 	public void testUpdateGroup() throws Exception {
 		GroupForm groupForm = getAdminGroup();
 

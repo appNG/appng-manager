@@ -282,10 +282,12 @@ public class ManagerService extends CoreService implements Service {
 
 	public void updateGroup(Site site, GroupForm form, FieldProcessor fp) throws BusinessException {
 		GroupImpl group = form.getGroup();
-		checkUniqueGroupName(group, fp);
 		GroupImpl currentGroup = groupRepository.findOne(group.getId());
 		if (null == currentGroup) {
 			throw new BusinessException("no such group");
+		}
+		if(!currentGroup.isDefaultAdmin()){
+			checkUniqueGroupName(group, fp);
 		}
 		getRequest().setPropertyValues(form, new GroupForm(currentGroup), fp.getMetaData());
 		assignRolesToGroup(currentGroup, site, form.getRoleIds());
