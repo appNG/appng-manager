@@ -30,11 +30,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.io.FileUtils;
@@ -111,7 +111,6 @@ import org.appng.core.xml.repository.PackageVersions;
 import org.appng.core.xml.repository.Packages;
 import org.appng.forms.FormUpload;
 import org.appng.persistence.repository.SearchQuery;
-import org.appng.xml.application.PackageInfo;
 import org.appng.xml.platform.Label;
 import org.appng.xml.platform.Option;
 import org.appng.xml.platform.Selection;
@@ -286,7 +285,7 @@ public class ManagerService extends CoreService implements Service {
 		if (null == currentGroup) {
 			throw new BusinessException("no such group");
 		}
-		if(!currentGroup.isDefaultAdmin()){
+		if (!currentGroup.isDefaultAdmin()) {
 			checkUniqueGroupName(group, fp);
 		}
 		getRequest().setPropertyValues(form, new GroupForm(currentGroup), fp.getMetaData());
@@ -485,12 +484,12 @@ public class ManagerService extends CoreService implements Service {
 		try {
 			Boolean isFilebased = getPlatformConfig().getBoolean(Platform.Property.FILEBASED_DEPLOYMENT);
 			PackageVersions packageVersions = getRepository(repositoryId).getPackageVersions(name);
-			List<PackageInfo> versions = packageVersions.getPackage().stream()
-					.filter(p -> p.getVersion().equals(version) && p.getTimestamp().equals(timestamp)).limit(1)
-					.collect(Collectors.toList());
+			Optional<String> pkAppngVer = packageVersions.getPackage().stream()
+					.filter(p -> p.getVersion().equals(version)
+							&& (StringUtils.isBlank(timestamp) || p.getTimestamp().equals(timestamp)))
+					.limit(1).map(p -> p.getAppngVersion()).findFirst();
 			String appngVer = environment.getAttribute(Scope.PLATFORM, Platform.Environment.APPNG_VERSION);
-			String pkAppngVer = versions.get(0).getAppngVersion();
-			if (pkAppngVer.compareTo(appngVer) > 0) {
+			if (pkAppngVer.isPresent() && pkAppngVer.get().compareTo(appngVer) > 0) {
 				String versionMismatch = request.getMessage(MessageConstants.PACKAGE_APP_NG_VERSION_MISMATCH,
 						pkAppngVer, appngVer);
 				fp.addNoticeMessage(versionMismatch);
