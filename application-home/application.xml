@@ -199,6 +199,14 @@
 			<description>Enables debugging output</description>
 			<permission id="debug" />
 		</role>
+		<role>
+			<name>Database report receiver</name>
+			<description>Receives the database report via email.</description>
+		</role>
+		<role>
+			<name>Event report receiver</name>
+			<description>Receives the event report via email.</description>
+		</role>
 	</roles>
 
 	<permissions>
@@ -313,11 +321,18 @@
 	<properties>
 		<property id="clusterInterfaceName"
 			description="the name of the network interface who's first assigned IP address is used as system property appng.node.id in case it was not set an JVM startup">eth0</property>
-		<property id="eventReportReceivers" description="a semicolon separted list of receviers for PlatformEventReportJob (if empty, all users with 'Administrators' group are used)"></property>
+		<property id="eventReportReceivers"
+			description="a semicolon separted list of receviers for PlatformEventReportJob, additional to all users with role 'Event report receiver'"></property>
 		<property id="eventReportSender" description="the sender for the event report email">report@example.com</property>
 		<property id="eventReportSubject" description="the subject for the event report email">appNG event report</property>
 		<property id="eventReportText" description="the text for the event report email">See attached file for a report of the recent appNG platform events.</property>
-		<property id="eventReportTypes" description="the event types to be inlcuded in the even report email (CREATE, UPDATE, DELETE, INFO, ERROR, WARN)">CREATE UPDATE DELETE INFO ERROR WARN</property>
+		<property id="eventReportTypes"
+			description="the event types to be included in the even report email (CREATE, UPDATE, DELETE, INFO, ERROR, WARN)">CREATE UPDATE DELETE INFO ERROR WARN</property>
+		<property id="databaseReportReceivers"
+			description="a semicolon separted list of receviers for DatabaseReportJob, additional to all users with role 'Database report receiver'"></property>
+		<property id="databaseReportSender" description="the sender for the database report email">report@example.com</property>
+		<property id="databaseReportSubject" description="the subject for the database report email">appNG database report</property>
+		<property id="databaseReportText" description="the text for the database report email">See attached file for a report of the database related platform events.</property>
 	</properties>
 
 </application>

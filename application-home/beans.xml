@@ -29,11 +29,21 @@
 		<property name="disableSend" value="${site.mailDisabled:true}" />
 	</bean>
 
-	<bean id="platformEventReportJob" class="org.appng.application.manager.PlatformEventReportJob">
+	<bean id="platformEventReportJob" class="org.appng.application.manager.job.PlatformEventReportJob">
 		<property name="jobDataMap">
 			<map>
 				<entry key="runOnce" value="true" />
 				<entry key="intervall" value="DAY" />
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="logDatabaseSize" class="org.appng.application.manager.job.LogDatabaseSize">
+		<property name="jobDataMap">
+			<map>
+				<entry key="enabled" value="true" />
+				<entry key="runOnce" value="true" />
+				<entry key="cronExpression" value="0 0 1 1/1 * ? *"/>
 			</map>
 		</property>
 	</bean>
