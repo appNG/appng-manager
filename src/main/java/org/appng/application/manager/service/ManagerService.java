@@ -56,7 +56,6 @@ import org.appng.api.model.Identifier;
 import org.appng.api.model.NameProvider;
 import org.appng.api.model.Nameable;
 import org.appng.api.model.Permission;
-import org.appng.api.model.Properties;
 import org.appng.api.model.Resource;
 import org.appng.api.model.ResourceType;
 import org.appng.api.model.Resources;
@@ -472,10 +471,6 @@ public class ManagerService extends CoreService implements Service {
 			}
 		}
 		throw new BusinessException("Repository not found or repository is not published: " + repositoryName);
-	}
-
-	protected Properties getPlatformConfig(Environment environment) {
-		return environment.getAttribute(Scope.PLATFORM, Platform.Environment.PLATFORM_CONFIG);
 	}
 
 	/**
