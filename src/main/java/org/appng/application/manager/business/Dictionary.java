@@ -41,8 +41,8 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
 /**
- * A {@link DataProvider} providing the available messages from an
- * {@link ResourceBundle} for a {@link Application} or the platform.
+ * A {@link DataProvider} providing the available messages from an {@link ResourceBundle} for a {@link Application} or
+ * the platform.
  * 
  * @author Matthias Müller
  * 

@@ -64,22 +64,22 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 		try {
 			if (ACTION_CREATE.equals(action)) {
 				errorMessage = MessageConstants.SITE_CREATE_ERROR;
-				service.createSite(siteForm, fp);
+				service.createSite(request, siteForm, fp);
 				okMessage = MessageConstants.SITE_CREATED;
 			} else if (ACTION_UPDATE.equals(action)) {
 				SiteImpl siteBean = siteForm.getSite();
 				siteBean.setId(siteId);
 				errorMessage = MessageConstants.SITE_UPDATE_ERROR;
-				service.updateSite(siteForm, fp);
+				service.updateSite(request, siteForm, fp);
 				okMessage = MessageConstants.SITE_UPDATED;
 			} else if (ACTION_DELETE.equals(action)) {
 				errorMessage = MessageConstants.SITE_DELETE_ERROR;
 				String host = request.getHost();
-				service.deleteSite(host, siteId, fp, site);
+				service.deleteSite(request, host, siteId, fp, site);
 				okMessage = MessageConstants.SITE_DELETED;
 			} else if (ACTION_RELOAD.equals(action)) {
 				errorMessage = MessageConstants.SITE_RELOADED_ERROR;
-				service.reloadSite(application, siteId, fp);
+				service.reloadSite(request, application, siteId, fp);
 				okMessage = MessageConstants.SITE_RELOADED;
 			} else if (ACTION_RELOAD_PLATFORM.equals(action)) {
 				errorMessage = MessageConstants.PLATFORM_RELOAD_ERROR;
@@ -104,7 +104,7 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 			data = service.getNewSite(fp);
 		} else {
 			try {
-				data = service.searchSites(fp, siteId);
+				data = service.searchSites(environment, fp, siteId);
 			} catch (BusinessException e) {
 				String message = request.getMessage(e.getMessageKey(), e.getMessageArgs());
 				log.error(message, e);

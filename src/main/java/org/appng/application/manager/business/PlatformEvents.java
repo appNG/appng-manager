@@ -81,11 +81,12 @@ public class PlatformEvents implements DataProvider {
 		selections.add(selectionFactory.getTextSelection("eX", MessageConstants.EVENT, filter.getEX()));
 
 		List<String> users = platformEventEventService.getUsers();
-		Selection userSelection =  getStringSelection("eU", users, filter.getEU(), MessageConstants.USER);
+		Selection userSelection = getStringSelection("eU", users, filter.getEU(), MessageConstants.USER);
 		selections.add(userSelection);
 
 		List<String> applications = platformEventEventService.getApplications();
-		Selection applicationSelection =  getStringSelection("eAp", applications, filter.getEAp(), MessageConstants.APPLICATION);
+		Selection applicationSelection = getStringSelection("eAp", applications, filter.getEAp(),
+				MessageConstants.APPLICATION);
 		selections.add(applicationSelection);
 
 		List<String> hostNames = platformEventEventService.getOrigins();

@@ -78,7 +78,7 @@ public class Upload extends ServiceAware implements ActionProvider<UploadForm>, 
 		Integer applicationId = request.convert(options.getOptionValue(APPLICATION, ID), Integer.class);
 
 		try {
-			service.createResource(site, applicationId, form, fp);
+			service.createResource(request, site, applicationId, form, fp);
 		} catch (BusinessException ex) {
 			log.error("error while processing resource", ex);
 

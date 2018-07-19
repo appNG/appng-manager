@@ -47,7 +47,7 @@ public class Templates extends ServiceAware implements DataProvider, ActionProvi
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
 			Void applicationBean, FieldProcessor fp) {
 		if ("delete".equals(options.getOptionValue("template", "action"))) {
-			getService().deleteTemplate(options.getOptionValue("template", "templateName"), fp);
+			getService().deleteTemplate(request, options.getOptionValue("template", "templateName"), fp);
 		}
 	}
 

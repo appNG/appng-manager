@@ -42,7 +42,6 @@ import org.appng.core.xml.repository.Packages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -54,11 +53,10 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
  * {@link Repository}.
  * 
  * @author Matthias Herlitzius
+ * @author Matthias Müller
  * 
  */
 @Endpoint
-@Scope("request")
-@org.springframework.stereotype.Service
 public class RepositoryService implements SoapService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryService.class);
@@ -71,6 +69,7 @@ public class RepositoryService implements SoapService {
 
 	@Autowired
 	private Service service;
+	private Environment environment;
 
 	@PayloadRoot(localPart = GET_PACKAGES, namespace = NAMESPACE)
 	public @ResponsePayload GetPackagesResponse getPackages(@RequestPayload GetPackagesRequest request)
@@ -79,11 +78,11 @@ public class RepositoryService implements SoapService {
 		try {
 			GetPackagesResponse response = new GetPackagesResponse();
 			FieldProcessor fp = new FieldProcessorImpl(REPOSITORY);
-			Packages packages = service.searchPackages(fp, repositoryName, request.getDigest());
+			Packages packages = service.searchPackages(environment, fp, repositoryName, request.getDigest());
 			response.setPackages(packages);
 			return response;
 		} catch (BusinessException e) {
-			LOGGER.error("error while retrieving packages from repository: " + repositoryName, e);
+			LOGGER.error(String.format("error while retrieving packages from repository:  %s", repositoryName), e);
 			throw e;
 		}
 	}
@@ -96,13 +95,13 @@ public class RepositoryService implements SoapService {
 		try {
 			GetPackageVersionsResponse response = new GetPackageVersionsResponse();
 			FieldProcessor fp = new FieldProcessorImpl(REPOSITORY);
-			PackageVersions packageVersions = service.searchPackageVersions(fp, repositoryName, packageName,
-					request.getDigest());
+			PackageVersions packageVersions = service.searchPackageVersions(environment, fp, repositoryName,
+					packageName, request.getDigest());
 			response.setPackageVersions(packageVersions);
 			return response;
 		} catch (BusinessException e) {
-			LOGGER.error("error while retrieving package versions from repository: " + repositoryName + ", package: "
-					+ packageName, e);
+			LOGGER.error(String.format("error while retrieving package versions from repository: %s, package: %s",
+					repositoryName, packageName), e);
 			throw e;
 		}
 	}
@@ -115,8 +114,8 @@ public class RepositoryService implements SoapService {
 		String version = request.getPackageVersion();
 		String timestamp = request.getPackageTimestamp();
 		try {
-			PackageArchive archive = service.getPackageArchive(repositoryName, packageName, version, timestamp,
-					request.getDigest());
+			PackageArchive archive = service.getPackageArchive(environment, repositoryName, packageName, version,
+					timestamp, request.getDigest());
 			try {
 				if (StringUtils.isBlank(timestamp)) {
 					timestamp = archive.getPackageInfo().getTimestamp();
@@ -130,8 +129,9 @@ public class RepositoryService implements SoapService {
 				throw new BusinessException("error getting bytes from " + archive, e);
 			}
 		} catch (BusinessException e) {
-			LOGGER.error("error while retrieving package archive from remote repository: " + repositoryName
-					+ ", package: " + packageName + ", version: " + version + ", timestamp: " + timestamp, e);
+			LOGGER.error(String.format(
+					"error while retrieving package archive from remote repository: %s, package: %s, version: %s, timestamp: %s",
+					repositoryName, packageName, version, timestamp), e);
 			throw e;
 		}
 	}
@@ -151,6 +151,7 @@ public class RepositoryService implements SoapService {
 	}
 
 	public void setEnvironment(Environment environment) {
+		this.environment = environment;
 	}
 
 	public Service getService() {

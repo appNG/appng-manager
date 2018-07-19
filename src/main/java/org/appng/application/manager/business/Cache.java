@@ -163,13 +163,13 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 		if (ACTION_EXPIRE_CACHE_ELEMENT.equals(action)) {
 			String cacheElement = options.getOptionValue("cacheElement", "id");
 			Integer siteId = request.convert(options.getOptionValue("site", "id"), Integer.class);
-			getService().expireCacheElement(fieldProcessor, request, siteId, cacheElement);
+			getService().expireCacheElement(request, fieldProcessor, siteId, cacheElement);
 		} else if (ACTION_CLEAR_CACHE_STATISTICS.equals(action)) {
 			Integer siteId = request.convert(options.getOptionValue("site", "id"), Integer.class);
-			getService().clearCacheStatistics(fieldProcessor, request, siteId);
+			getService().clearCacheStatistics(request, fieldProcessor, siteId);
 		} else if (ACTION_CLEAR_CACHE.equals(action)) {
 			Integer siteId = request.convert(options.getOptionValue("site", "id"), Integer.class);
-			getService().clearCache(fieldProcessor, request, siteId);
+			getService().clearCache(request, fieldProcessor, siteId);
 		}
 	}
 }

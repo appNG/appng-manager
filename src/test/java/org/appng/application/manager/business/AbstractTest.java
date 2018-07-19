@@ -77,8 +77,8 @@ public class AbstractTest extends TestBase {
 		WritingXmlValidator.writeXml = false;
 	}
 
-	AbstractTest() {
-		super("appng-manager", "application-home");
+	protected AbstractTest() {
+		super("appng-manager", APPLICATION_HOME);
 		setUseFullClassname(false);
 		setEntityPackage("org.appng.core.domain");
 		setRepositoryBase("org.appng.core.repository");

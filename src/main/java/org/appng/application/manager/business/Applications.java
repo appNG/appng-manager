@@ -66,11 +66,11 @@ public class Applications extends ServiceAware implements DataProvider, ActionPr
 			if (ACTION_UPDATE.equals(action)) {
 				applicationBean.setId(applicationId);
 				errorMessage = MessageConstants.APPLICATION_UPDATE_ERROR;
-				service.updateApplication(environment, applicationBean, fp);
+				service.updateApplication(request, environment, applicationBean, fp);
 				okMessage = MessageConstants.APPLICATION_UPDATED;
 			} else if (ACTION_DELETE.equals(action)) {
 				errorMessage = MessageConstants.APPLICATION_DELETE_ERROR;
-				service.deleteApplication(applicationId, fp);
+				service.deleteApplication(request, applicationId, fp);
 				okMessage = MessageConstants.APPLICATION_DELETED;
 			} else if (ACTION_CONFIGURE_APPLICATION.equals(action)) {
 				MigrationStatus migrationStatus = null;
@@ -78,11 +78,11 @@ public class Applications extends ServiceAware implements DataProvider, ActionPr
 				String formAction = options.getOptionValue(ACTION, FORM_ACTION);
 				if (ACTIVATE_APPLICATION.equals(formAction)) {
 					errorMessage = MessageConstants.APPLICATION_UPDATE_ERROR;
-					migrationStatus = service.assignApplicationToSite(siteId, applicationId, fp);
+					migrationStatus = service.assignApplicationToSite(request, siteId, applicationId, fp);
 					okMessage = MessageConstants.APPLICATION_ACTIVATED;
 				} else if (DEACTIVATE_APPLICATION.equals(formAction)) {
 					errorMessage = MessageConstants.APPLICATION_UPDATE_ERROR;
-					migrationStatus = service.removeApplicationFromSite(siteId, applicationId, fp);
+					migrationStatus = service.removeApplicationFromSite(request, siteId, applicationId, fp);
 					okMessage = MessageConstants.APPLICATION_DEACTIVATED;
 				}
 				if (migrationStatus.isErroneous()) {

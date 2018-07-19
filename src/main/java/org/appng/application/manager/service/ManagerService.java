@@ -140,21 +140,18 @@ public class ManagerService extends CoreService implements Service {
 
 	private Logger logger = LoggerFactory.getLogger(ManagerService.class);
 
-	@Autowired
-	private Request request;
-
-	@Autowired
-	private Environment environment;
-
-	@Autowired
 	private SelectionFactory selectionFactory;
-
-	@Autowired
 	private OptionGroupFactory optionGroupFactory;
-
 	private MessageSource timezoneMessages;
 
-	public void deleteSubject(Subject currentSubject, Integer subjectId, FieldProcessor fp) throws BusinessException {
+	@Autowired
+	public ManagerService(SelectionFactory selectionFactory, OptionGroupFactory optionGroupFactory) {
+		this.selectionFactory = selectionFactory;
+		this.optionGroupFactory = optionGroupFactory;
+	}
+
+	public void deleteSubject(Request request, Subject currentSubject, Integer subjectId, FieldProcessor fp)
+			throws BusinessException {
 		try {
 			if (currentSubject.getId().equals(subjectId)) {
 				throw new BusinessException("can not delete currently used subject!");
@@ -166,11 +163,11 @@ public class ManagerService extends CoreService implements Service {
 				throw new BusinessException("No such subject " + subjectId, MessageConstants.SUBJECT_NOT_EXISTS);
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public void deletePermission(Integer permissionId, FieldProcessor fp) throws BusinessException {
+	public void deletePermission(Request request, Integer permissionId, FieldProcessor fp) throws BusinessException {
 		try {
 			PermissionImpl permission = permissionRepository.findOne(permissionId);
 			if (null != permission) {
@@ -191,7 +188,7 @@ public class ManagerService extends CoreService implements Service {
 						MessageConstants.PERMISSION_NOT_EXISTS);
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
@@ -201,17 +198,17 @@ public class ManagerService extends CoreService implements Service {
 		deleteRole(roleId, roleDeleteError, roleErrorInvalid);
 	}
 
-	public void deleteApplication(Integer appId, FieldProcessor fp) throws BusinessException {
+	public void deleteApplication(Request request, Integer appId, FieldProcessor fp) throws BusinessException {
 		String deleteErrorWithCause = MessageConstants.APPLICATION_DELETE_ERROR_WITH_CAUSE;
 		String removedFromSite = MessageConstants.APPLICATION_REMOVED_FROM_SITE;
 		String errorInvalid = MessageConstants.APPLICATION_NOT_EXISTS;
 		String roleDeleteError = MessageConstants.ROLE_DELETE_ERROR;
 		String roleErrorInvalid = MessageConstants.ROLE_NOT_EXISTS;
-		deleteApplication(environment, request, appId, fp, deleteErrorWithCause, removedFromSite, errorInvalid,
-				roleDeleteError, roleErrorInvalid);
+		deleteApplication(request.getEnvironment(), request, appId, fp, deleteErrorWithCause, removedFromSite,
+				errorInvalid, roleDeleteError, roleErrorInvalid);
 	}
 
-	public void deleteRepository(Integer repositoryId, FieldProcessor fp) throws BusinessException {
+	public void deleteRepository(Request request, Integer repositoryId, FieldProcessor fp) throws BusinessException {
 		try {
 			RepositoryImpl repository = repoRepository.findOne(repositoryId);
 			if (null != repository) {
@@ -221,11 +218,11 @@ public class ManagerService extends CoreService implements Service {
 						MessageConstants.REPOSITORY_NOT_EXISTS);
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public String deleteResource(Integer applicationId, Integer resourceId, FieldProcessor fp)
+	public String deleteResource(Request request, Integer applicationId, Integer resourceId, FieldProcessor fp)
 			throws BusinessException {
 		try {
 			if (null != applicationId) {
@@ -235,12 +232,12 @@ public class ManagerService extends CoreService implements Service {
 				return resourceName;
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 		return null;
 	}
 
-	public void deleteSite(String host, Integer siteId, final FieldProcessor fp, Site currentSite)
+	public void deleteSite(Request request, String host, Integer siteId, final FieldProcessor fp, Site currentSite)
 			throws BusinessException {
 		try {
 			SiteImpl site = siteRepository.findOne(siteId);
@@ -255,11 +252,11 @@ public class ManagerService extends CoreService implements Service {
 				throw new BusinessException("No such site " + siteId, MessageConstants.SITE_NOT_EXISTS);
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public void deleteGroup(Integer id, FieldProcessor fp) throws BusinessException {
+	public void deleteGroup(Request request, Integer id, FieldProcessor fp) throws BusinessException {
 		try {
 			GroupImpl group = groupRepository.findOne(id);
 			if (null != group) {
@@ -268,31 +265,32 @@ public class ManagerService extends CoreService implements Service {
 				throw new BusinessException("No such group " + id);
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public void createGroup(GroupForm groupForm, Site site, FieldProcessor fp) throws BusinessException {
+	public void createGroup(Request request, GroupForm groupForm, Site site, FieldProcessor fp)
+			throws BusinessException {
 		GroupImpl group = groupForm.getGroup();
-		checkUniqueGroupName(group, fp);
+		checkUniqueGroupName(request, group, fp);
 		groupRepository.save(group);
 		assignRolesToGroup(group, site, groupForm.getRoleIds());
 	}
 
-	public void updateGroup(Site site, GroupForm form, FieldProcessor fp) throws BusinessException {
+	public void updateGroup(Request request, Site site, GroupForm form, FieldProcessor fp) throws BusinessException {
 		GroupImpl group = form.getGroup();
 		GroupImpl currentGroup = groupRepository.findOne(group.getId());
 		if (null == currentGroup) {
 			throw new BusinessException("no such group");
 		}
 		if (!currentGroup.isDefaultAdmin()) {
-			checkUniqueGroupName(group, fp);
+			checkUniqueGroupName(request, group, fp);
 		}
-		getRequest().setPropertyValues(form, new GroupForm(currentGroup), fp.getMetaData());
+		request.setPropertyValues(form, new GroupForm(currentGroup), fp.getMetaData());
 		assignRolesToGroup(currentGroup, site, form.getRoleIds());
 	}
 
-	private void checkUniqueGroupName(Group group, FieldProcessor fp) throws BusinessException {
+	private void checkUniqueGroupName(Request request, Group group, FieldProcessor fp) throws BusinessException {
 		boolean isUnique = groupRepository.isUnique(group.getId(), "name", group.getName());
 		if (!isUnique) {
 			fp.addErrorMessage(fp.getField("group.name"), request.getMessage(MessageConstants.GROUP_EXISTS));
@@ -342,7 +340,7 @@ public class ManagerService extends CoreService implements Service {
 		return items;
 	}
 
-	public DataContainer searchRepositories(FieldProcessor fp, Integer repositoryId) {
+	public DataContainer searchRepositories(Request request, FieldProcessor fp, Integer repositoryId) {
 		DataContainer data = new DataContainer(fp);
 		if (repositoryId == null) {
 			Page<RepositoryImpl> repositories = repoRepository.search(fp.getPageable());
@@ -350,11 +348,11 @@ public class ManagerService extends CoreService implements Service {
 		} else {
 			RepositoryImpl repository = repoRepository.findOne(repositoryId);
 			data.setItem(new RepositoryForm(repository));
-			Selection repositoryTypeSelection = getRepositoryTypeSelection(repository.getRepositoryType());
+			Selection repositoryTypeSelection = getRepositoryTypeSelection(request, repository.getRepositoryType());
 			if (null != repositoryTypeSelection) {
 				data.getSelections().add(repositoryTypeSelection);
 			}
-			Selection repositoryModeSelection = getRepositoryModeSelection(repository.getRepositoryMode());
+			Selection repositoryModeSelection = getRepositoryModeSelection(request, repository.getRepositoryMode());
 			if (null != repositoryModeSelection) {
 				data.getSelections().add(repositoryModeSelection);
 			}
@@ -362,7 +360,8 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	public DataContainer searchInstallablePackages(FieldProcessor fp, Integer repositoryId) throws BusinessException {
+	public DataContainer searchInstallablePackages(Request request, FieldProcessor fp, Integer repositoryId)
+			throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (null != repositoryId) {
 			RepositoryImpl repository = repoRepository.findOne(repositoryId);
@@ -378,13 +377,13 @@ public class ManagerService extends CoreService implements Service {
 					data.setPage(packages, fp.getPageable());
 				}
 			} catch (Exception e) {
-				handleRepositoryException(fp, repository, e);
+				handleRepositoryException(request, fp, repository, e);
 			}
 		}
 		return data;
 	}
 
-	protected void handleRepositoryException(FieldProcessor fp, Repository repository, Exception e)
+	protected void handleRepositoryException(Request request, FieldProcessor fp, Repository repository, Exception e)
 			throws BusinessException {
 		Exception handled = e;
 		if (!(e instanceof BusinessException)) {
@@ -394,8 +393,8 @@ public class ManagerService extends CoreService implements Service {
 		request.handleException(fp, handled);
 	}
 
-	public DataContainer searchPackageVersions(FieldProcessor fp, Integer repositoryId, String packageName)
-			throws BusinessException {
+	public DataContainer searchPackageVersions(Request request, FieldProcessor fp, Integer repositoryId,
+			String packageName) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		try {
 			if ((null != repositoryId) && (StringUtils.isNotBlank(packageName))) {
@@ -421,12 +420,13 @@ public class ManagerService extends CoreService implements Service {
 	 * Returns a {@link Packages}-object from a certain repository. {@link Packages} are made available to other appNG
 	 * instances via the {@link RepositoryService}.
 	 */
-	public Packages searchPackages(FieldProcessor fp, String repositoryName, String digest) throws BusinessException {
+	public Packages searchPackages(Environment environment, FieldProcessor fp, String repositoryName, String digest)
+			throws BusinessException {
 		try {
-			Repository repository = getRepository(repositoryName, digest);
+			Repository repository = getRepository(environment, repositoryName, digest);
 			return repository.getPackages();
 		} catch (Exception e) {
-			request.handleException(fp, e);
+			logger.error("error retrieving packages", e);
 		}
 		return null;
 	}
@@ -435,30 +435,32 @@ public class ManagerService extends CoreService implements Service {
 	 * Returns a {@link PackageVersions}-object from a certain repository. {@link PackageVersions} are made available to
 	 * other appNG instances via the {@link RepositoryService}.
 	 */
-	public PackageVersions searchPackageVersions(FieldProcessor fp, String repositoryName, String packageName,
-			String digest) throws BusinessException {
+	public PackageVersions searchPackageVersions(Environment environment, FieldProcessor fp, String repositoryName,
+			String packageName, String digest) throws BusinessException {
 		try {
-			Repository repository = getRepository(repositoryName, digest);
+			Repository repository = getRepository(environment, repositoryName, digest);
 			return repository.getPackageVersions(packageName);
 		} catch (Exception e) {
-			request.handleException(fp, e);
+			logger.error("error retrieving package versions", e);
 		}
 		return null;
 	}
 
-	public PackageArchive getPackageArchive(String repositoryName, String name, String version, String timestamp,
-			String digest) throws BusinessException {
-		Repository repository = getRepository(repositoryName, digest);
+	public PackageArchive getPackageArchive(Environment environment, String repositoryName, String name, String version,
+			String timestamp, String digest) throws BusinessException {
+		Repository repository = getRepository(environment, repositoryName, digest);
 		return repository.getPackageArchive(name, version, timestamp);
 	}
 
-	private Repository getRepository(String repositoryName, String digest) throws BusinessException {
+	private Repository getRepository(Environment environment, String repositoryName, String digest)
+			throws BusinessException {
 		if (StringUtils.isNotBlank(repositoryName)) {
 			Repository repository = repoRepository.findByName(repositoryName);
 			if (null != repository && repository.isPublished()) {
 				boolean digestOk = false;
 				if (StringUtils.isBlank(repository.getDigest())) {
-					String defaultDigest = getPlatformConfig().getString(Platform.Property.REPOSITORY_DEFAULT_DIGEST);
+					String defaultDigest = getPlatformConfig(environment)
+							.getString(Platform.Property.REPOSITORY_DEFAULT_DIGEST);
 					digestOk = StringUtils.equals(StringUtils.trimToEmpty(defaultDigest),
 							StringUtils.trimToEmpty(digest));
 				} else {
@@ -472,23 +474,24 @@ public class ManagerService extends CoreService implements Service {
 		throw new BusinessException("Repository not found or repository is not published: " + repositoryName);
 	}
 
-	protected Properties getPlatformConfig() {
+	protected Properties getPlatformConfig(Environment environment) {
 		return environment.getAttribute(Scope.PLATFORM, Platform.Environment.PLATFORM_CONFIG);
 	}
 
 	/**
 	 * Installs a {@link PackageArchive} in order to use it within the platform.
 	 */
-	public void installPackage(Integer repositoryId, String name, String version, String timestamp, FieldProcessor fp)
-			throws BusinessException {
+	public void installPackage(Request request, Integer repositoryId, String name, String version, String timestamp,
+			FieldProcessor fp) throws BusinessException {
 		try {
-			Boolean isFilebased = getPlatformConfig().getBoolean(Platform.Property.FILEBASED_DEPLOYMENT);
+			Boolean isFilebased = getPlatformConfig(request.getEnvironment())
+					.getBoolean(Platform.Property.FILEBASED_DEPLOYMENT);
 			PackageVersions packageVersions = getRepository(repositoryId).getPackageVersions(name);
 			Optional<String> pkAppngVer = packageVersions.getPackage().stream()
 					.filter(p -> p.getVersion().equals(version)
 							&& (StringUtils.isBlank(timestamp) || p.getTimestamp().equals(timestamp)))
 					.limit(1).map(p -> p.getAppngVersion()).findFirst();
-			String appngVer = environment.getAttribute(Scope.PLATFORM, Platform.Environment.APPNG_VERSION);
+			String appngVer = request.getEnvironment().getAttribute(Scope.PLATFORM, Platform.Environment.APPNG_VERSION);
 			if (pkAppngVer.isPresent() && pkAppngVer.get().compareTo(appngVer) > 0) {
 				String versionMismatch = request.getMessage(MessageConstants.PACKAGE_APP_NG_VERSION_MISMATCH,
 						pkAppngVer, appngVer);
@@ -496,30 +499,30 @@ public class ManagerService extends CoreService implements Service {
 			}
 			installPackage(repositoryId, name, version, timestamp, false, false, isFilebased);
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
 	/**
 	 * Deletes a {@link PackageArchive} in the {@link Repository}.
 	 */
-	public void deletePackageVersion(Integer repositoryId, String packageName, String packageVersion,
+	public void deletePackageVersion(Request request, Integer repositoryId, String packageName, String packageVersion,
 			String packageTimestamp, FieldProcessor fp) throws BusinessException {
 		try {
 			deletePackageVersion(repositoryId, packageName, packageVersion, packageTimestamp);
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public DataContainer searchResources(Site site, FieldProcessor fp, ResourceType type, Integer resourceId,
-			Integer applicationId) throws BusinessException {
+	public DataContainer searchResources(Request request, Site site, FieldProcessor fp, ResourceType type,
+			Integer resourceId, Integer applicationId) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		Application application = applicationRepository.findOne(applicationId);
 		Resources resourceHolder;
 		try {
-			File appRootFolder = getApplicationRootFolder(environment);
+			File appRootFolder = getApplicationRootFolder(request.getEnvironment());
 			resourceHolder = getResources(application, null, appRootFolder);
 
 			if (null == resourceId) {
@@ -552,7 +555,7 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	public String updateResource(Site site, Integer appId, ResourceForm form, FieldProcessor fp)
+	public String updateResource(Request request, Site site, Integer appId, ResourceForm form, FieldProcessor fp)
 			throws BusinessException {
 		String errorMessage = null;
 		String okMessage = null;
@@ -561,14 +564,14 @@ public class ManagerService extends CoreService implements Service {
 			Application application = applicationRepository.findOne(appId);
 			boolean fileBased = application.isFileBased();
 			String reloadMessage = request.getMessage(MessageConstants.RELOAD_SITE);
-			File appRootFolder = getApplicationRootFolder(environment);
+			File appRootFolder = getApplicationRootFolder(request.getEnvironment());
 			Resources resourceHolder = getResources(application, null, appRootFolder);
 			Resource resource = resourceHolder.getResource(id);
 			String fileName = resource.getName();
 			ResourceType type = resource.getResourceType();
 			if (fileBased) {
 				errorMessage = request.getMessage(MessageConstants.RESOURCE_UPDATED_FILEBASED_ERROR, fileName);
-				File resourceFolder = getResourceFolder(application.getName(), type);
+				File resourceFolder = getResourceFolder(request.getEnvironment(), application.getName(), type);
 				File original = new File(resourceFolder, fileName);
 				FileUtils.write(original, form.getContent(), ResourceForm.ENCODING, false);
 				okMessage = request.getMessage(MessageConstants.RESOURCE_UPDATED_FILEBASED, fileName,
@@ -593,14 +596,15 @@ public class ManagerService extends CoreService implements Service {
 		return null;
 	}
 
-	private File getResourceFolder(String appName, ResourceType type) {
+	private File getResourceFolder(Environment environment, String appName, ResourceType type) {
 		File appFolder = getApplicationFolder(environment, appName);
 		String typeFolder = type.getFolder();
 		File resourceFolder = new File(appFolder, typeFolder);
 		return resourceFolder;
 	}
 
-	public void createResource(Site site, Integer appId, UploadForm form, FieldProcessor fp) throws BusinessException {
+	public void createResource(Request request, Site site, Integer appId, UploadForm form, FieldProcessor fp)
+			throws BusinessException {
 		Application application = applicationRepository.findOne(appId);
 		String okMessage = null;
 		String errorMessage = null;
@@ -615,7 +619,7 @@ public class ManagerService extends CoreService implements Service {
 			errorMessage = request.getMessage(MessageConstants.RESOURCE_UPLOAD_ERROR, originalFilename);
 			if (type.isValidFileName(originalFilename)) {
 				if (application.isFileBased()) {
-					File appFolder = getResourceFolder(application.getName(), type);
+					File appFolder = getResourceFolder(request.getEnvironment(), application.getName(), type);
 					File targetFile = new File(appFolder, originalFilename);
 					if (targetFile.exists()) {
 						String overriddenMssg = request.getMessage(MessageConstants.RESOURCE_OVERRIDDEN,
@@ -645,7 +649,7 @@ public class ManagerService extends CoreService implements Service {
 				fp.addNoticeMessage(reloadMessage);
 				fp.addOkMessage(okMessage);
 			} else {
-				String invalidTypeMessage = application.getMessage(environment.getLocale(),
+				String invalidTypeMessage = application.getMessage(request.getEnvironment().getLocale(),
 						MessageConstants.RESOURCE_WRONG_TYPE, type.toString(),
 						StringUtils.join(type.getAllowedFileEndings(), ","));
 				fp.addErrorMessage(invalidTypeMessage);
@@ -718,31 +722,33 @@ public class ManagerService extends CoreService implements Service {
 		return permissionSelection;
 	}
 
-	public void createRole(RoleForm roleForm, Integer appId, FieldProcessor fp) throws BusinessException {
+	public void createRole(Request request, RoleForm roleForm, Integer appId, FieldProcessor fp)
+			throws BusinessException {
 		if (null != appId) {
 			RoleImpl role = roleForm.getRole();
 			Application application = applicationRepository.findOne(appId);
 			role.setApplication(application);
-			checkUniqueRoleName(role, role.getName(), fp);
+			checkUniqueRoleName(request, role, role.getName(), fp);
 			roleRepository.save(role);
-			assignPermissionsToRole(role, roleForm.getPermissionIds(), fp);
+			assignPermissionsToRole(request, role, roleForm.getPermissionIds(), fp);
 		} else {
 			throw new BusinessException("no application id given", MessageConstants.ROLE_CREATE_ERROR);
 		}
 	}
 
-	public void updateRole(RoleForm form, FieldProcessor fp) throws BusinessException {
+	public void updateRole(Request request, RoleForm form, FieldProcessor fp) throws BusinessException {
 		RoleImpl role = form.getRole();
 		RoleImpl currentRole = roleRepository.findOne(role.getId());
 		if (null == currentRole) {
 			throw new BusinessException("no such role", MessageConstants.ROLE_NOT_EXISTS);
 		}
-		checkUniqueRoleName(currentRole, role.getName(), fp);
-		getRequest().setPropertyValues(form, new RoleForm(currentRole), fp.getMetaData());
-		assignPermissionsToRole(currentRole, form.getPermissionIds(), fp);
+		checkUniqueRoleName(request, currentRole, role.getName(), fp);
+		request.setPropertyValues(form, new RoleForm(currentRole), fp.getMetaData());
+		assignPermissionsToRole(request, currentRole, form.getPermissionIds(), fp);
 	}
 
-	private void checkUniqueRoleName(Role role, String name, FieldProcessor fp) throws BusinessException {
+	private void checkUniqueRoleName(Request request, Role role, String name, FieldProcessor fp)
+			throws BusinessException {
 		boolean isUnique = roleRepository.isUnique(role.getId(), new String[] { "name", "application.id" },
 				new Object[] { name, role.getApplication().getId() });
 		if (!isUnique) {
@@ -801,30 +807,32 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	public void createRepository(RepositoryImpl repository, FieldProcessor fp) throws BusinessException {
+	public void createRepository(Request request, RepositoryImpl repository, FieldProcessor fp)
+			throws BusinessException {
 		try {
-			validateRepository(repository, new RepositoryImpl(), fp);
+			validateRepository(request, repository, new RepositoryImpl(), fp);
 			createRepository(repository);
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public void reloadRepository(Integer repositoryId, FieldProcessor fp) throws BusinessException {
-		reloadRepository(fp, repoRepository.findOne(repositoryId));
+	public void reloadRepository(Request request, Integer repositoryId, FieldProcessor fp) throws BusinessException {
+		reloadRepository(request, fp, repoRepository.findOne(repositoryId));
 	}
 
-	protected void reloadRepository(FieldProcessor fp, RepositoryImpl repository) throws BusinessException {
+	protected void reloadRepository(Request request, FieldProcessor fp, RepositoryImpl repository)
+			throws BusinessException {
 		if (null != repository) {
 			try {
 				repository.reload();
 			} catch (Exception e) {
-				handleRepositoryException(fp, repository, e);
+				handleRepositoryException(request, fp, repository, e);
 			}
 		}
 	}
 
-	public void updateApplication(Environment env, Application application, FieldProcessor fp)
+	public void updateApplication(Request request, Environment env, Application application, FieldProcessor fp)
 			throws BusinessException {
 		try {
 			if (application.getId() != null) {
@@ -834,31 +842,32 @@ public class ManagerService extends CoreService implements Service {
 					return;
 				}
 				synchronizeApplicationResources(env, currentApplication, application.isFileBased());
-				getRequest().setPropertyValues(application, currentApplication, fp.getMetaData());
+				request.setPropertyValues(application, currentApplication, fp.getMetaData());
 			} else {
 				throw new BusinessException("No such application");
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public void updateRepository(RepositoryForm repositoryForm, FieldProcessor fp) throws BusinessException {
+	public void updateRepository(Request request, RepositoryForm repositoryForm, FieldProcessor fp)
+			throws BusinessException {
 		RepositoryImpl currentRepository = repoRepository.findOne(repositoryForm.getRepository().getId());
 		try {
 			if (null == currentRepository) {
 				throw new BusinessException("no such repository");
 			}
-			validateRepository(repositoryForm.getRepository(), currentRepository, fp);
-			getRequest().setPropertyValues(repositoryForm, new RepositoryForm(currentRepository), fp.getMetaData());
+			validateRepository(request, repositoryForm.getRepository(), currentRepository, fp);
+			request.setPropertyValues(repositoryForm, new RepositoryForm(currentRepository), fp.getMetaData());
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
-		reloadRepository(fp, currentRepository);
+		reloadRepository(request, fp, currentRepository);
 	}
 
-	private void validateRepository(RepositoryImpl repository, RepositoryImpl currentRepository, FieldProcessor fp)
-			throws BusinessException {
+	private void validateRepository(Request request, RepositoryImpl repository, RepositoryImpl currentRepository,
+			FieldProcessor fp) throws BusinessException {
 		if (null == repository.getRepositoryType()) {
 			if (null == currentRepository.getRepositoryType()) {
 				repository.setRepositoryType(RepositoryType.getDefault());
@@ -873,7 +882,7 @@ public class ManagerService extends CoreService implements Service {
 				repository.setRepositoryMode(currentRepository.getRepositoryMode());
 			}
 		}
-		checkUniqueRepositoryName(repository, fp);
+		checkUniqueRepositoryName(request, repository, fp);
 		try {
 			RepositoryCacheFactory.validateRepositoryURI(repository);
 		} catch (BusinessException e) {
@@ -883,7 +892,8 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	private void checkUniqueRepositoryName(Repository repository, FieldProcessor fp) throws BusinessException {
+	private void checkUniqueRepositoryName(Request request, Repository repository, FieldProcessor fp)
+			throws BusinessException {
 		boolean isUnique = repoRepository.isUnique(repository.getId(), "name", repository.getName());
 		if (!isUnique) {
 			fp.addErrorMessage(fp.getField("repository.name"), request.getMessage(MessageConstants.REPOSITORY_EXISTS));
@@ -891,7 +901,8 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public DataContainer searchSites(FieldProcessor fp, Integer siteId) throws BusinessException {
+	public DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId)
+			throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (siteId != null) {
 			SiteImpl site = siteRepository.findOne(siteId);
@@ -932,18 +943,18 @@ public class ManagerService extends CoreService implements Service {
 		return templateService.getInstalledTemplates();
 	}
 
-	public void createSite(SiteForm siteForm, FieldProcessor fp) throws BusinessException {
+	public void createSite(Request request, SiteForm siteForm, FieldProcessor fp) throws BusinessException {
 		try {
 			SiteImpl site = siteForm.getSite();
-			checkSite(site, fp, site);
-			createSite(site, environment);
+			checkSite(request, site, fp, site);
+			createSite(site, request.getEnvironment());
 			updateSiteTemplate(site, siteForm.getTemplate());
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public void updateSite(SiteForm form, FieldProcessor fp) throws BusinessException {
+	public void updateSite(Request request, SiteForm form, FieldProcessor fp) throws BusinessException {
 		try {
 			SiteImpl site = form.getSite();
 			boolean isActive = site.isActive();
@@ -951,10 +962,10 @@ public class ManagerService extends CoreService implements Service {
 			if (null == currentSite) {
 				throw new BusinessException("no such site:" + site.getId());
 			}
-			checkSite(site, fp, currentSite);
+			checkSite(request, site, fp, currentSite);
 
 			boolean wasActiveBefore = currentSite.isActive();
-			getRequest().setPropertyValues(form, new SiteForm(currentSite), fp.getMetaData());
+			request.setPropertyValues(form, new SiteForm(currentSite), fp.getMetaData());
 
 			if (isActive ^ wasActiveBefore) {
 				String message = request.getMessage(MessageConstants.RELOAD_SITE);
@@ -963,7 +974,7 @@ public class ManagerService extends CoreService implements Service {
 
 			updateSiteTemplate(currentSite, form.getTemplate());
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
@@ -972,7 +983,7 @@ public class ManagerService extends CoreService implements Service {
 		propertyRepository.findByName(propertyName).setString(template);
 	}
 
-	private void checkSite(Site site, FieldProcessor fp, Site currentSite) throws BusinessException {
+	private void checkSite(Request request, Site site, FieldProcessor fp, Site currentSite) throws BusinessException {
 		if (fp.hasField("site.name")) {
 			if (!siteRepository.isUnique(site.getId(), "name", site.getName())) {
 				fp.addErrorMessage(fp.getField("site.name"), request.getMessage(MessageConstants.SITE_NAME_EXISTS));
@@ -1001,7 +1012,7 @@ public class ManagerService extends CoreService implements Service {
 			SubjectForm subjectsForm = new SubjectForm(subject);
 			data.setItem(subjectsForm);
 			String timeZone = subject.getTimeZone();
-			addSelectionsForSubject(data, subject, timeZone == null ? defaultTimezone : timeZone, languages);
+			addSelectionsForSubject(request, data, subject, timeZone == null ? defaultTimezone : timeZone, languages);
 		} else {
 			String filterParamType = "f_type";
 			String filterParamName = "f_name";
@@ -1022,11 +1033,11 @@ public class ManagerService extends CoreService implements Service {
 
 			Page<SubjectImpl> subjects = subjectRepository.search(searchQuery, fp.getPageable());
 			for (SubjectImpl subject : subjects) {
-				subject.setTypeName(getUserTypeNameProvider().getName(subject.getUserType()));
+				subject.setTypeName(getUserTypeNameProvider(request).getName(subject.getUserType()));
 			}
 
 			Selection userTypes = selectionFactory.fromObjects(filterParamType, MessageConstants.TYPE,
-					UserType.values(), getUserTypeNameProvider(), userType);
+					UserType.values(), getUserTypeNameProvider(request), userType);
 			userTypes.getOptions().add(0, new Option());
 			userTypes.setType(SelectionType.SELECT);
 			Selection userName = selectionFactory.fromObjects(filterParamName, MessageConstants.NAME,
@@ -1041,13 +1052,13 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	private void addSelectionsForSubject(DataContainer data, SubjectImpl subject, String timezone,
+	private void addSelectionsForSubject(Request request, DataContainer data, SubjectImpl subject, String timezone,
 			List<String> languages) {
 		List<? extends Group> allGroups = groupRepository.findAll(new Sort(Direction.ASC, "name"));
 		Selection selection = selectionFactory.fromNamed("groups", MessageConstants.GROUPS, allGroups,
 				subject.getGroups());
 		data.getSelections().add(selection);
-		NameProvider<UserType> nameProvider = getUserTypeNameProvider();
+		NameProvider<UserType> nameProvider = getUserTypeNameProvider(request);
 		Selection userTypeSelection = selectionFactory.fromEnum("userType", MessageConstants.TYPE, UserType.values(),
 				subject.getUserType(), nameProvider);
 
@@ -1056,11 +1067,11 @@ public class ManagerService extends CoreService implements Service {
 				languages.toArray(), subject.getLanguage());
 		data.getSelections().add(localeSelection);
 
-		Selection timezoneSelection = getTimezoneSelection(timezone);
+		Selection timezoneSelection = getTimezoneSelection(request.getLocale(), timezone);
 		data.getSelections().add(timezoneSelection);
 	}
 
-	private Selection getTimezoneSelection(String timeZone) {
+	private Selection getTimezoneSelection(Locale locale, String timeZone) {
 
 		Selection timezoneSelection = new Selection();
 		timezoneSelection.setId("timeZone");
@@ -1077,7 +1088,6 @@ public class ManagerService extends CoreService implements Service {
 			}
 		}
 
-		Locale locale = environment.getLocale();
 		String groupName = "";
 		for (TimeZone tz : timeZones) {
 			String id = tz.getID();
@@ -1120,7 +1130,7 @@ public class ManagerService extends CoreService implements Service {
 		return timezoneSelection;
 	}
 
-	private NameProvider<UserType> getUserTypeNameProvider() {
+	private NameProvider<UserType> getUserTypeNameProvider(Request request) {
 		return new NameProvider<UserType>() {
 			public String getName(UserType instance) {
 				return request.getMessage(UserType.class.getSimpleName() + "." + instance.name());
@@ -1128,7 +1138,8 @@ public class ManagerService extends CoreService implements Service {
 		};
 	}
 
-	public void createSubject(Locale locale, SubjectForm form, FieldProcessor fp) throws BusinessException {
+	public void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp)
+			throws BusinessException {
 		try {
 			SubjectImpl subject = form.getSubject();
 			SubjectImpl subjectByName = getSubjectByName(subject.getName(), false);
@@ -1141,13 +1152,13 @@ public class ManagerService extends CoreService implements Service {
 				updatePassword(form.getPassword().toCharArray(), form.getPasswordConfirmation().toCharArray(), subject);
 			}
 			subjectRepository.save(subject);
-			assignGroupsToSubject(subject.getId(), form.getGroupIds(), fp);
+			assignGroupsToSubject(request, subject.getId(), form.getGroupIds(), fp);
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public Boolean updateSubject(SubjectForm subjectForm, FieldProcessor fp) throws BusinessException {
+	public Boolean updateSubject(Request request, SubjectForm subjectForm, FieldProcessor fp) throws BusinessException {
 		Boolean updated = false;
 		SubjectImpl subject = subjectForm.getSubject();
 		try {
@@ -1161,27 +1172,27 @@ public class ManagerService extends CoreService implements Service {
 					updated = updatePassword(subjectForm.getPassword().toCharArray(),
 							subjectForm.getPasswordConfirmation().toCharArray(), currentSubject);
 				}
-				assignGroupsToSubject(subject.getId(), subjectForm.getGroupIds(), fp);
-				getRequest().setPropertyValues(subjectForm, new SubjectForm(currentSubject), fp.getMetaData());
+				assignGroupsToSubject(request, subject.getId(), subjectForm.getGroupIds(), fp);
+				request.setPropertyValues(subjectForm, new SubjectForm(currentSubject), fp.getMetaData());
 			} else {
 				throw new BusinessException("No such user exists");
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 		return updated;
 	}
 
-	public void assignGroupsToSubject(Integer subjectId, List<Integer> groupIds, FieldProcessor fp)
+	public void assignGroupsToSubject(Request request, Integer subjectId, List<Integer> groupIds, FieldProcessor fp)
 			throws BusinessException {
 		try {
 			assignGroupsToSubject(subjectId, groupIds, true);
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public void assignPermissionsToRole(Role role, List<Integer> permissionsIds, FieldProcessor fp)
+	public void assignPermissionsToRole(Request request, Role role, List<Integer> permissionsIds, FieldProcessor fp)
 			throws BusinessException {
 		try {
 			role.getPermissions().clear();
@@ -1190,22 +1201,22 @@ public class ManagerService extends CoreService implements Service {
 				role.getPermissions().add(permission);
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public MigrationStatus assignApplicationToSite(Integer siteId, Integer appId, FieldProcessor fp)
+	public MigrationStatus assignApplicationToSite(Request request, Integer siteId, Integer appId, FieldProcessor fp)
 			throws BusinessException {
-		return assignApplicationToSite(environment, siteId, appId, fp, true);
+		return assignApplicationToSite(request, siteId, appId, fp, true);
 	}
 
-	public MigrationStatus removeApplicationFromSite(Integer siteId, Integer appId, FieldProcessor fp)
+	public MigrationStatus removeApplicationFromSite(Request request, Integer siteId, Integer appId, FieldProcessor fp)
 			throws BusinessException {
-		return assignApplicationToSite(environment, siteId, appId, fp, false);
+		return assignApplicationToSite(request, siteId, appId, fp, false);
 	}
 
-	private MigrationStatus assignApplicationToSite(Environment environment, Integer siteId, Integer appId,
-			FieldProcessor fp, boolean assign) throws BusinessException {
+	private MigrationStatus assignApplicationToSite(Request request, Integer siteId, Integer appId, FieldProcessor fp,
+			boolean assign) throws BusinessException {
 
 		MigrationStatus migrationStatus = null;
 		SiteImpl site = siteRepository.findOne(siteId);
@@ -1216,7 +1227,7 @@ public class ManagerService extends CoreService implements Service {
 			boolean hasConnection = null != siteApplication.getDatabaseConnection();
 			migrationStatus = hasConnection ? MigrationStatus.DB_SUPPORTED : MigrationStatus.NO_DB_SUPPORTED;
 		}
-		Site liveSite = RequestUtil.getSiteByName(environment, site.getName());
+		Site liveSite = RequestUtil.getSiteByName(request.getEnvironment(), site.getName());
 		SiteApplication liveApplication = null;
 		if (null != liveSite) {
 			liveApplication = ((SiteImpl) liveSite).getSiteApplication(application.getName());
@@ -1279,31 +1290,32 @@ public class ManagerService extends CoreService implements Service {
 		return migrationStatus;
 	}
 
-	public void createPermission(PermissionImpl permission, Integer appId, FieldProcessor fp) throws BusinessException {
+	public void createPermission(Request request, PermissionImpl permission, Integer appId, FieldProcessor fp)
+			throws BusinessException {
 		if (null != appId) {
 			ApplicationImpl application = applicationRepository.findOne(appId);
 			permission.setApplication(application);
-			checkUniquePermissionName(permission, permission.getName(), fp);
+			checkUniquePermissionName(request, permission, permission.getName(), fp);
 			permissionRepository.save(permission);
 		} else {
 			throw new BusinessException("no application ID provided");
 		}
 	}
 
-	public void updatePermission(Permission permission, FieldProcessor fp) throws BusinessException {
+	public void updatePermission(Request request, Permission permission, FieldProcessor fp) throws BusinessException {
 		if (permission.getId() != null) {
 			PermissionImpl currentPermission = permissionRepository.findOne(permission.getId());
 			if (null == currentPermission) {
 				throw new BusinessException("No such permission!", MessageConstants.PERMISSION_NOT_EXISTS);
 			}
-			checkUniquePermissionName(currentPermission, permission.getName(), fp);
-			getRequest().setPropertyValues(permission, currentPermission, fp.getMetaData());
+			checkUniquePermissionName(request, currentPermission, permission.getName(), fp);
+			request.setPropertyValues(permission, currentPermission, fp.getMetaData());
 		} else {
 			throw new BusinessException("No such permission!", MessageConstants.PERMISSION_NOT_EXISTS);
 		}
 	}
 
-	private void checkUniquePermissionName(Permission permission, String name, FieldProcessor fp)
+	private void checkUniquePermissionName(Request request, Permission permission, String name, FieldProcessor fp)
 			throws BusinessException {
 		boolean isUnique = permissionRepository.isUnique(permission.getId(), new String[] { "name", "application.id" },
 				new Object[] { name, permission.getApplication().getId() });
@@ -1349,8 +1361,8 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	public void createProperty(PropertyForm propertyForm, Integer siteId, Integer appId, FieldProcessor fp)
-			throws BusinessException {
+	public void createProperty(Request request, PropertyForm propertyForm, Integer siteId, Integer appId,
+			FieldProcessor fp) throws BusinessException {
 		try {
 			PropertyImpl property = propertyForm.getProperty();
 			if (checkPropertyExists(siteId, appId, property)) {
@@ -1360,11 +1372,11 @@ public class ManagerService extends CoreService implements Service {
 				createProperty(siteId, appId, property);
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public void updateProperty(PropertyForm propertyForm, FieldProcessor fp) throws BusinessException {
+	public void updateProperty(Request request, PropertyForm propertyForm, FieldProcessor fp) throws BusinessException {
 		try {
 			PropertyImpl property = propertyForm.getProperty();
 			if (property.getName() != null) {
@@ -1372,16 +1384,16 @@ public class ManagerService extends CoreService implements Service {
 				if (null == currentProperty) {
 					throw new BusinessException("no such property");
 				}
-				getRequest().setPropertyValues(propertyForm, new PropertyForm(currentProperty), fp.getMetaData());
+				request.setPropertyValues(propertyForm, new PropertyForm(currentProperty), fp.getMetaData());
 			} else {
 				throw new BusinessException("no propertyname given");
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public void deleteProperty(String id, FieldProcessor fp) throws BusinessException {
+	public void deleteProperty(Request request, String id, FieldProcessor fp) throws BusinessException {
 		PropertyImpl prop = propertyRepository.findOne(id);
 		try {
 			if (null != prop) {
@@ -1390,11 +1402,12 @@ public class ManagerService extends CoreService implements Service {
 				throw new BusinessException("No such property " + id);
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public void reloadSite(Application application, Integer siteId, FieldProcessor fp) throws BusinessException {
+	public void reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
+			throws BusinessException {
 		try {
 			InitializerService initializerService = application.getBean(InitializerService.class);
 			SiteImpl site = getSite(siteId);
@@ -1402,21 +1415,21 @@ public class ManagerService extends CoreService implements Service {
 				String siteName = site.getName();
 				if (site.isActive()) {
 					try {
-						initializerService.loadSite(environment, site, fp);
+						initializerService.loadSite(request.getEnvironment(), site, fp);
 						logger.info("Site reloaded: " + siteName);
 					} catch (InvalidConfigurationException e) {
 						throw new BusinessException("Invalid configuration for site: " + siteName, e);
 					}
 				} else {
-					shutdownSite(environment, siteName);
+					shutdownSite(request.getEnvironment(), siteName);
 				}
 			}
 		} catch (Exception e) {
-			getRequest().handleException(fp, e);
+			request.handleException(fp, e);
 		}
 	}
 
-	public DataContainer getNewSubject(FieldProcessor fp, String timezone, List<String> languages) {
+	public DataContainer getNewSubject(Request request, FieldProcessor fp, String timezone, List<String> languages) {
 		DataContainer data = new DataContainer(fp);
 		SubjectForm subjectsForm = new SubjectForm();
 		SubjectImpl subject = subjectsForm.getSubject();
@@ -1428,7 +1441,7 @@ public class ManagerService extends CoreService implements Service {
 		subject.setUserType(UserType.LOCAL_USER);
 		subject.setTimeZone(timezone);
 		data.setItem(subjectsForm);
-		addSelectionsForSubject(data, subject, timezone, languages);
+		addSelectionsForSubject(request, data, subject, timezone, languages);
 		return data;
 	}
 
@@ -1471,7 +1484,7 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	public DataContainer getNewRepository(FieldProcessor fp) {
+	public DataContainer getNewRepository(Request request, FieldProcessor fp) {
 		DataContainer data = new DataContainer(fp);
 		try {
 			RepositoryImpl repository = new RepositoryImpl();
@@ -1484,11 +1497,11 @@ public class ManagerService extends CoreService implements Service {
 			repository.setRepositoryMode(RepositoryMode.getDefault());
 
 			data.setItem(new RepositoryForm(repository));
-			Selection repositoryTypeSelection = getRepositoryTypeSelection(null);
+			Selection repositoryTypeSelection = getRepositoryTypeSelection(request, null);
 			if (null != repositoryTypeSelection) {
 				data.getSelections().add(repositoryTypeSelection);
 			}
-			Selection repositoryModeSelection = getRepositoryModeSelection(null);
+			Selection repositoryModeSelection = getRepositoryModeSelection(request, null);
 			if (null != repositoryModeSelection) {
 				data.getSelections().add(repositoryModeSelection);
 			}
@@ -1499,16 +1512,16 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	private Selection getRepositoryTypeSelection(RepositoryType repositoryType) {
-		return getTypeSelection(RepositoryType.class, repositoryType, "repositoryType", "repositoryType");
+	private Selection getRepositoryTypeSelection(Request request, RepositoryType repositoryType) {
+		return getTypeSelection(request, RepositoryType.class, repositoryType, "repositoryType", "repositoryType");
 	}
 
-	private Selection getRepositoryModeSelection(RepositoryMode repositoryMode) {
-		return getTypeSelection(RepositoryMode.class, repositoryMode, "repositoryMode", "repositoryMode");
+	private Selection getRepositoryModeSelection(Request request, RepositoryMode repositoryMode) {
+		return getTypeSelection(request, RepositoryMode.class, repositoryMode, "repositoryMode", "repositoryMode");
 	}
 
-	private <E extends Enum<E>> Selection getTypeSelection(final Class<E> clazz, final E type, String id,
-			String title) {
+	private <E extends Enum<E>> Selection getTypeSelection(Request request, final Class<E> clazz, final E type,
+			String id, String title) {
 		NameProvider<E> nameProvider = new NameProvider<E>() {
 			public String getName(E instance) {
 				return request.getMessage(clazz.getSimpleName() + "." + instance.name());
@@ -1548,22 +1561,14 @@ public class ManagerService extends CoreService implements Service {
 		return jarInfos;
 	}
 
-	public Request getRequest() {
-		return request;
-	}
-
-	public void setRequest(Request request) {
-		this.request = request;
-	}
-
-	public void updateDatabaseConnection(FieldProcessor fp, DatabaseConnection databaseConnection) {
+	public void updateDatabaseConnection(Request request, FieldProcessor fp, DatabaseConnection databaseConnection) {
 		DatabaseConnection current = databaseConnectionRepository.findOne(databaseConnection.getId());
 		byte[] currentPassword = current.getPassword();
 		request.setPropertyValues(databaseConnection, current, fp.getMetaData());
 		if (StringUtils.isBlank(current.getPasswordPlain())) {
 			current.setPassword(currentPassword);
 		}
-		boolean isConnectionWorking = testConnection(fp, current, false);
+		boolean isConnectionWorking = testConnection(request, fp, current, false);
 		if (current.isActive() && !isConnectionWorking) {
 			fp.addNoticeMessage(request.getMessage(MessageConstants.CONNECTION_NOT_ACTIVE, current.getName()));
 			current.setActive(false);
@@ -1573,17 +1578,18 @@ public class ManagerService extends CoreService implements Service {
 		fp.addOkMessage(request.getMessage(MessageConstants.CONNECTION_UPDATED));
 	}
 
-	public void createDatabaseConnection(FieldProcessor fp, DatabaseConnection databaseConnection, Integer siteId) {
+	public void createDatabaseConnection(Request request, FieldProcessor fp, DatabaseConnection databaseConnection,
+			Integer siteId) {
 		if (null != siteId) {
 			Site site = getSite(siteId);
 			databaseConnection.setSite(site);
 		}
 		createDatabaseConnection(databaseConnection, false);
 		fp.addOkMessage(request.getMessage(MessageConstants.CONNECTION_CREATED));
-		testConnection(fp, databaseConnection, true);
+		testConnection(request, fp, databaseConnection, true);
 	}
 
-	private boolean testConnection(FieldProcessor fp, DatabaseConnection current, boolean addError) {
+	private boolean testConnection(Request request, FieldProcessor fp, DatabaseConnection current, boolean addError) {
 		StringBuilder dbInfo = new StringBuilder();
 		if (current.testConnection(dbInfo)) {
 			fp.addOkMessage(request.getMessage(MessageConstants.CONNECTION_SUCCESSFULL, dbInfo.toString()));
@@ -1594,12 +1600,12 @@ public class ManagerService extends CoreService implements Service {
 		return false;
 	}
 
-	public void testConnection(FieldProcessor fp, Integer connectionId) {
+	public void testConnection(Request request, FieldProcessor fp, Integer connectionId) {
 		DatabaseConnection databaseConnection = getDatabaseConnection(connectionId, false);
-		testConnection(fp, databaseConnection, true);
+		testConnection(request, fp, databaseConnection, true);
 	}
 
-	public void deleteDatabaseConnection(FieldProcessor fp, Integer conId) {
+	public void deleteDatabaseConnection(Request request, FieldProcessor fp, Integer conId) {
 		DatabaseConnection current = databaseConnectionRepository.findOne(conId);
 		if (null != current) {
 			// TODO check if in use
@@ -1658,7 +1664,7 @@ public class ManagerService extends CoreService implements Service {
 		siteApplication.getGrantedSites().addAll(sites);
 	}
 
-	public String addArchiveToRepository(Integer repositoryId, FormUpload archive, FieldProcessor fp) {
+	public String addArchiveToRepository(Request request, Integer repositoryId, FormUpload archive, FieldProcessor fp) {
 		String name = null;
 		File file = archive.getFile();
 		String originalFilename = archive.getOriginalFilename();
@@ -1714,7 +1720,7 @@ public class ManagerService extends CoreService implements Service {
 		return super.getCacheStatistics(siteId);
 	}
 
-	public void expireCacheElement(FieldProcessor fp, Request request, Integer siteId, String cacheElement) {
+	public void expireCacheElement(Request request, FieldProcessor fp, Integer siteId, String cacheElement) {
 		String cacheElementNotExists = MessageConstants.CACHE_ELEMENT_NOT_EXISTS;
 		String cacheElementDeleted = MessageConstants.CACHE_ELEMENT_DELETED;
 		try {
@@ -1725,19 +1731,19 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public void clearCacheStatistics(FieldProcessor fp, Request request, Integer siteId) {
+	public void clearCacheStatistics(Request request, FieldProcessor fp, Integer siteId) {
 		String cacheStatisticsCleared = MessageConstants.CACHE_STATISTICS_CLEARED;
 		clearCacheStatistics(siteId);
 		fp.addNoticeMessage(request.getMessage(cacheStatisticsCleared));
 	}
 
-	public void clearCache(FieldProcessor fp, Request request, Integer siteId) {
+	public void clearCache(Request request, FieldProcessor fp, Integer siteId) {
 		String cacheCleared = MessageConstants.CACHE_CLEARED;
 		clearCache(siteId);
 		fp.addNoticeMessage(request.getMessage(cacheCleared));
 	}
 
-	public void deleteTemplate(String name, FieldProcessor fp) {
+	public void deleteTemplate(Request request, String name, FieldProcessor fp) {
 		Integer code = deleteTemplate(name);
 		String message = request.getMessage("template.delete.status." + code, name);
 		if (0 == code) {

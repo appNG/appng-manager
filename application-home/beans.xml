@@ -12,7 +12,7 @@
 	<tx:annotation-driven transaction-manager="coreTxManager" proxy-target-class="true" />
 	<bean class="org.appng.api.support.OptionGroupFactory" />
 
-	<bean id="service" class="org.appng.application.manager.service.ManagerService" scope="request">
+	<bean id="service" class="org.appng.application.manager.service.ManagerService">
 		<property name="timezoneMessages">
 			<bean class="org.springframework.context.support.ResourceBundleMessageSource">
 				<property name="alwaysUseMessageFormat" value="true" />
