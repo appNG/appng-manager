@@ -32,8 +32,19 @@
 	<bean id="platformEventReportJob" class="org.appng.application.manager.job.PlatformEventReportJob">
 		<property name="jobDataMap">
 			<map>
+				<entry key="enabled" value="true" />
 				<entry key="runOnce" value="true" />
-				<entry key="intervall" value="DAY" />
+				<entry key="interval" value="DAY" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="databaseReportJob" class="org.appng.application.manager.job.DatabaseReportJob">
+		<property name="jobDataMap">
+			<map>
+				<entry key="enabled" value="true" />
+				<entry key="runOnce" value="true" />
+				<entry key="interval" value="WEEK" />
 			</map>
 		</property>
 	</bean>

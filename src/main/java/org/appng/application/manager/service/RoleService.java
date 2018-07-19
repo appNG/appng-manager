@@ -16,14 +16,17 @@
 package org.appng.application.manager.service;
 
 import java.util.Collection;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import org.appng.api.BusinessException;
 import org.appng.api.model.Application;
 import org.appng.api.model.Subject;
 import org.appng.core.domain.SubjectImpl;
-import org.appng.core.repository.SubjectRepository;
-import org.appng.persistence.repository.SearchQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,18 +34,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = BusinessException.class)
 public class RoleService {
 
-	private SubjectRepository subjectRepository;
+	private EntityManager em;
 
 	@Autowired
-	public RoleService(SubjectRepository subjectRepository) {
-		this.subjectRepository = subjectRepository;
+	public RoleService(@Qualifier("entityManager") EntityManager em) {
+		this.em = em;
 	}
 
 	public Collection<? extends Subject> getSubjectsForRole(Application application, String roleName) {
-		SearchQuery<SubjectImpl> query = subjectRepository.createSearchQuery();
-		query.join("left join fetch e.roles r");
-		query.equals("r.name", roleName).equals("r.application.id", application.getId());
-		return subjectRepository.search(query, null).getContent();
+		TypedQuery<SubjectImpl> query = em.createQuery(
+				"select s from GroupImpl g join g.subjects s join g.roles r where r.name=:name and r.application.id=:applicationId",
+				SubjectImpl.class);
+		query.setParameter("name", roleName).setParameter("applicationId", application.getId());
+		List<SubjectImpl> result = query.getResultList();
+		return result;
 	}
 
 }

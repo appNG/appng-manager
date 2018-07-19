@@ -42,7 +42,7 @@ public class DatabaseReportJob extends ReportJobBase {
 	@Autowired
 	DatabaseReportJob(PlatformEventService service, DatabaseService databaseService, MailTransport mailTransport,
 			MessageSource messageSource, RoleService roleService) {
-		super(service, mailTransport, messageSource,roleService);
+		super(service, mailTransport, messageSource, roleService);
 	}
 
 	public void execute(Site site, Application application) throws Exception {
@@ -50,8 +50,8 @@ public class DatabaseReportJob extends ReportJobBase {
 		Properties properties = application.getProperties();
 		List<String> receivers = properties.getList(ManagerSettings.DATABASE_REPORT_RECEIVERS, ";");
 
-		Collection<? extends org.appng.api.model.Subject> reportReceivers = roleService
-				.getSubjectsForRole(application, ROLE_DATABASE_REPORT_RECEIVER);
+		Collection<? extends org.appng.api.model.Subject> reportReceivers = roleService.getSubjectsForRole(application,
+				ROLE_DATABASE_REPORT_RECEIVER);
 
 		if (!(receivers.isEmpty() && reportReceivers.isEmpty())) {
 			Mail mail = mailTransport.createMail();
@@ -65,10 +65,10 @@ public class DatabaseReportJob extends ReportJobBase {
 
 			EventFilter eventFilter = new EventFilter();
 			eventFilter.setEA(getIntervalStart());
-			eventFilter.setEX("jdbc://");
-			
+			eventFilter.setEX("jdbc:");
+
 			addReport(mail, eventFilter);
-			
+
 			mailTransport.send(mail);
 		} else {
 			log.info("No report receivers defined, set {} accordingly!", ManagerSettings.DATABASE_REPORT_RECEIVERS);
