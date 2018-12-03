@@ -15,6 +15,7 @@
  */
 package org.appng.application.manager.job;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -47,11 +48,11 @@ public class LogDatabaseSize extends ReportJobBase {
 	}
 
 	public void execute(Site site, Application application) throws Exception {
-		List<DatabaseType> databaseTypes = Arrays.asList(DatabaseType.values());
+		List<DatabaseType> databaseTypes = new ArrayList<>(Arrays.asList(DatabaseType.values()));
 		databaseTypes.remove(DatabaseType.HSQL);
 		for (DatabaseType databaseType : databaseTypes) {
 			DatabaseConnection rootConnection = databaseService.getRootConnectionOfType(databaseType);
-			if (rootConnection.testConnection(true)) {
+			if (null != rootConnection && rootConnection.testConnection(true)) {
 				Object[] messageArgs = new Object[] { databaseType.name(), rootConnection.getJdbcUrl(),
 						rootConnection.getDatabaseSize() };
 				String message = messageSource.getMessage(MessageConstants.EVENT_DATABASE_ROOT_SIZE, messageArgs,
