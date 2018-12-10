@@ -87,9 +87,6 @@ public class SitesTest extends AbstractTest {
 	public void testShowSites() throws Exception {
 		createSite();
 
-		addParameter("sortSites", "name:asc");
-		initParameters();
-
 		CallableDataSource siteDatasource = getDataSource("sites").getCallableDataSource();
 		siteDatasource.perform("test");
 
