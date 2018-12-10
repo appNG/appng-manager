@@ -67,6 +67,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 	private static final String F_SESS = "fSess";
 	private static final String F_DMN = "fDmn";
 	private static final String F_USR = "fUsr";
+	private static final String F_LGN = "fLgn";
 	private static final String MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
 	private final FastDateFormat hourMinutes = FastDateFormat.getInstance(MM_DD_HH_MM);
 
@@ -102,12 +103,13 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 		String fCrBf = request.getParameter(F_CR_BF);
 		String fCrAf = request.getParameter(F_CR_AF);
 		String fUsr = request.getParameter(F_USR);
+		String fLgn = request.getParameter(F_LGN);
 
 		Set<String> userAgents = new TreeSet<String>();
 		userAgents.add("");
 		Boolean currentSiteOnly = request.convert(options.getOptionValue("site", "currentSiteOnly"), Boolean.class);
 		List<Session> sessions = getSessions(options, request, currentSiteOnly, imutableSessions, userAgents, fDmn,
-				fSess, fAgnt, fUsr, getDate(fCrBf), getDate(fCrAf));
+				fSess, fAgnt, fUsr, getDate(fCrBf), getDate(fCrAf), fLgn);
 
 		addFilters(request, currentSiteOnly, dataContainer, userAgents, fAgnt, fDmn, fUsr);
 
@@ -117,7 +119,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 
 	protected List<Session> getSessions(Options options, Request request, Boolean currentSiteOnly,
 			List<Session> imutableSessions, Set<String> userAgents, final String fSite, final String fSessid,
-			final String fAgnt, String fUsr, final Date fcrBfDate, final Date fcrAfDate) {
+			final String fAgnt, String fUsr, final Date fcrBfDate, final Date fcrAfDate, final String fLgn) {
 		Integer siteId = request.convert(options.getOptionValue("site", "id"), Integer.class);
 		String currentSiteName = null == siteId ? null : getService().getNameForSite(siteId);
 		List<Session> sessions = new ArrayList<Session>();
@@ -146,6 +148,8 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 			doAdd &= null == fcrAfDate || session.getCreationTime().after(fcrAfDate);
 			doAdd &= null == fcrBfDate || session.getCreationTime().before(fcrBfDate);
 			doAdd &= StringUtils.isBlank(fSite) || session.getSite().equals(fSite);
+			doAdd &= StringUtils.isBlank(fLgn)
+					|| (StringUtils.isNotBlank(session.getUser()) && Boolean.TRUE.toString().equalsIgnoreCase(fLgn));
 
 			if (doAdd) {
 				Session cloned = session.clone();
@@ -167,6 +171,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 		dataContainer.getSelectionGroups().add(selectionGroup);
 		selectionGroup.getSelections()
 				.add(selectionFactory.getTextSelection(F_SESS, MessageConstants.ID, request.getParameter(F_SESS)));
+
 		Selection userAgentFilter = selectionFactory.fromObjects(F_AGNT, MessageConstants.USER_AGENT,
 				userAgents.toArray(), new OptionOwner.Selector() {
 					public void select(Option o) {
@@ -176,17 +181,26 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 					}
 				});
 		selectionGroup.getSelections().add(userAgentFilter);
-		Selection crAfFilter = selectionFactory.getDateSelection(F_CR_AF, MessageConstants.CREATED_AFTER,
-				request.getParameter(F_CR_AF), MM_DD_HH_MM);
-		selectionGroup.getSelections().add(crAfFilter);
-		Selection crBfFilter = selectionFactory.getDateSelection(F_CR_BF, MessageConstants.CREATED_BEFORE,
-				request.getParameter(F_CR_BF), MM_DD_HH_MM);
-		selectionGroup.getSelections().add(crBfFilter);
+
+		selectionGroup.getSelections()
+				.add(selectionFactory.getTextSelection(F_USR, MessageConstants.USER_NAME, request.getParameter(F_USR)));
+
 		if (!currentSiteOnly) {
 			selectionGroup.getSelections().add(getDomainFilter(request, fDmn));
 		}
-		selectionGroup.getSelections()
-				.add(selectionFactory.getTextSelection(F_USR, MessageConstants.USER_NAME, request.getParameter(F_USR)));
+
+		Selection loggedinFilter = selectionFactory.fromObjects(F_LGN, MessageConstants.USER_LOGGED_IN,
+				new String[] { Boolean.TRUE.toString() }, o -> StringUtils.EMPTY, request.getParameter(F_LGN));
+		loggedinFilter.setType(SelectionType.CHECKBOX);
+		selectionGroup.getSelections().add(loggedinFilter);
+
+		Selection crAfFilter = selectionFactory.getDateSelection(F_CR_AF, MessageConstants.CREATED_AFTER,
+				request.getParameter(F_CR_AF), MM_DD_HH_MM);
+		selectionGroup.getSelections().add(crAfFilter);
+
+		Selection crBfFilter = selectionFactory.getDateSelection(F_CR_BF, MessageConstants.CREATED_BEFORE,
+				request.getParameter(F_CR_BF), MM_DD_HH_MM);
+		selectionGroup.getSelections().add(crBfFilter);
 	}
 
 	private Date getDate(String dateString) {
