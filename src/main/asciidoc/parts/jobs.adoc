@@ -1,0 +1,79 @@
+== Jobs
+
+The appNG manager ships with three https://appng.org/appng/docs/current/reference/html/developerguide.html#job-scheduling[scheduled jobs^].
+
+They all have something to do with platform-events.
+
+
+=== Database Report Job
+
+*Purpose:* +
+This job collects all platform events containg 'jdbc:' in their message that occurred in the last hour/day/week/month, puts them into an Excel-file and sends 
+this file via e-mail to all users that own the role 'Database report receiver'.
+
+*Enabled by default:* No.
+
+*Configuration* +
+This job can be configured using the following *application properties*:
+
+- `databaseReportReceivers` +
+A semicolon separted list of receviers, additional to all users with role 'Database report receiver'. +
+Default: `<none>`
+- `databaseReportSender` +
+The sender for the database report email. +
+Default: `report@example.com`
+- `databaseReportSubject` +
+The subject for the database report email. +
+Default: `appNG database report`
+- `databaseReportText` +
+The text for the database report email. +
+Default: `See attached file for a report of the database related platform events.`
+
+Additionally, the entry `interval` in the job's `jobDataMap` can be used to set the time unit for the report (one of `HOUR`, `DAY`, `WEEK`, `MONTH`, defaults to  `DAY`).
+
+	
+=== Log Database Size Job
+*Purpose:* +
+This job writes a platform event for each active and working database connection, may it be a global one or of a site's application.
+
+An entry looks like this: +
+`Size of MYSQL database for site 'appng' located at 'jdbc:mysql://localhost:3306/my_app' is 16.44MB`
+
+*Enabled by default:* Yes.
+
+*Scheduled at*: `0 0 1 1/1 * ? *` +
+(every night at 1:00 am)
+
+
+=== Platform Event Report Job
+
+*Purpose:* +
+This job collects all platform events of certain types that occurred in the last hour/day/week/month, puts them into an Excel-file and sends 
+this file via e-mail to all users that own the role 'Event report receiver'.
+
+*Enabled by default:* No.
+
+*Configuration* +
+This job can be configured using the following *application properties*:
+
+- `eventReportReceivers` +
+A semicolon separted list of receviers, additional to all users with role 'Event report receiver'. +
+Default: `<none>`
+
+- `eventReportSender` +
+The sender for the event report email. +
+Ddefault: `report@example.com`
+
+- `eventReportSubject` +
+The subject for the event report email. +
+Default: `appNG event report`
+
+- `eventReportText` +
+The text for the event report email. +
+Default: `See attached file for a report of the recent appNG platform events`
+
+- `eventReportTypes` +
+The event types to be included in the even report email, separeted by space. +
+Default: `CREATE UPDATE DELETE INFO ERROR WARN`
+
+Additionally, the entry `interval` in the job's `jobDataMap` can be used to set the time unit for the report (one of `HOUR`, `DAY`, `WEEK`, `MONTH`, defaults to  `DAY`).
