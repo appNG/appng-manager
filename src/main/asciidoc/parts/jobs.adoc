@@ -1,3 +1,4 @@
+
 == Jobs
 
 The appNG manager ships with three https://appng.org/appng/docs/current/reference/html/developerguide.html#job-scheduling[scheduled jobs^].

@@ -1,6 +1,5 @@
 = appNG Manager User Manual
-Claus Stümke <claus.stuemke@appng.org>
-Matthias Müller <matthias.mueller@appng.org>
+Claus Stümke <claus.stuemke@appng.org>; Matthias Müller <matthias.mueller@appng.org>
 Build Version  {project-version} created {localdate}
 :title-logo-image: images/appng.png
 :toc:
