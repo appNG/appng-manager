@@ -90,12 +90,12 @@ A platform event has the following attributes:
 |Created|The date and time when the event occurred.|`18/04/17 12:37:49`
 |Type|The type of the event. One of `CREATE`, `UPDATE`, `DELETE`, `INFO`,`ERROR`,`WARN`.|`INFO`
 |Event|A text describing the event.|`Loaded site manager`
-|Appplication|The application that triggered the event. One of `appNG`, `appNG CLI` or `appNGizer`|`appNG`
-|Context|The context the event was executed in, depending onthe application that triggered the event. +
+|Application|The application that triggered the event. One of `appNG`, `appNG CLI` or `appNGizer`|`appNG`
+|Context|The context the event was executed in, depending on the application that triggered the event. +
 If it was triggered by `appNG` or `appNGizer`, the context is the relative URL path that caused the event. +
 If triggered by `appNG CLI`, the context is the CLI command that caused the event|`/manager/manager/appng-manager/sites` +
 `batch -f ./install.list`
-|User|The user that triggered the event. This is either a user that was signed in at the appNG Manager, `appNG platform` (in case no specifix user could be determined), +
+|User|The user that triggered the event. This is either a user that was signed in at the appNG Manager, `appNG platform` (in case no specific user could be determined), +
 `appNGizer` (when triggered by the same) or, in case of an CLI command, the name of the system user that executed the command. |`appNG Administrator`
 |Host|The remote host  or IP that triggered the event. May contain an IPv4 or IPv6 address or a host name.|`127.0.0.1`
 |Host name|The local host name of the appNG server where the event was triggered at.|`appng-node1.example.com`

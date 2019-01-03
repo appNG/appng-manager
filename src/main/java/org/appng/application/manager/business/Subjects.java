@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018 the original author or authors.
+ * Copyright 2011-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,14 +66,14 @@ public class Subjects extends ServiceAware implements DataProvider, ActionProvid
 		try {
 			if (ACTION_CREATE.equals(action)) {
 				errorMessage = MessageConstants.SUBJECT_CREATE_ERROR;
-				service.createSubject(environment.getLocale(), valueHolder, fp);
+				service.createSubject(request, environment.getLocale(), valueHolder, fp);
 				okMessage = MessageConstants.SUBJECT_CREATED;
 			} else if (ACTION_UPDATE.equals(action)) {
 				SubjectImpl subject = valueHolder.getSubject();
 				subject.setId(subjectId);
 				okMessage = MessageConstants.SUBJECT_UPDATED;
 				errorMessage = MessageConstants.SUBJECT_UPDATE_ERROR;
-				Boolean isUpdated = service.updateSubject(valueHolder, fp);
+				Boolean isUpdated = service.updateSubject(request, valueHolder, fp);
 				if (isUpdated) {
 					String passwordMessage = request.getMessage(MessageConstants.SUBJECT_PASSWORD_UPDATED, subjectId);
 					fp.addOkMessage(passwordMessage);
@@ -82,7 +82,7 @@ public class Subjects extends ServiceAware implements DataProvider, ActionProvid
 			} else if (ACTION_DELETE.equals(action)) {
 				errorMessage = MessageConstants.SUBJECT_DELETE_ERROR;
 				Subject currentSubject = environment.getSubject();
-				service.deleteSubject(currentSubject, subjectId, fp);
+				service.deleteSubject(request, currentSubject, subjectId, fp);
 				okMessage = MessageConstants.SUBJECT_DELETED;
 			}
 			if (null != okMessage) {
@@ -104,7 +104,7 @@ public class Subjects extends ServiceAware implements DataProvider, ActionProvid
 		String defaultTimezone = site.getProperties().getString(Platform.Property.TIME_ZONE);
 		DataContainer data = null;
 		if (subjectId == null && ACTION_CREATE.equals(getAction(options))) {
-			data = service.getNewSubject(fp, defaultTimezone, languages);
+			data = service.getNewSubject(request, fp, defaultTimezone, languages);
 		} else {
 			try {
 				data = service.searchSubjects(request, fp, subjectId, defaultTimezone, languages);

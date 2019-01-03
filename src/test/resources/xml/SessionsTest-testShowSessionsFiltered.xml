@@ -83,6 +83,19 @@
                 <option value="&lt;none&gt;" name="&lt;none&gt;" selected="false"/>
                 <option value="Mozilla" name="Mozilla" selected="true"/>
             </selection>
+            <selection id="fUsr" type="text">
+                <title id="userName">User-Name</title>
+                <option value="" name="fUsr"/>
+            </selection>
+            <selection id="fDmn" type="select">
+                <title id="domain">Domain</title>
+                <option/>
+                <option value="localhost" name="localhost" selected="false"/>
+            </selection>
+            <selection id="fLgn" type="checkbox">
+                <title id="user.loggedIn">Logged in users only?</title>
+                <option value="true" name="" selected="false"/>
+            </selection>
             <selection id="fCrAf" type="date" format="yyyy-MM-dd HH:mm">
                 <title id="createdAfter">Created after</title>
                 <option value="" name="fCrAf"/>
@@ -90,15 +103,6 @@
             <selection id="fCrBf" type="date" format="yyyy-MM-dd HH:mm">
                 <title id="createdBefore">Created before</title>
                 <option value="" name="fCrBf"/>
-            </selection>
-            <selection id="fDmn" type="select">
-                <title id="domain">Domain</title>
-                <option/>
-                <option value="localhost" name="localhost" selected="false"/>
-            </selection>
-            <selection id="fUsr" type="text">
-                <title id="userName">User-Name</title>
-                <option value="" name="fUsr"/>
             </selection>
         </selectionGroup>
         <resultset chunk="0" chunkname="sessions" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="1">

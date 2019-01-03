@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018 the original author or authors.
+ * Copyright 2011-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,13 +70,13 @@ public class Installation extends ServiceAware implements DataProvider, ActionPr
 		try {
 			if (ACTION_INSTALL.equals(action)) {
 				errorMessage = MessageConstants.PACKAGE_INSTALL_ERROR;
-				service.installPackage(repositoryId, packageName, packageVersion, packageTimestamp, fp);
+				service.installPackage(request, repositoryId, packageName, packageVersion, packageTimestamp, fp);
 				okMessage = MessageConstants.PACKAGE_INSTALLED;
 				String reloadMessage = request.getMessage(MessageConstants.RELOAD_SITE);
 				fp.addNoticeMessage(reloadMessage);
 			} else if (ACTION_DELETE_PACKAGE.equals(action)) {
 				errorMessage = MessageConstants.PACKAGE_DELETE_ERROR;
-				service.deletePackageVersion(repositoryId, packageName, packageVersion, packageTimestamp, fp);
+				service.deletePackageVersion(request, repositoryId, packageName, packageVersion, packageTimestamp, fp);
 				okMessage = MessageConstants.PACKAGE_DELETED;
 			}
 			String message = request.getMessage(okMessage, repositoryId, packageName, packageVersion);
@@ -96,9 +96,9 @@ public class Installation extends ServiceAware implements DataProvider, ActionPr
 		DataContainer data = new DataContainer(fp);
 		try {
 			if (null != repositoryId && null == applicationName) {
-				data = service.searchInstallablePackages(fp, repositoryId);
+				data = service.searchInstallablePackages(request, fp, repositoryId);
 			} else if (null != repositoryId && null != applicationName) {
-				data = service.searchPackageVersions(fp, repositoryId, applicationName);
+				data = service.searchPackageVersions(request, fp, repositoryId, applicationName);
 			}
 		} catch (BusinessException ex) {
 			data.setPage(new ArrayList<InstallablePackage>(), fp.getPageable());

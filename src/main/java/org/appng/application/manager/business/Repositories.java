@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018 the original author or authors.
+ * Copyright 2011-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,26 +66,26 @@ public class Repositories extends ServiceAware implements DataProvider, ActionPr
 		try {
 			if (ACTION_CREATE.equals(action)) {
 				errorMessage = MessageConstants.REPOSITORY_CREATE_ERROR;
-				service.createRepository(repositoryForm.getRepository(), fp);
+				service.createRepository(request, repositoryForm.getRepository(), fp);
 				okMessage = MessageConstants.REPOSITORY_CREATED;
 			} else if (ACTION_UPDATE.equals(action)) {
 				repositoryForm.getRepository().setId(repositoryId);
 				errorMessage = MessageConstants.REPOSITORY_UPDATE_ERROR;
-				service.updateRepository(repositoryForm, fp);
+				service.updateRepository(request, repositoryForm, fp);
 				okMessage = MessageConstants.REPOSITORY_UPDATED;
 			} else if (ACTION_DELETE.equals(action)) {
 				errorMessage = MessageConstants.REPOSITORY_DELETE_ERROR;
-				service.deleteRepository(repositoryId, fp);
+				service.deleteRepository(request, repositoryId, fp);
 				okMessage = MessageConstants.REPOSITORY_DELETED;
 			} else if (ACTION_RELOAD.equals(action)) {
 				errorMessage = MessageConstants.REPOSITORY_RELOAD_ERROR;
-				service.reloadRepository(repositoryId, fp);
+				service.reloadRepository(request, repositoryId, fp);
 				okMessage = MessageConstants.REPOSITORY_RELOADED;
 			} else if (ACTION_UPLOAD_ARCHIVE.equals(action)) {
 				errorMessage = MessageConstants.REPOSITORY_ARCHIVE_UPLOAD_ERROR;
 				FormUpload archive = ((PackageUploadForm) repositoryForm).getArchive();
 				archiveName = archive.getOriginalFilename();
-				service.addArchiveToRepository(repositoryId, archive, fp);
+				service.addArchiveToRepository(request, repositoryId, archive, fp);
 				okMessage = MessageConstants.REPOSITORY_ARCHIVE_UPLOADED;
 			}
 			String message = request.getMessage(okMessage, repositoryId, archiveName);
@@ -103,14 +103,14 @@ public class Repositories extends ServiceAware implements DataProvider, ActionPr
 		Integer repositoryId = request.convert(options.getOptionValue(REPOSITORY, ID), Integer.class);
 		DataContainer data = null;
 		if (null == repositoryId && ACTION_CREATE.equals(getAction(options))) {
-			data = service.getNewRepository(fp);
+			data = service.getNewRepository(request, fp);
 		} else if (UPLOAD.equals(options.getOptionValue(REPOSITORY, MODE))) {
 			data = new DataContainer(fp);
 			PackageUploadForm packageUploadForm = new PackageUploadForm();
 			packageUploadForm.setRepository(service.getRepository(repositoryId));
 			data.setItem(packageUploadForm);
 		} else {
-			data = service.searchRepositories(fp, repositoryId);
+			data = service.searchRepositories(request, fp, repositoryId);
 		}
 		return data;
 	}

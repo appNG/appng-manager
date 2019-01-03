@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018 the original author or authors.
+ * Copyright 2011-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,10 @@ public class PlatformEventService {
 		query.lessEquals("created", eventFilter.getEB());
 		query.equals("origin", StringUtils.trimToNull(eventFilter.getEH()));
 		query.equals("hostName", StringUtils.trimToNull(eventFilter.getEN()));
-		query.equals("user", StringUtils.trimToNull(eventFilter.getEU()));
-		query.equals("application",StringUtils.trimToNull(eventFilter.getEAp()));
+		if (StringUtils.isNotBlank(eventFilter.getEU())) {
+			query.equals("user", eventFilter.getEU());
+		}
+		query.equals("application", StringUtils.trimToNull(eventFilter.getEAp()));
 		query.in("type", eventFilter.eventTypes());
 		query.contains("event", StringUtils.trimToNull(eventFilter.getEX()));
 		return platformEventRepository.search(query, pageable);
@@ -59,15 +61,15 @@ public class PlatformEventService {
 	public List<String> getUsers() {
 		return platformEventRepository.findDistinctUsers();
 	}
-	
+
 	public List<String> getApplications() {
 		return platformEventRepository.findDistinctApplications();
 	}
-	
+
 	public List<String> getHostNames() {
 		return platformEventRepository.findDistinctHostNames();
 	}
-	
+
 	public List<String> getOrigins() {
 		return platformEventRepository.findDistinctOrigins();
 	}

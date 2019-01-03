@@ -20,6 +20,7 @@
 				<session-param name="fUsr" />
 				<session-param name="fEtr" />
 				<session-param name="fCtpe" />
+				<session-param name="fLgn" />
 				<!-- event filter -->
 				<session-param name="fTps" />
 				<session-param name="fTxt" />

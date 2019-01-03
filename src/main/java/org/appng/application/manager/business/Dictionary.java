@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018 the original author or authors.
+ * Copyright 2011-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,8 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
 /**
- * A {@link DataProvider} providing the available messages from an
- * {@link ResourceBundle} for a {@link Application} or the platform.
+ * A {@link DataProvider} providing the available messages from an {@link ResourceBundle} for a {@link Application} or
+ * the platform.
  * 
  * @author Matthias Müller
  * 

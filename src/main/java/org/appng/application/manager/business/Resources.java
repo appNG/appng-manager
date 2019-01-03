@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018 the original author or authors.
+ * Copyright 2011-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,11 +65,11 @@ public class Resources extends ServiceAware implements ActionProvider<ResourceFo
 		try {
 			if (ACTION_DELETE.equals(action)) {
 				errorMessage = MessageConstants.RESOURCE_DELETE_ERROR;
-				resourceName = service.deleteResource(applicationId, resourceId, fp);
+				resourceName = service.deleteResource(request, applicationId, resourceId, fp);
 
 			} else if (ACTION_UPDATE.equals(action)) {
 				form.setId(resourceId);
-				resourceName = service.updateResource(site, applicationId, form, fp);
+				resourceName = service.updateResource(request, site, applicationId, form, fp);
 			}
 
 		} catch (BusinessException ex) {
@@ -92,7 +92,7 @@ public class Resources extends ServiceAware implements ActionProvider<ResourceFo
 		}
 
 		try {
-			return service.searchResources(site, fp, type, resourceId, applicationId);
+			return service.searchResources(request, site, fp, type, resourceId, applicationId);
 		} catch (BusinessException e) {
 			throw new ApplicationException("error while loading resources for application", e);
 		}

@@ -6,7 +6,7 @@
 	<artifactId>appng-manager</artifactId>
 	<packaging>jar</packaging>
 	<name>appNG Manager</name>
-	<version>1.13.1</version>
+	<version>1.14.0</version>
 	<description><![CDATA[Global appNG administration]]></description>
 	<url>https://appng.org</url>
 
@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.appng</groupId>
 		<artifactId>appng-application-parent</artifactId>
-		<version>1.17.0</version>
+		<version>1.17.1</version>
 	</parent>
 
 	<scm>

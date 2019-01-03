@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018 the original author or authors.
+ * Copyright 2011-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class Templates extends ServiceAware implements DataProvider, ActionProvi
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
 			Void applicationBean, FieldProcessor fp) {
 		if ("delete".equals(options.getOptionValue("template", "action"))) {
-			getService().deleteTemplate(options.getOptionValue("template", "templateName"), fp);
+			getService().deleteTemplate(request, options.getOptionValue("template", "templateName"), fp);
 		}
 	}
 

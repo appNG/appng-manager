@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018 the original author or authors.
+ * Copyright 2011-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,15 +60,15 @@ public class Groups extends ServiceAware implements ActionProvider<GroupForm>, D
 		Integer groupId = request.convert(options.getOptionValue(GROUP, ID), Integer.class);
 		try {
 			if (ACTION_CREATE.equals(action)) {
-				service.createGroup(groupForm, site, fp);
+				service.createGroup(request, groupForm, site, fp);
 				okMessage = MessageConstants.GROUP_CREATED;
 			} else if (ACTION_UPDATE.equals(action)) {
 				groupForm.getGroup().setId(groupId);
-				service.updateGroup(site, groupForm, fp);
+				service.updateGroup(request, site, groupForm, fp);
 				okMessage = MessageConstants.GROUP_UPDATED;
 			} else if (ACTION_DELETE.equals(action)) {
 				errorMessage = MessageConstants.GROUP_DELETE_ERROR;
-				service.deleteGroup(groupId, fp);
+				service.deleteGroup(request, groupId, fp);
 				okMessage = MessageConstants.GROUP_DELETED;
 			}
 			String message = request.getMessage(okMessage, groupId);

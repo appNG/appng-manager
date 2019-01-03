@@ -27,6 +27,7 @@
 					<get-param name="fCrBf" />
 					<get-param name="fDmn" />
 					<get-param name="fUsr" />
+					<get-param name="fLgn" />
 				</get-params>
 				<post-params>
 					<post-param name="form_action" />

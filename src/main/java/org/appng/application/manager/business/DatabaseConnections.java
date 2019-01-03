@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018 the original author or authors.
+ * Copyright 2011-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,11 +61,11 @@ public class DatabaseConnections extends ServiceAware implements DataProvider, A
 		Integer conId = request.convert(options.getOptionValue(OPT_CONNECTION, ID), Integer.class);
 		if (ACTION_UPDATE.equals(action)) {
 			databaseConnection.setId(conId);
-			getService().updateDatabaseConnection(fp, databaseConnection);
+			getService().updateDatabaseConnection(request, fp, databaseConnection);
 		} else if (ACTION_DELETE.equals(action)) {
-			getService().deleteDatabaseConnection(fp, conId);
+			getService().deleteDatabaseConnection(request, fp, conId);
 		} else if (ACTION_TEST.equals(action)) {
-			getService().testConnection(fp, conId);
+			getService().testConnection(request, fp, conId);
 		} else if (ACTION_RESET.equals(action)) {
 			getService().resetConnection(conId);
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2018 the original author or authors.
+ * Copyright 2011-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,16 +101,16 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 				Integer siteId = request.convert(options.getOption(PROPERTIES).getString("siteId"), Integer.class);
 				Integer applicationId = request.convert(options.getOption(PROPERTIES).getString("applicationId"),
 						Integer.class);
-				service.createProperty(propertyForm, siteId, applicationId, fp);
+				service.createProperty(request, propertyForm, siteId, applicationId, fp);
 				okMessage = MessageConstants.PROPERTY_CREATED;
 			} else if (ACTION_UPDATE.equals(action)) {
 				errorMessage = MessageConstants.PROPERTY_UPDATE_ERROR;
 				propertyForm.getProperty().setName(propertyName);
-				service.updateProperty(propertyForm, fp);
+				service.updateProperty(request, propertyForm, fp);
 				okMessage = MessageConstants.PROPERTY_UPDATED;
 			} else if (ACTION_DELETE.equals(action)) {
 				errorMessage = MessageConstants.PROPERTY_DELETE_ERROR;
-				service.deleteProperty(propertyName, fp);
+				service.deleteProperty(request, propertyName, fp);
 				okMessage = MessageConstants.PROPERTY_DELETED;
 			}
 			String message = request.getMessage(okMessage, propertyName);

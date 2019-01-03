@@ -16,7 +16,7 @@
 					<label>id</label>
 				</field>
 				<field name="name" type="text">
-					<sort ignore-case="true" />
+					<sort prio="0" order="asc" ignore-case="true" />
 					<label>name</label>
 				</field>
 				<field name="realname" type="text">
