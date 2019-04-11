@@ -27,27 +27,30 @@
 			</permissions>
 			<params />
 			<meta-data bindClass="org.appng.core.domain.RepositoryImpl">
-				<field name="id" type="text" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
+					<sort prio="0" order="asc" ignore-case="true"/>
 					<label>name</label>
 				</field>
 				<field name="repositoryType" type="text">
+					<sort />
 					<label>type</label>
 				</field>
 				<field name="repositoryMode" type="text">
+					<sort />
 					<label>mode</label>
 				</field>
 				<field name="published" type="image">
+					<sort />
 					<label>published</label>
 					<icon condition="${current.published}">led_orange</icon>
 					<icon condition="${not current.published}"></icon>
 				</field>
 				<field name="uri" type="text" displayLength="60">
+					<sort />
 					<label>uri</label>
 				</field>
 				<field name="active" type="image">
+					<sort />
 					<label>active</label>
 					<icon condition="${current.active}">led_green</icon>
 					<icon condition="${not current.active}">led_red</icon>

@@ -12,9 +12,6 @@
 				<param name="userid" />
 			</params>
 			<meta-data bindClass="org.appng.api.model.Subject" result-selector="${current.id eq userid}">
-				<field name="id" type="int">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
 					<sort prio="0" order="asc" ignore-case="true" />
 					<label>name</label>

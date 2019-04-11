@@ -13,11 +13,8 @@
 				<param name="roleid" />
 			</params>
 			<meta-data bindClass="org.appng.api.model.Role" result-selector="${current.id eq roleid}">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
-					<sort />
+					<sort prio="0" order="asc" ignore-case="true"/>
 					<label>name</label>
 				</field>
 				<field name="description" type="text">

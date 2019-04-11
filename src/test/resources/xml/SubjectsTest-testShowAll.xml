@@ -9,9 +9,6 @@
 			<param name="userid" />
 		</params>
 		<meta-data bindClass="org.appng.api.model.Subject" result-selector="${current.id eq userid}">
-			<field name="id" type="int" format="#" binding="id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" binding="name">
 				<sort />
 				<label id="name">Name</label>
@@ -78,9 +75,6 @@
 		<resultset chunk="0" chunkname="users" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
 			lastchunk="0" hits="1">
 			<result>
-				<field name="id" type="int">
-					<value>1</value>
-				</field>
 				<field name="name" type="text">
 					<value>admin</value>
 				</field>
@@ -97,11 +91,11 @@
 					<value>en</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/users/user/update/1" default="true">
+					<link id="actions[1]" mode="intern" target="/users/user/update/" default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[2]" mode="intern" target="/users?form_action=delete&amp;userid=1">
+					<link id="actions[2]" mode="intern" target="/users?form_action=delete&amp;userid=">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="subject.delete.confirm" params="#{name}">Do you really want to delete the user "admin"?

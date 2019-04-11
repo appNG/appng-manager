@@ -18,7 +18,7 @@
 					<condition expression="${siteId ne null}" />
 				</field>
 				<field name="fileName" type="text">
-					<sort />
+					<sort prio="0" order="asc" ignore-case="true"/>
 					<label>name</label>
 				</field>
 				<field name="version" type="date" format="yyyy-MM-dd HH:mm:ss">
@@ -52,7 +52,7 @@
 			</permissions>
 			<meta-data bindClass="org.appng.core.model.JarInfo">
 				<field name="fileName" type="text">
-					<sort />
+					<sort prio="0" order="asc" ignore-case="true"/>
 					<label id="name" />
 				</field>
 				<field name="version" type="date" format="yyyy-MM-dd HH:mm:ss">
