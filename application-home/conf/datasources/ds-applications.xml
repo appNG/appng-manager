@@ -42,7 +42,7 @@
 						<permission ref="application.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/applications&#63;form_action=delete&#38;appid=#{id}">
+				<link mode="intern" target="/applications&#63;form_action=delete&#38;appid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="application.delete.confirm" params="#{name}"></confirmation>
@@ -63,9 +63,6 @@
 				<param name="appid" />
 			</params>
 			<meta-data bindClass="org.appng.core.domain.ApplicationImpl">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text" readonly="true">
 					<label>name</label>
 				</field>

@@ -40,21 +40,20 @@
 			</link>
 		</linkpanel>
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="/users/user/update/#{id}" default="true">
+			<link id="actions[1]" mode="intern" target="/users/user/update/${current.id}" default="true">
 				<permissions>
 					<permission ref="subject.edit" mode="set"></permission>
 				</permissions>
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[2]" mode="intern" target="/users?form_action=delete&amp;userid=#{id}">
+			<link id="actions[2]" mode="intern" target="/users?form_action=delete&amp;userid=${current.id}">
 				<permissions>
 					<permission ref="subject.delete" mode="set"></permission>
 				</permissions>
 				<label id="delete">Delete</label>
 				<icon>delete</icon>
-				<confirmation id="subject.delete.confirm" params="#{name}">Do you really want to delete the user "#{name}"?
-				</confirmation>
+				<confirmation id="subject.delete.confirm" params="#{name}">Do you really want to delete the user "#{name}"?</confirmation>
 			</link>
 		</linkpanel>
 	</config>
@@ -91,15 +90,14 @@
 					<value>en</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/users/user/update/" default="true">
+					<link id="actions[1]" mode="intern" target="/users/user/update/1" default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[2]" mode="intern" target="/users?form_action=delete&amp;userid=">
+					<link id="actions[2]" mode="intern" target="/users?form_action=delete&amp;userid=1">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
-						<confirmation id="subject.delete.confirm" params="#{name}">Do you really want to delete the user "admin"?
-						</confirmation>
+						<confirmation id="subject.delete.confirm" params="#{name}">Do you really want to delete the user "admin"?</confirmation>
 					</link>
 				</linkpanel>
 			</result>

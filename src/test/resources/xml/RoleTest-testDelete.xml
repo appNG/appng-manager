@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <messages xmlns="http://www.appng.org/schema/platform" ref="delete-role">
-    <message ref="delete-role" class="OK">Role has been deleted.</message>
+	<message ref="delete-role" class="OK">Role has been deleted.</message>
 </messages>

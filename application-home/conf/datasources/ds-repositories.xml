@@ -69,14 +69,14 @@
 				</link>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/repositories/update/#{id}#tab_update">
+				<link mode="intern" target="/repositories/update/${current.id}#tab_update">
 					<label>edit</label>
 					<icon>edit</icon>
 					<permissions>
 						<permission ref="repository.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/repositories&#63;form_action=delete-repository&#38;repositoryid=#{id}">
+				<link mode="intern" target="/repositories&#63;form_action=delete-repository&#38;repositoryid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="repository.delete.confirm" params="#{name}" />
@@ -84,7 +84,7 @@
 						<permission ref="repository.delete" mode="set" />
 					</permissions>
 				</link>
-				<link target="/repositories/installation/#{id}&#63;form_action=reload" mode="intern">
+				<link target="/repositories/installation/${current.id}&#63;form_action=reload" mode="intern">
 					<label>reload</label>
 					<icon>reload</icon>
 					<confirmation id="repository.reload.confirm" params="#{name}" />
@@ -93,7 +93,7 @@
 						<permission ref="repository.reload" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/repositories/installation/#{id}#tab_packages" default="true">
+				<link mode="intern" target="/repositories/installation/${current.id}#tab_packages" default="true">
 					<label>installation</label>
 					<icon>deploy</icon>
 					<condition expression="${current.active}" />
@@ -115,9 +115,6 @@
 				<param name="repositoryid" />
 			</params>
 			<meta-data bindClass="org.appng.application.manager.form.RepositoryForm" binding="repository">
-				<field name="id" type="text" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
 					<label>name</label>
 				</field>

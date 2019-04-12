@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <dataConfig xmlns="http://www.appng.org/schema/platform">
-    <title id="clusterState">Cluster Status</title>
-    <params>
-        <param name="nodeId"/>
-    </params>
-    <meta-data bindClass="org.appng.application.manager.business.ClusterState.LocalNodeState" result-selector="${current.nodeId eq nodeId}">
-        <field name="nodeId" type="text" binding="nodeId">
-            <sort/>
-            <label id="nodeId">Node ID</label>
-        </field>
-        <field name="date" type="date" format="MM/dd HH:mm:ss" binding="date">
-            <label id="lastUpdated">Last updated</label>
-        </field>
-        <field name="heap.max" type="long" format="#,##0 MB" binding="heap.max">
-            <label id="heap.max">Heap max.</label>
-        </field>
-        <field name="heap.used" type="long" format="#,##0 MB" binding="heap.used">
-            <label id="heap.used">Heap used</label>
-        </field>
-        <field name="heap.usedPercent" type="decimal" format="00.00 %" binding="heap.usedPercent">
-            <label id="heap.usedPercent">Percentage</label>
-        </field>
-        <field name="nonHeap.max" type="long" format="#,##0 MB" binding="nonHeap.max">
-            <label id="nonHeap.max">non-heap max.</label>
-        </field>
-        <field name="nonHeap.used" type="long" format="#,##0 MB" binding="nonHeap.used">
-            <label id="nonHeap.used">non-heap used</label>
-        </field>
-        <field name="nonHeap.usedPercent" type="decimal" format="00.00 %" binding="nonHeap.usedPercent">
-            <label id="nonHeap.usedPercent">Percentage</label>
-        </field>
-        <field name="current" type="image" binding="current">
-            <label id="selected">Selected</label>
-            <icon condition="${current.current}">led_green</icon>
-            <icon condition="${!current.current}">ico_spacer</icon>
-        </field>
-        <field name="actions" type="linkpanel" binding="actions">
-            <label id="actions">Actions</label>
-        </field>
-    </meta-data>
-    <linkpanel id="actions" location="inline">
-        <link id="actions[1]" mode="intern" target="/system/${current.nodeId}#tab_clusterState" default="true">
-            <label id="show">show</label>
-            <icon>preview</icon>
-        </link>
-    </linkpanel>
-    <linkpanel id="refresh" location="both">
-        <link id="refresh[1]" mode="intern" target="/system?action=refresh#tab_clusterState">
-            <label id="refresh">refresh</label>
-            <icon>reload</icon>
-        </link>
-    </linkpanel>
+	<title id="clusterState">Cluster Status</title>
+	<params>
+		<param name="nodeId" />
+	</params>
+	<meta-data bindClass="org.appng.application.manager.business.ClusterState.LocalNodeState" result-selector="${current.nodeId eq nodeId}">
+		<field name="nodeId" type="text" binding="nodeId">
+			<sort />
+			<label id="nodeId">Node ID</label>
+		</field>
+		<field name="date" type="date" format="MM/dd HH:mm:ss" binding="date">
+			<label id="lastUpdated">Last updated</label>
+		</field>
+		<field name="heap.max" type="long" format="#,##0 MB" binding="heap.max">
+			<label id="heap.max">Heap max.</label>
+		</field>
+		<field name="heap.used" type="long" format="#,##0 MB" binding="heap.used">
+			<label id="heap.used">Heap used</label>
+		</field>
+		<field name="heap.usedPercent" type="decimal" format="00.00 %" binding="heap.usedPercent">
+			<label id="heap.usedPercent">Percentage</label>
+		</field>
+		<field name="nonHeap.max" type="long" format="#,##0 MB" binding="nonHeap.max">
+			<label id="nonHeap.max">non-heap max.</label>
+		</field>
+		<field name="nonHeap.used" type="long" format="#,##0 MB" binding="nonHeap.used">
+			<label id="nonHeap.used">non-heap used</label>
+		</field>
+		<field name="nonHeap.usedPercent" type="decimal" format="00.00 %" binding="nonHeap.usedPercent">
+			<label id="nonHeap.usedPercent">Percentage</label>
+		</field>
+		<field name="current" type="image" binding="current">
+			<label id="selected">Selected</label>
+			<icon condition="${current.current}">led_green</icon>
+			<icon condition="${!current.current}">ico_spacer</icon>
+		</field>
+		<field name="actions" type="linkpanel" binding="actions">
+			<label id="actions">Actions</label>
+		</field>
+	</meta-data>
+	<linkpanel id="actions" location="inline">
+		<link id="actions[1]" mode="intern" target="/system/${current.nodeId}#tab_clusterState" default="true">
+			<label id="show">show</label>
+			<icon>preview</icon>
+		</link>
+	</linkpanel>
+	<linkpanel id="refresh" location="both">
+		<link id="refresh[1]" mode="intern" target="/system?action=refresh#tab_clusterState">
+			<label id="refresh">refresh</label>
+			<icon>reload</icon>
+		</link>
+	</linkpanel>
 </dataConfig>

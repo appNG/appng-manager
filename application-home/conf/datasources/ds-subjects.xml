@@ -43,14 +43,14 @@
 				</link>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/users/user/update/#{id}" default="true">
+				<link mode="intern" target="/users/user/update/${current.id}" default="true">
 					<label>edit</label>
 					<icon>edit</icon>
 					<permissions>
 						<permission ref="subject.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/users&#63;form_action=delete&#38;userid=#{id}">
+				<link mode="intern" target="/users&#63;form_action=delete&#38;userid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="subject.delete.confirm" params="#{name}" />
@@ -71,9 +71,6 @@
 				<param name="userid" />
 			</params>
 			<meta-data binding="subject" bindClass="org.appng.application.manager.form.SubjectForm">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text" readonly="true">
 					<label>name</label>
 				</field>

@@ -34,20 +34,21 @@
 			</link>
 		</linkpanel>
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="/applications/update/1/role/update/#{id}#tab_roles" default="true">
+			<link id="actions[1]" mode="intern" target="/applications/update/1/role/update/${current.id}#tab_roles" default="true">
 				<permissions>
 					<permission ref="role.edit" mode="set"></permission>
 				</permissions>
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[2]" mode="intern" target="/applications/update/1?form_action=delete-role&amp;roleid=#{id}#tab_roles">
+			<link id="actions[2]" mode="intern" target="/applications/update/1?form_action=delete-role&amp;roleid=${current.id}#tab_roles">
 				<permissions>
 					<permission ref="role.delete" mode="set"></permission>
 				</permissions>
 				<label id="delete">Delete</label>
 				<icon>delete</icon>
-				<confirmation id="role.delete.confirm" params="#{name}">Do you really want to delete the role "#{name}"?</confirmation>
+				<confirmation id="role.delete.confirm" params="#{name}">Do you really want to delete the role "#{name}"?
+				</confirmation>
 			</link>
 		</linkpanel>
 	</config>
@@ -65,14 +66,15 @@
 					<value>application</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/applications/update/1/role/update/#tab_roles" default="true">
+					<link id="actions[1]" mode="intern" target="/applications/update/1/role/update/1#tab_roles" default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[2]" mode="intern" target="/applications/update/1?form_action=delete-role&amp;roleid=#tab_roles">
+					<link id="actions[2]" mode="intern" target="/applications/update/1?form_action=delete-role&amp;roleid=1#tab_roles">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
-						<confirmation id="role.delete.confirm" params="#{name}">Do you really want to delete the role "role1"?</confirmation>
+						<confirmation id="role.delete.confirm" params="#{name}">Do you really want to delete the role "role1"?
+						</confirmation>
 					</link>
 				</linkpanel>
 			</result>

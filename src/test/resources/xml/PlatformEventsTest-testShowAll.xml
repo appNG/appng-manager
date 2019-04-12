@@ -1,91 +1,92 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <datasource xmlns="http://www.appng.org/schema/platform" id="platformEvents">
-    <config>
-        <title id="events">Events</title>
-        <permissions>
-            <permission ref="platform.events" mode="set"></permission>
-        </permissions>
-        <params/>
-        <meta-data bindClass="org.appng.core.domain.PlatformEvent">
-            <field name="created" type="date" format="yy/MM/dd HH:mm:ss" binding="created">
-                <sort/>
-                <label id="created">Created</label>
-            </field>
-            <field name="type" type="text" binding="type">
-                <label id="type">Type</label>
-            </field>
-            <field name="event" type="longtext" displayLength="80" binding="event">
-                <label id="event">Event</label>
-            </field>
-            <field name="user" type="text" binding="user">
-                <label id="user">User</label>
-            </field>
-            <field name="application" type="text" binding="application">
-                <label id="application">Application</label>
-            </field>
-            <field name="origin" type="text" binding="origin">
-                <label id="host">Host</label>
-            </field>
-            <field name="hostName" type="text" binding="hostName">
-                <label id="hostName">Host name</label>
-            </field>
-            <field name="context" type="text" displayLength="15" binding="context">
-                <label id="context">Context</label>
-            </field>
-            <field name="requestId" type="text" displayLength="9" binding="requestId">
-                <label id="request">Request</label>
-            </field>
-            <field name="sessionId" type="text" displayLength="11" binding="sessionId">
-                <label id="session">Session</label>
-            </field>
-        </meta-data>
-        <linkpanel id="other" location="both">
-            <link id="other[1]" mode="webservice" target="/service/localhost/appng-manager/webservice/platformEventExport">
-                <label id="events.export">Export to .xlsx</label>
-                <icon>goto</icon>
-            </link>
-        </linkpanel>
-    </config>
-    <data>
-        <selectionGroup>
-            <selection id="eT" type="checkbox">
-                <title id="type">Type</title>
-                <option value="CREATE" name="CREATE" selected="false"/>
-                <option value="UPDATE" name="UPDATE" selected="false"/>
-                <option value="DELETE" name="DELETE" selected="false"/>
-                <option value="INFO" name="INFO" selected="false"/>
-                <option value="ERROR" name="ERROR" selected="false"/>
-                <option value="WARN" name="WARN" selected="false"/>
-            </selection>
-            <selection id="eX" type="text">
-                <title id="event">Event</title>
-                <option value="" name="eX"/>
-            </selection>
-            <selection id="eU" type="select">
-                <title id="user">User</title>
-                <option value="" name=""/>
-            </selection>
-            <selection id="eAp" type="select">
-                <title id="application">Application</title>
-                <option value="" name=""/>
-            </selection>
-            <selection id="eH" type="select">
-                <title id="host">Host</title>
-                <option value="" name=""/>
-            </selection>
-            <selection id="eN" type="select">
-                <title id="hostName">Host name</title>
-                <option value="" name=""/>
-            </selection>
-            <selection id="eA" type="date" format="yyyy-MM-dd HH:mm:ss">
-                <title id="createdAfter">Created after</title>
-                <option value="" name="eA"/>
-            </selection>
-            <selection id="eB" type="date" format="yyyy-MM-dd HH:mm:ss">
-                <title id="createdBefore">Created before</title>
-                <option value="" name="eB"/>
-            </selection>
-        </selectionGroup>
-        <resultset chunk="0" chunkname="platformEvents" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="-1" hits="0"/>
-    </data>
+	<config>
+		<title id="events">Events</title>
+		<permissions>
+			<permission ref="platform.events" mode="set"></permission>
+		</permissions>
+		<params />
+		<meta-data bindClass="org.appng.core.domain.PlatformEvent">
+			<field name="created" type="date" format="yy/MM/dd HH:mm:ss" binding="created">
+				<sort />
+				<label id="created">Created</label>
+			</field>
+			<field name="type" type="text" binding="type">
+				<label id="type">Type</label>
+			</field>
+			<field name="event" type="longtext" displayLength="80" binding="event">
+				<label id="event">Event</label>
+			</field>
+			<field name="user" type="text" binding="user">
+				<label id="user">User</label>
+			</field>
+			<field name="application" type="text" binding="application">
+				<label id="application">Application</label>
+			</field>
+			<field name="origin" type="text" binding="origin">
+				<label id="host">Host</label>
+			</field>
+			<field name="hostName" type="text" binding="hostName">
+				<label id="hostName">Host name</label>
+			</field>
+			<field name="context" type="text" displayLength="15" binding="context">
+				<label id="context">Context</label>
+			</field>
+			<field name="requestId" type="text" displayLength="9" binding="requestId">
+				<label id="request">Request</label>
+			</field>
+			<field name="sessionId" type="text" displayLength="11" binding="sessionId">
+				<label id="session">Session</label>
+			</field>
+		</meta-data>
+		<linkpanel id="other" location="both">
+			<link id="other[1]" mode="webservice" target="/service/localhost/appng-manager/webservice/platformEventExport">
+				<label id="events.export">Export to .xlsx</label>
+				<icon>goto</icon>
+			</link>
+		</linkpanel>
+	</config>
+	<data>
+		<selectionGroup>
+			<selection id="eT" type="checkbox">
+				<title id="type">Type</title>
+				<option value="CREATE" name="CREATE" selected="false" />
+				<option value="UPDATE" name="UPDATE" selected="false" />
+				<option value="DELETE" name="DELETE" selected="false" />
+				<option value="INFO" name="INFO" selected="false" />
+				<option value="ERROR" name="ERROR" selected="false" />
+				<option value="WARN" name="WARN" selected="false" />
+			</selection>
+			<selection id="eX" type="text">
+				<title id="event">Event</title>
+				<option value="" name="eX" />
+			</selection>
+			<selection id="eU" type="select">
+				<title id="user">User</title>
+				<option value="" name="" />
+			</selection>
+			<selection id="eAp" type="select">
+				<title id="application">Application</title>
+				<option value="" name="" />
+			</selection>
+			<selection id="eH" type="select">
+				<title id="host">Host</title>
+				<option value="" name="" />
+			</selection>
+			<selection id="eN" type="select">
+				<title id="hostName">Host name</title>
+				<option value="" name="" />
+			</selection>
+			<selection id="eA" type="date" format="yyyy-MM-dd HH:mm:ss">
+				<title id="createdAfter">Created after</title>
+				<option value="" name="eA" />
+			</selection>
+			<selection id="eB" type="date" format="yyyy-MM-dd HH:mm:ss">
+				<title id="createdBefore">Created before</title>
+				<option value="" name="eB" />
+			</selection>
+		</selectionGroup>
+		<resultset chunk="0" chunkname="platformEvents" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
+			lastchunk="-1" hits="0" />
+	</data>
 </datasource>

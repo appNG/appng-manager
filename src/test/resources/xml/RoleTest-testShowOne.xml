@@ -1,47 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <datasource xmlns="http://www.appng.org/schema/platform" id="role">
-    <config>
-        <title id="role">Role</title>
-        <params>
-            <param name="id">1</param>
-        </params>
-        <meta-data binding="role" bindClass="org.appng.application.manager.form.RoleForm">
-            <field name="id" type="int" format="#" readonly="true" binding="role.id">
-                <label id="id">ID</label>
-            </field>
-            <field name="name" type="text" binding="role.name">
-                <label id="name">Name</label>
-            </field>
-            <field name="description" type="text" binding="role.description">
-                <label id="description">Description</label>
-            </field>
-            <field name="permissions" type="list:select" binding="permissionIds">
-                <label id="permissions">Permissions</label>
-            </field>
-        </meta-data>
-    </config>
-    <data>
-        <selection id="permissions" type="select:multiple">
-            <title id="permissions">Permissions</title>
-            <optionGroup id="do">
-                <label id="do">do</label>
-                <option value="2" name="do.that" selected="true"/>
-                <option value="1" name="do.this" selected="true"/>
-            </optionGroup>
-        </selection>
-        <result>
-            <field name="id" type="int">
-                <value>1</value>
-            </field>
-            <field name="name" type="text">
-                <value>role1</value>
-            </field>
-            <field name="description" type="text">
-                <value></value>
-            </field>
-            <field name="permissions" type="list:select">
-                <value></value>
-            </field>
-        </result>
-    </data>
+	<config>
+		<title id="role">Role</title>
+		<params>
+			<param name="id">1</param>
+		</params>
+		<meta-data binding="role" bindClass="org.appng.application.manager.form.RoleForm">
+			<field name="name" type="text" binding="role.name">
+				<label id="name">Name</label>
+			</field>
+			<field name="description" type="text" binding="role.description">
+				<label id="description">Description</label>
+			</field>
+			<field name="permissions" type="list:select" binding="permissionIds">
+				<label id="permissions">Permissions</label>
+			</field>
+		</meta-data>
+	</config>
+	<data>
+		<selection id="permissions" type="select:multiple">
+			<title id="permissions">Permissions</title>
+			<optionGroup id="do">
+				<label id="do">do</label>
+				<option value="2" name="do.that" selected="true" />
+				<option value="1" name="do.this" selected="true" />
+			</optionGroup>
+		</selection>
+		<result>
+			<field name="name" type="text">
+				<value>role1</value>
+			</field>
+			<field name="description" type="text">
+				<value></value>
+			</field>
+			<field name="permissions" type="list:select">
+				<value></value>
+			</field>
+		</result>
+	</data>
 </datasource>

@@ -33,7 +33,7 @@
 			</link>
 		</linkpanel>
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="/applications/update/1/permission/update/#{id}#tab_permissions"
+			<link id="actions[1]" mode="intern" target="/applications/update/1/permission/update/${current.id}#tab_permissions"
 				default="true">
 				<permissions>
 					<permission ref="permission.edit" mode="set"></permission>
@@ -42,7 +42,7 @@
 				<icon>edit</icon>
 			</link>
 			<link id="actions[2]" mode="intern"
-				target="/applications/update/1?form_action=delete-permission&amp;permissionid=#{id}#tab_permissions">
+				target="/applications/update/1?form_action=delete-permission&amp;permissionid=${current.id}#tab_permissions">
 				<permissions>
 					<permission ref="permission.delete" mode="set"></permission>
 				</permissions>
@@ -67,13 +67,13 @@
 					<value>application</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/applications/update/1/permission/update/#tab_permissions"
+					<link id="actions[1]" mode="intern" target="/applications/update/1/permission/update/2#tab_permissions"
 						default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/applications/update/1?form_action=delete-permission&amp;permissionid=#tab_permissions">
+						target="/applications/update/1?form_action=delete-permission&amp;permissionid=2#tab_permissions">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="permission.delete.confirm" params="#{name}">Do you really want to delete the permission
@@ -92,13 +92,13 @@
 					<value>application</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/applications/update/1/permission/update/#tab_permissions"
+					<link id="actions[1]" mode="intern" target="/applications/update/1/permission/update/1#tab_permissions"
 						default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/applications/update/1?form_action=delete-permission&amp;permissionid=#tab_permissions">
+						target="/applications/update/1?form_action=delete-permission&amp;permissionid=1#tab_permissions">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="permission.delete.confirm" params="#{name}">Do you really want to delete the permission

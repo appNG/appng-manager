@@ -49,14 +49,14 @@
 			</link>
 		</linkpanel>
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="/repositories/update/#{id}#tab_update">
+			<link id="actions[1]" mode="intern" target="/repositories/update/${current.id}#tab_update">
 				<permissions>
 					<permission ref="repository.edit" mode="set"></permission>
 				</permissions>
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[2]" mode="intern" target="/repositories?form_action=delete-repository&amp;repositoryid=#{id}">
+			<link id="actions[2]" mode="intern" target="/repositories?form_action=delete-repository&amp;repositoryid=${current.id}">
 				<permissions>
 					<permission ref="repository.delete" mode="set"></permission>
 				</permissions>
@@ -65,7 +65,7 @@
 				<confirmation id="repository.delete.confirm" params="#{name}">Do you really want to delete the repository
 					"#{name}"?</confirmation>
 			</link>
-			<link id="actions[3]" mode="intern" target="/repositories/installation/#{id}?form_action=reload">
+			<link id="actions[3]" mode="intern" target="/repositories/installation/${current.id}?form_action=reload">
 				<condition expression="${current.active}" />
 				<permissions>
 					<permission ref="repository.reload" mode="set"></permission>
@@ -75,7 +75,7 @@
 				<confirmation id="repository.reload.confirm" params="#{name}">Do you really want to reload the repository
 					"#{name}"?</confirmation>
 			</link>
-			<link id="actions[4]" mode="intern" target="/repositories/installation/#{id}#tab_packages" default="true">
+			<link id="actions[4]" mode="intern" target="/repositories/installation/${current.id}#tab_packages" default="true">
 				<condition expression="${current.active}" />
 				<permissions>
 					<permission ref="repository.installation" mode="set"></permission>
@@ -103,18 +103,18 @@
 					<icon type="class"></icon>
 				</field>
 				<field name="uri" type="text">
-					<value>file:///home/mm/gitworkspace/appng-manager-1.13.x/target/</value>
+					<value>file:///home/mm/workspace/appng-manager/target/</value>
 				</field>
 				<field name="active" type="image">
 					<value>false</value>
 					<icon type="class">led_red</icon>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/repositories/update/#tab_update">
+					<link id="actions[1]" mode="intern" target="/repositories/update/1#tab_update">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[2]" mode="intern" target="/repositories?form_action=delete-repository&amp;repositoryid=">
+					<link id="actions[2]" mode="intern" target="/repositories?form_action=delete-repository&amp;repositoryid=1">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="repository.delete.confirm" params="#{name}">Do you really want to delete the repository
@@ -137,30 +137,30 @@
 					<icon type="class"></icon>
 				</field>
 				<field name="uri" type="text">
-					<value>file:///home/mm/gitworkspace/appng-manager-1.13.x/target/</value>
+					<value>file:///home/mm/workspace/appng-manager/target/</value>
 				</field>
 				<field name="active" type="image">
 					<value>true</value>
 					<icon type="class">led_green</icon>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/repositories/update/#tab_update">
+					<link id="actions[1]" mode="intern" target="/repositories/update/3#tab_update">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[2]" mode="intern" target="/repositories?form_action=delete-repository&amp;repositoryid=">
+					<link id="actions[2]" mode="intern" target="/repositories?form_action=delete-repository&amp;repositoryid=3">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="repository.delete.confirm" params="#{name}">Do you really want to delete the repository
 							"Delete me"?</confirmation>
 					</link>
-					<link id="actions[3]" mode="intern" target="/repositories/installation/?form_action=reload">
+					<link id="actions[3]" mode="intern" target="/repositories/installation/3?form_action=reload">
 						<label id="reload">Reload</label>
 						<icon>reload</icon>
 						<confirmation id="repository.reload.confirm" params="#{name}">Do you really want to reload the repository
 							"Delete me"?</confirmation>
 					</link>
-					<link id="actions[4]" mode="intern" target="/repositories/installation/#tab_packages" default="true">
+					<link id="actions[4]" mode="intern" target="/repositories/installation/3#tab_packages" default="true">
 						<label id="installation">Installation</label>
 						<icon>deploy</icon>
 					</link>

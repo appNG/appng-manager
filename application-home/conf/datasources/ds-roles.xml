@@ -37,7 +37,7 @@
 				</link>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/applications/update/${appid}/role/update/#{id}#tab_roles" default="true">
+				<link mode="intern" target="/applications/update/${appid}/role/update/${current.id}#tab_roles" default="true">
 					<label>edit</label>
 					<icon>edit</icon>
 					<permissions>
@@ -45,7 +45,7 @@
 					</permissions>
 				</link>
 				<link mode="intern"
-					target="/applications/update/${appid}&#63;form_action=delete-role&#38;roleid=#{id}#tab_roles">
+					target="/applications/update/${appid}&#63;form_action=delete-role&#38;roleid=${current.id}#tab_roles">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="role.delete.confirm" params="#{name}"/>
@@ -67,9 +67,6 @@
 				<param name="id" />
 			</params>
 			<meta-data binding="role" bindClass="org.appng.application.manager.form.RoleForm">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
 					<label>name</label>
 				</field>
