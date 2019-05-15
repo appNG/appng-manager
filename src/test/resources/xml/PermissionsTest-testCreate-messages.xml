@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <messages xmlns="http://www.appng.org/schema/platform" ref="create-permission">
-    <message ref="create-permission" class="OK">Permission has been created.</message>
+	<message ref="create-permission" class="OK">Permission has been created.</message>
 </messages>

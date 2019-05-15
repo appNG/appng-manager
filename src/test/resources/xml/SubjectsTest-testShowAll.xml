@@ -56,8 +56,7 @@
 				</permissions>
 				<label id="delete">Delete</label>
 				<icon>delete</icon>
-				<confirmation id="subject.delete.confirm" params="#{name}">Do you really want to delete the user "#{name}"?
-				</confirmation>
+				<confirmation id="subject.delete.confirm" params="#{name}">Do you really want to delete the user "#{name}"?</confirmation>
 			</link>
 		</linkpanel>
 	</config>
@@ -104,8 +103,7 @@
 					<link id="actions[2]" mode="intern" target="/users?form_action=delete&amp;userid=1">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
-						<confirmation id="subject.delete.confirm" params="#{name}">Do you really want to delete the user "admin"?
-						</confirmation>
+						<confirmation id="subject.delete.confirm" params="#{name}">Do you really want to delete the user "admin"?</confirmation>
 					</link>
 				</linkpanel>
 			</result>

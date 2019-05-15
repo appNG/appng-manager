@@ -1,68 +1,70 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <action xmlns="http://www.appng.org/schema/platform" id="createGroup" eventId="groupEvent" async="false">
-    <config>
-        <title id="group.create">Create group</title>
-        <permissions>
-            <permission ref="group.create" mode="set"></permission>
-        </permissions>
-        <params>
-            <param name="form_action">createGroup</param>
-        </params>
-        <meta-data binding="group" bindClass="org.appng.application.manager.form.GroupForm">
-            <field name="name" type="text" binding="group.name">
-                <label id="name">Name</label>
-                <validation>
-                    <notNull>
-                        <message ref="group.name" class="ERROR">Field must not be empty</message>
-                    </notNull>
-                    <size min="0" max="64">
-                        <message ref="group.name" class="ERROR">Enter at most 64 characters</message>
-                    </size>
-                    <pattern regexp="([a-zA-Z0-9_\.-]{3,}[ ]*)+([a-zA-Z0-9_\.-][ ]*)+">
-                        <message ref="group.name" class="ERROR">Please enter a valid name, which may only consist of letters, numbers, spaces, dots, underscores and hyphens</message>
-                    </pattern>
-                </validation>
-            </field>
-            <field name="description" type="text" binding="group.description">
-                <label id="description">Description</label>
-                <validation>
-                    <size min="0" max="8192">
-                        <message ref="group.description" class="ERROR">Enter at most 8192 characters</message>
-                    </size>
-                </validation>
-            </field>
-            <field name="roles" type="list:select" binding="roleIds">
-                <label id="roles">Roles</label>
-            </field>
-        </meta-data>
-    </config>
-    <condition expression="${form_action eq 'createGroup'}"/>
-    <messages>
-        <message ref="createGroup" class="OK">Group has been created.</message>
-    </messages>
-    <datasource id="new-group"/>
-    <data>
-        <selection id="roles" type="select:multiple">
-            <title id="roles">Roles</title>
-            <optionGroup id="application">
-                <label id="application">Application</label>
-                <option value="1" name="role1" selected="false"/>
-                <option value="2" name="role2" selected="false"/>
-            </optionGroup>
-        </selection>
-        <result>
-            <field name="name" type="text">
-                <value></value>
-            </field>
-            <field name="description" type="text">
-                <value></value>
-            </field>
-            <field name="roles" type="list:select">
-                <value></value>
-            </field>
-        </result>
-    </data>
-    <bean id="groups">
-        <option name="action" id="create"/>
-    </bean>
+	<config>
+		<title id="group.create">Create group</title>
+		<permissions>
+			<permission ref="group.create" mode="set"></permission>
+		</permissions>
+		<params>
+			<param name="form_action">createGroup</param>
+		</params>
+		<meta-data binding="group" bindClass="org.appng.application.manager.form.GroupForm">
+			<field name="name" type="text" binding="group.name">
+				<label id="name">Name</label>
+				<validation>
+					<notNull>
+						<message ref="group.name" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+					<size min="0" max="64">
+						<message ref="group.name" class="ERROR" code="{validation.string.max}">Enter at most 64 characters</message>
+					</size>
+					<pattern regexp="([a-zA-Z0-9_\.-]{3,}[ ]*)+([a-zA-Z0-9_\.-][ ]*)+">
+						<message ref="group.name" class="ERROR" code="{validation.name}">Please enter a valid name, which may only consist of
+							letters,
+							numbers, spaces, dots, underscores and hyphens</message>
+					</pattern>
+				</validation>
+			</field>
+			<field name="description" type="text" binding="group.description">
+				<label id="description">Description</label>
+				<validation>
+					<size min="0" max="8192">
+						<message ref="group.description" class="ERROR" code="{validation.string.max}">Enter at most 8192 characters</message>
+					</size>
+				</validation>
+			</field>
+			<field name="roles" type="list:select" binding="roleIds">
+				<label id="roles">Roles</label>
+			</field>
+		</meta-data>
+	</config>
+	<condition expression="${form_action eq 'createGroup'}" />
+	<messages>
+		<message ref="createGroup" class="OK">Group has been created.</message>
+	</messages>
+	<datasource id="new-group" />
+	<data>
+		<selection id="roles" type="select:multiple">
+			<title id="roles">Roles</title>
+			<optionGroup id="application">
+				<label id="application">Application</label>
+				<option value="1" name="role1" selected="false" />
+				<option value="2" name="role2" selected="false" />
+			</optionGroup>
+		</selection>
+		<result>
+			<field name="name" type="text">
+				<value></value>
+			</field>
+			<field name="description" type="text">
+				<value></value>
+			</field>
+			<field name="roles" type="list:select">
+				<value></value>
+			</field>
+		</result>
+	</data>
+	<bean id="groups">
+		<option name="action" id="create" />
+	</bean>
 </action>

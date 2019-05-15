@@ -66,7 +66,8 @@
 				</permissions>
 				<label id="delete">Delete</label>
 				<icon>delete</icon>
-				<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "#{name}"?</confirmation>
+				<confirmation id="site.delete.confirm" params="#{name}">Do you
+					really want to delete the site "#{name}"?</confirmation>
 			</link>
 			<link id="actions[3]" mode="intern" target="/sites?form_action=reload&amp;siteid=#{id}">
 				<permissions>

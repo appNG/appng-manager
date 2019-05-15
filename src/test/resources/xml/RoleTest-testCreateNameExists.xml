@@ -1,75 +1,78 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <action xmlns="http://www.appng.org/schema/platform" id="create-role" eventId="roleEvent" async="false">
-    <config>
-        <title id="role.create">Create role</title>
-        <permissions>
-            <permission ref="role.create" mode="set"></permission>
-        </permissions>
-        <params>
-            <param name="form_action">create-role</param>
-            <param name="appid">1</param>
-        </params>
-        <meta-data binding="role" bindClass="org.appng.application.manager.form.RoleForm">
-            <field name="name" type="text" binding="role.name">
-                <label id="name">Name</label>
-                <validation>
-                    <notNull>
-                        <message ref="role.name" class="ERROR">Field must not be empty</message>
-                    </notNull>
-                    <size min="0" max="64">
-                        <message ref="role.name" class="ERROR">Enter at most 64 characters</message>
-                    </size>
-                    <pattern regexp="([a-zA-Z0-9_\.-]{3,}[ ]*)+([a-zA-Z0-9_\.-][ ]*)+">
-                        <message ref="role.name" class="ERROR">Please enter a valid name, which may only consist of letters, numbers, spaces, dots, underscores and hyphens</message>
-                    </pattern>
-                </validation>
-                <messages ref="name">
-                    <message ref="name" class="ERROR">A Role with this name already exists.</message>
-                </messages>
-            </field>
-            <field name="description" type="text" binding="role.description">
-                <label id="description">Description</label>
-                <validation>
-                    <size min="0" max="8192">
-                        <message ref="role.description" class="ERROR">Enter at most 8192 characters</message>
-                    </size>
-                </validation>
-            </field>
-            <field name="permissions" type="list:select" binding="permissionIds">
-                <label id="permissions">Permissions</label>
-            </field>
-        </meta-data>
-    </config>
-    <condition expression="${form_action eq 'create-role' and not empty appid}"/>
-    <datasource id="new-role">
-        <params>
-            <param name="appid">1</param>
-        </params>
-    </datasource>
-    <userdata/>
-    <data>
-        <selection id="permissions" type="select:multiple">
-            <title id="permissions">Permissions</title>
-            <optionGroup id="do">
-                <label id="do">do</label>
-                <option value="2" name="do.that" selected="false"/>
-                <option value="1" name="do.this" selected="false"/>
-            </optionGroup>
-        </selection>
-        <result>
-            <field name="name" type="text">
-                <value></value>
-            </field>
-            <field name="description" type="text">
-                <value></value>
-            </field>
-            <field name="permissions" type="list:select">
-                <value></value>
-            </field>
-        </result>
-    </data>
-    <bean id="roles">
-        <option name="action" id="create"/>
-        <option name="application" id="1"/>
-    </bean>
+	<config>
+		<title id="role.create">Create role</title>
+		<permissions>
+			<permission ref="role.create" mode="set"></permission>
+		</permissions>
+		<params>
+			<param name="form_action">create-role</param>
+			<param name="appid">1</param>
+		</params>
+		<meta-data binding="role" bindClass="org.appng.application.manager.form.RoleForm">
+			<field name="name" type="text" binding="role.name">
+				<label id="name">Name</label>
+				<validation>
+					<notNull>
+						<message ref="role.name" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+					<size min="0" max="64">
+						<message ref="role.name" class="ERROR" code="{validation.string.max}">Enter at most 64 characters</message>
+					</size>
+					<pattern regexp="([a-zA-Z0-9_\.-]{3,}[ ]*)+([a-zA-Z0-9_\.-][ ]*)+">
+						<message ref="role.name" class="ERROR" code="{validation.name}">Please enter a valid name, which may only consist of
+							letters,
+							numbers, spaces, dots, underscores and hyphens</message>
+					</pattern>
+				</validation>
+				<messages ref="name">
+					<message ref="name" class="ERROR">A Role with this name already
+						exists.</message>
+				</messages>
+			</field>
+			<field name="description" type="text" binding="role.description">
+				<label id="description">Description</label>
+				<validation>
+					<size min="0" max="8192">
+						<message ref="role.description" class="ERROR" code="{validation.string.max}">Enter at most 8192 characters</message>
+					</size>
+				</validation>
+			</field>
+			<field name="permissions" type="list:select" binding="permissionIds">
+				<label id="permissions">Permissions</label>
+			</field>
+		</meta-data>
+	</config>
+	<condition expression="${form_action eq 'create-role' and not empty appid}" />
+	<datasource id="new-role">
+		<params>
+			<param name="appid">1</param>
+		</params>
+	</datasource>
+	<userdata />
+	<data>
+		<selection id="permissions" type="select:multiple">
+			<title id="permissions">Permissions</title>
+			<optionGroup id="do">
+				<label id="do">do</label>
+				<option value="2" name="do.that" selected="false" />
+				<option value="1" name="do.this" selected="false" />
+			</optionGroup>
+		</selection>
+		<result>
+			<field name="name" type="text">
+				<value></value>
+			</field>
+			<field name="description" type="text">
+				<value></value>
+			</field>
+			<field name="permissions" type="list:select">
+				<value></value>
+			</field>
+		</result>
+	</data>
+	<bean id="roles">
+		<option name="action" id="create" />
+		<option name="application" id="1" />
+	</bean>
 </action>

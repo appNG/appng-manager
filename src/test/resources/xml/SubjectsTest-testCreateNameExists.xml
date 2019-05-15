@@ -1,643 +1,655 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <action xmlns="http://www.appng.org/schema/platform" id="create" eventId="subjectEvent" async="false">
-    <config>
-        <title id="subject.create">Create user</title>
-        <permissions>
-            <permission ref="subject.create" mode="set"></permission>
-        </permissions>
-        <params>
-            <param name="form_action">create</param>
-        </params>
-        <meta-data binding="subject" bindClass="org.appng.application.manager.form.SubjectForm">
-            <field name="name" type="text" binding="subject.name">
-                <label id="name">Name</label>
-                <validation>
-                    <notNull>
-                        <message ref="subject.name" class="ERROR">Field must not be empty</message>
-                    </notNull>
-                    <size min="0" max="64">
-                        <message ref="subject.name" class="ERROR">Enter at most 64 characters</message>
-                    </size>
-                    <pattern regexp="^([a-zA-Z0-9_\.-])+(@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]){2,})?$">
-                        <message ref="subject.name" class="ERROR">The name must either be a valid e-mail address, or consist of letters, digits, dots, underscores and hyphens</message>
-                    </pattern>
-                </validation>
-                <messages ref="name">
-                    <message ref="name" class="ERROR">Another user with this username already exists.</message>
-                </messages>
-            </field>
-            <field name="realname" type="text" binding="subject.realname">
-                <label id="realname">Real name</label>
-                <validation>
-                    <notNull>
-                        <message ref="subject.realname" class="ERROR">Field must not be empty</message>
-                    </notNull>
-                    <size min="0" max="64">
-                        <message ref="subject.realname" class="ERROR">Enter at most 64 characters</message>
-                    </size>
-                </validation>
-            </field>
-            <field name="email" type="text" binding="subject.email">
-                <label id="email">E-mail</label>
-                <validation>
-                    <pattern regexp="^([a-zA-Z0-9_\.-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]){2,}$">
-                        <message ref="subject.email" class="ERROR">Please enter a valid e-mail address</message>
-                    </pattern>
-                </validation>
-            </field>
-            <field name="description" type="longtext" binding="subject.description">
-                <label id="description">Description</label>
-                <validation>
-                    <size min="0" max="8192">
-                        <message ref="subject.description" class="ERROR">Enter at most 8192 characters</message>
-                    </size>
-                </validation>
-            </field>
-            <field name="userType" type="list:select" binding="subject.userType">
-                <label id="type">Type</label>
-            </field>
-            <field name="language" type="list:select" binding="subject.language">
-                <label id="language">Language</label>
-                <validation>
-                    <notNull>
-                        <message ref="subject.language" class="ERROR">Field must not be empty</message>
-                    </notNull>
-                    <size min="2" max="3">
-                        <message ref="subject.language" class="ERROR">Enter between 2 and 3 characters</message>
-                    </size>
-                </validation>
-            </field>
-            <field name="timeZone" type="list:select" binding="subject.timeZone">
-                <label id="timezone">Timezone</label>
-            </field>
-            <field name="password" type="password" binding="password">
-                <label id="password">Password</label>
-            </field>
-            <field name="passwordConfirmation" type="password" binding="passwordConfirmation">
-                <label id="password.confirmation">Password confirmation</label>
-            </field>
-            <field name="groups" type="list:checkbox" binding="groupIds">
-                <label id="groups">Groups</label>
-            </field>
-        </meta-data>
-    </config>
-    <condition expression="${form_action eq 'create'}"/>
-    <messages>
-        <message ref="create" class="ERROR">Failed to create the user.</message>
-    </messages>
-    <datasource id="new-user"/>
-    <userdata/>
-    <data>
-        <selection id="groups">
-            <title id="groups">Groups</title>
-            <option value="1" name="admins" selected="false"/>
-            <option value="2" name="users" selected="false"/>
-        </selection>
-        <selection id="userType">
-            <title id="type">Type</title>
-            <option value="LOCAL_USER" name="Local User" selected="true"/>
-            <option value="GLOBAL_USER" name="LDAP User" selected="false"/>
-            <option value="GLOBAL_GROUP" name="LDAP Group" selected="false"/>
-        </selection>
-        <selection id="language">
-            <title id="language">Language</title>
-        </selection>
-        <selection id="timeZone" type="select">
-            <title id="timezone">Timezone</title>
-            <optionGroup>
-                <label id="Africa">Africa</label>
-                <option value="Africa/Abidjan" name="Abidjan (GMT+00:00)" selected="false"/>
-                <option value="Africa/Accra" name="Accra (GMT+00:00)" selected="false"/>
-                <option value="Africa/Addis_Ababa" name="Addis Ababa (GMT+03:00)" selected="false"/>
-                <option value="Africa/Algiers" name="Algiers (GMT+01:00)" selected="false"/>
-                <option value="Africa/Asmara" name="Asmara (GMT+03:00)" selected="false"/>
-                <option value="Africa/Asmera" name="Asmara (GMT+03:00)" selected="false"/>
-                <option value="Africa/Bamako" name="Bamako (GMT+00:00)" selected="false"/>
-                <option value="Africa/Bangui" name="Bangui (GMT+01:00)" selected="false"/>
-                <option value="Africa/Banjul" name="Banjul (GMT+00:00)" selected="false"/>
-                <option value="Africa/Bissau" name="Bissau (GMT+00:00)" selected="false"/>
-                <option value="Africa/Blantyre" name="Blantyre (GMT+02:00)" selected="false"/>
-                <option value="Africa/Brazzaville" name="Brazzaville (GMT+01:00)" selected="false"/>
-                <option value="Africa/Bujumbura" name="Bujumbura (GMT+02:00)" selected="false"/>
-                <option value="Africa/Cairo" name="Cairo (GMT+02:00)" selected="false"/>
-                <option value="Africa/Casablanca" name="Casablanca (GMT+00:00)" selected="false"/>
-                <option value="Africa/Ceuta" name="Ceuta (GMT+01:00)" selected="false"/>
-                <option value="Africa/Conakry" name="Conakry (GMT+00:00)" selected="false"/>
-                <option value="Africa/Dakar" name="Dakar (GMT+00:00)" selected="false"/>
-                <option value="Africa/Dar_es_Salaam" name="Dar es Salaam (GMT+03:00)" selected="false"/>
-                <option value="Africa/Djibouti" name="Djibouti (GMT+03:00)" selected="false"/>
-                <option value="Africa/Douala" name="Douala (GMT+01:00)" selected="false"/>
-                <option value="Africa/El_Aaiun" name="El Aaiun (GMT+00:00)" selected="false"/>
-                <option value="Africa/Freetown" name="Freetown (GMT+00:00)" selected="false"/>
-                <option value="Africa/Gaborone" name="Gaborone (GMT+02:00)" selected="false"/>
-                <option value="Africa/Harare" name="Harare (GMT+02:00)" selected="false"/>
-                <option value="Africa/Johannesburg" name="Johannesburg (GMT+02:00)" selected="false"/>
-                <option value="Africa/Juba" name="Juba (GMT+03:00)" selected="false"/>
-                <option value="Africa/Kampala" name="Kampala (GMT+03:00)" selected="false"/>
-                <option value="Africa/Khartoum" name="Khartoum (GMT+03:00)" selected="false"/>
-                <option value="Africa/Kigali" name="Kigali (GMT+02:00)" selected="false"/>
-                <option value="Africa/Kinshasa" name="Kinshasa (GMT+01:00)" selected="false"/>
-                <option value="Africa/Lagos" name="Lagos (GMT+01:00)" selected="false"/>
-                <option value="Africa/Libreville" name="Libreville (GMT+01:00)" selected="false"/>
-                <option value="Africa/Lome" name="Lome (GMT+00:00)" selected="false"/>
-                <option value="Africa/Luanda" name="Luanda (GMT+01:00)" selected="false"/>
-                <option value="Africa/Lubumbashi" name="Lubumbashi (GMT+02:00)" selected="false"/>
-                <option value="Africa/Lusaka" name="Lusaka (GMT+02:00)" selected="false"/>
-                <option value="Africa/Malabo" name="Malabo (GMT+01:00)" selected="false"/>
-                <option value="Africa/Maputo" name="Maputo (GMT+02:00)" selected="false"/>
-                <option value="Africa/Maseru" name="Maseru (GMT+02:00)" selected="false"/>
-                <option value="Africa/Mbabane" name="Mbabane (GMT+02:00)" selected="false"/>
-                <option value="Africa/Mogadishu" name="Mogadishu (GMT+03:00)" selected="false"/>
-                <option value="Africa/Monrovia" name="Monrovia (GMT+00:00)" selected="false"/>
-                <option value="Africa/Nairobi" name="Nairobi (GMT+03:00)" selected="false"/>
-                <option value="Africa/Ndjamena" name="Ndjamena (GMT+01:00)" selected="false"/>
-                <option value="Africa/Niamey" name="Niamey (GMT+01:00)" selected="false"/>
-                <option value="Africa/Nouakchott" name="Nouakchott (GMT+00:00)" selected="false"/>
-                <option value="Africa/Ouagadougou" name="Ouagadougou (GMT+00:00)" selected="false"/>
-                <option value="Africa/Porto-Novo" name="Porto-Novo (GMT+01:00)" selected="false"/>
-                <option value="Africa/Sao_Tome" name="São Tomé (GMT+00:00)" selected="false"/>
-                <option value="Africa/Timbuktu" name="Timbuktu (GMT+00:00)" selected="false"/>
-                <option value="Africa/Tripoli" name="Tripoli (GMT+02:00)" selected="false"/>
-                <option value="Africa/Tunis" name="Tunis (GMT+01:00)" selected="false"/>
-                <option value="Africa/Windhoek" name="Windhoek (GMT+01:00)" selected="false"/>
-            </optionGroup>
-            <optionGroup>
-                <label id="America">America</label>
-                <option value="America/Adak" name="Adak (GMT-10:00)" selected="false"/>
-                <option value="America/Anchorage" name="Anchorage (GMT-9:00)" selected="false"/>
-                <option value="America/Anguilla" name="Anguilla (GMT-4:00)" selected="false"/>
-                <option value="America/Antigua" name="Antigua (GMT-4:00)" selected="false"/>
-                <option value="America/Araguaina" name="Araguaina (GMT-3:00)" selected="false"/>
-                <option value="America/Aruba" name="Aruba (GMT-4:00)" selected="false"/>
-                <option value="America/Asuncion" name="Asunción (GMT-4:00)" selected="false"/>
-                <option value="America/Atikokan" name="Atikokan (GMT-5:00)" selected="false"/>
-                <option value="America/Coral_Harbour" name="Atikokan (GMT-5:00)" selected="false"/>
-                <option value="America/Atka" name="Atka (GMT-10:00)" selected="false"/>
-                <option value="America/Bahia" name="Bahia (GMT-3:00)" selected="false"/>
-                <option value="America/Bahia_Banderas" name="Bahia Banderas (GMT-6:00)" selected="false"/>
-                <option value="America/Barbados" name="Barbados (GMT-4:00)" selected="false"/>
-                <option value="America/Belem" name="Belem (GMT-3:00)" selected="false"/>
-                <option value="America/Belize" name="Belize (GMT-6:00)" selected="false"/>
-                <option value="America/North_Dakota/Beulah" name="Beulah, North Dakota (GMT-6:00)" selected="false"/>
-                <option value="America/Blanc-Sablon" name="Blanc-Sablon (GMT-4:00)" selected="false"/>
-                <option value="America/Boa_Vista" name="Boa Vista (GMT-4:00)" selected="false"/>
-                <option value="America/Bogota" name="Bogota (GMT-5:00)" selected="false"/>
-                <option value="America/Boise" name="Boise (GMT-7:00)" selected="false"/>
-                <option value="America/Argentina/Buenos_Aires" name="Buenos Aires (GMT-3:00)" selected="false"/>
-                <option value="America/Buenos_Aires" name="Buenos Aires (GMT-3:00)" selected="false"/>
-                <option value="America/Cambridge_Bay" name="Cambridge Bay (GMT-7:00)" selected="false"/>
-                <option value="America/Campo_Grande" name="Campo Grande (GMT-4:00)" selected="false"/>
-                <option value="America/Cancun" name="Cancun (GMT-5:00)" selected="false"/>
-                <option value="America/Caracas" name="Caracas (GMT-4:30)" selected="false"/>
-                <option value="America/Argentina/Catamarca" name="Catamarca (GMT-3:00)" selected="false"/>
-                <option value="America/Catamarca" name="Catamarca (GMT-3:00)" selected="false"/>
-                <option value="America/Cayenne" name="Cayenne (GMT-3:00)" selected="false"/>
-                <option value="America/Cayman" name="Cayman (GMT-5:00)" selected="false"/>
-                <option value="America/North_Dakota/Center" name="Center, North Dakota (GMT-6:00)" selected="false"/>
-                <option value="America/Chicago" name="Chicago (GMT-6:00)" selected="false"/>
-                <option value="America/Chihuahua" name="Chihuahua (GMT-7:00)" selected="false"/>
-                <option value="America/Argentina/ComodRivadavia" name="ComodRivadavia (GMT-3:00)" selected="false"/>
-                <option value="America/Argentina/Cordoba" name="Cordoba (GMT-3:00)" selected="false"/>
-                <option value="America/Cordoba" name="Cordoba (GMT-3:00)" selected="false"/>
-                <option value="America/Costa_Rica" name="Costa Rica (GMT-6:00)" selected="false"/>
-                <option value="America/Creston" name="Creston (GMT-7:00)" selected="false"/>
-                <option value="America/Cuiaba" name="Cuiaba (GMT-4:00)" selected="false"/>
-                <option value="America/Curacao" name="Curaçao (GMT-4:00)" selected="false"/>
-                <option value="America/Danmarkshavn" name="Danmarkshavn (GMT+00:00)" selected="false"/>
-                <option value="America/Dawson" name="Dawson (GMT-8:00)" selected="false"/>
-                <option value="America/Dawson_Creek" name="Dawson Creek (GMT-7:00)" selected="false"/>
-                <option value="America/Denver" name="Denver (GMT-7:00)" selected="false"/>
-                <option value="America/Detroit" name="Detroit (GMT-5:00)" selected="false"/>
-                <option value="America/Dominica" name="Dominica (GMT-4:00)" selected="false"/>
-                <option value="America/Edmonton" name="Edmonton (GMT-7:00)" selected="false"/>
-                <option value="America/Eirunepe" name="Eirunepe (GMT-5:00)" selected="false"/>
-                <option value="America/El_Salvador" name="El Salvador (GMT-6:00)" selected="false"/>
-                <option value="America/Ensenada" name="Ensenada (GMT-8:00)" selected="false"/>
-                <option value="America/Fort_Wayne" name="Fort Wayne (GMT-5:00)" selected="false"/>
-                <option value="America/Fortaleza" name="Fortaleza (GMT-3:00)" selected="false"/>
-                <option value="America/Glace_Bay" name="Glace Bay (GMT-4:00)" selected="false"/>
-                <option value="America/Goose_Bay" name="Goose Bay (GMT-4:00)" selected="false"/>
-                <option value="America/Grand_Turk" name="Grand Turk (GMT-4:00)" selected="false"/>
-                <option value="America/Grenada" name="Grenada (GMT-4:00)" selected="false"/>
-                <option value="America/Guadeloupe" name="Guadeloupe (GMT-4:00)" selected="false"/>
-                <option value="America/Guatemala" name="Guatemala (GMT-6:00)" selected="false"/>
-                <option value="America/Guayaquil" name="Guayaquil (GMT-5:00)" selected="false"/>
-                <option value="America/Guyana" name="Guyana (GMT-4:00)" selected="false"/>
-                <option value="America/Halifax" name="Halifax (GMT-4:00)" selected="false"/>
-                <option value="America/Havana" name="Havana (GMT-5:00)" selected="false"/>
-                <option value="America/Hermosillo" name="Hermosillo (GMT-7:00)" selected="false"/>
-                <option value="America/Indiana/Indianapolis" name="Indianapolis (GMT-5:00)" selected="false"/>
-                <option value="America/Indianapolis" name="Indianapolis (GMT-5:00)" selected="false"/>
-                <option value="America/Inuvik" name="Inuvik (GMT-7:00)" selected="false"/>
-                <option value="America/Iqaluit" name="Iqaluit (GMT-5:00)" selected="false"/>
-                <option value="America/Scoresbysund" name="Ittoqqortoormiit (GMT-1:00)" selected="false"/>
-                <option value="America/Jamaica" name="Jamaica (GMT-5:00)" selected="false"/>
-                <option value="America/Argentina/Jujuy" name="Jujuy (GMT-3:00)" selected="false"/>
-                <option value="America/Jujuy" name="Jujuy (GMT-3:00)" selected="false"/>
-                <option value="America/Juneau" name="Juneau (GMT-9:00)" selected="false"/>
-                <option value="America/Knox_IN" name="Knox IN (GMT-6:00)" selected="false"/>
-                <option value="America/Indiana/Knox" name="Knox, Indiana (GMT-6:00)" selected="false"/>
-                <option value="America/Kralendijk" name="Kralendijk (GMT-4:00)" selected="false"/>
-                <option value="America/La_Paz" name="La Paz (GMT-4:00)" selected="false"/>
-                <option value="America/Argentina/La_Rioja" name="La Rioja (GMT-3:00)" selected="false"/>
-                <option value="America/Lima" name="Lima (GMT-5:00)" selected="false"/>
-                <option value="America/Los_Angeles" name="Los Angeles (GMT-8:00)" selected="false"/>
-                <option value="America/Kentucky/Louisville" name="Louisville (GMT-5:00)" selected="false"/>
-                <option value="America/Louisville" name="Louisville (GMT-5:00)" selected="false"/>
-                <option value="America/Lower_Princes" name="Lower Princes Quarter (GMT-4:00)" selected="false"/>
-                <option value="America/Maceio" name="Maceio (GMT-3:00)" selected="false"/>
-                <option value="America/Managua" name="Managua (GMT-6:00)" selected="false"/>
-                <option value="America/Manaus" name="Manaus (GMT-4:00)" selected="false"/>
-                <option value="America/Indiana/Marengo" name="Marengo, Indiana (GMT-5:00)" selected="false"/>
-                <option value="America/Marigot" name="Marigot (GMT-4:00)" selected="false"/>
-                <option value="America/Martinique" name="Martinique (GMT-4:00)" selected="false"/>
-                <option value="America/Matamoros" name="Matamoros (GMT-6:00)" selected="false"/>
-                <option value="America/Mazatlan" name="Mazatlan (GMT-7:00)" selected="false"/>
-                <option value="America/Argentina/Mendoza" name="Mendoza (GMT-3:00)" selected="false"/>
-                <option value="America/Mendoza" name="Mendoza (GMT-3:00)" selected="false"/>
-                <option value="America/Menominee" name="Menominee (GMT-6:00)" selected="false"/>
-                <option value="America/Merida" name="Merida (GMT-6:00)" selected="false"/>
-                <option value="America/Metlakatla" name="Metlakatla (GMT-8:00)" selected="false"/>
-                <option value="America/Mexico_City" name="Mexico City (GMT-6:00)" selected="false"/>
-                <option value="America/Miquelon" name="Miquelon (GMT-3:00)" selected="false"/>
-                <option value="America/Moncton" name="Moncton (GMT-4:00)" selected="false"/>
-                <option value="America/Monterrey" name="Monterrey (GMT-6:00)" selected="false"/>
-                <option value="America/Montevideo" name="Montevideo (GMT-3:00)" selected="false"/>
-                <option value="America/Kentucky/Monticello" name="Monticello, Kentucky (GMT-5:00)" selected="false"/>
-                <option value="America/Montreal" name="Montreal (GMT-5:00)" selected="false"/>
-                <option value="America/Montserrat" name="Montserrat (GMT-4:00)" selected="false"/>
-                <option value="America/Nassau" name="Nassau (GMT-5:00)" selected="false"/>
-                <option value="America/North_Dakota/New_Salem" name="New Salem, North Dakota (GMT-6:00)" selected="false"/>
-                <option value="America/New_York" name="New York (GMT-5:00)" selected="false"/>
-                <option value="America/Nipigon" name="Nipigon (GMT-5:00)" selected="false"/>
-                <option value="America/Nome" name="Nome (GMT-9:00)" selected="false"/>
-                <option value="America/Noronha" name="Noronha (GMT-2:00)" selected="false"/>
-                <option value="America/Godthab" name="Nuuk (GMT-3:00)" selected="false"/>
-                <option value="America/Ojinaga" name="Ojinaga (GMT-7:00)" selected="false"/>
-                <option value="America/Panama" name="Panama (GMT-5:00)" selected="false"/>
-                <option value="America/Pangnirtung" name="Pangnirtung (GMT-5:00)" selected="false"/>
-                <option value="America/Paramaribo" name="Paramaribo (GMT-3:00)" selected="false"/>
-                <option value="America/Indiana/Petersburg" name="Petersburg, Indiana (GMT-5:00)" selected="false"/>
-                <option value="America/Phoenix" name="Phoenix (GMT-7:00)" selected="false"/>
-                <option value="America/Port_of_Spain" name="Port of Spain (GMT-4:00)" selected="false"/>
-                <option value="America/Port-au-Prince" name="Port-au-Prince (GMT-5:00)" selected="false"/>
-                <option value="America/Porto_Acre" name="Porto Acre (GMT-5:00)" selected="false"/>
-                <option value="America/Porto_Velho" name="Porto Velho (GMT-4:00)" selected="false"/>
-                <option value="America/Puerto_Rico" name="Puerto Rico (GMT-4:00)" selected="false"/>
-                <option value="America/Rainy_River" name="Rainy River (GMT-6:00)" selected="false"/>
-                <option value="America/Rankin_Inlet" name="Rankin Inlet (GMT-6:00)" selected="false"/>
-                <option value="America/Recife" name="Recife (GMT-3:00)" selected="false"/>
-                <option value="America/Regina" name="Regina (GMT-6:00)" selected="false"/>
-                <option value="America/Resolute" name="Resolute (GMT-6:00)" selected="false"/>
-                <option value="America/Rio_Branco" name="Rio Branco (GMT-5:00)" selected="false"/>
-                <option value="America/Argentina/Rio_Gallegos" name="Rio Gallegos (GMT-3:00)" selected="false"/>
-                <option value="America/Rosario" name="Rosario (GMT-3:00)" selected="false"/>
-                <option value="America/St_Barthelemy" name="Saint Barthélemy (GMT-4:00)" selected="false"/>
-                <option value="America/Argentina/Salta" name="Salta (GMT-3:00)" selected="false"/>
-                <option value="America/Argentina/San_Juan" name="San Juan (GMT-3:00)" selected="false"/>
-                <option value="America/Argentina/San_Luis" name="San Luis (GMT-3:00)" selected="false"/>
-                <option value="America/Santa_Isabel" name="Santa Isabel (GMT-8:00)" selected="false"/>
-                <option value="America/Santarem" name="Santarem (GMT-3:00)" selected="false"/>
-                <option value="America/Santiago" name="Santiago (GMT-3:00)" selected="false"/>
-                <option value="America/Santo_Domingo" name="Santo Domingo (GMT-4:00)" selected="false"/>
-                <option value="America/Sao_Paulo" name="Sao Paulo (GMT-3:00)" selected="false"/>
-                <option value="America/Shiprock" name="Shiprock (GMT-7:00)" selected="false"/>
-                <option value="America/Sitka" name="Sitka (GMT-9:00)" selected="false"/>
-                <option value="America/St_Johns" name="St. John’s (GMT-3:30)" selected="false"/>
-                <option value="America/St_Kitts" name="St. Kitts (GMT-4:00)" selected="false"/>
-                <option value="America/St_Lucia" name="St. Lucia (GMT-4:00)" selected="false"/>
-                <option value="America/St_Thomas" name="St. Thomas (GMT-4:00)" selected="false"/>
-                <option value="America/St_Vincent" name="St. Vincent (GMT-4:00)" selected="false"/>
-                <option value="America/Swift_Current" name="Swift Current (GMT-6:00)" selected="false"/>
-                <option value="America/Tegucigalpa" name="Tegucigalpa (GMT-6:00)" selected="false"/>
-                <option value="America/Indiana/Tell_City" name="Tell City, Indiana (GMT-6:00)" selected="false"/>
-                <option value="America/Thule" name="Thule (GMT-4:00)" selected="false"/>
-                <option value="America/Thunder_Bay" name="Thunder Bay (GMT-5:00)" selected="false"/>
-                <option value="America/Tijuana" name="Tijuana (GMT-8:00)" selected="false"/>
-                <option value="America/Toronto" name="Toronto (GMT-5:00)" selected="false"/>
-                <option value="America/Tortola" name="Tortola (GMT-4:00)" selected="false"/>
-                <option value="America/Argentina/Tucuman" name="Tucuman (GMT-3:00)" selected="false"/>
-                <option value="America/Argentina/Ushuaia" name="Ushuaia (GMT-3:00)" selected="false"/>
-                <option value="America/Vancouver" name="Vancouver (GMT-8:00)" selected="false"/>
-                <option value="America/Indiana/Vevay" name="Vevay, Indiana (GMT-5:00)" selected="false"/>
-                <option value="America/Indiana/Vincennes" name="Vincennes, Indiana (GMT-5:00)" selected="false"/>
-                <option value="America/Virgin" name="Virgin (GMT-4:00)" selected="false"/>
-                <option value="America/Whitehorse" name="Whitehorse (GMT-8:00)" selected="false"/>
-                <option value="America/Indiana/Winamac" name="Winamac, Indiana (GMT-5:00)" selected="false"/>
-                <option value="America/Winnipeg" name="Winnipeg (GMT-6:00)" selected="false"/>
-                <option value="America/Yakutat" name="Yakutat (GMT-9:00)" selected="false"/>
-                <option value="America/Yellowknife" name="Yellowknife (GMT-7:00)" selected="false"/>
-                <option value="America/Fort_Nelson" name="timezone.America.Fort_Nelson (GMT-7:00)" selected="false"/>
-            </optionGroup>
-            <optionGroup>
-                <label id="Antarctica">Antarctica</label>
-                <option value="Antarctica/Casey" name="Casey (GMT+08:00)" selected="false"/>
-                <option value="Antarctica/Davis" name="Davis (GMT+07:00)" selected="false"/>
-                <option value="Antarctica/DumontDUrville" name="Dumont d’Urville (GMT+10:00)" selected="false"/>
-                <option value="Antarctica/Macquarie" name="Macquarie (GMT+11:00)" selected="false"/>
-                <option value="Antarctica/Mawson" name="Mawson (GMT+05:00)" selected="false"/>
-                <option value="Antarctica/McMurdo" name="McMurdo (GMT+12:00)" selected="false"/>
-                <option value="Antarctica/Palmer" name="Palmer (GMT-3:00)" selected="false"/>
-                <option value="Antarctica/Rothera" name="Rothera (GMT-3:00)" selected="false"/>
-                <option value="Antarctica/South_Pole" name="South Pole (GMT+12:00)" selected="false"/>
-                <option value="Antarctica/Syowa" name="Syowa (GMT+03:00)" selected="false"/>
-                <option value="Antarctica/Troll" name="Troll (GMT+00:00)" selected="false"/>
-                <option value="Antarctica/Vostok" name="Vostok (GMT+06:00)" selected="false"/>
-            </optionGroup>
-            <optionGroup>
-                <label id="Asia">Asia</label>
-                <option value="Asia/Aden" name="Aden (GMT+03:00)" selected="false"/>
-                <option value="Asia/Almaty" name="Almaty (GMT+06:00)" selected="false"/>
-                <option value="Asia/Amman" name="Amman (GMT+02:00)" selected="false"/>
-                <option value="Asia/Anadyr" name="Anadyr (GMT+12:00)" selected="false"/>
-                <option value="Asia/Aqtau" name="Aqtau (GMT+05:00)" selected="false"/>
-                <option value="Asia/Aqtobe" name="Aqtobe (GMT+05:00)" selected="false"/>
-                <option value="Asia/Ashgabat" name="Ashgabat (GMT+05:00)" selected="false"/>
-                <option value="Asia/Ashkhabad" name="Ashkhabad (GMT+05:00)" selected="false"/>
-                <option value="Asia/Baghdad" name="Baghdad (GMT+03:00)" selected="false"/>
-                <option value="Asia/Bahrain" name="Bahrain (GMT+03:00)" selected="false"/>
-                <option value="Asia/Baku" name="Baku (GMT+04:00)" selected="false"/>
-                <option value="Asia/Bangkok" name="Bangkok (GMT+07:00)" selected="false"/>
-                <option value="Asia/Beirut" name="Beirut (GMT+02:00)" selected="false"/>
-                <option value="Asia/Bishkek" name="Bishkek (GMT+06:00)" selected="false"/>
-                <option value="Asia/Brunei" name="Brunei (GMT+08:00)" selected="false"/>
-                <option value="Asia/Chita" name="Chita (GMT+08:00)" selected="false"/>
-                <option value="Asia/Choibalsan" name="Choibalsan (GMT+08:00)" selected="false"/>
-                <option value="Asia/Chongqing" name="Chongqing (GMT+08:00)" selected="false"/>
-                <option value="Asia/Chungking" name="Chungking (GMT+08:00)" selected="false"/>
-                <option value="Asia/Colombo" name="Colombo (GMT+05:30)" selected="false"/>
-                <option value="Asia/Dacca" name="Dacca (GMT+06:00)" selected="false"/>
-                <option value="Asia/Damascus" name="Damascus (GMT+02:00)" selected="false"/>
-                <option value="Asia/Dhaka" name="Dhaka (GMT+06:00)" selected="false"/>
-                <option value="Asia/Dili" name="Dili (GMT+09:00)" selected="false"/>
-                <option value="Asia/Dubai" name="Dubai (GMT+04:00)" selected="false"/>
-                <option value="Asia/Dushanbe" name="Dushanbe (GMT+05:00)" selected="false"/>
-                <option value="Asia/Gaza" name="Gaza (GMT+02:00)" selected="false"/>
-                <option value="Asia/Harbin" name="Harbin (GMT+08:00)" selected="false"/>
-                <option value="Asia/Hebron" name="Hebron (GMT+02:00)" selected="false"/>
-                <option value="Asia/Ho_Chi_Minh" name="Ho Chi Minh (GMT+07:00)" selected="false"/>
-                <option value="Asia/Saigon" name="Ho Chi Minh City (GMT+07:00)" selected="false"/>
-                <option value="Asia/Hong_Kong" name="Hong Kong (GMT+08:00)" selected="false"/>
-                <option value="Asia/Hovd" name="Hovd (GMT+07:00)" selected="false"/>
-                <option value="Asia/Irkutsk" name="Irkutsk (GMT+08:00)" selected="false"/>
-                <option value="Asia/Istanbul" name="Istanbul (GMT+02:00)" selected="false"/>
-                <option value="Asia/Jakarta" name="Jakarta (GMT+07:00)" selected="false"/>
-                <option value="Asia/Jayapura" name="Jayapura (GMT+09:00)" selected="false"/>
-                <option value="Asia/Jerusalem" name="Jerusalem (GMT+02:00)" selected="false"/>
-                <option value="Asia/Kabul" name="Kabul (GMT+04:30)" selected="false"/>
-                <option value="Asia/Kamchatka" name="Kamchatka (GMT+12:00)" selected="false"/>
-                <option value="Asia/Karachi" name="Karachi (GMT+05:00)" selected="false"/>
-                <option value="Asia/Kashgar" name="Kashgar (GMT+06:00)" selected="false"/>
-                <option value="Asia/Kathmandu" name="Kathmandu (GMT+05:45)" selected="false"/>
-                <option value="Asia/Katmandu" name="Kathmandu (GMT+05:45)" selected="false"/>
-                <option value="Asia/Khandyga" name="Khandyga (GMT+09:00)" selected="false"/>
-                <option value="Asia/Calcutta" name="Kolkata (GMT+05:30)" selected="false"/>
-                <option value="Asia/Kolkata" name="Kolkata (GMT+05:30)" selected="false"/>
-                <option value="Asia/Krasnoyarsk" name="Krasnoyarsk (GMT+07:00)" selected="false"/>
-                <option value="Asia/Kuala_Lumpur" name="Kuala Lumpur (GMT+08:00)" selected="false"/>
-                <option value="Asia/Kuching" name="Kuching (GMT+08:00)" selected="false"/>
-                <option value="Asia/Kuwait" name="Kuwait (GMT+03:00)" selected="false"/>
-                <option value="Asia/Macao" name="Macao (GMT+08:00)" selected="false"/>
-                <option value="Asia/Macau" name="Macau (GMT+08:00)" selected="false"/>
-                <option value="Asia/Magadan" name="Magadan (GMT+10:00)" selected="false"/>
-                <option value="Asia/Makassar" name="Makassar (GMT+08:00)" selected="false"/>
-                <option value="Asia/Manila" name="Manila (GMT+08:00)" selected="false"/>
-                <option value="Asia/Muscat" name="Muscat (GMT+04:00)" selected="false"/>
-                <option value="Asia/Nicosia" name="Nicosia (GMT+02:00)" selected="false"/>
-                <option value="Asia/Novokuznetsk" name="Novokuznetsk (GMT+07:00)" selected="false"/>
-                <option value="Asia/Novosibirsk" name="Novosibirsk (GMT+06:00)" selected="false"/>
-                <option value="Asia/Omsk" name="Omsk (GMT+06:00)" selected="false"/>
-                <option value="Asia/Oral" name="Oral (GMT+05:00)" selected="false"/>
-                <option value="Asia/Phnom_Penh" name="Phnom Penh (GMT+07:00)" selected="false"/>
-                <option value="Asia/Pontianak" name="Pontianak (GMT+07:00)" selected="false"/>
-                <option value="Asia/Pyongyang" name="Pyongyang (GMT+08:30)" selected="false"/>
-                <option value="Asia/Qatar" name="Qatar (GMT+03:00)" selected="false"/>
-                <option value="Asia/Qyzylorda" name="Qyzylorda (GMT+06:00)" selected="false"/>
-                <option value="Asia/Rangoon" name="Rangoon (GMT+06:30)" selected="false"/>
-                <option value="Asia/Riyadh" name="Riyadh (GMT+03:00)" selected="false"/>
-                <option value="Asia/Sakhalin" name="Sakhalin (GMT+10:00)" selected="false"/>
-                <option value="Asia/Samarkand" name="Samarkand (GMT+05:00)" selected="false"/>
-                <option value="Asia/Seoul" name="Seoul (GMT+09:00)" selected="false"/>
-                <option value="Asia/Shanghai" name="Shanghai (GMT+08:00)" selected="false"/>
-                <option value="Asia/Singapore" name="Singapore (GMT+08:00)" selected="false"/>
-                <option value="Asia/Srednekolymsk" name="Srednekolymsk (GMT+11:00)" selected="false"/>
-                <option value="Asia/Taipei" name="Taipei (GMT+08:00)" selected="false"/>
-                <option value="Asia/Tashkent" name="Tashkent (GMT+05:00)" selected="false"/>
-                <option value="Asia/Tbilisi" name="Tbilisi (GMT+04:00)" selected="false"/>
-                <option value="Asia/Tehran" name="Tehran (GMT+03:30)" selected="false"/>
-                <option value="Asia/Tel_Aviv" name="Tel Aviv (GMT+02:00)" selected="false"/>
-                <option value="Asia/Thimbu" name="Thimbu (GMT+06:00)" selected="false"/>
-                <option value="Asia/Thimphu" name="Thimphu (GMT+06:00)" selected="false"/>
-                <option value="Asia/Tokyo" name="Tokyo (GMT+09:00)" selected="false"/>
-                <option value="Asia/Ujung_Pandang" name="Ujung Pandang (GMT+08:00)" selected="false"/>
-                <option value="Asia/Ulaanbaatar" name="Ulaanbaatar (GMT+08:00)" selected="false"/>
-                <option value="Asia/Ulan_Bator" name="Ulan Bator (GMT+08:00)" selected="false"/>
-                <option value="Asia/Urumqi" name="Urumqi (GMT+06:00)" selected="false"/>
-                <option value="Asia/Ust-Nera" name="Ust-Nera (GMT+10:00)" selected="false"/>
-                <option value="Asia/Vientiane" name="Vientiane (GMT+07:00)" selected="false"/>
-                <option value="Asia/Vladivostok" name="Vladivostok (GMT+10:00)" selected="false"/>
-                <option value="Asia/Yakutsk" name="Yakutsk (GMT+09:00)" selected="false"/>
-                <option value="Asia/Yekaterinburg" name="Yekaterinburg (GMT+05:00)" selected="false"/>
-                <option value="Asia/Yerevan" name="Yerevan (GMT+04:00)" selected="false"/>
-            </optionGroup>
-            <optionGroup>
-                <label id="Atlantic">Atlantic</label>
-                <option value="Atlantic/Azores" name="Azores (GMT-1:00)" selected="false"/>
-                <option value="Atlantic/Bermuda" name="Bermuda (GMT-4:00)" selected="false"/>
-                <option value="Atlantic/Canary" name="Canary (GMT+00:00)" selected="false"/>
-                <option value="Atlantic/Cape_Verde" name="Cape Verde (GMT-1:00)" selected="false"/>
-                <option value="Atlantic/Faeroe" name="Faroe (GMT+00:00)" selected="false"/>
-                <option value="Atlantic/Faroe" name="Faroe (GMT+00:00)" selected="false"/>
-                <option value="Atlantic/Jan_Mayen" name="Jan Mayen (GMT+01:00)" selected="false"/>
-                <option value="Atlantic/Madeira" name="Madeira (GMT+00:00)" selected="false"/>
-                <option value="Atlantic/Reykjavik" name="Reykjavik (GMT+00:00)" selected="false"/>
-                <option value="Atlantic/South_Georgia" name="South Georgia (GMT-2:00)" selected="false"/>
-                <option value="Atlantic/St_Helena" name="St. Helena (GMT+00:00)" selected="false"/>
-                <option value="Atlantic/Stanley" name="Stanley (GMT-3:00)" selected="false"/>
-            </optionGroup>
-            <optionGroup>
-                <label id="Australia">Australia</label>
-                <option value="Australia/ACT" name="ACT (GMT+10:00)" selected="false"/>
-                <option value="Australia/Adelaide" name="Adelaide (GMT+09:30)" selected="false"/>
-                <option value="Australia/Brisbane" name="Brisbane (GMT+10:00)" selected="false"/>
-                <option value="Australia/Broken_Hill" name="Broken Hill (GMT+09:30)" selected="false"/>
-                <option value="Australia/Canberra" name="Canberra (GMT+10:00)" selected="false"/>
-                <option value="Australia/Currie" name="Currie (GMT+10:00)" selected="false"/>
-                <option value="Australia/Darwin" name="Darwin (GMT+09:30)" selected="false"/>
-                <option value="Australia/Eucla" name="Eucla (GMT+08:45)" selected="false"/>
-                <option value="Australia/Hobart" name="Hobart (GMT+10:00)" selected="false"/>
-                <option value="Australia/LHI" name="LHI (GMT+10:30)" selected="false"/>
-                <option value="Australia/Lindeman" name="Lindeman (GMT+10:00)" selected="false"/>
-                <option value="Australia/Lord_Howe" name="Lord Howe (GMT+10:30)" selected="false"/>
-                <option value="Australia/Melbourne" name="Melbourne (GMT+10:00)" selected="false"/>
-                <option value="Australia/NSW" name="NSW (GMT+10:00)" selected="false"/>
-                <option value="Australia/North" name="North (GMT+09:30)" selected="false"/>
-                <option value="Australia/Perth" name="Perth (GMT+08:00)" selected="false"/>
-                <option value="Australia/Queensland" name="Queensland (GMT+10:00)" selected="false"/>
-                <option value="Australia/South" name="South (GMT+09:30)" selected="false"/>
-                <option value="Australia/Sydney" name="Sydney (GMT+10:00)" selected="false"/>
-                <option value="Australia/Tasmania" name="Tasmania (GMT+10:00)" selected="false"/>
-                <option value="Australia/Victoria" name="Victoria (GMT+10:00)" selected="false"/>
-                <option value="Australia/West" name="West (GMT+08:00)" selected="false"/>
-                <option value="Australia/Yancowinna" name="Yancowinna (GMT+09:30)" selected="false"/>
-            </optionGroup>
-            <optionGroup>
-                <label id="Europe">Europe</label>
-                <option value="Europe/Amsterdam" name="Amsterdam (GMT+01:00)" selected="false"/>
-                <option value="Europe/Andorra" name="Andorra (GMT+01:00)" selected="false"/>
-                <option value="Europe/Athens" name="Athens (GMT+02:00)" selected="false"/>
-                <option value="Europe/Belfast" name="Belfast (GMT+00:00)" selected="false"/>
-                <option value="Europe/Belgrade" name="Belgrade (GMT+01:00)" selected="false"/>
-                <option value="Europe/Berlin" name="Berlin (GMT+01:00)" selected="false"/>
-                <option value="Europe/Bratislava" name="Bratislava (GMT+01:00)" selected="false"/>
-                <option value="Europe/Brussels" name="Brussels (GMT+01:00)" selected="false"/>
-                <option value="Europe/Bucharest" name="Bucharest (GMT+02:00)" selected="false"/>
-                <option value="Europe/Budapest" name="Budapest (GMT+01:00)" selected="false"/>
-                <option value="Europe/Busingen" name="Busingen (GMT+01:00)" selected="false"/>
-                <option value="Europe/Chisinau" name="Chisinau (GMT+02:00)" selected="false"/>
-                <option value="Europe/Copenhagen" name="Copenhagen (GMT+01:00)" selected="false"/>
-                <option value="Europe/Dublin" name="Dublin (GMT+00:00)" selected="false"/>
-                <option value="Europe/Gibraltar" name="Gibraltar (GMT+01:00)" selected="false"/>
-                <option value="Europe/Guernsey" name="Guernsey (GMT+00:00)" selected="false"/>
-                <option value="Europe/Helsinki" name="Helsinki (GMT+02:00)" selected="false"/>
-                <option value="Europe/Isle_of_Man" name="Isle of Man (GMT+00:00)" selected="false"/>
-                <option value="Europe/Istanbul" name="Istanbul (GMT+02:00)" selected="false"/>
-                <option value="Europe/Jersey" name="Jersey (GMT+00:00)" selected="false"/>
-                <option value="Europe/Kaliningrad" name="Kaliningrad (GMT+02:00)" selected="false"/>
-                <option value="Europe/Kiev" name="Kiev (GMT+02:00)" selected="false"/>
-                <option value="Europe/Lisbon" name="Lisbon (GMT+00:00)" selected="false"/>
-                <option value="Europe/Ljubljana" name="Ljubljana (GMT+01:00)" selected="false"/>
-                <option value="Europe/London" name="London (GMT+00:00)" selected="false"/>
-                <option value="Europe/Luxembourg" name="Luxembourg (GMT+01:00)" selected="false"/>
-                <option value="Europe/Madrid" name="Madrid (GMT+01:00)" selected="false"/>
-                <option value="Europe/Malta" name="Malta (GMT+01:00)" selected="false"/>
-                <option value="Europe/Mariehamn" name="Mariehamn (GMT+02:00)" selected="false"/>
-                <option value="Europe/Minsk" name="Minsk (GMT+03:00)" selected="false"/>
-                <option value="Europe/Monaco" name="Monaco (GMT+01:00)" selected="false"/>
-                <option value="Europe/Moscow" name="Moscow (GMT+03:00)" selected="false"/>
-                <option value="Europe/Nicosia" name="Nicosia (GMT+02:00)" selected="false"/>
-                <option value="Europe/Oslo" name="Oslo (GMT+01:00)" selected="false"/>
-                <option value="Europe/Paris" name="Paris (GMT+01:00)" selected="false"/>
-                <option value="Europe/Podgorica" name="Podgorica (GMT+01:00)" selected="false"/>
-                <option value="Europe/Prague" name="Prague (GMT+01:00)" selected="false"/>
-                <option value="Europe/Riga" name="Riga (GMT+02:00)" selected="false"/>
-                <option value="Europe/Rome" name="Rome (GMT+01:00)" selected="false"/>
-                <option value="Europe/Samara" name="Samara (GMT+04:00)" selected="false"/>
-                <option value="Europe/San_Marino" name="San Marino (GMT+01:00)" selected="false"/>
-                <option value="Europe/Sarajevo" name="Sarajevo (GMT+01:00)" selected="false"/>
-                <option value="Europe/Simferopol" name="Simferopol (GMT+03:00)" selected="false"/>
-                <option value="Europe/Skopje" name="Skopje (GMT+01:00)" selected="false"/>
-                <option value="Europe/Sofia" name="Sofia (GMT+02:00)" selected="false"/>
-                <option value="Europe/Stockholm" name="Stockholm (GMT+01:00)" selected="false"/>
-                <option value="Europe/Tallinn" name="Tallinn (GMT+02:00)" selected="false"/>
-                <option value="Europe/Tirane" name="Tirane (GMT+01:00)" selected="false"/>
-                <option value="Europe/Tiraspol" name="Tiraspol (GMT+02:00)" selected="false"/>
-                <option value="Europe/Uzhgorod" name="Uzhgorod (GMT+02:00)" selected="false"/>
-                <option value="Europe/Vaduz" name="Vaduz (GMT+01:00)" selected="false"/>
-                <option value="Europe/Vatican" name="Vatican (GMT+01:00)" selected="false"/>
-                <option value="Europe/Vienna" name="Vienna (GMT+01:00)" selected="false"/>
-                <option value="Europe/Vilnius" name="Vilnius (GMT+02:00)" selected="false"/>
-                <option value="Europe/Volgograd" name="Volgograd (GMT+03:00)" selected="false"/>
-                <option value="Europe/Warsaw" name="Warsaw (GMT+01:00)" selected="false"/>
-                <option value="Europe/Zagreb" name="Zagreb (GMT+01:00)" selected="false"/>
-                <option value="Europe/Zaporozhye" name="Zaporozhye (GMT+02:00)" selected="false"/>
-                <option value="Europe/Zurich" name="Zurich (GMT+01:00)" selected="false"/>
-            </optionGroup>
-            <optionGroup>
-                <label id="Indian">Indian</label>
-                <option value="Indian/Antananarivo" name="Antananarivo (GMT+03:00)" selected="false"/>
-                <option value="Indian/Chagos" name="Chagos (GMT+06:00)" selected="false"/>
-                <option value="Indian/Christmas" name="Christmas (GMT+07:00)" selected="false"/>
-                <option value="Indian/Cocos" name="Cocos (GMT+06:30)" selected="false"/>
-                <option value="Indian/Comoro" name="Comoro (GMT+03:00)" selected="false"/>
-                <option value="Indian/Kerguelen" name="Kerguelen (GMT+05:00)" selected="false"/>
-                <option value="Indian/Mahe" name="Mahe (GMT+04:00)" selected="false"/>
-                <option value="Indian/Maldives" name="Maldives (GMT+05:00)" selected="false"/>
-                <option value="Indian/Mauritius" name="Mauritius (GMT+04:00)" selected="false"/>
-                <option value="Indian/Mayotte" name="Mayotte (GMT+03:00)" selected="false"/>
-                <option value="Indian/Reunion" name="Réunion (GMT+04:00)" selected="false"/>
-            </optionGroup>
-            <optionGroup>
-                <label id="Pacific">Pacific</label>
-                <option value="Pacific/Apia" name="Apia (GMT+13:00)" selected="false"/>
-                <option value="Pacific/Auckland" name="Auckland (GMT+12:00)" selected="false"/>
-                <option value="Pacific/Bougainville" name="Bougainville (GMT+11:00)" selected="false"/>
-                <option value="Pacific/Chatham" name="Chatham (GMT+12:45)" selected="false"/>
-                <option value="Pacific/Chuuk" name="Chuuk (GMT+10:00)" selected="false"/>
-                <option value="Pacific/Truk" name="Chuuk (GMT+10:00)" selected="false"/>
-                <option value="Pacific/Easter" name="Easter (GMT-5:00)" selected="false"/>
-                <option value="Pacific/Efate" name="Efate (GMT+11:00)" selected="false"/>
-                <option value="Pacific/Enderbury" name="Enderbury (GMT+13:00)" selected="false"/>
-                <option value="Pacific/Fakaofo" name="Fakaofo (GMT+13:00)" selected="false"/>
-                <option value="Pacific/Fiji" name="Fiji (GMT+12:00)" selected="false"/>
-                <option value="Pacific/Funafuti" name="Funafuti (GMT+12:00)" selected="false"/>
-                <option value="Pacific/Galapagos" name="Galapagos (GMT-6:00)" selected="false"/>
-                <option value="Pacific/Gambier" name="Gambier (GMT-9:00)" selected="false"/>
-                <option value="Pacific/Guadalcanal" name="Guadalcanal (GMT+11:00)" selected="false"/>
-                <option value="Pacific/Guam" name="Guam (GMT+10:00)" selected="false"/>
-                <option value="Pacific/Honolulu" name="Honolulu (GMT-10:00)" selected="false"/>
-                <option value="Pacific/Johnston" name="Johnston (GMT-10:00)" selected="false"/>
-                <option value="Pacific/Kiritimati" name="Kiritimati (GMT+14:00)" selected="false"/>
-                <option value="Pacific/Kosrae" name="Kosrae (GMT+11:00)" selected="false"/>
-                <option value="Pacific/Kwajalein" name="Kwajalein (GMT+12:00)" selected="false"/>
-                <option value="Pacific/Majuro" name="Majuro (GMT+12:00)" selected="false"/>
-                <option value="Pacific/Marquesas" name="Marquesas (GMT-9:30)" selected="false"/>
-                <option value="Pacific/Midway" name="Midway (GMT-11:00)" selected="false"/>
-                <option value="Pacific/Nauru" name="Nauru (GMT+12:00)" selected="false"/>
-                <option value="Pacific/Niue" name="Niue (GMT-11:00)" selected="false"/>
-                <option value="Pacific/Norfolk" name="Norfolk (GMT+11:00)" selected="false"/>
-                <option value="Pacific/Noumea" name="Noumea (GMT+11:00)" selected="false"/>
-                <option value="Pacific/Pago_Pago" name="Pago Pago (GMT-11:00)" selected="false"/>
-                <option value="Pacific/Palau" name="Palau (GMT+09:00)" selected="false"/>
-                <option value="Pacific/Pitcairn" name="Pitcairn (GMT-8:00)" selected="false"/>
-                <option value="Pacific/Pohnpei" name="Pohnpei (GMT+11:00)" selected="false"/>
-                <option value="Pacific/Ponape" name="Pohnpei (GMT+11:00)" selected="false"/>
-                <option value="Pacific/Port_Moresby" name="Port Moresby (GMT+10:00)" selected="false"/>
-                <option value="Pacific/Rarotonga" name="Rarotonga (GMT-10:00)" selected="false"/>
-                <option value="Pacific/Saipan" name="Saipan (GMT+10:00)" selected="false"/>
-                <option value="Pacific/Samoa" name="Samoa (GMT-11:00)" selected="false"/>
-                <option value="Pacific/Tahiti" name="Tahiti (GMT-10:00)" selected="false"/>
-                <option value="Pacific/Tarawa" name="Tarawa (GMT+12:00)" selected="false"/>
-                <option value="Pacific/Tongatapu" name="Tongatapu (GMT+13:00)" selected="false"/>
-                <option value="Pacific/Wake" name="Wake (GMT+12:00)" selected="false"/>
-                <option value="Pacific/Wallis" name="Wallis (GMT+12:00)" selected="false"/>
-                <option value="Pacific/Yap" name="Yap (GMT+10:00)" selected="false"/>
-            </optionGroup>
-        </selection>
-        <result>
-            <field name="name" type="text">
-                <value></value>
-            </field>
-            <field name="realname" type="text">
-                <value></value>
-            </field>
-            <field name="email" type="text">
-                <value></value>
-            </field>
-            <field name="description" type="longtext">
-                <value></value>
-            </field>
-            <field name="userType" type="list:select">
-                <value>LOCAL_USER</value>
-            </field>
-            <field name="language" type="list:select">
-                <value></value>
-            </field>
-            <field name="timeZone" type="list:select">
-                <value></value>
-            </field>
-            <field name="password" type="password">
-                <value></value>
-            </field>
-            <field name="passwordConfirmation" type="password">
-                <value></value>
-            </field>
-            <field name="groups" type="list:checkbox">
-                <value></value>
-            </field>
-        </result>
-    </data>
-    <bean id="subjects">
-        <option name="action" id="create"/>
-    </bean>
+	<config>
+		<title id="subject.create">Create user</title>
+		<permissions>
+			<permission ref="subject.create" mode="set"></permission>
+		</permissions>
+		<params>
+			<param name="form_action">create</param>
+		</params>
+		<meta-data binding="subject" bindClass="org.appng.application.manager.form.SubjectForm">
+			<field name="name" type="text" binding="subject.name">
+				<label id="name">Name</label>
+				<validation>
+					<notNull>
+						<message ref="subject.name" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+					<size min="0" max="64">
+						<message ref="subject.name" class="ERROR" code="{validation.string.max}">Enter at most 64 characters</message>
+					</size>
+					<pattern regexp="^([a-zA-Z0-9_\.-])+(@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]){2,})?$">
+						<message ref="subject.name" class="ERROR" code="{validation.username}">The name must either be a valid e-mail address, or consist
+							of letters, digits, dots, underscores and hyphens</message>
+					</pattern>
+				</validation>
+				<messages ref="name">
+					<message ref="name" class="ERROR">Another user with this username
+						already exists.</message>
+				</messages>
+			</field>
+			<field name="realname" type="text" binding="subject.realname">
+				<label id="realname">Real name</label>
+				<validation>
+					<notNull>
+						<message ref="subject.realname" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+					<size min="0" max="64">
+						<message ref="subject.realname" class="ERROR" code="{validation.string.max}">Enter at most 64 characters</message>
+					</size>
+				</validation>
+			</field>
+			<field name="email" type="text" binding="subject.email">
+				<label id="email">E-mail</label>
+				<validation>
+					<pattern regexp="^([a-zA-Z0-9_\.-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]){2,}$">
+						<message ref="subject.email" class="ERROR" code="{validation.email}">Please enter a valid e-mail address</message>
+					</pattern>
+				</validation>
+			</field>
+			<field name="description" type="longtext" binding="subject.description">
+				<label id="description">Description</label>
+				<validation>
+					<size min="0" max="8192">
+						<message ref="subject.description" class="ERROR" code="{validation.string.max}">Enter at most 8192 characters</message>
+					</size>
+				</validation>
+			</field>
+			<field name="userType" type="list:select" binding="subject.userType">
+				<label id="type">Type</label>
+			</field>
+			<field name="language" type="list:select" binding="subject.language">
+				<label id="language">Language</label>
+				<validation>
+					<notNull>
+						<message ref="subject.language" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+					<size min="2" max="3">
+						<message ref="subject.language" class="ERROR" code="{validation.string.min.max}">Enter between 2 and 3 characters</message>
+					</size>
+				</validation>
+			</field>
+			<field name="timeZone" type="list:select" binding="subject.timeZone">
+				<label id="timezone">Timezone</label>
+			</field>
+			<field name="password" type="password" binding="password">
+				<label id="password">Password</label>
+			</field>
+			<field name="passwordConfirmation" type="password" binding="passwordConfirmation">
+				<label id="password.confirmation">Password confirmation</label>
+			</field>
+			<field name="groups" type="list:checkbox" binding="groupIds">
+				<label id="groups">Groups</label>
+			</field>
+		</meta-data>
+	</config>
+	<condition expression="${form_action eq 'create'}" />
+	<messages>
+		<message ref="create" class="ERROR">Failed to create the user.</message>
+	</messages>
+	<datasource id="new-user" />
+	<userdata />
+	<data>
+		<selection id="groups">
+			<title id="groups">Groups</title>
+			<option value="1" name="admins" selected="false" />
+			<option value="2" name="users" selected="false" />
+		</selection>
+		<selection id="userType">
+			<title id="type">Type</title>
+			<option value="LOCAL_USER" name="Local User" selected="true" />
+			<option value="GLOBAL_USER" name="LDAP User" selected="false" />
+			<option value="GLOBAL_GROUP" name="LDAP Group" selected="false" />
+		</selection>
+		<selection id="language">
+			<title id="language">Language</title>
+		</selection>
+		<selection id="timeZone" type="select">
+			<title id="timezone">Timezone</title>
+			<optionGroup>
+				<label id="Africa">Africa</label>
+				<option value="Africa/Abidjan" name="Abidjan (GMT+00:00)" selected="false" />
+				<option value="Africa/Accra" name="Accra (GMT+00:00)" selected="false" />
+				<option value="Africa/Addis_Ababa" name="Addis Ababa (GMT+03:00)" selected="false" />
+				<option value="Africa/Algiers" name="Algiers (GMT+01:00)" selected="false" />
+				<option value="Africa/Asmara" name="Asmara (GMT+03:00)" selected="false" />
+				<option value="Africa/Asmera" name="Asmara (GMT+03:00)" selected="false" />
+				<option value="Africa/Bamako" name="Bamako (GMT+00:00)" selected="false" />
+				<option value="Africa/Bangui" name="Bangui (GMT+01:00)" selected="false" />
+				<option value="Africa/Banjul" name="Banjul (GMT+00:00)" selected="false" />
+				<option value="Africa/Bissau" name="Bissau (GMT+00:00)" selected="false" />
+				<option value="Africa/Blantyre" name="Blantyre (GMT+02:00)" selected="false" />
+				<option value="Africa/Brazzaville" name="Brazzaville (GMT+01:00)" selected="false" />
+				<option value="Africa/Bujumbura" name="Bujumbura (GMT+02:00)" selected="false" />
+				<option value="Africa/Cairo" name="Cairo (GMT+02:00)" selected="false" />
+				<option value="Africa/Casablanca" name="Casablanca (GMT+01:00)" selected="false" />
+				<option value="Africa/Ceuta" name="Ceuta (GMT+01:00)" selected="false" />
+				<option value="Africa/Conakry" name="Conakry (GMT+00:00)" selected="false" />
+				<option value="Africa/Dakar" name="Dakar (GMT+00:00)" selected="false" />
+				<option value="Africa/Dar_es_Salaam" name="Dar es Salaam (GMT+03:00)" selected="false" />
+				<option value="Africa/Djibouti" name="Djibouti (GMT+03:00)" selected="false" />
+				<option value="Africa/Douala" name="Douala (GMT+01:00)" selected="false" />
+				<option value="Africa/El_Aaiun" name="El Aaiun (GMT+01:00)" selected="false" />
+				<option value="Africa/Freetown" name="Freetown (GMT+00:00)" selected="false" />
+				<option value="Africa/Gaborone" name="Gaborone (GMT+02:00)" selected="false" />
+				<option value="Africa/Harare" name="Harare (GMT+02:00)" selected="false" />
+				<option value="Africa/Johannesburg" name="Johannesburg (GMT+02:00)" selected="false" />
+				<option value="Africa/Juba" name="Juba (GMT+03:00)" selected="false" />
+				<option value="Africa/Kampala" name="Kampala (GMT+03:00)" selected="false" />
+				<option value="Africa/Khartoum" name="Khartoum (GMT+02:00)" selected="false" />
+				<option value="Africa/Kigali" name="Kigali (GMT+02:00)" selected="false" />
+				<option value="Africa/Kinshasa" name="Kinshasa (GMT+01:00)" selected="false" />
+				<option value="Africa/Lagos" name="Lagos (GMT+01:00)" selected="false" />
+				<option value="Africa/Libreville" name="Libreville (GMT+01:00)" selected="false" />
+				<option value="Africa/Lome" name="Lome (GMT+00:00)" selected="false" />
+				<option value="Africa/Luanda" name="Luanda (GMT+01:00)" selected="false" />
+				<option value="Africa/Lubumbashi" name="Lubumbashi (GMT+02:00)" selected="false" />
+				<option value="Africa/Lusaka" name="Lusaka (GMT+02:00)" selected="false" />
+				<option value="Africa/Malabo" name="Malabo (GMT+01:00)" selected="false" />
+				<option value="Africa/Maputo" name="Maputo (GMT+02:00)" selected="false" />
+				<option value="Africa/Maseru" name="Maseru (GMT+02:00)" selected="false" />
+				<option value="Africa/Mbabane" name="Mbabane (GMT+02:00)" selected="false" />
+				<option value="Africa/Mogadishu" name="Mogadishu (GMT+03:00)" selected="false" />
+				<option value="Africa/Monrovia" name="Monrovia (GMT+00:00)" selected="false" />
+				<option value="Africa/Nairobi" name="Nairobi (GMT+03:00)" selected="false" />
+				<option value="Africa/Ndjamena" name="Ndjamena (GMT+01:00)" selected="false" />
+				<option value="Africa/Niamey" name="Niamey (GMT+01:00)" selected="false" />
+				<option value="Africa/Nouakchott" name="Nouakchott (GMT+00:00)" selected="false" />
+				<option value="Africa/Ouagadougou" name="Ouagadougou (GMT+00:00)" selected="false" />
+				<option value="Africa/Porto-Novo" name="Porto-Novo (GMT+01:00)" selected="false" />
+				<option value="Africa/Sao_Tome" name="São Tomé (GMT+01:00)" selected="false" />
+				<option value="Africa/Timbuktu" name="Timbuktu (GMT+00:00)" selected="false" />
+				<option value="Africa/Tripoli" name="Tripoli (GMT+02:00)" selected="false" />
+				<option value="Africa/Tunis" name="Tunis (GMT+01:00)" selected="false" />
+				<option value="Africa/Windhoek" name="Windhoek (GMT+02:00)" selected="false" />
+			</optionGroup>
+			<optionGroup>
+				<label id="America">America</label>
+				<option value="America/Adak" name="Adak (GMT-10:00)" selected="false" />
+				<option value="America/Anchorage" name="Anchorage (GMT-9:00)" selected="false" />
+				<option value="America/Anguilla" name="Anguilla (GMT-4:00)" selected="false" />
+				<option value="America/Antigua" name="Antigua (GMT-4:00)" selected="false" />
+				<option value="America/Araguaina" name="Araguaina (GMT-3:00)" selected="false" />
+				<option value="America/Aruba" name="Aruba (GMT-4:00)" selected="false" />
+				<option value="America/Asuncion" name="Asunción (GMT-4:00)" selected="false" />
+				<option value="America/Atikokan" name="Atikokan (GMT-5:00)" selected="false" />
+				<option value="America/Coral_Harbour" name="Atikokan (GMT-5:00)" selected="false" />
+				<option value="America/Atka" name="Atka (GMT-10:00)" selected="false" />
+				<option value="America/Bahia" name="Bahia (GMT-3:00)" selected="false" />
+				<option value="America/Bahia_Banderas" name="Bahia Banderas (GMT-6:00)" selected="false" />
+				<option value="America/Barbados" name="Barbados (GMT-4:00)" selected="false" />
+				<option value="America/Belem" name="Belem (GMT-3:00)" selected="false" />
+				<option value="America/Belize" name="Belize (GMT-6:00)" selected="false" />
+				<option value="America/North_Dakota/Beulah" name="Beulah, North Dakota (GMT-6:00)" selected="false" />
+				<option value="America/Blanc-Sablon" name="Blanc-Sablon (GMT-4:00)" selected="false" />
+				<option value="America/Boa_Vista" name="Boa Vista (GMT-4:00)" selected="false" />
+				<option value="America/Bogota" name="Bogota (GMT-5:00)" selected="false" />
+				<option value="America/Boise" name="Boise (GMT-7:00)" selected="false" />
+				<option value="America/Argentina/Buenos_Aires" name="Buenos Aires (GMT-3:00)" selected="false" />
+				<option value="America/Buenos_Aires" name="Buenos Aires (GMT-3:00)" selected="false" />
+				<option value="America/Cambridge_Bay" name="Cambridge Bay (GMT-7:00)" selected="false" />
+				<option value="America/Campo_Grande" name="Campo Grande (GMT-4:00)" selected="false" />
+				<option value="America/Cancun" name="Cancun (GMT-5:00)" selected="false" />
+				<option value="America/Caracas" name="Caracas (GMT-4:00)" selected="false" />
+				<option value="America/Argentina/Catamarca" name="Catamarca (GMT-3:00)" selected="false" />
+				<option value="America/Catamarca" name="Catamarca (GMT-3:00)" selected="false" />
+				<option value="America/Cayenne" name="Cayenne (GMT-3:00)" selected="false" />
+				<option value="America/Cayman" name="Cayman (GMT-5:00)" selected="false" />
+				<option value="America/North_Dakota/Center" name="Center, North Dakota (GMT-6:00)" selected="false" />
+				<option value="America/Chicago" name="Chicago (GMT-6:00)" selected="false" />
+				<option value="America/Chihuahua" name="Chihuahua (GMT-7:00)" selected="false" />
+				<option value="America/Argentina/ComodRivadavia" name="ComodRivadavia (GMT-3:00)" selected="false" />
+				<option value="America/Argentina/Cordoba" name="Cordoba (GMT-3:00)" selected="false" />
+				<option value="America/Cordoba" name="Cordoba (GMT-3:00)" selected="false" />
+				<option value="America/Costa_Rica" name="Costa Rica (GMT-6:00)" selected="false" />
+				<option value="America/Creston" name="Creston (GMT-7:00)" selected="false" />
+				<option value="America/Cuiaba" name="Cuiaba (GMT-4:00)" selected="false" />
+				<option value="America/Curacao" name="Curaçao (GMT-4:00)" selected="false" />
+				<option value="America/Danmarkshavn" name="Danmarkshavn (GMT+00:00)" selected="false" />
+				<option value="America/Dawson" name="Dawson (GMT-8:00)" selected="false" />
+				<option value="America/Dawson_Creek" name="Dawson Creek (GMT-7:00)" selected="false" />
+				<option value="America/Denver" name="Denver (GMT-7:00)" selected="false" />
+				<option value="America/Detroit" name="Detroit (GMT-5:00)" selected="false" />
+				<option value="America/Dominica" name="Dominica (GMT-4:00)" selected="false" />
+				<option value="America/Edmonton" name="Edmonton (GMT-7:00)" selected="false" />
+				<option value="America/Eirunepe" name="Eirunepe (GMT-5:00)" selected="false" />
+				<option value="America/El_Salvador" name="El Salvador (GMT-6:00)" selected="false" />
+				<option value="America/Ensenada" name="Ensenada (GMT-8:00)" selected="false" />
+				<option value="America/Fort_Wayne" name="Fort Wayne (GMT-5:00)" selected="false" />
+				<option value="America/Fortaleza" name="Fortaleza (GMT-3:00)" selected="false" />
+				<option value="America/Glace_Bay" name="Glace Bay (GMT-4:00)" selected="false" />
+				<option value="America/Goose_Bay" name="Goose Bay (GMT-4:00)" selected="false" />
+				<option value="America/Grand_Turk" name="Grand Turk (GMT-5:00)" selected="false" />
+				<option value="America/Grenada" name="Grenada (GMT-4:00)" selected="false" />
+				<option value="America/Guadeloupe" name="Guadeloupe (GMT-4:00)" selected="false" />
+				<option value="America/Guatemala" name="Guatemala (GMT-6:00)" selected="false" />
+				<option value="America/Guayaquil" name="Guayaquil (GMT-5:00)" selected="false" />
+				<option value="America/Guyana" name="Guyana (GMT-4:00)" selected="false" />
+				<option value="America/Halifax" name="Halifax (GMT-4:00)" selected="false" />
+				<option value="America/Havana" name="Havana (GMT-5:00)" selected="false" />
+				<option value="America/Hermosillo" name="Hermosillo (GMT-7:00)" selected="false" />
+				<option value="America/Indiana/Indianapolis" name="Indianapolis (GMT-5:00)" selected="false" />
+				<option value="America/Indianapolis" name="Indianapolis (GMT-5:00)" selected="false" />
+				<option value="America/Inuvik" name="Inuvik (GMT-7:00)" selected="false" />
+				<option value="America/Iqaluit" name="Iqaluit (GMT-5:00)" selected="false" />
+				<option value="America/Scoresbysund" name="Ittoqqortoormiit (GMT-1:00)" selected="false" />
+				<option value="America/Jamaica" name="Jamaica (GMT-5:00)" selected="false" />
+				<option value="America/Argentina/Jujuy" name="Jujuy (GMT-3:00)" selected="false" />
+				<option value="America/Jujuy" name="Jujuy (GMT-3:00)" selected="false" />
+				<option value="America/Juneau" name="Juneau (GMT-9:00)" selected="false" />
+				<option value="America/Knox_IN" name="Knox IN (GMT-6:00)" selected="false" />
+				<option value="America/Indiana/Knox" name="Knox, Indiana (GMT-6:00)" selected="false" />
+				<option value="America/Kralendijk" name="Kralendijk (GMT-4:00)" selected="false" />
+				<option value="America/La_Paz" name="La Paz (GMT-4:00)" selected="false" />
+				<option value="America/Argentina/La_Rioja" name="La Rioja (GMT-3:00)" selected="false" />
+				<option value="America/Lima" name="Lima (GMT-5:00)" selected="false" />
+				<option value="America/Los_Angeles" name="Los Angeles (GMT-8:00)" selected="false" />
+				<option value="America/Kentucky/Louisville" name="Louisville (GMT-5:00)" selected="false" />
+				<option value="America/Louisville" name="Louisville (GMT-5:00)" selected="false" />
+				<option value="America/Lower_Princes" name="Lower Princes Quarter (GMT-4:00)" selected="false" />
+				<option value="America/Maceio" name="Maceio (GMT-3:00)" selected="false" />
+				<option value="America/Managua" name="Managua (GMT-6:00)" selected="false" />
+				<option value="America/Manaus" name="Manaus (GMT-4:00)" selected="false" />
+				<option value="America/Indiana/Marengo" name="Marengo, Indiana (GMT-5:00)" selected="false" />
+				<option value="America/Marigot" name="Marigot (GMT-4:00)" selected="false" />
+				<option value="America/Martinique" name="Martinique (GMT-4:00)" selected="false" />
+				<option value="America/Matamoros" name="Matamoros (GMT-6:00)" selected="false" />
+				<option value="America/Mazatlan" name="Mazatlan (GMT-7:00)" selected="false" />
+				<option value="America/Argentina/Mendoza" name="Mendoza (GMT-3:00)" selected="false" />
+				<option value="America/Mendoza" name="Mendoza (GMT-3:00)" selected="false" />
+				<option value="America/Menominee" name="Menominee (GMT-6:00)" selected="false" />
+				<option value="America/Merida" name="Merida (GMT-6:00)" selected="false" />
+				<option value="America/Metlakatla" name="Metlakatla (GMT-9:00)" selected="false" />
+				<option value="America/Mexico_City" name="Mexico City (GMT-6:00)" selected="false" />
+				<option value="America/Miquelon" name="Miquelon (GMT-3:00)" selected="false" />
+				<option value="America/Moncton" name="Moncton (GMT-4:00)" selected="false" />
+				<option value="America/Monterrey" name="Monterrey (GMT-6:00)" selected="false" />
+				<option value="America/Montevideo" name="Montevideo (GMT-3:00)" selected="false" />
+				<option value="America/Kentucky/Monticello" name="Monticello, Kentucky (GMT-5:00)" selected="false" />
+				<option value="America/Montreal" name="Montreal (GMT-5:00)" selected="false" />
+				<option value="America/Montserrat" name="Montserrat (GMT-4:00)" selected="false" />
+				<option value="America/Nassau" name="Nassau (GMT-5:00)" selected="false" />
+				<option value="America/North_Dakota/New_Salem" name="New Salem, North Dakota (GMT-6:00)" selected="false" />
+				<option value="America/New_York" name="New York (GMT-5:00)" selected="false" />
+				<option value="America/Nipigon" name="Nipigon (GMT-5:00)" selected="false" />
+				<option value="America/Nome" name="Nome (GMT-9:00)" selected="false" />
+				<option value="America/Noronha" name="Noronha (GMT-2:00)" selected="false" />
+				<option value="America/Godthab" name="Nuuk (GMT-3:00)" selected="false" />
+				<option value="America/Ojinaga" name="Ojinaga (GMT-7:00)" selected="false" />
+				<option value="America/Panama" name="Panama (GMT-5:00)" selected="false" />
+				<option value="America/Pangnirtung" name="Pangnirtung (GMT-5:00)" selected="false" />
+				<option value="America/Paramaribo" name="Paramaribo (GMT-3:00)" selected="false" />
+				<option value="America/Indiana/Petersburg" name="Petersburg, Indiana (GMT-5:00)" selected="false" />
+				<option value="America/Phoenix" name="Phoenix (GMT-7:00)" selected="false" />
+				<option value="America/Port_of_Spain" name="Port of Spain (GMT-4:00)" selected="false" />
+				<option value="America/Port-au-Prince" name="Port-au-Prince (GMT-5:00)" selected="false" />
+				<option value="America/Porto_Acre" name="Porto Acre (GMT-5:00)" selected="false" />
+				<option value="America/Porto_Velho" name="Porto Velho (GMT-4:00)" selected="false" />
+				<option value="America/Puerto_Rico" name="Puerto Rico (GMT-4:00)" selected="false" />
+				<option value="America/Rainy_River" name="Rainy River (GMT-6:00)" selected="false" />
+				<option value="America/Rankin_Inlet" name="Rankin Inlet (GMT-6:00)" selected="false" />
+				<option value="America/Recife" name="Recife (GMT-3:00)" selected="false" />
+				<option value="America/Regina" name="Regina (GMT-6:00)" selected="false" />
+				<option value="America/Resolute" name="Resolute (GMT-6:00)" selected="false" />
+				<option value="America/Rio_Branco" name="Rio Branco (GMT-5:00)" selected="false" />
+				<option value="America/Argentina/Rio_Gallegos" name="Rio Gallegos (GMT-3:00)" selected="false" />
+				<option value="America/Rosario" name="Rosario (GMT-3:00)" selected="false" />
+				<option value="America/St_Barthelemy" name="Saint Barthélemy (GMT-4:00)" selected="false" />
+				<option value="America/Argentina/Salta" name="Salta (GMT-3:00)" selected="false" />
+				<option value="America/Argentina/San_Juan" name="San Juan (GMT-3:00)" selected="false" />
+				<option value="America/Argentina/San_Luis" name="San Luis (GMT-3:00)" selected="false" />
+				<option value="America/Santa_Isabel" name="Santa Isabel (GMT-8:00)" selected="false" />
+				<option value="America/Santarem" name="Santarem (GMT-3:00)" selected="false" />
+				<option value="America/Santiago" name="Santiago (GMT-4:00)" selected="false" />
+				<option value="America/Santo_Domingo" name="Santo Domingo (GMT-4:00)" selected="false" />
+				<option value="America/Sao_Paulo" name="Sao Paulo (GMT-3:00)" selected="false" />
+				<option value="America/Shiprock" name="Shiprock (GMT-7:00)" selected="false" />
+				<option value="America/Sitka" name="Sitka (GMT-9:00)" selected="false" />
+				<option value="America/St_Johns" name="St. John’s (GMT-3:30)" selected="false" />
+				<option value="America/St_Kitts" name="St. Kitts (GMT-4:00)" selected="false" />
+				<option value="America/St_Lucia" name="St. Lucia (GMT-4:00)" selected="false" />
+				<option value="America/St_Thomas" name="St. Thomas (GMT-4:00)" selected="false" />
+				<option value="America/St_Vincent" name="St. Vincent (GMT-4:00)" selected="false" />
+				<option value="America/Swift_Current" name="Swift Current (GMT-6:00)" selected="false" />
+				<option value="America/Tegucigalpa" name="Tegucigalpa (GMT-6:00)" selected="false" />
+				<option value="America/Indiana/Tell_City" name="Tell City, Indiana (GMT-6:00)" selected="false" />
+				<option value="America/Thule" name="Thule (GMT-4:00)" selected="false" />
+				<option value="America/Thunder_Bay" name="Thunder Bay (GMT-5:00)" selected="false" />
+				<option value="America/Tijuana" name="Tijuana (GMT-8:00)" selected="false" />
+				<option value="America/Toronto" name="Toronto (GMT-5:00)" selected="false" />
+				<option value="America/Tortola" name="Tortola (GMT-4:00)" selected="false" />
+				<option value="America/Argentina/Tucuman" name="Tucuman (GMT-3:00)" selected="false" />
+				<option value="America/Argentina/Ushuaia" name="Ushuaia (GMT-3:00)" selected="false" />
+				<option value="America/Vancouver" name="Vancouver (GMT-8:00)" selected="false" />
+				<option value="America/Indiana/Vevay" name="Vevay, Indiana (GMT-5:00)" selected="false" />
+				<option value="America/Indiana/Vincennes" name="Vincennes, Indiana (GMT-5:00)" selected="false" />
+				<option value="America/Virgin" name="Virgin (GMT-4:00)" selected="false" />
+				<option value="America/Whitehorse" name="Whitehorse (GMT-8:00)" selected="false" />
+				<option value="America/Indiana/Winamac" name="Winamac, Indiana (GMT-5:00)" selected="false" />
+				<option value="America/Winnipeg" name="Winnipeg (GMT-6:00)" selected="false" />
+				<option value="America/Yakutat" name="Yakutat (GMT-9:00)" selected="false" />
+				<option value="America/Yellowknife" name="Yellowknife (GMT-7:00)" selected="false" />
+				<option value="America/Fort_Nelson" name="timezone.America.Fort_Nelson (GMT-7:00)" selected="false" />
+				<option value="America/Punta_Arenas" name="timezone.America.Punta_Arenas (GMT-3:00)" selected="false" />
+			</optionGroup>
+			<optionGroup>
+				<label id="Antarctica">Antarctica</label>
+				<option value="Antarctica/Casey" name="Casey (GMT+08:00)" selected="false" />
+				<option value="Antarctica/Davis" name="Davis (GMT+07:00)" selected="false" />
+				<option value="Antarctica/DumontDUrville" name="Dumont d’Urville (GMT+10:00)" selected="false" />
+				<option value="Antarctica/Macquarie" name="Macquarie (GMT+11:00)" selected="false" />
+				<option value="Antarctica/Mawson" name="Mawson (GMT+05:00)" selected="false" />
+				<option value="Antarctica/McMurdo" name="McMurdo (GMT+12:00)" selected="false" />
+				<option value="Antarctica/Palmer" name="Palmer (GMT-3:00)" selected="false" />
+				<option value="Antarctica/Rothera" name="Rothera (GMT-3:00)" selected="false" />
+				<option value="Antarctica/South_Pole" name="South Pole (GMT+12:00)" selected="false" />
+				<option value="Antarctica/Syowa" name="Syowa (GMT+03:00)" selected="false" />
+				<option value="Antarctica/Troll" name="Troll (GMT+00:00)" selected="false" />
+				<option value="Antarctica/Vostok" name="Vostok (GMT+06:00)" selected="false" />
+			</optionGroup>
+			<optionGroup>
+				<label id="Asia">Asia</label>
+				<option value="Asia/Aden" name="Aden (GMT+03:00)" selected="false" />
+				<option value="Asia/Almaty" name="Almaty (GMT+06:00)" selected="false" />
+				<option value="Asia/Amman" name="Amman (GMT+02:00)" selected="false" />
+				<option value="Asia/Anadyr" name="Anadyr (GMT+12:00)" selected="false" />
+				<option value="Asia/Aqtau" name="Aqtau (GMT+05:00)" selected="false" />
+				<option value="Asia/Aqtobe" name="Aqtobe (GMT+05:00)" selected="false" />
+				<option value="Asia/Ashgabat" name="Ashgabat (GMT+05:00)" selected="false" />
+				<option value="Asia/Ashkhabad" name="Ashkhabad (GMT+05:00)" selected="false" />
+				<option value="Asia/Baghdad" name="Baghdad (GMT+03:00)" selected="false" />
+				<option value="Asia/Bahrain" name="Bahrain (GMT+03:00)" selected="false" />
+				<option value="Asia/Baku" name="Baku (GMT+04:00)" selected="false" />
+				<option value="Asia/Bangkok" name="Bangkok (GMT+07:00)" selected="false" />
+				<option value="Asia/Beirut" name="Beirut (GMT+02:00)" selected="false" />
+				<option value="Asia/Bishkek" name="Bishkek (GMT+06:00)" selected="false" />
+				<option value="Asia/Brunei" name="Brunei (GMT+08:00)" selected="false" />
+				<option value="Asia/Chita" name="Chita (GMT+09:00)" selected="false" />
+				<option value="Asia/Choibalsan" name="Choibalsan (GMT+08:00)" selected="false" />
+				<option value="Asia/Chongqing" name="Chongqing (GMT+08:00)" selected="false" />
+				<option value="Asia/Chungking" name="Chungking (GMT+08:00)" selected="false" />
+				<option value="Asia/Colombo" name="Colombo (GMT+05:30)" selected="false" />
+				<option value="Asia/Dacca" name="Dacca (GMT+06:00)" selected="false" />
+				<option value="Asia/Damascus" name="Damascus (GMT+02:00)" selected="false" />
+				<option value="Asia/Dhaka" name="Dhaka (GMT+06:00)" selected="false" />
+				<option value="Asia/Dili" name="Dili (GMT+09:00)" selected="false" />
+				<option value="Asia/Dubai" name="Dubai (GMT+04:00)" selected="false" />
+				<option value="Asia/Dushanbe" name="Dushanbe (GMT+05:00)" selected="false" />
+				<option value="Asia/Gaza" name="Gaza (GMT+02:00)" selected="false" />
+				<option value="Asia/Harbin" name="Harbin (GMT+08:00)" selected="false" />
+				<option value="Asia/Hebron" name="Hebron (GMT+02:00)" selected="false" />
+				<option value="Asia/Ho_Chi_Minh" name="Ho Chi Minh (GMT+07:00)" selected="false" />
+				<option value="Asia/Saigon" name="Ho Chi Minh City (GMT+07:00)" selected="false" />
+				<option value="Asia/Hong_Kong" name="Hong Kong (GMT+08:00)" selected="false" />
+				<option value="Asia/Hovd" name="Hovd (GMT+07:00)" selected="false" />
+				<option value="Asia/Irkutsk" name="Irkutsk (GMT+08:00)" selected="false" />
+				<option value="Asia/Istanbul" name="Istanbul (GMT+03:00)" selected="false" />
+				<option value="Asia/Jakarta" name="Jakarta (GMT+07:00)" selected="false" />
+				<option value="Asia/Jayapura" name="Jayapura (GMT+09:00)" selected="false" />
+				<option value="Asia/Jerusalem" name="Jerusalem (GMT+02:00)" selected="false" />
+				<option value="Asia/Kabul" name="Kabul (GMT+04:30)" selected="false" />
+				<option value="Asia/Kamchatka" name="Kamchatka (GMT+12:00)" selected="false" />
+				<option value="Asia/Karachi" name="Karachi (GMT+05:00)" selected="false" />
+				<option value="Asia/Kashgar" name="Kashgar (GMT+06:00)" selected="false" />
+				<option value="Asia/Kathmandu" name="Kathmandu (GMT+05:45)" selected="false" />
+				<option value="Asia/Katmandu" name="Kathmandu (GMT+05:45)" selected="false" />
+				<option value="Asia/Khandyga" name="Khandyga (GMT+09:00)" selected="false" />
+				<option value="Asia/Calcutta" name="Kolkata (GMT+05:30)" selected="false" />
+				<option value="Asia/Kolkata" name="Kolkata (GMT+05:30)" selected="false" />
+				<option value="Asia/Krasnoyarsk" name="Krasnoyarsk (GMT+07:00)" selected="false" />
+				<option value="Asia/Kuala_Lumpur" name="Kuala Lumpur (GMT+08:00)" selected="false" />
+				<option value="Asia/Kuching" name="Kuching (GMT+08:00)" selected="false" />
+				<option value="Asia/Kuwait" name="Kuwait (GMT+03:00)" selected="false" />
+				<option value="Asia/Macao" name="Macao (GMT+08:00)" selected="false" />
+				<option value="Asia/Macau" name="Macau (GMT+08:00)" selected="false" />
+				<option value="Asia/Magadan" name="Magadan (GMT+11:00)" selected="false" />
+				<option value="Asia/Makassar" name="Makassar (GMT+08:00)" selected="false" />
+				<option value="Asia/Manila" name="Manila (GMT+08:00)" selected="false" />
+				<option value="Asia/Muscat" name="Muscat (GMT+04:00)" selected="false" />
+				<option value="Asia/Nicosia" name="Nicosia (GMT+02:00)" selected="false" />
+				<option value="Asia/Novokuznetsk" name="Novokuznetsk (GMT+07:00)" selected="false" />
+				<option value="Asia/Novosibirsk" name="Novosibirsk (GMT+07:00)" selected="false" />
+				<option value="Asia/Omsk" name="Omsk (GMT+06:00)" selected="false" />
+				<option value="Asia/Oral" name="Oral (GMT+05:00)" selected="false" />
+				<option value="Asia/Phnom_Penh" name="Phnom Penh (GMT+07:00)" selected="false" />
+				<option value="Asia/Pontianak" name="Pontianak (GMT+07:00)" selected="false" />
+				<option value="Asia/Pyongyang" name="Pyongyang (GMT+09:00)" selected="false" />
+				<option value="Asia/Qatar" name="Qatar (GMT+03:00)" selected="false" />
+				<option value="Asia/Qyzylorda" name="Qyzylorda (GMT+06:00)" selected="false" />
+				<option value="Asia/Rangoon" name="Rangoon (GMT+06:30)" selected="false" />
+				<option value="Asia/Riyadh" name="Riyadh (GMT+03:00)" selected="false" />
+				<option value="Asia/Sakhalin" name="Sakhalin (GMT+11:00)" selected="false" />
+				<option value="Asia/Samarkand" name="Samarkand (GMT+05:00)" selected="false" />
+				<option value="Asia/Seoul" name="Seoul (GMT+09:00)" selected="false" />
+				<option value="Asia/Shanghai" name="Shanghai (GMT+08:00)" selected="false" />
+				<option value="Asia/Singapore" name="Singapore (GMT+08:00)" selected="false" />
+				<option value="Asia/Srednekolymsk" name="Srednekolymsk (GMT+11:00)" selected="false" />
+				<option value="Asia/Taipei" name="Taipei (GMT+08:00)" selected="false" />
+				<option value="Asia/Tashkent" name="Tashkent (GMT+05:00)" selected="false" />
+				<option value="Asia/Tbilisi" name="Tbilisi (GMT+04:00)" selected="false" />
+				<option value="Asia/Tehran" name="Tehran (GMT+03:30)" selected="false" />
+				<option value="Asia/Tel_Aviv" name="Tel Aviv (GMT+02:00)" selected="false" />
+				<option value="Asia/Thimbu" name="Thimbu (GMT+06:00)" selected="false" />
+				<option value="Asia/Thimphu" name="Thimphu (GMT+06:00)" selected="false" />
+				<option value="Asia/Tokyo" name="Tokyo (GMT+09:00)" selected="false" />
+				<option value="Asia/Ujung_Pandang" name="Ujung Pandang (GMT+08:00)" selected="false" />
+				<option value="Asia/Ulaanbaatar" name="Ulaanbaatar (GMT+08:00)" selected="false" />
+				<option value="Asia/Ulan_Bator" name="Ulan Bator (GMT+08:00)" selected="false" />
+				<option value="Asia/Urumqi" name="Urumqi (GMT+06:00)" selected="false" />
+				<option value="Asia/Ust-Nera" name="Ust-Nera (GMT+10:00)" selected="false" />
+				<option value="Asia/Vientiane" name="Vientiane (GMT+07:00)" selected="false" />
+				<option value="Asia/Vladivostok" name="Vladivostok (GMT+10:00)" selected="false" />
+				<option value="Asia/Yakutsk" name="Yakutsk (GMT+09:00)" selected="false" />
+				<option value="Asia/Yekaterinburg" name="Yekaterinburg (GMT+05:00)" selected="false" />
+				<option value="Asia/Yerevan" name="Yerevan (GMT+04:00)" selected="false" />
+				<option value="Asia/Atyrau" name="timezone.Asia.Atyrau (GMT+05:00)" selected="false" />
+				<option value="Asia/Barnaul" name="timezone.Asia.Barnaul (GMT+07:00)" selected="false" />
+				<option value="Asia/Famagusta" name="timezone.Asia.Famagusta (GMT+02:00)" selected="false" />
+				<option value="Asia/Tomsk" name="timezone.Asia.Tomsk (GMT+07:00)" selected="false" />
+				<option value="Asia/Yangon" name="timezone.Asia.Yangon (GMT+06:30)" selected="false" />
+			</optionGroup>
+			<optionGroup>
+				<label id="Atlantic">Atlantic</label>
+				<option value="Atlantic/Azores" name="Azores (GMT-1:00)" selected="false" />
+				<option value="Atlantic/Bermuda" name="Bermuda (GMT-4:00)" selected="false" />
+				<option value="Atlantic/Canary" name="Canary (GMT+00:00)" selected="false" />
+				<option value="Atlantic/Cape_Verde" name="Cape Verde (GMT-1:00)" selected="false" />
+				<option value="Atlantic/Faeroe" name="Faroe (GMT+00:00)" selected="false" />
+				<option value="Atlantic/Faroe" name="Faroe (GMT+00:00)" selected="false" />
+				<option value="Atlantic/Jan_Mayen" name="Jan Mayen (GMT+01:00)" selected="false" />
+				<option value="Atlantic/Madeira" name="Madeira (GMT+00:00)" selected="false" />
+				<option value="Atlantic/Reykjavik" name="Reykjavik (GMT+00:00)" selected="false" />
+				<option value="Atlantic/South_Georgia" name="South Georgia (GMT-2:00)" selected="false" />
+				<option value="Atlantic/St_Helena" name="St. Helena (GMT+00:00)" selected="false" />
+				<option value="Atlantic/Stanley" name="Stanley (GMT-3:00)" selected="false" />
+			</optionGroup>
+			<optionGroup>
+				<label id="Australia">Australia</label>
+				<option value="Australia/ACT" name="ACT (GMT+10:00)" selected="false" />
+				<option value="Australia/Adelaide" name="Adelaide (GMT+09:30)" selected="false" />
+				<option value="Australia/Brisbane" name="Brisbane (GMT+10:00)" selected="false" />
+				<option value="Australia/Broken_Hill" name="Broken Hill (GMT+09:30)" selected="false" />
+				<option value="Australia/Canberra" name="Canberra (GMT+10:00)" selected="false" />
+				<option value="Australia/Currie" name="Currie (GMT+10:00)" selected="false" />
+				<option value="Australia/Darwin" name="Darwin (GMT+09:30)" selected="false" />
+				<option value="Australia/Eucla" name="Eucla (GMT+08:45)" selected="false" />
+				<option value="Australia/Hobart" name="Hobart (GMT+10:00)" selected="false" />
+				<option value="Australia/LHI" name="LHI (GMT+10:30)" selected="false" />
+				<option value="Australia/Lindeman" name="Lindeman (GMT+10:00)" selected="false" />
+				<option value="Australia/Lord_Howe" name="Lord Howe (GMT+10:30)" selected="false" />
+				<option value="Australia/Melbourne" name="Melbourne (GMT+10:00)" selected="false" />
+				<option value="Australia/NSW" name="NSW (GMT+10:00)" selected="false" />
+				<option value="Australia/North" name="North (GMT+09:30)" selected="false" />
+				<option value="Australia/Perth" name="Perth (GMT+08:00)" selected="false" />
+				<option value="Australia/Queensland" name="Queensland (GMT+10:00)" selected="false" />
+				<option value="Australia/South" name="South (GMT+09:30)" selected="false" />
+				<option value="Australia/Sydney" name="Sydney (GMT+10:00)" selected="false" />
+				<option value="Australia/Tasmania" name="Tasmania (GMT+10:00)" selected="false" />
+				<option value="Australia/Victoria" name="Victoria (GMT+10:00)" selected="false" />
+				<option value="Australia/West" name="West (GMT+08:00)" selected="false" />
+				<option value="Australia/Yancowinna" name="Yancowinna (GMT+09:30)" selected="false" />
+			</optionGroup>
+			<optionGroup>
+				<label id="Europe">Europe</label>
+				<option value="Europe/Amsterdam" name="Amsterdam (GMT+01:00)" selected="false" />
+				<option value="Europe/Andorra" name="Andorra (GMT+01:00)" selected="false" />
+				<option value="Europe/Athens" name="Athens (GMT+02:00)" selected="false" />
+				<option value="Europe/Belfast" name="Belfast (GMT+00:00)" selected="false" />
+				<option value="Europe/Belgrade" name="Belgrade (GMT+01:00)" selected="false" />
+				<option value="Europe/Berlin" name="Berlin (GMT+01:00)" selected="false" />
+				<option value="Europe/Bratislava" name="Bratislava (GMT+01:00)" selected="false" />
+				<option value="Europe/Brussels" name="Brussels (GMT+01:00)" selected="false" />
+				<option value="Europe/Bucharest" name="Bucharest (GMT+02:00)" selected="false" />
+				<option value="Europe/Budapest" name="Budapest (GMT+01:00)" selected="false" />
+				<option value="Europe/Busingen" name="Busingen (GMT+01:00)" selected="false" />
+				<option value="Europe/Chisinau" name="Chisinau (GMT+02:00)" selected="false" />
+				<option value="Europe/Copenhagen" name="Copenhagen (GMT+01:00)" selected="false" />
+				<option value="Europe/Dublin" name="Dublin (GMT+00:00)" selected="false" />
+				<option value="Europe/Gibraltar" name="Gibraltar (GMT+01:00)" selected="false" />
+				<option value="Europe/Guernsey" name="Guernsey (GMT+00:00)" selected="false" />
+				<option value="Europe/Helsinki" name="Helsinki (GMT+02:00)" selected="false" />
+				<option value="Europe/Isle_of_Man" name="Isle of Man (GMT+00:00)" selected="false" />
+				<option value="Europe/Istanbul" name="Istanbul (GMT+03:00)" selected="false" />
+				<option value="Europe/Jersey" name="Jersey (GMT+00:00)" selected="false" />
+				<option value="Europe/Kaliningrad" name="Kaliningrad (GMT+02:00)" selected="false" />
+				<option value="Europe/Kiev" name="Kiev (GMT+02:00)" selected="false" />
+				<option value="Europe/Lisbon" name="Lisbon (GMT+00:00)" selected="false" />
+				<option value="Europe/Ljubljana" name="Ljubljana (GMT+01:00)" selected="false" />
+				<option value="Europe/London" name="London (GMT+00:00)" selected="false" />
+				<option value="Europe/Luxembourg" name="Luxembourg (GMT+01:00)" selected="false" />
+				<option value="Europe/Madrid" name="Madrid (GMT+01:00)" selected="false" />
+				<option value="Europe/Malta" name="Malta (GMT+01:00)" selected="false" />
+				<option value="Europe/Mariehamn" name="Mariehamn (GMT+02:00)" selected="false" />
+				<option value="Europe/Minsk" name="Minsk (GMT+03:00)" selected="false" />
+				<option value="Europe/Monaco" name="Monaco (GMT+01:00)" selected="false" />
+				<option value="Europe/Moscow" name="Moscow (GMT+03:00)" selected="false" />
+				<option value="Europe/Nicosia" name="Nicosia (GMT+02:00)" selected="false" />
+				<option value="Europe/Oslo" name="Oslo (GMT+01:00)" selected="false" />
+				<option value="Europe/Paris" name="Paris (GMT+01:00)" selected="false" />
+				<option value="Europe/Podgorica" name="Podgorica (GMT+01:00)" selected="false" />
+				<option value="Europe/Prague" name="Prague (GMT+01:00)" selected="false" />
+				<option value="Europe/Riga" name="Riga (GMT+02:00)" selected="false" />
+				<option value="Europe/Rome" name="Rome (GMT+01:00)" selected="false" />
+				<option value="Europe/Samara" name="Samara (GMT+04:00)" selected="false" />
+				<option value="Europe/San_Marino" name="San Marino (GMT+01:00)" selected="false" />
+				<option value="Europe/Sarajevo" name="Sarajevo (GMT+01:00)" selected="false" />
+				<option value="Europe/Simferopol" name="Simferopol (GMT+03:00)" selected="false" />
+				<option value="Europe/Skopje" name="Skopje (GMT+01:00)" selected="false" />
+				<option value="Europe/Sofia" name="Sofia (GMT+02:00)" selected="false" />
+				<option value="Europe/Stockholm" name="Stockholm (GMT+01:00)" selected="false" />
+				<option value="Europe/Tallinn" name="Tallinn (GMT+02:00)" selected="false" />
+				<option value="Europe/Tirane" name="Tirane (GMT+01:00)" selected="false" />
+				<option value="Europe/Tiraspol" name="Tiraspol (GMT+02:00)" selected="false" />
+				<option value="Europe/Uzhgorod" name="Uzhgorod (GMT+02:00)" selected="false" />
+				<option value="Europe/Vaduz" name="Vaduz (GMT+01:00)" selected="false" />
+				<option value="Europe/Vatican" name="Vatican (GMT+01:00)" selected="false" />
+				<option value="Europe/Vienna" name="Vienna (GMT+01:00)" selected="false" />
+				<option value="Europe/Vilnius" name="Vilnius (GMT+02:00)" selected="false" />
+				<option value="Europe/Volgograd" name="Volgograd (GMT+04:00)" selected="false" />
+				<option value="Europe/Warsaw" name="Warsaw (GMT+01:00)" selected="false" />
+				<option value="Europe/Zagreb" name="Zagreb (GMT+01:00)" selected="false" />
+				<option value="Europe/Zaporozhye" name="Zaporozhye (GMT+02:00)" selected="false" />
+				<option value="Europe/Zurich" name="Zurich (GMT+01:00)" selected="false" />
+				<option value="Europe/Astrakhan" name="timezone.Europe.Astrakhan (GMT+04:00)" selected="false" />
+				<option value="Europe/Kirov" name="timezone.Europe.Kirov (GMT+03:00)" selected="false" />
+				<option value="Europe/Saratov" name="timezone.Europe.Saratov (GMT+04:00)" selected="false" />
+				<option value="Europe/Ulyanovsk" name="timezone.Europe.Ulyanovsk (GMT+04:00)" selected="false" />
+			</optionGroup>
+			<optionGroup>
+				<label id="Indian">Indian</label>
+				<option value="Indian/Antananarivo" name="Antananarivo (GMT+03:00)" selected="false" />
+				<option value="Indian/Chagos" name="Chagos (GMT+06:00)" selected="false" />
+				<option value="Indian/Christmas" name="Christmas (GMT+07:00)" selected="false" />
+				<option value="Indian/Cocos" name="Cocos (GMT+06:30)" selected="false" />
+				<option value="Indian/Comoro" name="Comoro (GMT+03:00)" selected="false" />
+				<option value="Indian/Kerguelen" name="Kerguelen (GMT+05:00)" selected="false" />
+				<option value="Indian/Mahe" name="Mahe (GMT+04:00)" selected="false" />
+				<option value="Indian/Maldives" name="Maldives (GMT+05:00)" selected="false" />
+				<option value="Indian/Mauritius" name="Mauritius (GMT+04:00)" selected="false" />
+				<option value="Indian/Mayotte" name="Mayotte (GMT+03:00)" selected="false" />
+				<option value="Indian/Reunion" name="Réunion (GMT+04:00)" selected="false" />
+			</optionGroup>
+			<optionGroup>
+				<label id="Pacific">Pacific</label>
+				<option value="Pacific/Apia" name="Apia (GMT+13:00)" selected="false" />
+				<option value="Pacific/Auckland" name="Auckland (GMT+12:00)" selected="false" />
+				<option value="Pacific/Bougainville" name="Bougainville (GMT+11:00)" selected="false" />
+				<option value="Pacific/Chatham" name="Chatham (GMT+12:45)" selected="false" />
+				<option value="Pacific/Chuuk" name="Chuuk (GMT+10:00)" selected="false" />
+				<option value="Pacific/Truk" name="Chuuk (GMT+10:00)" selected="false" />
+				<option value="Pacific/Easter" name="Easter (GMT-6:00)" selected="false" />
+				<option value="Pacific/Efate" name="Efate (GMT+11:00)" selected="false" />
+				<option value="Pacific/Enderbury" name="Enderbury (GMT+13:00)" selected="false" />
+				<option value="Pacific/Fakaofo" name="Fakaofo (GMT+13:00)" selected="false" />
+				<option value="Pacific/Fiji" name="Fiji (GMT+12:00)" selected="false" />
+				<option value="Pacific/Funafuti" name="Funafuti (GMT+12:00)" selected="false" />
+				<option value="Pacific/Galapagos" name="Galapagos (GMT-6:00)" selected="false" />
+				<option value="Pacific/Gambier" name="Gambier (GMT-9:00)" selected="false" />
+				<option value="Pacific/Guadalcanal" name="Guadalcanal (GMT+11:00)" selected="false" />
+				<option value="Pacific/Guam" name="Guam (GMT+10:00)" selected="false" />
+				<option value="Pacific/Honolulu" name="Honolulu (GMT-10:00)" selected="false" />
+				<option value="Pacific/Johnston" name="Johnston (GMT-10:00)" selected="false" />
+				<option value="Pacific/Kiritimati" name="Kiritimati (GMT+14:00)" selected="false" />
+				<option value="Pacific/Kosrae" name="Kosrae (GMT+11:00)" selected="false" />
+				<option value="Pacific/Kwajalein" name="Kwajalein (GMT+12:00)" selected="false" />
+				<option value="Pacific/Majuro" name="Majuro (GMT+12:00)" selected="false" />
+				<option value="Pacific/Marquesas" name="Marquesas (GMT-9:30)" selected="false" />
+				<option value="Pacific/Midway" name="Midway (GMT-11:00)" selected="false" />
+				<option value="Pacific/Nauru" name="Nauru (GMT+12:00)" selected="false" />
+				<option value="Pacific/Niue" name="Niue (GMT-11:00)" selected="false" />
+				<option value="Pacific/Norfolk" name="Norfolk (GMT+11:00)" selected="false" />
+				<option value="Pacific/Noumea" name="Noumea (GMT+11:00)" selected="false" />
+				<option value="Pacific/Pago_Pago" name="Pago Pago (GMT-11:00)" selected="false" />
+				<option value="Pacific/Palau" name="Palau (GMT+09:00)" selected="false" />
+				<option value="Pacific/Pitcairn" name="Pitcairn (GMT-8:00)" selected="false" />
+				<option value="Pacific/Pohnpei" name="Pohnpei (GMT+11:00)" selected="false" />
+				<option value="Pacific/Ponape" name="Pohnpei (GMT+11:00)" selected="false" />
+				<option value="Pacific/Port_Moresby" name="Port Moresby (GMT+10:00)" selected="false" />
+				<option value="Pacific/Rarotonga" name="Rarotonga (GMT-10:00)" selected="false" />
+				<option value="Pacific/Saipan" name="Saipan (GMT+10:00)" selected="false" />
+				<option value="Pacific/Samoa" name="Samoa (GMT-11:00)" selected="false" />
+				<option value="Pacific/Tahiti" name="Tahiti (GMT-10:00)" selected="false" />
+				<option value="Pacific/Tarawa" name="Tarawa (GMT+12:00)" selected="false" />
+				<option value="Pacific/Tongatapu" name="Tongatapu (GMT+13:00)" selected="false" />
+				<option value="Pacific/Wake" name="Wake (GMT+12:00)" selected="false" />
+				<option value="Pacific/Wallis" name="Wallis (GMT+12:00)" selected="false" />
+				<option value="Pacific/Yap" name="Yap (GMT+10:00)" selected="false" />
+			</optionGroup>
+		</selection>
+		<result>
+			<field name="name" type="text">
+				<value></value>
+			</field>
+			<field name="realname" type="text">
+				<value></value>
+			</field>
+			<field name="email" type="text">
+				<value></value>
+			</field>
+			<field name="description" type="longtext">
+				<value></value>
+			</field>
+			<field name="userType" type="list:select">
+				<value>LOCAL_USER</value>
+			</field>
+			<field name="language" type="list:select">
+				<value></value>
+			</field>
+			<field name="timeZone" type="list:select">
+				<value></value>
+			</field>
+			<field name="password" type="password">
+				<value></value>
+			</field>
+			<field name="passwordConfirmation" type="password">
+				<value></value>
+			</field>
+			<field name="groups" type="list:checkbox">
+				<value></value>
+			</field>
+		</result>
+	</data>
+	<bean id="subjects">
+		<option name="action" id="create" />
+	</bean>
 </action>

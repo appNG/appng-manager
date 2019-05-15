@@ -1,168 +1,174 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <datasource xmlns="http://www.appng.org/schema/platform" id="repositories">
-    <config>
-        <title id="repositories">Repositories</title>
-        <permissions>
-            <permission mode="set" ref="repository.list"></permission>
-        </permissions>
-        <params/>
-        <meta-data bindClass="org.appng.core.domain.RepositoryImpl">
-            <field binding="id" readonly="true" type="text" name="id">
-                <label id="id">ID</label>
-            </field>
-            <field binding="name" type="text" name="name">
-                <label id="name">Name</label>
-            </field>
-            <field binding="repositoryType" type="text" name="repositoryType">
-                <label id="type">Type</label>
-            </field>
-            <field binding="repositoryMode" type="text" name="repositoryMode">
-                <label id="mode">Mode</label>
-            </field>
-            <field binding="published" type="image" name="published">
-                <label id="published">Published</label>
-                <icon condition="${current.published}">led_orange</icon>
-                <icon condition="${not current.published}"></icon>
-            </field>
-            <field binding="uri" displayLength="60" type="text" name="uri">
-                <label id="uri">URI</label>
-            </field>
-            <field binding="active" type="image" name="active">
-                <label id="active">Active</label>
-                <icon condition="${current.active}">led_green</icon>
-                <icon condition="${not current.active}">led_red</icon>
-            </field>
-            <field binding="actions" type="linkpanel" name="actions">
-                <label id="actions">Actions</label>
-            </field>
-        </meta-data>
-        <linkpanel location="both" id="other">
-            <link target="/repositories/create#tab_create" mode="intern" id="other[1]">
-                <permissions>
-                    <permission mode="set" ref="repository.create"></permission>
-                </permissions>
-                <label id="repository.create">Create repository</label>
-                <icon>new</icon>
-            </link>
-        </linkpanel>
-        <linkpanel location="inline" id="actions">
-            <link target="/repositories/update/#{id}#tab_update" mode="intern" id="actions[1]">
-                <permissions>
-                    <permission mode="set" ref="repository.edit"></permission>
-                </permissions>
-                <label id="edit">Edit</label>
-                <icon>edit</icon>
-            </link>
-            <link target="/repositories?form_action=delete-repository&amp;repositoryid=#{id}" mode="intern" id="actions[2]">
-                <permissions>
-                    <permission mode="set" ref="repository.delete"></permission>
-                </permissions>
-                <label id="delete">Delete</label>
-                <icon>delete</icon>
-                <confirmation params="#{name}" id="repository.delete.confirm">Do you really want to delete the repository &quot;#{name}&quot;?</confirmation>
-            </link>
-            <link target="/repositories/installation/#{id}?form_action=reload" mode="intern" id="actions[3]">
-            	<condition expression="${current.active}"/>
-                <permissions>
-                    <permission mode="set" ref="repository.reload"></permission>
-                </permissions>
-                <label id="reload">Reload</label>
-                <icon>reload</icon>
-                <confirmation params="#{name}" id="repository.reload.confirm">Do you really want to reload the repository &quot;#{name}&quot;?</confirmation>
-            </link>
-            <link default="true" target="/repositories/installation/#{id}#tab_packages" mode="intern" id="actions[4]">
-            	<condition expression="${current.active}"/>
-                <permissions>
-                    <permission mode="set" ref="repository.installation"></permission>
-                </permissions>
-                <label id="installation">Installation</label>
-                <icon>deploy</icon>
-            </link>
-        </linkpanel>
-    </config>
-    <data>
-        <resultset hits="2" lastchunk="0" firstchunk="0" previouschunk="0" nextchunk="0" chunksize="10" chunkname="repositories" chunk="0">
-            <result>
-                <field type="text" name="id">
-                    <value>1</value>
-                </field>
-                <field type="text" name="name">
-                    <value>Local</value>
-                </field>
-                <field type="text" name="repositoryType">
-                    <value>LOCAL</value>
-                </field>
-                <field type="text" name="repositoryMode">
-                    <value>ALL</value>
-                </field>
-                <field type="image" name="published">
-                    <value>false</value>
-                    <icon type="class"></icon>
-                </field>
-                <field type="text" name="uri">
-                    <value>file:/srv/www</value>
-                </field>
-                <field type="image" name="active">
-                    <value>false</value>
-                    <icon type="class">led_red</icon>
-                </field>
-                <linkpanel location="inline" id="actions">
-                    <link target="/repositories/update/1#tab_update" mode="intern" id="actions[1]">
-                        <label id="edit">Edit</label>
-                        <icon>edit</icon>
-                    </link>
-                    <link target="/repositories?form_action=delete-repository&amp;repositoryid=1" mode="intern" id="actions[2]">
-                        <label id="delete">Delete</label>
-                        <icon>delete</icon>
-                        <confirmation params="#{name}" id="repository.delete.confirm">Do you really want to delete the repository &quot;Local&quot;?</confirmation>
-                    </link>
-                </linkpanel>
-            </result>
-            <result>
-                <field type="text" name="id">
-                    <value>3</value>
-                </field>
-                <field type="text" name="name">
-                    <value>Delete me</value>
-                </field>
-                <field type="text" name="repositoryType">
-                    <value>LOCAL</value>
-                </field>
-                <field type="text" name="repositoryMode">
-                    <value>ALL</value>
-                </field>
-                <field type="image" name="published">
-                    <value>false</value>
-                    <icon type="class"></icon>
-                </field>
-                <field type="text" name="uri">
-                    <value>file:/srv/www</value>
-                </field>
-                <field type="image" name="active">
-                    <value>true</value>
-                    <icon type="class">led_green</icon>
-                </field>
-                <linkpanel location="inline" id="actions">
-                    <link target="/repositories/update/3#tab_update" mode="intern" id="actions[1]">
-                        <label id="edit">Edit</label>
-                        <icon>edit</icon>
-                    </link>
-                    <link target="/repositories?form_action=delete-repository&amp;repositoryid=3" mode="intern" id="actions[2]">
-                        <label id="delete">Delete</label>
-                        <icon>delete</icon>
-                        <confirmation params="#{name}" id="repository.delete.confirm">Do you really want to delete the repository &quot;Delete me&quot;?</confirmation>
-                    </link>
-                    <link target="/repositories/installation/3?form_action=reload" mode="intern" id="actions[3]">
-                        <label id="reload">Reload</label>
-                        <icon>reload</icon>
-                        <confirmation params="#{name}" id="repository.reload.confirm">Do you really want to reload the repository &quot;Delete me&quot;?</confirmation>
-                    </link>
-                    <link default="true" target="/repositories/installation/3#tab_packages" mode="intern" id="actions[4]">
-                        <label id="installation">Installation</label>
-                        <icon>deploy</icon>
-                    </link>
-                </linkpanel>
-            </result>
-        </resultset>
-    </data>
+	<config>
+		<title id="repositories">Repositories</title>
+		<permissions>
+			<permission ref="repository.list" mode="set"></permission>
+		</permissions>
+		<params />
+		<meta-data bindClass="org.appng.core.domain.RepositoryImpl">
+			<field name="id" type="text" readonly="true" binding="id">
+				<label id="id">ID</label>
+			</field>
+			<field name="name" type="text" binding="name">
+				<label id="name">Name</label>
+			</field>
+			<field name="repositoryType" type="text" binding="repositoryType">
+				<label id="type">Type</label>
+			</field>
+			<field name="repositoryMode" type="text" binding="repositoryMode">
+				<label id="mode">Mode</label>
+			</field>
+			<field name="published" type="image" binding="published">
+				<label id="published">Published</label>
+				<icon condition="${current.published}">led_orange</icon>
+				<icon condition="${not current.published}"></icon>
+			</field>
+			<field name="uri" type="text" displayLength="60" binding="uri">
+				<label id="uri">URI</label>
+			</field>
+			<field name="active" type="image" binding="active">
+				<label id="active">Active</label>
+				<icon condition="${current.active}">led_green</icon>
+				<icon condition="${not current.active}">led_red</icon>
+			</field>
+			<field name="actions" type="linkpanel" binding="actions">
+				<label id="actions">Actions</label>
+			</field>
+		</meta-data>
+		<linkpanel id="other" location="both">
+			<link id="other[1]" mode="intern" target="/repositories/create#tab_create">
+				<permissions>
+					<permission ref="repository.create" mode="set"></permission>
+				</permissions>
+				<label id="repository.create">Create repository</label>
+				<icon>new</icon>
+			</link>
+		</linkpanel>
+		<linkpanel id="actions" location="inline">
+			<link id="actions[1]" mode="intern" target="/repositories/update/#{id}#tab_update">
+				<permissions>
+					<permission ref="repository.edit" mode="set"></permission>
+				</permissions>
+				<label id="edit">Edit</label>
+				<icon>edit</icon>
+			</link>
+			<link id="actions[2]" mode="intern" target="/repositories?form_action=delete-repository&amp;repositoryid=#{id}">
+				<permissions>
+					<permission ref="repository.delete" mode="set"></permission>
+				</permissions>
+				<label id="delete">Delete</label>
+				<icon>delete</icon>
+				<confirmation id="repository.delete.confirm" params="#{name}">Do you really want to delete the repository
+					"#{name}"?</confirmation>
+			</link>
+			<link id="actions[3]" mode="intern" target="/repositories/installation/#{id}?form_action=reload">
+				<condition expression="${current.active}" />
+				<permissions>
+					<permission ref="repository.reload" mode="set"></permission>
+				</permissions>
+				<label id="reload">Reload</label>
+				<icon>reload</icon>
+				<confirmation id="repository.reload.confirm" params="#{name}">Do you really want to reload the repository
+					"#{name}"?</confirmation>
+			</link>
+			<link id="actions[4]" mode="intern" target="/repositories/installation/#{id}#tab_packages" default="true">
+				<condition expression="${current.active}" />
+				<permissions>
+					<permission ref="repository.installation" mode="set"></permission>
+				</permissions>
+				<label id="installation">Installation</label>
+				<icon>deploy</icon>
+			</link>
+		</linkpanel>
+	</config>
+	<data>
+		<resultset chunk="0" chunkname="repositories" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
+			lastchunk="0" hits="2">
+			<result>
+				<field name="id" type="text">
+					<value>1</value>
+				</field>
+				<field name="name" type="text">
+					<value>Local</value>
+				</field>
+				<field name="repositoryType" type="text">
+					<value>LOCAL</value>
+				</field>
+				<field name="repositoryMode" type="text">
+					<value>ALL</value>
+				</field>
+				<field name="published" type="image">
+					<value>false</value>
+					<icon type="class"></icon>
+				</field>
+				<field name="uri" type="text">
+					<value>file:///home/mm/workspace/appng/appng-manager/target/</value>
+				</field>
+				<field name="active" type="image">
+					<value>false</value>
+					<icon type="class">led_red</icon>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="/repositories/update/1#tab_update">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+					<link id="actions[2]" mode="intern" target="/repositories?form_action=delete-repository&amp;repositoryid=1">
+						<label id="delete">Delete</label>
+						<icon>delete</icon>
+						<confirmation id="repository.delete.confirm" params="#{name}">Do you really want to delete the repository
+							"Local"?</confirmation>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="text">
+					<value>3</value>
+				</field>
+				<field name="name" type="text">
+					<value>Delete me</value>
+				</field>
+				<field name="repositoryType" type="text">
+					<value>LOCAL</value>
+				</field>
+				<field name="repositoryMode" type="text">
+					<value>ALL</value>
+				</field>
+				<field name="published" type="image">
+					<value>false</value>
+					<icon type="class"></icon>
+				</field>
+				<field name="uri" type="text">
+					<value>file:///home/mm/workspace/appng/appng-manager/target/</value>
+				</field>
+				<field name="active" type="image">
+					<value>true</value>
+					<icon type="class">led_green</icon>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="/repositories/update/3#tab_update">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+					<link id="actions[2]" mode="intern" target="/repositories?form_action=delete-repository&amp;repositoryid=3">
+						<label id="delete">Delete</label>
+						<icon>delete</icon>
+						<confirmation id="repository.delete.confirm" params="#{name}">Do you really want to delete the repository
+							"Delete me"?</confirmation>
+					</link>
+					<link id="actions[3]" mode="intern" target="/repositories/installation/3?form_action=reload">
+						<label id="reload">Reload</label>
+						<icon>reload</icon>
+						<confirmation id="repository.reload.confirm" params="#{name}">Do you really want to reload the repository
+							"Delete me"?</confirmation>
+					</link>
+					<link id="actions[4]" mode="intern" target="/repositories/installation/3#tab_packages" default="true">
+						<label id="installation">Installation</label>
+						<icon>deploy</icon>
+					</link>
+				</linkpanel>
+			</result>
+		</resultset>
+	</data>
 </datasource>

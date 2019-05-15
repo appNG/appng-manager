@@ -1,119 +1,120 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <datasource xmlns="http://www.appng.org/schema/platform" id="groups">
-    <config>
-        <title id="groups">Groups</title>
-        <permissions>
-            <permission ref="group.list" mode="set"></permission>
-        </permissions>
-        <params>
-            <param name="groupid"/>
-        </params>
-        <meta-data bindClass="org.appng.api.model.Group" result-selector="${current.id eq groupid}">
-            <field name="id" type="int" format="#" binding="id">
-                <label id="id">ID</label>
-            </field>
-            <field name="name" type="text" binding="name">
-                <sort order="desc" prio="0"/>
-                <label id="name">Name</label>
-            </field>
-            <field name="description" type="text" binding="description">
-                <label id="description">Description</label>
-            </field>
-            <field name="actions" type="linkpanel" binding="actions">
-                <label id="actions">Actions</label>
-            </field>
-        </meta-data>
-        <linkpanel id="other" location="both">
-            <link id="other[1]" mode="intern" target="/users/group/create#tab_groups">
-                <permissions>
-                    <permission ref="group.create" mode="set"></permission>
-                </permissions>
-                <label id="group.create">Create group</label>
-                <icon>new</icon>
-            </link>
-        </linkpanel>
-        <linkpanel id="actions" location="inline">
-            <link id="actions[1]" mode="intern" target="/users/group/update/#{id}#tab_groups" default="true">
-                <permissions>
-                    <permission ref="group.edit" mode="set"></permission>
-                </permissions>
-                <label id="edit">Edit</label>
-                <icon>edit</icon>
-            </link>
-            <link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=#{id}">
-                <condition expression="${not current.defaultAdmin}"/>
-                <permissions>
-                    <permission ref="group.delete" mode="set"></permission>
-                </permissions>
-                <label id="delete">Delete</label>
-                <icon>delete</icon>
-                <confirmation id="group.delete.confirm" params="#{name}">Do you really want to delete the group "#{name}"?</confirmation>
-            </link>
-        </linkpanel>
-    </config>
-    <data>
-        <resultset chunk="0" chunkname="groups" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="3">
-            <result>
-                <field name="id" type="int">
-                    <value>3</value>
-                </field>
-                <field name="name" type="text">
-                    <value>users</value>
-                </field>
-                <field name="description" type="text">
-                    <value>all the users</value>
-                </field>
-                <linkpanel id="actions" location="inline">
-                    <link id="actions[1]" mode="intern" target="/users/group/update/3#tab_groups" default="true">
-                        <label id="edit">Edit</label>
-                        <icon>edit</icon>
-                    </link>
-                    <link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=3">
-                        <label id="delete">Delete</label>
-                        <icon>delete</icon>
-                        <confirmation id="group.delete.confirm" params="#{name}">Do you really want to delete the group "users"?</confirmation>
-                    </link>
-                </linkpanel>
-            </result>
-            <result>
-                <field name="id" type="int">
-                    <value>1</value>
-                </field>
-                <field name="name" type="text">
-                    <value>admin</value>
-                </field>
-                <field name="description" type="text">
-                    <value>admins</value>
-                </field>
-                <linkpanel id="actions" location="inline">
-                    <link id="actions[1]" mode="intern" target="/users/group/update/1#tab_groups" default="true">
-                        <label id="edit">Edit</label>
-                        <icon>edit</icon>
-                    </link>
-                    <link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=1">
-                        <label id="delete">Delete</label>
-                        <icon>delete</icon>
-                        <confirmation id="group.delete.confirm" params="#{name}">Do you really want to delete the group "admin"?</confirmation>
-                    </link>
-                </linkpanel>
-            </result>
-            <result>
-                <field name="id" type="int">
-                    <value>4</value>
-                </field>
-                <field name="name" type="text">
-                    <value>Administrators</value>
-                </field>
-                <field name="description" type="text">
-                    <value>appNG Administrators Group</value>
-                </field>
-                <linkpanel id="actions" location="inline">
-                    <link id="actions[1]" mode="intern" target="/users/group/update/4#tab_groups" default="true">
-                        <label id="edit">Edit</label>
-                        <icon>edit</icon>
-                    </link>
-                </linkpanel>
-            </result>
-        </resultset>
-    </data>
+	<config>
+		<title id="groups">Groups</title>
+		<permissions>
+			<permission ref="group.list" mode="set"></permission>
+		</permissions>
+		<params>
+			<param name="groupid" />
+		</params>
+		<meta-data bindClass="org.appng.api.model.Group" result-selector="${current.id eq groupid}">
+			<field name="id" type="int" format="#" binding="id">
+				<label id="id">ID</label>
+			</field>
+			<field name="name" type="text" binding="name">
+				<sort order="desc" prio="0" />
+				<label id="name">Name</label>
+			</field>
+			<field name="description" type="text" binding="description">
+				<label id="description">Description</label>
+			</field>
+			<field name="actions" type="linkpanel" binding="actions">
+				<label id="actions">Actions</label>
+			</field>
+		</meta-data>
+		<linkpanel id="other" location="both">
+			<link id="other[1]" mode="intern" target="/users/group/create#tab_groups">
+				<permissions>
+					<permission ref="group.create" mode="set"></permission>
+				</permissions>
+				<label id="group.create">Create group</label>
+				<icon>new</icon>
+			</link>
+		</linkpanel>
+		<linkpanel id="actions" location="inline">
+			<link id="actions[1]" mode="intern" target="/users/group/update/#{id}#tab_groups" default="true">
+				<permissions>
+					<permission ref="group.edit" mode="set"></permission>
+				</permissions>
+				<label id="edit">Edit</label>
+				<icon>edit</icon>
+			</link>
+			<link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=#{id}">
+				<condition expression="${not current.defaultAdmin}" />
+				<permissions>
+					<permission ref="group.delete" mode="set"></permission>
+				</permissions>
+				<label id="delete">Delete</label>
+				<icon>delete</icon>
+				<confirmation id="group.delete.confirm" params="#{name}">Do you really want to delete the group "#{name}"?</confirmation>
+			</link>
+		</linkpanel>
+	</config>
+	<data>
+		<resultset chunk="0" chunkname="groups" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
+			lastchunk="0" hits="3">
+			<result>
+				<field name="id" type="int">
+					<value>3</value>
+				</field>
+				<field name="name" type="text">
+					<value>users</value>
+				</field>
+				<field name="description" type="text">
+					<value>all the users</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="/users/group/update/3#tab_groups" default="true">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+					<link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=3">
+						<label id="delete">Delete</label>
+						<icon>delete</icon>
+						<confirmation id="group.delete.confirm" params="#{name}">Do you really want to delete the group "users"?</confirmation>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="int">
+					<value>1</value>
+				</field>
+				<field name="name" type="text">
+					<value>admin</value>
+				</field>
+				<field name="description" type="text">
+					<value>admins</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="/users/group/update/1#tab_groups" default="true">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+					<link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=1">
+						<label id="delete">Delete</label>
+						<icon>delete</icon>
+						<confirmation id="group.delete.confirm" params="#{name}">Do you really want to delete the group "admin"?</confirmation>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="int">
+					<value>4</value>
+				</field>
+				<field name="name" type="text">
+					<value>Administrators</value>
+				</field>
+				<field name="description" type="text">
+					<value>appNG Administrators Group</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="/users/group/update/4#tab_groups" default="true">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+				</linkpanel>
+			</result>
+		</resultset>
+	</data>
 </datasource>

@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <datasource xmlns="http://www.appng.org/schema/platform" id="property">
-    <config>
-        <title id="property">property</title>
-        <params>
-            <param name="id">platform.application.manager.testproperty</param>
-        </params>
-        <meta-data binding="property" bindClass="org.appng.application.manager.form.PropertyForm">
-            <field name="shortName" type="text" readonly="true" binding="property.shortName">
-                <label id="name">Name</label>
-            </field>
-            <field name="string" type="text" readonly="true" binding="property.string">
-                <label id="activeValue">Active Value</label>
-            </field>
-            <field name="defaultString" type="text" readonly="true" binding="property.defaultString">
-                <label id="defaultvalue">Default-Value</label>
-            </field>
-            <field name="actualString" type="text" binding="property.actualString">
-                <label id="value">Value</label>
-            </field>
-            <field name="clob" type="longtext" format="auto" binding="property.clob">
-                <label id="clobvalue">Multilined value</label>
-            </field>
-            <field name="description" type="longtext" readonly="true" binding="property.description">
-                <label id="description">Description</label>
-            </field>
-        </meta-data>
-    </config>
-    <data>
-        <result>
-            <field name="shortName" type="text">
-                <value>testproperty</value>
-            </field>
-            <field name="string" type="text">
-                <value>7</value>
-            </field>
-            <field name="defaultString" type="text">
-                <value>5</value>
-            </field>
-            <field name="actualString" type="text">
-                <value>7</value>
-            </field>
-            <field name="clob" type="longtext">
-                <value></value>
-            </field>
-            <field name="description" type="longtext">
-                <value></value>
-            </field>
-        </result>
-    </data>
+	<config>
+		<title id="property">property</title>
+		<params>
+			<param name="id">platform.application.manager.testproperty</param>
+		</params>
+		<meta-data binding="property" bindClass="org.appng.application.manager.form.PropertyForm">
+			<field name="shortName" type="text" readonly="true" binding="property.shortName">
+				<label id="name">Name</label>
+			</field>
+			<field name="string" type="text" readonly="true" binding="property.string">
+				<label id="activeValue">Active Value</label>
+			</field>
+			<field name="defaultString" type="text" readonly="true" binding="property.defaultString">
+				<label id="defaultvalue">Default-Value</label>
+			</field>
+			<field name="actualString" type="text" binding="property.actualString">
+				<label id="value">Value</label>
+			</field>
+			<field name="clob" type="longtext" format="auto" binding="property.clob">
+				<label id="clobvalue">Multilined value</label>
+			</field>
+			<field name="description" type="longtext" readonly="true" binding="property.description">
+				<label id="description">Description</label>
+			</field>
+		</meta-data>
+	</config>
+	<data>
+		<result>
+			<field name="shortName" type="text">
+				<value>testproperty</value>
+			</field>
+			<field name="string" type="text">
+				<value>7</value>
+			</field>
+			<field name="defaultString" type="text">
+				<value>5</value>
+			</field>
+			<field name="actualString" type="text">
+				<value>7</value>
+			</field>
+			<field name="clob" type="longtext">
+				<value></value>
+			</field>
+			<field name="description" type="longtext">
+				<value></value>
+			</field>
+		</result>
+	</data>
 </datasource>
