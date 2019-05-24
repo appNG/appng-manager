@@ -11,11 +11,9 @@ import org.appng.mail.MailTransport;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
 import com.google.common.net.MediaType;
 
-@ContextConfiguration(initializers = DatabaseReportJobTest.class)
 public class DatabaseReportJobTest extends AbstractTest {
 
 	@Autowired

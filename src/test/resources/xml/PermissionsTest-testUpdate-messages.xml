@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <messages xmlns="http://www.appng.org/schema/platform" ref="update-permission">
-    <message ref="update-permission" class="OK">Permission has been updated.</message>
+	<message ref="update-permission" class="OK">Permission has been updated.</message>
 </messages>

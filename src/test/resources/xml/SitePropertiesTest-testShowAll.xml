@@ -1,115 +1,127 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <datasource xmlns="http://www.appng.org/schema/platform" id="site-properties">
-    <config>
-        <title id="site.properties">Site properties</title>
-        <permissions>
-            <permission ref="site.properties" mode="set"></permission>
-        </permissions>
-        <params>
-            <param name="siteid">1</param>
-            <param name="propId"/>
-        </params>
-        <meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
-            <field name="shortName" type="text" displayLength="50" binding="shortName">
-                <sort order="asc" name="name" prio="0" />
-                <label id="name">Name</label>
-            </field>
-            <field name="string" type="text" displayLength="40" binding="string">
-                <label id="activeValue">Active Value</label>
-            </field>
-            <field name="description" type="text" displayLength="30" binding="description">
-                <label id="description">Description</label>
-            </field>
-            <field name="changedValue" type="image" binding="changedValue">
-                <label></label>
-                <icon condition="${!current.changedValue}">led_orange</icon>
-                <icon condition="${current.changedValue}">led_green</icon>
-            </field>
-            <field name="actions" type="linkpanel" binding="actions">
-                <label id="actions">Actions</label>
-            </field>
-        </meta-data>
-        <linkpanel id="other" location="both">
-            <link id="other[1]" mode="intern" target="/sites/update/1/site-property/create#tab_site-properties">
-                <permissions>
-                    <permission ref="site.property.create" mode="set"></permission>
-                </permissions>
-                <label id="property.create">Create property</label>
-                <icon>new</icon>
-            </link>
-        </linkpanel>
-        <linkpanel id="actions" location="inline">
-            <link id="actions[1]" mode="intern" target="/sites/update/1/site-property/update/${current.name}#tab_site-properties" default="true">
-                <permissions>
-                    <permission ref="site.property.edit" mode="set"></permission>
-                </permissions>
-                <label id="edit">Edit</label>
-                <icon>edit</icon>
-            </link>
-            <link id="actions[2]" mode="intern" target="/sites/update/1?form_action=delete-site-property&amp;propertyid=${current.name}#tab_site-properties">
-                <permissions>
-                    <permission ref="site.property.delete" mode="set"></permission>
-                </permissions>
-                <label id="delete">Delete</label>
-                <icon>delete</icon>
-                <confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property &quot;#{shortName}&quot;?</confirmation>
-            </link>
-        </linkpanel>
-    </config>
-    <data>
-        <resultset chunk="0" chunkname="site-properties" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="2">
-            <result>
-                <field name="shortName" type="text">
-                    <value>anotherproperty</value>
-                </field>
-                <field name="string" type="text">
-                    <value>foobar</value>
-                </field>
-                <field name="description" type="text">
-                    <value></value>
-                </field>
-                <field name="changedValue" type="image">
-                    <value>true</value>
-                    <icon type="class">led_green</icon>
-                </field>
-                <linkpanel id="actions" location="inline">
-                    <link id="actions[1]" mode="intern" target="/sites/update/1/site-property/update/platform.site.localhost.anotherproperty#tab_site-properties" default="true">
-                        <label id="edit">Edit</label>
-                        <icon>edit</icon>
-                    </link>
-                    <link id="actions[2]" mode="intern" target="/sites/update/1?form_action=delete-site-property&amp;propertyid=platform.site.localhost.anotherproperty#tab_site-properties">
-                        <label id="delete">Delete</label>
-                        <icon>delete</icon>
-                        <confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property &quot;anotherproperty&quot;?</confirmation>
-                    </link>
-                </linkpanel>
-            </result>
-            <result>
-                <field name="shortName" type="text">
-                    <value>testproperty</value>
-                </field>
-                <field name="string" type="text">
-                    <value>5</value>
-                </field>
-                <field name="description" type="text">
-                    <value></value>
-                </field>
-                <field name="changedValue" type="image">
-                    <value>true</value>
-                    <icon type="class">led_green</icon>
-                </field>
-                <linkpanel id="actions" location="inline">
-                    <link id="actions[1]" mode="intern" target="/sites/update/1/site-property/update/platform.site.localhost.testproperty#tab_site-properties" default="true">
-                        <label id="edit">Edit</label>
-                        <icon>edit</icon>
-                    </link>
-                    <link id="actions[2]" mode="intern" target="/sites/update/1?form_action=delete-site-property&amp;propertyid=platform.site.localhost.testproperty#tab_site-properties">
-                        <label id="delete">Delete</label>
-                        <icon>delete</icon>
-                        <confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property &quot;testproperty&quot;?</confirmation>
-                    </link>
-                </linkpanel>
-            </result>
-        </resultset>
-    </data>
+	<config>
+		<title id="site.properties">Site properties</title>
+		<permissions>
+			<permission ref="site.properties" mode="set"></permission>
+		</permissions>
+		<params>
+			<param name="siteid">1</param>
+			<param name="propId" />
+		</params>
+		<meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
+			<field name="shortName" type="text" displayLength="50" binding="shortName">
+				<sort order="asc" name="name" prio="0" />
+				<label id="name">Name</label>
+			</field>
+			<field name="string" type="text" displayLength="40" binding="string">
+				<label id="activeValue">Active Value</label>
+			</field>
+			<field name="description" type="text" displayLength="30" binding="description">
+				<label id="description">Description</label>
+			</field>
+			<field name="changedValue" type="image" binding="changedValue">
+				<label></label>
+				<icon condition="${!current.changedValue}">led_orange</icon>
+				<icon condition="${current.changedValue}">led_green</icon>
+			</field>
+			<field name="actions" type="linkpanel" binding="actions">
+				<label id="actions">Actions</label>
+			</field>
+		</meta-data>
+		<linkpanel id="other" location="both">
+			<link id="other[1]" mode="intern" target="/sites/update/1/site-property/create#tab_site-properties">
+				<permissions>
+					<permission ref="site.property.create" mode="set"></permission>
+				</permissions>
+				<label id="property.create">Create property</label>
+				<icon>new</icon>
+			</link>
+		</linkpanel>
+		<linkpanel id="actions" location="inline">
+			<link id="actions[1]" mode="intern"
+				target="/sites/update/1/site-property/update/${current.name}#tab_site-properties" default="true">
+				<permissions>
+					<permission ref="site.property.edit" mode="set"></permission>
+				</permissions>
+				<label id="edit">Edit</label>
+				<icon>edit</icon>
+			</link>
+			<link id="actions[2]" mode="intern"
+				target="/sites/update/1?form_action=delete-site-property&amp;propertyid=${current.name}#tab_site-properties">
+				<permissions>
+					<permission ref="site.property.delete" mode="set"></permission>
+				</permissions>
+				<label id="delete">Delete</label>
+				<icon>delete</icon>
+				<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
+					"#{shortName}"?</confirmation>
+			</link>
+		</linkpanel>
+	</config>
+	<data>
+		<resultset chunk="0" chunkname="site-properties" chunksize="10" nextchunk="0" previouschunk="0"
+			firstchunk="0" lastchunk="0" hits="2">
+			<result>
+				<field name="shortName" type="text">
+					<value>anotherproperty</value>
+				</field>
+				<field name="string" type="text">
+					<value>foobar</value>
+				</field>
+				<field name="description" type="text">
+					<value></value>
+				</field>
+				<field name="changedValue" type="image">
+					<value>true</value>
+					<icon type="class">led_green</icon>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern"
+						target="/sites/update/1/site-property/update/platform.site.localhost.anotherproperty#tab_site-properties"
+						default="true">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+					<link id="actions[2]" mode="intern"
+						target="/sites/update/1?form_action=delete-site-property&amp;propertyid=platform.site.localhost.anotherproperty#tab_site-properties">
+						<label id="delete">Delete</label>
+						<icon>delete</icon>
+						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
+							"anotherproperty"?</confirmation>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="shortName" type="text">
+					<value>testproperty</value>
+				</field>
+				<field name="string" type="text">
+					<value>5</value>
+				</field>
+				<field name="description" type="text">
+					<value></value>
+				</field>
+				<field name="changedValue" type="image">
+					<value>true</value>
+					<icon type="class">led_green</icon>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern"
+						target="/sites/update/1/site-property/update/platform.site.localhost.testproperty#tab_site-properties"
+						default="true">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+					<link id="actions[2]" mode="intern"
+						target="/sites/update/1?form_action=delete-site-property&amp;propertyid=platform.site.localhost.testproperty#tab_site-properties">
+						<label id="delete">Delete</label>
+						<icon>delete</icon>
+						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
+							"testproperty"?</confirmation>
+					</link>
+				</linkpanel>
+			</result>
+		</resultset>
+	</data>
 </datasource>

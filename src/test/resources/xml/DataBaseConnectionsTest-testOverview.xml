@@ -1,93 +1,94 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <datasource xmlns="http://www.appng.org/schema/platform" id="databaseConnections">
-    <config>
-        <title id="connections">Database connections</title>
-        <params>
-            <param name="siteid"/>
-            <param name="createLink"/>
-            <param name="editLink"/>
-            <param name="deleteLink"/>
-            <param name="testLink"/>
-            <param name="resetLink"/>
-            <param name="linkTab"/>
-            <param name="editTab"/>
-        </params>
-        <meta-data bindClass="org.appng.core.domain.DatabaseConnection">
-            <field name="id" type="int" format="#" hidden="true" binding="id">
-                <label id="id">ID</label>
-            </field>
-            <field name="type" type="text" binding="type">
-                <label id="type">Type</label>
-            </field>
-            <field name="name" type="text" binding="name">
-                <label id="name">Name</label>
-            </field>
-            <field name="jdbcUrl" type="text" binding="jdbcUrl">
-                <label id="jdbcUrl">JDBC-URL</label>
-            </field>
-            <field name="userName" type="text" binding="userName">
-                <label id="userName">User-Name</label>
-            </field>
-            <field name="databaseSize" type="decimal" format="#.##" binding="databaseSize">
-                <label id="sizeMB">Size (MB)</label>
-            </field>
-            <field name="active" type="image" binding="active">
-                <label id="active">Active</label>
-                <icon condition="${current.active}">led_green</icon>
-                <icon condition="${not current.active}">led_red</icon>
-            </field>
-            <field name="actions" type="linkpanel" binding="actions">
-                <label id="actions">Actions</label>
-            </field>
-        </meta-data>
-        <linkpanel id="create" location="both"/>
-        <linkpanel id="actions" location="inline">
-            <link id="actions[1]" mode="intern" target="#{id}" default="true">
-                <label id="edit">Edit</label>
-                <icon>edit</icon>
-            </link>
-            <link id="actions[3]" mode="intern" target="#{id}">
-                <label id="test">Test</label>
-                <icon>start</icon>
-            </link>
-        </linkpanel>
-    </config>
-    <data>
-        <resultset chunk="0" chunkname="databaseConnections" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="1">
-            <result>
-                <field name="id" type="int">
-                    <value>1</value>
-                </field>
-                <field name="type" type="text">
-                    <value>HSQL</value>
-                </field>
-                <field name="name" type="text">
-                    <value>appNG HSQL</value>
-                </field>
-                <field name="jdbcUrl" type="text">
-                    <value>jdbc:hsqldb:hsql://localhost:9001/hsql-testdb</value>
-                </field>
-                <field name="userName" type="text">
-                    <value>sa</value>
-                </field>
-                <field name="databaseSize" type="decimal">
-                    <value></value>
-                </field>
-                <field name="active" type="image">
-                    <value>true</value>
-                    <icon type="class">led_green</icon>
-                </field>
-                <linkpanel id="actions" location="inline">
-                    <link id="actions[1]" mode="intern" target="1" default="true">
-                        <label id="edit">Edit</label>
-                        <icon>edit</icon>
-                    </link>
-                    <link id="actions[3]" mode="intern" target="1">
-                        <label id="test">Test</label>
-                        <icon>start</icon>
-                    </link>
-                </linkpanel>
-            </result>
-        </resultset>
-    </data>
+	<config>
+		<title id="connections">Database connections</title>
+		<params>
+			<param name="siteid" />
+			<param name="createLink" />
+			<param name="editLink" />
+			<param name="deleteLink" />
+			<param name="testLink" />
+			<param name="resetLink" />
+			<param name="linkTab" />
+			<param name="editTab" />
+		</params>
+		<meta-data bindClass="org.appng.core.domain.DatabaseConnection">
+			<field name="id" type="int" format="#" hidden="true" binding="id">
+				<label id="id">ID</label>
+			</field>
+			<field name="type" type="text" binding="type">
+				<label id="type">Type</label>
+			</field>
+			<field name="name" type="text" binding="name">
+				<label id="name">Name</label>
+			</field>
+			<field name="jdbcUrl" type="text" binding="jdbcUrl">
+				<label id="jdbcUrl">JDBC-URL</label>
+			</field>
+			<field name="userName" type="text" binding="userName">
+				<label id="userName">User-Name</label>
+			</field>
+			<field name="databaseSize" type="decimal" format="#.##" binding="databaseSize">
+				<label id="sizeMB">Size (MB)</label>
+			</field>
+			<field name="active" type="image" binding="active">
+				<label id="active">Active</label>
+				<icon condition="${current.active}">led_green</icon>
+				<icon condition="${not current.active}">led_red</icon>
+			</field>
+			<field name="actions" type="linkpanel" binding="actions">
+				<label id="actions">Actions</label>
+			</field>
+		</meta-data>
+		<linkpanel id="create" location="both" />
+		<linkpanel id="actions" location="inline">
+			<link id="actions[1]" mode="intern" target="#{id}" default="true">
+				<label id="edit">Edit</label>
+				<icon>edit</icon>
+			</link>
+			<link id="actions[3]" mode="intern" target="#{id}">
+				<label id="test">Test</label>
+				<icon>start</icon>
+			</link>
+		</linkpanel>
+	</config>
+	<data>
+		<resultset chunk="0" chunkname="databaseConnections" chunksize="10" nextchunk="0" previouschunk="0"
+			firstchunk="0" lastchunk="0" hits="1">
+			<result>
+				<field name="id" type="int">
+					<value>1</value>
+				</field>
+				<field name="type" type="text">
+					<value>HSQL</value>
+				</field>
+				<field name="name" type="text">
+					<value>appNG HSQL</value>
+				</field>
+				<field name="jdbcUrl" type="text">
+					<value>jdbc:hsqldb:hsql://localhost:9001/hsql-testdb</value>
+				</field>
+				<field name="userName" type="text">
+					<value>sa</value>
+				</field>
+				<field name="databaseSize" type="decimal">
+					<value></value>
+				</field>
+				<field name="active" type="image">
+					<value>true</value>
+					<icon type="class">led_green</icon>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="1" default="true">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+					<link id="actions[3]" mode="intern" target="1">
+						<label id="test">Test</label>
+						<icon>start</icon>
+					</link>
+				</linkpanel>
+			</result>
+		</resultset>
+	</data>
 </datasource>

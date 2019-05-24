@@ -1,115 +1,127 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <datasource xmlns="http://www.appng.org/schema/platform" id="application-properties">
-    <config>
-        <title id="application.properties">Application properties</title>
-        <permissions>
-            <permission ref="application.properties" mode="set"></permission>
-        </permissions>
-        <params>
-            <param name="appid">1</param>
-            <param name="propId"/>
-        </params>
-        <meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
-            <field name="shortName" type="text" displayLength="50" binding="shortName">
-                <sort order="asc" name="name" prio="0" />
-                <label id="name">Name</label>
-            </field>
-            <field name="string" type="text" displayLength="40" binding="string">
-                <label id="activeValue">Active Value</label>
-            </field>
-            <field name="description" type="text" displayLength="30" binding="description">
-                <label id="description">Description</label>
-            </field>
-            <field name="changedValue" type="image" binding="changedValue">
-                <label></label>
-                <icon condition="${!current.changedValue}">led_orange</icon>
-                <icon condition="${current.changedValue}">led_green</icon>
-            </field>
-            <field name="actions" type="linkpanel" binding="actions">
-                <label id="actions">Actions</label>
-            </field>
-        </meta-data>
-        <linkpanel id="other" location="both">
-            <link id="other[1]" mode="intern" target="/applications/update/1/property/create#tab_application-properties">
-                <permissions>
-                    <permission ref="application.property.create" mode="set"></permission>
-                </permissions>
-                <label id="property.create">Create property</label>
-                <icon>new</icon>
-            </link>
-        </linkpanel>
-        <linkpanel id="actions" location="inline">
-            <link id="actions[1]" mode="intern" target="/applications/update/1/property/update/${current.name}#tab_application-properties" default="true">
-                <permissions>
-                    <permission ref="application.property.edit" mode="set"></permission>
-                </permissions>
-                <label id="edit">Edit</label>
-                <icon>edit</icon>
-            </link>
-            <link id="actions[2]" mode="intern" target="/applications/update/1?form_action=delete-application-property&amp;propertyid=${current.name}#tab_application-properties">
-                <permissions>
-                    <permission ref="application.property.delete" mode="set"></permission>
-                </permissions>
-                <label id="delete">Delete</label>
-                <icon>delete</icon>
-                <confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property &quot;#{shortName}&quot;?</confirmation>
-            </link>
-        </linkpanel>
-    </config>
-    <data>
-        <resultset chunk="0" chunkname="application-properties" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="2">
-            <result>
-                <field name="shortName" type="text">
-                    <value>anotherproperty</value>
-                </field>
-                <field name="string" type="text">
-                    <value>foobar</value>
-                </field>
-                <field name="description" type="text">
-                    <value></value>
-                </field>
-                <field name="changedValue" type="image">
-                    <value>true</value>
-                    <icon type="class">led_green</icon>
-                </field>
-                <linkpanel id="actions" location="inline">
-                    <link id="actions[1]" mode="intern" target="/applications/update/1/property/update/platform.application.manager.anotherproperty#tab_application-properties" default="true">
-                        <label id="edit">Edit</label>
-                        <icon>edit</icon>
-                    </link>
-                    <link id="actions[2]" mode="intern" target="/applications/update/1?form_action=delete-application-property&amp;propertyid=platform.application.manager.anotherproperty#tab_application-properties">
-                        <label id="delete">Delete</label>
-                        <icon>delete</icon>
-                        <confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property &quot;anotherproperty&quot;?</confirmation>
-                    </link>
-                </linkpanel>
-            </result>
-            <result>
-                <field name="shortName" type="text">
-                    <value>testproperty</value>
-                </field>
-                <field name="string" type="text">
-                    <value>5</value>
-                </field>
-                <field name="description" type="text">
-                    <value></value>
-                </field>
-                <field name="changedValue" type="image">
-                    <value>true</value>
-                    <icon type="class">led_green</icon>
-                </field>
-                <linkpanel id="actions" location="inline">
-                    <link id="actions[1]" mode="intern" target="/applications/update/1/property/update/platform.application.manager.testproperty#tab_application-properties" default="true">
-                        <label id="edit">Edit</label>
-                        <icon>edit</icon>
-                    </link>
-                    <link id="actions[2]" mode="intern" target="/applications/update/1?form_action=delete-application-property&amp;propertyid=platform.application.manager.testproperty#tab_application-properties">
-                        <label id="delete">Delete</label>
-                        <icon>delete</icon>
-                        <confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property &quot;testproperty&quot;?</confirmation>
-                    </link>
-                </linkpanel>
-            </result>
-        </resultset>
-    </data>
+	<config>
+		<title id="application.properties">Application properties</title>
+		<permissions>
+			<permission ref="application.properties" mode="set"></permission>
+		</permissions>
+		<params>
+			<param name="appid">1</param>
+			<param name="propId" />
+		</params>
+		<meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propId}">
+			<field name="shortName" type="text" displayLength="50" binding="shortName">
+				<sort order="asc" name="name" prio="0" />
+				<label id="name">Name</label>
+			</field>
+			<field name="string" type="text" displayLength="40" binding="string">
+				<label id="activeValue">Active Value</label>
+			</field>
+			<field name="description" type="text" displayLength="30" binding="description">
+				<label id="description">Description</label>
+			</field>
+			<field name="changedValue" type="image" binding="changedValue">
+				<label></label>
+				<icon condition="${!current.changedValue}">led_orange</icon>
+				<icon condition="${current.changedValue}">led_green</icon>
+			</field>
+			<field name="actions" type="linkpanel" binding="actions">
+				<label id="actions">Actions</label>
+			</field>
+		</meta-data>
+		<linkpanel id="other" location="both">
+			<link id="other[1]" mode="intern" target="/applications/update/1/property/create#tab_application-properties">
+				<permissions>
+					<permission ref="application.property.create" mode="set"></permission>
+				</permissions>
+				<label id="property.create">Create property</label>
+				<icon>new</icon>
+			</link>
+		</linkpanel>
+		<linkpanel id="actions" location="inline">
+			<link id="actions[1]" mode="intern"
+				target="/applications/update/1/property/update/${current.name}#tab_application-properties" default="true">
+				<permissions>
+					<permission ref="application.property.edit" mode="set"></permission>
+				</permissions>
+				<label id="edit">Edit</label>
+				<icon>edit</icon>
+			</link>
+			<link id="actions[2]" mode="intern"
+				target="/applications/update/1?form_action=delete-application-property&amp;propertyid=${current.name}#tab_application-properties">
+				<permissions>
+					<permission ref="application.property.delete" mode="set"></permission>
+				</permissions>
+				<label id="delete">Delete</label>
+				<icon>delete</icon>
+				<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
+					"#{shortName}"?</confirmation>
+			</link>
+		</linkpanel>
+	</config>
+	<data>
+		<resultset chunk="0" chunkname="application-properties" chunksize="10" nextchunk="0" previouschunk="0"
+			firstchunk="0" lastchunk="0" hits="2">
+			<result>
+				<field name="shortName" type="text">
+					<value>anotherproperty</value>
+				</field>
+				<field name="string" type="text">
+					<value>foobar</value>
+				</field>
+				<field name="description" type="text">
+					<value></value>
+				</field>
+				<field name="changedValue" type="image">
+					<value>true</value>
+					<icon type="class">led_green</icon>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern"
+						target="/applications/update/1/property/update/platform.application.manager.anotherproperty#tab_application-properties"
+						default="true">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+					<link id="actions[2]" mode="intern"
+						target="/applications/update/1?form_action=delete-application-property&amp;propertyid=platform.application.manager.anotherproperty#tab_application-properties">
+						<label id="delete">Delete</label>
+						<icon>delete</icon>
+						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
+							"anotherproperty"?</confirmation>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="shortName" type="text">
+					<value>testproperty</value>
+				</field>
+				<field name="string" type="text">
+					<value>5</value>
+				</field>
+				<field name="description" type="text">
+					<value></value>
+				</field>
+				<field name="changedValue" type="image">
+					<value>true</value>
+					<icon type="class">led_green</icon>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern"
+						target="/applications/update/1/property/update/platform.application.manager.testproperty#tab_application-properties"
+						default="true">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+					<link id="actions[2]" mode="intern"
+						target="/applications/update/1?form_action=delete-application-property&amp;propertyid=platform.application.manager.testproperty#tab_application-properties">
+						<label id="delete">Delete</label>
+						<icon>delete</icon>
+						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
+							"testproperty"?</confirmation>
+					</link>
+				</linkpanel>
+			</result>
+		</resultset>
+	</data>
 </datasource>
