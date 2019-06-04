@@ -16,8 +16,6 @@
 package org.appng.application.manager.business;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -25,14 +23,25 @@ import org.appng.api.Scope;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.core.controller.Session;
+import org.appng.core.controller.SessionListener;
+import org.appng.core.service.CacheService;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SessionsTest extends AbstractTest {
+
+	@BeforeClass
+	public static void initCache() {
+		new SessionListener().contextInitialized(null);
+	}
 
 	@Test
 	public void testShowSessions() throws Exception {
@@ -60,7 +69,7 @@ public class SessionsTest extends AbstractTest {
 	@Test
 	public void testExpire() throws Exception {
 		Session session = new Session("47124712");
-		environment.setAttribute(Scope.PLATFORM, "sessions", Arrays.asList(session));
+		setSessions(session);
 		CallableAction callableAction = getAction("sessionEvent", "expire").withParam("action", "expire")
 				.withParam("sessid", "47124712").getCallableAction(null);
 		callableAction.perform();
@@ -74,7 +83,7 @@ public class SessionsTest extends AbstractTest {
 		Session sessionC = Mockito.spy(new Session("47134713"));
 		Mockito.when(sessionC.isAllowExpire()).thenReturn(false);
 		environment.setAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID, sessionC.getId());
-		environment.setAttribute(Scope.PLATFORM, "sessions", Arrays.asList(sessionA, sessionB, sessionC));
+		setSessions(sessionA, sessionB, sessionC);
 		CallableAction callableAction = getAction("sessionEvent", "expireAll").withParam("action", "expireAll")
 				.getCallableAction(null);
 		callableAction.perform();
@@ -84,7 +93,6 @@ public class SessionsTest extends AbstractTest {
 	}
 
 	private List<Session> setSessions() throws ParseException {
-		List<Session> sessions = new ArrayList<Session>();
 		Session sessionA = Mockito.mock(Session.class);
 		Mockito.when(sessionA.getId()).thenReturn("47114711");
 		Mockito.when(sessionA.getShortId()).thenReturn("47114711");
@@ -100,7 +108,6 @@ public class SessionsTest extends AbstractTest {
 		Mockito.when(sessionA.getUserAgent()).thenReturn("Mozilla");
 		Mockito.when(sessionA.isAllowExpire()).thenReturn(true);
 		Mockito.when(sessionA.clone()).thenReturn(sessionA);
-		sessions.add(sessionA);
 
 		Session sessionB = Mockito.mock(Session.class);
 		Mockito.when(sessionB.getId()).thenReturn("47124712");
@@ -117,8 +124,16 @@ public class SessionsTest extends AbstractTest {
 		Mockito.when(sessionB.getUserAgent()).thenReturn("Mozilla");
 		Mockito.when(sessionB.isAllowExpire()).thenReturn(false);
 		Mockito.when(sessionB.clone()).thenReturn(sessionB);
-		sessions.add(sessionB);
-		environment.setAttribute(Scope.PLATFORM, "sessions", sessions);
-		return sessions;
+
+		return setSessions(sessionA, sessionB);
+	}
+
+	private List<Session> setSessions(Session... sessions) {
+		Cache cache = CacheService.getCacheManager().getCache("sessions");
+		cache.removeAll();
+		for (Session session : sessions) {
+			cache.put(new Element(session.getId(), session));
+		}
+		return SessionListener.getSessions();
 	}
 }

@@ -45,7 +45,6 @@ import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.SelectionFactory;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.ServiceAware;
-import org.appng.core.controller.Controller;
 import org.appng.core.controller.Session;
 import org.appng.core.controller.SessionListener;
 import org.appng.xml.platform.Option;
@@ -77,28 +76,32 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 	@Autowired
 	private SelectionFactory selectionFactory;
 
-	public void perform(Site site, Application application, Environment environment, Options options, Request request,
+	public void perform(Site site, Application application, Environment env, Options options, Request request,
 			Void formBean, FieldProcessor fieldProcessor) {
 		String sessionId = options.getOptionValue("session", "id");
-		List<Session> sessions = environment.getAttribute(Scope.PLATFORM, "sessions");
-		String currentSession = environment.getAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID);
+		List<Session> sessions = SessionListener.getSessions();
+		String currentSession = env.getAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID);
 		Integer siteId = request.convert(options.getOptionValue("site", "id"), Integer.class);
 		String siteName = null == siteId ? null : getService().getNameForSite(siteId);
+		String expireSessions = SessionListener.ALL;
 		if (null == sessionId) {
 			for (Session session : sessions) {
 				expire(currentSession, session, siteName);
 			}
+			fieldProcessor.addOkMessage(request.getMessage(MessageConstants.SESSIONS_EXPIRED, sessions.size()));
 		} else {
+			expireSessions = sessionId;
 			Session session = sessions.get(sessions.indexOf(new Session(sessionId)));
+			fieldProcessor.addOkMessage(request.getMessage(MessageConstants.SESSION_EXPIRED));
 			expire(currentSession, session, siteName);
 		}
-		environment.setAttribute(Scope.SESSION, Controller.EXPIRE_SESSIONS, true);
+		env.setAttribute(Scope.SESSION, SessionListener.EXPIRE_SESSIONS, expireSessions);
 	}
 
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fieldProcessor) {
 		DataContainer dataContainer = new DataContainer(fieldProcessor);
-		List<Session> imutableSessions = environment.getAttribute(Scope.PLATFORM, SessionListener.SESSIONS);
+		List<Session> imutableSessions = SessionListener.getSessions();
 
 		String fDmn = request.getParameter(F_DMN);
 		String fSess = request.getParameter(F_SESS);
