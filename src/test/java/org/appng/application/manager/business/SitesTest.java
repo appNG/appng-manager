@@ -18,10 +18,12 @@ package org.appng.application.manager.business;
 import java.io.IOException;
 
 import org.appng.api.FieldProcessor;
+import org.appng.api.Platform;
 import org.appng.api.ProcessingException;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.SiteForm;
+import org.appng.core.domain.PropertyImpl;
 import org.appng.core.domain.SiteImpl;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -34,6 +36,8 @@ public class SitesTest extends AbstractTest {
 
 	@Test
 	public void testCreateSite() throws Exception {
+		propertyRepository.save(new PropertyImpl("platform." + Platform.Property.MESSAGING_ENABLED, null, "false"));
+		
 		SiteImpl siteToCreate = new SiteImpl();
 		SiteForm siteForm = new SiteForm(siteToCreate);
 		siteToCreate.setName("localhost");

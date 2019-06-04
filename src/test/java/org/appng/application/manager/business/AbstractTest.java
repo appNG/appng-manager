@@ -31,6 +31,7 @@ import org.appng.api.support.environment.DefaultEnvironment;
 import org.appng.core.repository.ApplicationRepository;
 import org.appng.core.repository.GroupRepository;
 import org.appng.core.repository.PermissionRepository;
+import org.appng.core.repository.PropertyRepository;
 import org.appng.core.repository.RepoRepository;
 import org.appng.core.repository.RoleRepository;
 import org.appng.core.repository.SiteApplicationRepository;
@@ -68,6 +69,9 @@ public class AbstractTest extends TestBase {
 
 	@Autowired
 	PermissionRepository permissionRepository;
+
+	@Autowired
+	PropertyRepository propertyRepository;
 
 	@Autowired
 	@Qualifier("entityManager")
