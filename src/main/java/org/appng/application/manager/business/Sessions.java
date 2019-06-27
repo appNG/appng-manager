@@ -242,7 +242,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 
 	private void expire(String currentSession, Session session, String siteName) {
 		if (!session.getId().equals(currentSession) && (siteName == null || session.getSite().equals(siteName))) {
-			session.expire();
+			SessionListener.markSessionExpired(session.getId());
 		}
 	}
 }

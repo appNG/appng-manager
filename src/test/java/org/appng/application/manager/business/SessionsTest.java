@@ -32,14 +32,12 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.Element;
-
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SessionsTest extends AbstractTest {
 
 	@BeforeClass
 	public static void initCache() {
+		CacheService.createCacheManager(null);
 		new SessionListener().contextInitialized(null);
 	}
 
@@ -129,10 +127,10 @@ public class SessionsTest extends AbstractTest {
 	}
 
 	private List<Session> setSessions(Session... sessions) {
-		Cache cache = CacheService.getCacheManager().getCache("sessions");
+		javax.cache.Cache<String, Session> cache = CacheService.getCacheManager().getCache("sessions");
 		cache.removeAll();
 		for (Session session : sessions) {
-			cache.put(new Element(session.getId(), session));
+			cache.put(session.getId(), session);
 		}
 		return SessionListener.getSessions();
 	}
