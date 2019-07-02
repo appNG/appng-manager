@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.io.FileUtils;
@@ -65,6 +66,7 @@ import org.appng.api.model.Site.SiteState;
 import org.appng.api.model.Subject;
 import org.appng.api.model.UserType;
 import org.appng.api.support.OptionGroupFactory;
+import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.OptionGroupFactory.OptionGroup;
 import org.appng.api.support.OptionOwner.Selector;
 import org.appng.api.support.SelectionFactory;
@@ -138,6 +140,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ManagerService extends CoreService implements Service {
 
 	private Logger logger = LoggerFactory.getLogger(ManagerService.class);
+	private static final String FILTER_GROUP_NAME = "f_gn";
 
 	private SelectionFactory selectionFactory;
 	private OptionGroupFactory optionGroupFactory;
@@ -297,7 +300,7 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public DataContainer searchGroups(FieldProcessor fp, Site site, Integer siteId, Integer groupId)
+	public DataContainer searchGroups(FieldProcessor fp, Site site, Integer siteId, Integer groupId, String groupName)
 			throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (groupId != null) {
@@ -307,10 +310,27 @@ public class ManagerService extends CoreService implements Service {
 			}
 			Selection selection = getRoleSelection(group, site.getId());
 
+			List<String> users = group.getSubjects().stream()
+					.map(s -> String.format("%s (%s)", s.getAuthName(), s.getRealname())).sorted()
+					.collect(Collectors.toList());
+			if (!users.isEmpty()) {
+				Selection subjects = new SelectionBuilder<String>("subjects").title(MessageConstants.SUBJECTS)
+						.type(SelectionType.CHECKBOX).options(users).select(users).build();
+				data.getSelections().add(subjects);
+			} else {
+				fp.getMetaData().getFields().remove(fp.getField("group.subjects"));
+			}
 			data.getSelections().add(selection);
 			data.setItem(new GroupForm(group));
 		} else {
-			Page<GroupImpl> groups = groupRepository.search(fp.getPageable());
+			Selection nameFilter = new SelectionBuilder<String>(FILTER_GROUP_NAME)
+					.defaultOption(FILTER_GROUP_NAME, groupName).title(MessageConstants.NAME).type(SelectionType.TEXT)
+					.select(groupName).build();
+			SelectionGroup filter = new SelectionGroup();
+			filter.getSelections().add(nameFilter);
+			data.getSelectionGroups().add(filter);
+			SearchQuery<GroupImpl> groupQuery = groupRepository.createSearchQuery().contains("name", groupName);
+			Page<GroupImpl> groups = groupRepository.search(groupQuery, fp.getPageable());
 			data.setPage(groups);
 		}
 		return data;
