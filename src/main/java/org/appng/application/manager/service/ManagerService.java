@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.io.FileUtils;
@@ -359,8 +360,8 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	public DataContainer searchInstallablePackages(Request request, FieldProcessor fp, Integer repositoryId)
-			throws BusinessException {
+	public DataContainer searchInstallablePackages(Request request, FieldProcessor fp, Integer repositoryId,
+			String filter) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (null != repositoryId) {
 			RepositoryImpl repository = repoRepository.findOne(repositoryId);
@@ -373,9 +374,18 @@ public class ManagerService extends CoreService implements Service {
 					identifiers.addAll(templates);
 
 					List<InstallablePackage> packages = repository.getInstallablePackages(identifiers);
+
+					if (StringUtils.isNotBlank(filter)) {
+						Packages filteredPackages = repository.getPackages(filter);
+						List<String> packageNames = filteredPackages.getPackage().stream()
+								.map(org.appng.core.xml.repository.Package::getName).collect(Collectors.toList());
+						packages = packages.stream().filter(p -> packageNames.contains(p.getName()))
+								.collect(Collectors.toList());
+					}
 					data.setPage(packages, fp.getPageable());
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				handleRepositoryException(request, fp, repository, e);
 			}
 		}
@@ -416,14 +426,15 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link Packages}-object from a certain repository. {@link Packages} are made available to other appNG
-	 * instances via the {@link RepositoryService}.
+	 * Returns a {@link Packages}-object from a certain repository. {@link Packages}
+	 * are made available to other appNG instances via the
+	 * {@link RepositoryService}.
 	 */
-	public Packages searchPackages(Environment environment, FieldProcessor fp, String repositoryName, String digest)
-			throws BusinessException {
+	public Packages searchPackages(Environment environment, FieldProcessor fp, String repositoryName, String digest,
+			String packageName) throws BusinessException {
 		try {
 			Repository repository = getRepository(environment, repositoryName, digest);
-			return repository.getPackages();
+			return repository.getPackages(packageName);
 		} catch (Exception e) {
 			logger.error("error retrieving packages", e);
 		}
@@ -431,8 +442,9 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link PackageVersions}-object from a certain repository. {@link PackageVersions} are made available to
-	 * other appNG instances via the {@link RepositoryService}.
+	 * Returns a {@link PackageVersions}-object from a certain repository.
+	 * {@link PackageVersions} are made available to other appNG instances via the
+	 * {@link RepositoryService}.
 	 */
 	public PackageVersions searchPackageVersions(Environment environment, FieldProcessor fp, String repositoryName,
 			String packageName, String digest) throws BusinessException {
@@ -1013,7 +1025,8 @@ public class ManagerService extends CoreService implements Service {
 			String filterParamName = "f_name";
 			String typeFormRequest = request.getParameter(filterParamType);
 			UserType userType = null != typeFormRequest && UserType.names().contains(typeFormRequest)
-					? UserType.valueOf(typeFormRequest) : null;
+					? UserType.valueOf(typeFormRequest)
+					: null;
 			String name = request.getParameter(filterParamName);
 
 			SearchQuery<SubjectImpl> searchQuery = subjectRepository.createSearchQuery();

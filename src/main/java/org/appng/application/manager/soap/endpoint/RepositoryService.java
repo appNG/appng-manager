@@ -30,6 +30,8 @@ import org.appng.core.domain.PackageArchiveImpl;
 import org.appng.core.model.PackageArchive;
 import org.appng.core.model.Repository;
 import org.appng.core.model.RepositoryUtils;
+import org.appng.core.xml.repository.GetCertificationRequest;
+import org.appng.core.xml.repository.GetCertificationResponse;
 import org.appng.core.xml.repository.GetPackageRequest;
 import org.appng.core.xml.repository.GetPackageResponse;
 import org.appng.core.xml.repository.GetPackageVersionsRequest;
@@ -49,8 +51,8 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 /**
  * 
- * A {@link SoapService} allowing remote listing and transferring of the available {@link Package}s from a
- * {@link Repository}.
+ * A {@link SoapService} allowing remote listing and transferring of the
+ * available {@link Package}s from a {@link Repository}.
  * 
  * @author Matthias Herlitzius
  * @author Matthias Müller
@@ -63,6 +65,7 @@ public class RepositoryService implements SoapService {
 	private static final String SCHEMA_LOCATION = "appng-repository.xsd";
 	private static final String REPOSITORY = "repository";
 	private static final String NAMESPACE = "http://www.appng.org/schema/repository";
+	private static final String GET_CERTIFICATION = "getCertificationRequest";
 	private static final String GET_PACKAGES = "getPackagesRequest";
 	private static final String GET_PACKAGE_VERSIONS = "getPackageVersionsRequest";
 	private static final String GET_PACKAGE = "getPackageRequest";
@@ -78,7 +81,8 @@ public class RepositoryService implements SoapService {
 		try {
 			GetPackagesResponse response = new GetPackagesResponse();
 			FieldProcessor fp = new FieldProcessorImpl(REPOSITORY);
-			Packages packages = service.searchPackages(environment, fp, repositoryName, request.getDigest());
+			Packages packages = service.searchPackages(environment, fp, repositoryName, request.getDigest(),
+					request.getPackageName());
 			response.setPackages(packages);
 			return response;
 		} catch (BusinessException e) {
@@ -134,6 +138,13 @@ public class RepositoryService implements SoapService {
 					repositoryName, packageName, version, timestamp), e);
 			throw e;
 		}
+	}
+
+	@PayloadRoot(localPart = GET_CERTIFICATION, namespace = NAMESPACE)
+	public @ResponsePayload GetCertificationResponse getCertification(@RequestPayload GetCertificationRequest request)
+			throws BusinessException {
+		// just a dummy until MGR-43 is implemented
+		return new GetCertificationResponse();
 	}
 
 	public String getContextPath() {
