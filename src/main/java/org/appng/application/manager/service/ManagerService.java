@@ -385,7 +385,6 @@ public class ManagerService extends CoreService implements Service {
 					data.setPage(packages, fp.getPageable());
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 				handleRepositoryException(request, fp, repository, e);
 			}
 		}
