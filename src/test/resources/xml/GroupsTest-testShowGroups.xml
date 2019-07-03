@@ -7,11 +7,9 @@
 		</permissions>
 		<params>
 			<param name="groupid" />
+			<param name="groupName" />
 		</params>
 		<meta-data bindClass="org.appng.api.model.Group" result-selector="${current.id eq groupid}">
-			<field name="id" type="int" format="#" binding="id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" binding="name">
 				<sort order="desc" prio="0" />
 				<label id="name">Name</label>
@@ -33,31 +31,35 @@
 			</link>
 		</linkpanel>
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="/users/group/update/#{id}#tab_groups" default="true">
+			<link id="actions[1]" mode="intern" target="/users/group/update/${current.id}#tab_groups" default="true">
 				<permissions>
 					<permission ref="group.edit" mode="set"></permission>
 				</permissions>
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=#{id}">
+			<link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=${current.id}">
 				<condition expression="${not current.defaultAdmin}" />
 				<permissions>
 					<permission ref="group.delete" mode="set"></permission>
 				</permissions>
 				<label id="delete">Delete</label>
 				<icon>delete</icon>
-				<confirmation id="group.delete.confirm" params="#{name}">Do you really want to delete the group "#{name}"?</confirmation>
+				<confirmation id="group.delete.confirm" params="${current.name}">Do you really want to delete the group
+					"${current.name}"?</confirmation>
 			</link>
 		</linkpanel>
 	</config>
 	<data>
+		<selectionGroup>
+			<selection id="f_gn" type="text">
+				<title id="name">Name</title>
+				<option value="" name="f_gn" />
+			</selection>
+		</selectionGroup>
 		<resultset chunk="0" chunkname="groups" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
 			lastchunk="0" hits="3">
 			<result>
-				<field name="id" type="int">
-					<value>3</value>
-				</field>
 				<field name="name" type="text">
 					<value>users</value>
 				</field>
@@ -72,14 +74,12 @@
 					<link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=3">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
-						<confirmation id="group.delete.confirm" params="#{name}">Do you really want to delete the group "users"?</confirmation>
+						<confirmation id="group.delete.confirm" params="${current.name}">Do you really want to delete the group "users"?
+						</confirmation>
 					</link>
 				</linkpanel>
 			</result>
 			<result>
-				<field name="id" type="int">
-					<value>1</value>
-				</field>
 				<field name="name" type="text">
 					<value>admin</value>
 				</field>
@@ -94,14 +94,12 @@
 					<link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=1">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
-						<confirmation id="group.delete.confirm" params="#{name}">Do you really want to delete the group "admin"?</confirmation>
+						<confirmation id="group.delete.confirm" params="${current.name}">Do you really want to delete the group "admin"?
+						</confirmation>
 					</link>
 				</linkpanel>
 			</result>
 			<result>
-				<field name="id" type="int">
-					<value>4</value>
-				</field>
 				<field name="name" type="text">
 					<value>Administrators</value>
 				</field>

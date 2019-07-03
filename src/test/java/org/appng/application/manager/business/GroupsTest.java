@@ -27,6 +27,7 @@ import org.appng.core.domain.GroupImpl;
 import org.appng.core.domain.RoleImpl;
 import org.appng.core.domain.SiteApplication;
 import org.appng.core.domain.SiteImpl;
+import org.appng.testsupport.validation.WritingXmlValidator;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -35,6 +36,10 @@ import org.junit.runners.MethodSorters;
 public class GroupsTest extends AbstractTest {
 
 	private static final String GROUP_EVENT = "groupEvent";
+
+	static {
+		WritingXmlValidator.writeXml = false;
+	}
 
 	@Test
 	public void testCreateGroup() throws Exception {
@@ -96,10 +101,10 @@ public class GroupsTest extends AbstractTest {
 
 	@Test
 	public void testShowGroup() throws Exception {
-		CallableDataSource siteDatasource = getDataSource("group").withParam("groupid", "1").getCallableDataSource();
-		siteDatasource.perform("test");
+		CallableDataSource groupDatasource = getDataSource("group").withParam("groupid", "1").getCallableDataSource();
+		groupDatasource.perform("test");
 
-		validate(siteDatasource.getDatasource());
+		validate(groupDatasource.getDatasource());
 	}
 
 	@Test
@@ -111,10 +116,19 @@ public class GroupsTest extends AbstractTest {
 		addParameter("sortGroups", "name:desc");
 		initParameters();
 
-		CallableDataSource siteDatasource = getDataSource("groups").getCallableDataSource();
-		siteDatasource.perform("test");
+		CallableDataSource groupDatasource = getDataSource("groups").getCallableDataSource();
+		groupDatasource.perform("test");
 
-		validate(siteDatasource.getDatasource());
+		validate(groupDatasource.getDatasource());
+	}
+
+	@Test
+	public void testShowGroupsFilterName() throws Exception {
+		CallableDataSource groupDatasource = getDataSource("groups").withParam("groupName", "admin")
+				.getCallableDataSource();
+		groupDatasource.perform("test");
+
+		validate(groupDatasource.getDatasource());
 	}
 
 	@Test
