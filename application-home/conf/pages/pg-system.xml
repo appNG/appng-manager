@@ -28,6 +28,9 @@
 					<get-param name="fDmn" />
 					<get-param name="fUsr" />
 					<get-param name="fLgn" />
+					<!-- sort params to avoid warnings from appNG eclipse plugin -->
+					<get-param name="sortSystemProps" />
+					<get-param name="sortSystemEnv" />
 				</get-params>
 				<post-params>
 					<post-param name="form_action" />

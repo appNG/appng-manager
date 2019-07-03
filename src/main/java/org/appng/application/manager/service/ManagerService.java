@@ -36,6 +36,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.io.FileUtils;
@@ -376,16 +377,19 @@ public class ManagerService extends CoreService implements Service {
 					List<InstallablePackage> packages = repository.getInstallablePackages(identifiers);
 
 					if (StringUtils.isNotBlank(filter)) {
-						Packages filteredPackages = repository.getPackages(filter);
-						List<String> packageNames = filteredPackages.getPackage().stream()
-								.map(org.appng.core.xml.repository.Package::getName).collect(Collectors.toList());
-						packages = packages.stream().filter(p -> packageNames.contains(p.getName()))
-								.collect(Collectors.toList());
+						// we can't rely on filtering being supported by the repository,
+						// so do it manually
+						Stream<InstallablePackage> pckgStream = packages.stream();
+						if (filter.contains("*")) {
+							pckgStream = pckgStream.filter(p -> p.getName().matches(filter.replace("*", ".*?")));
+						} else {
+							pckgStream = pckgStream.filter(p -> p.getName().startsWith(filter));
+						}
+						packages = pckgStream.collect(Collectors.toList());
 					}
 					data.setPage(packages, fp.getPageable());
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (BusinessException e) {
 				handleRepositoryException(request, fp, repository, e);
 			}
 		}
