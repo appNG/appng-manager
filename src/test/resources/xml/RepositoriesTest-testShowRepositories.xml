@@ -105,7 +105,7 @@
 					<icon type="class"></icon>
 				</field>
 				<field name="uri" type="text">
-					<value>file:///home/mm/workspace/appng/appng-manager/target/</value>
+					<value>file:///path/to/local/repo</value>
 				</field>
 				<field name="active" type="image">
 					<value>false</value>
@@ -139,7 +139,7 @@
 					<icon type="class"></icon>
 				</field>
 				<field name="uri" type="text">
-					<value>file:///home/mm/workspace/appng/appng-manager/target/</value>
+					<value>file:///path/to/local/repo</value>
 				</field>
 				<field name="active" type="image">
 					<value>true</value>
