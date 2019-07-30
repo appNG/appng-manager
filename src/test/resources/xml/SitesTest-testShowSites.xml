@@ -7,9 +7,6 @@
 		</permissions>
 		<params />
 		<meta-data bindClass="org.appng.api.model.Site">
-			<field name="id" type="int" format="#" hidden="true" binding="id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" binding="name">
 				<sort />
 				<label id="name">Name</label>
@@ -53,23 +50,22 @@
 			</link>
 		</linkpanel>
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="/sites/update/#{id}" default="true">
+			<link id="actions[1]" mode="intern" target="/sites/update/${current.id}" default="true">
 				<permissions>
 					<permission ref="site.edit" mode="set"></permission>
 				</permissions>
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[2]" mode="intern" target="/sites?form_action=delete&amp;siteid=#{id}">
+			<link id="actions[2]" mode="intern" target="/sites?form_action=delete&amp;siteid=${current.id}">
 				<permissions>
 					<permission ref="site.delete" mode="set"></permission>
 				</permissions>
 				<label id="delete">Delete</label>
 				<icon>delete</icon>
-				<confirmation id="site.delete.confirm" params="#{name}">Do you
-					really want to delete the site "#{name}"?</confirmation>
+				<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "#{name}"?</confirmation>
 			</link>
-			<link id="actions[3]" mode="intern" target="/sites?form_action=reload&amp;siteid=#{id}">
+			<link id="actions[3]" mode="intern" target="/sites?form_action=reload&amp;siteid=${current.id}">
 				<permissions>
 					<permission ref="site.reload" mode="set"></permission>
 				</permissions>
@@ -82,9 +78,6 @@
 		<resultset chunk="0" chunkname="sites" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
 			lastchunk="0" hits="2">
 			<result>
-				<field name="id" type="int">
-					<value>1</value>
-				</field>
 				<field name="name" type="text">
 					<value>localhost</value>
 				</field>
@@ -125,9 +118,6 @@
 				</linkpanel>
 			</result>
 			<result>
-				<field name="id" type="int">
-					<value>3</value>
-				</field>
 				<field name="name" type="text">
 					<value>site2</value>
 				</field>

@@ -13,9 +13,6 @@
 			<param name="editTab" />
 		</params>
 		<meta-data bindClass="org.appng.core.domain.DatabaseConnection">
-			<field name="id" type="int" format="#" hidden="true" binding="id">
-				<label id="id">ID</label>
-			</field>
 			<field name="type" type="text" binding="type">
 				<label id="type">Type</label>
 			</field>
@@ -42,11 +39,11 @@
 		</meta-data>
 		<linkpanel id="create" location="both" />
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="#{id}" default="true">
+			<link id="actions[1]" mode="intern" target="${current.id}" default="true">
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[3]" mode="intern" target="#{id}">
+			<link id="actions[3]" mode="intern" target="${current.id}">
 				<label id="test">Test</label>
 				<icon>start</icon>
 			</link>
@@ -56,9 +53,6 @@
 		<resultset chunk="0" chunkname="databaseConnections" chunksize="10" nextchunk="0" previouschunk="0"
 			firstchunk="0" lastchunk="0" hits="1">
 			<result>
-				<field name="id" type="int">
-					<value>1</value>
-				</field>
 				<field name="type" type="text">
 					<value>HSQL</value>
 				</field>

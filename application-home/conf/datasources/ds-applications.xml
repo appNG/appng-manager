@@ -10,11 +10,8 @@
 			</permissions>
 			<params />
 			<meta-data bindClass="org.appng.api.model.Application">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
-					<sort />
+					<sort prio="0" order="asc" ignore-case="true"/>
 					<label>name</label>
 				</field>
 				<field name="displayName" type="text">
@@ -38,14 +35,14 @@
 				</field>
 			</meta-data>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/applications/update/#{id}" default="true">
+				<link mode="intern" target="/applications/update/${current.id}" default="true">
 					<label>edit</label>
 					<icon>edit</icon>
 					<permissions>
 						<permission ref="application.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/applications&#63;form_action=delete&#38;appid=#{id}">
+				<link mode="intern" target="/applications&#63;form_action=delete&#38;appid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="application.delete.confirm" params="#{name}"></confirmation>
@@ -66,9 +63,6 @@
 				<param name="appid" />
 			</params>
 			<meta-data bindClass="org.appng.core.domain.ApplicationImpl">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text" readonly="true">
 					<label>name</label>
 				</field>
@@ -118,10 +112,8 @@
 				<param name="mode" />
 			</params>
 			<meta-data bindClass="org.appng.core.domain.SiteApplication" binding="application" result-selector="${current.application.id eq appid}">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
+					<sort prio="0" order="asc" name="application.name" ignore-case="true" />
 					<label>name</label>
 				</field>
 				<field name="displayName" type="text">
@@ -138,7 +130,8 @@
 				</field>
 			</meta-data>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="${defaultlink}?selectedappid=${current.application.id}${defaultlinkanchor}" default="true">
+				<link mode="intern" target="${defaultlink}?selectedappid=${current.application.id}${defaultlinkanchor}"
+					default="true">
 					<label>select</label>
 					<icon>edit</icon>
 					<permissions>
@@ -162,10 +155,8 @@
 				<param name="siteid" />
 			</params>
 			<meta-data bindClass="org.appng.core.domain.SiteApplication">
-				<field name="application.id" type="int">
-					<label>id</label>
-				</field>
 				<field name="application.name" type="text">
+					<sort prio="0" order="asc" name="application.name" ignore-case="true"/>
 					<label>name</label>
 				</field>
 				<field name="application.applicationVersion" type="text">

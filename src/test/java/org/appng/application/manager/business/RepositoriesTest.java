@@ -80,8 +80,8 @@ public class RepositoriesTest extends AbstractTest {
 		siteDatasource.perform("test");
 		
 		XPathDifferenceHandler differenceListener = new XPathDifferenceHandler(false);
+		differenceListener.ignoreDifference("/datasource[1]/data[1]/result[1]/field[3]/value[1]/text()[1]");
 		differenceListener.ignoreDifference("/datasource[1]/data[1]/result[1]/field[4]/value[1]/text()[1]");
-		differenceListener.ignoreDifference("/datasource[1]/data[1]/result[1]/field[5]/value[1]/text()[1]");
 		validate(siteDatasource.getDatasource(), differenceListener);
 	}
 
@@ -109,8 +109,8 @@ public class RepositoriesTest extends AbstractTest {
 				.withParam(FORM_ACTION, "update").getCallableAction(repoForm);
 		
 		XPathDifferenceHandler differenceListener = new XPathDifferenceHandler(false);
+		differenceListener.ignoreDifference("/action[1]/data[1]/result[1]/field[3]/value[1]/text()[1]");
 		differenceListener.ignoreDifference("/action[1]/data[1]/result[1]/field[4]/value[1]/text()[1]");
-		differenceListener.ignoreDifference("/action[1]/data[1]/result[1]/field[5]/value[1]/text()[1]");
 
 		FieldProcessor fieldProcessor = callableAction.perform();
 		validate(callableAction.getAction(), "-action", differenceListener);

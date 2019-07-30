@@ -20,8 +20,7 @@
 					</size>
 				</validation>
 				<messages ref="name">
-					<message ref="name" class="ERROR">A repository with this name
-						already exists!</message>
+					<message ref="name" class="ERROR">A repository with this name already exists!</message>
 				</messages>
 			</field>
 			<field name="description" type="text" binding="repository.description">

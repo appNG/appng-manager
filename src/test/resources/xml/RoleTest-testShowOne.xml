@@ -6,9 +6,6 @@
 			<param name="id">1</param>
 		</params>
 		<meta-data binding="role" bindClass="org.appng.application.manager.form.RoleForm">
-			<field name="id" type="int" format="#" readonly="true" binding="role.id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" binding="role.name">
 				<label id="name">Name</label>
 			</field>
@@ -30,9 +27,6 @@
 			</optionGroup>
 		</selection>
 		<result>
-			<field name="id" type="int">
-				<value>1</value>
-			</field>
 			<field name="name" type="text">
 				<value>role1</value>
 			</field>

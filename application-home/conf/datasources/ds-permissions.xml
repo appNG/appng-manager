@@ -12,11 +12,8 @@
 				<param name="appid" />
 			</params>
 			<meta-data bindClass="org.appng.core.domain.PermissionImpl">
-				<field name="id" type="int">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
-					<sort />
+					<sort prio="0" order="asc" ignore-case="true"/>
 					<label>name</label>
 				</field>
 				<field name="description" type="text">
@@ -39,7 +36,7 @@
 				</link>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/applications/update/${appid}/permission/update/#{id}#tab_permissions" default="true">
+				<link mode="intern" target="/applications/update/${appid}/permission/update/${current.id}#tab_permissions" default="true">
 					<label>edit</label>
 					<icon>edit</icon>
 					<permissions>
@@ -47,7 +44,7 @@
 					</permissions>
 				</link>
 				<link mode="intern"
-					target="/applications/update/${appid}&#63;form_action=delete-permission&#38;permissionid=#{id}#tab_permissions">
+					target="/applications/update/${appid}&#63;form_action=delete-permission&#38;permissionid=${current.id}#tab_permissions">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="permission.delete.confirm" params="#{name}"/>
@@ -69,9 +66,6 @@
 				<param name="permissionid" />
 			</params>
 			<meta-data bindClass="org.appng.core.domain.PermissionImpl">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
 					<label>name</label>
 				</field>
