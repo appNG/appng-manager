@@ -7,7 +7,7 @@
 		</permissions>
 		<params>
 			<param name="groupid" />
-			<param name="groupName" />
+			<param name="groupName">admin</param>
 		</params>
 		<meta-data bindClass="org.appng.api.model.Group" result-selector="${current.id eq groupid}">
 			<field name="name" type="text" binding="name">
@@ -54,30 +54,11 @@
 		<selectionGroup>
 			<selection id="f_gn" type="text">
 				<title id="name">Name</title>
-				<option value="" name="f_gn" />
+				<option value="admin" name="f_gn" />
 			</selection>
 		</selectionGroup>
 		<resultset chunk="0" chunkname="groups" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
-			lastchunk="0" hits="3">
-			<result>
-				<field name="name" type="text">
-					<value>users</value>
-				</field>
-				<field name="description" type="text">
-					<value>all the users</value>
-				</field>
-				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/users/group/update/3#tab_groups" default="true">
-						<label id="edit">Edit</label>
-						<icon>edit</icon>
-					</link>
-					<link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=3">
-						<label id="delete">Delete</label>
-						<icon>delete</icon>
-						<confirmation id="group.delete.confirm" params="${current.name}">Do you really want to delete the group "users"?</confirmation>
-					</link>
-				</linkpanel>
-			</result>
+			lastchunk="0" hits="1">
 			<result>
 				<field name="name" type="text">
 					<value>admin</value>
@@ -94,20 +75,6 @@
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="group.delete.confirm" params="${current.name}">Do you really want to delete the group "admin"?</confirmation>
-					</link>
-				</linkpanel>
-			</result>
-			<result>
-				<field name="name" type="text">
-					<value>Administrators</value>
-				</field>
-				<field name="description" type="text">
-					<value>appNG Administrators Group</value>
-				</field>
-				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/users/group/update/4#tab_groups" default="true">
-						<label id="edit">Edit</label>
-						<icon>edit</icon>
 					</link>
 				</linkpanel>
 			</result>

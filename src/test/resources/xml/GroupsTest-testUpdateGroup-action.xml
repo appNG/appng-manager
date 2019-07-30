@@ -20,8 +20,7 @@
 						<message ref="group.name" class="ERROR" code="{validation.string.max}">Enter at most 64 characters</message>
 					</size>
 					<pattern regexp="([a-zA-Z0-9_\.-]{3,}[ ]*)+([a-zA-Z0-9_\.-][ ]*)+">
-						<message ref="group.name" class="ERROR" code="{validation.name}">Please enter a valid name, which may only consist of
-							letters,
+						<message ref="group.name" class="ERROR" code="{validation.name}">Please enter a valid name, which may only consist of letters,
 							numbers, spaces, dots, underscores and hyphens</message>
 					</pattern>
 				</validation>

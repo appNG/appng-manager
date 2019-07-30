@@ -85,13 +85,14 @@ public class Groups extends ServiceAware implements ActionProvider<GroupForm>, D
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		Service service = getService();
-		Integer groupId = request.convert(options.getOptionValue(GROUP, ID), Integer.class);
+		Integer groupId = options.getInteger(GROUP, ID);
 		DataContainer data = null;
 		if (null == groupId && ACTION_CREATE.equals(getAction(options))) {
 			data = service.getNewGroup(site, fp);
 		} else {
 			try {
-				data = service.searchGroups(fp, site, null, groupId);
+				String groupName = options.getString(GROUP, "groupName");
+				data = service.searchGroups(fp, site, null, groupId, groupName);
 			} catch (BusinessException ex) {
 				String message = request.getMessage(ex.getMessageKey(), ex.getMessageArgs());
 				log.error(message, ex);

@@ -9,9 +9,6 @@
 			<param name="userid" />
 		</params>
 		<meta-data bindClass="org.appng.api.model.Subject" result-selector="${current.id eq userid}">
-			<field name="id" type="int" format="#" binding="id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" binding="name">
 				<sort />
 				<label id="name">Name</label>
@@ -43,14 +40,14 @@
 			</link>
 		</linkpanel>
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="/users/user/update/#{id}" default="true">
+			<link id="actions[1]" mode="intern" target="/users/user/update/${current.id}" default="true">
 				<permissions>
 					<permission ref="subject.edit" mode="set"></permission>
 				</permissions>
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[2]" mode="intern" target="/users?form_action=delete&amp;userid=#{id}">
+			<link id="actions[2]" mode="intern" target="/users?form_action=delete&amp;userid=${current.id}">
 				<permissions>
 					<permission ref="subject.delete" mode="set"></permission>
 				</permissions>
@@ -77,9 +74,6 @@
 		<resultset chunk="0" chunkname="users" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
 			lastchunk="0" hits="1">
 			<result>
-				<field name="id" type="int">
-					<value>1</value>
-				</field>
 				<field name="name" type="text">
 					<value>admin</value>
 				</field>

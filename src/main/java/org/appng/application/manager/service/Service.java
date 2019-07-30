@@ -82,7 +82,7 @@ public interface Service {
 	void createPermission(Request request, PermissionImpl permission, Integer appId, FieldProcessor fp)
 			throws BusinessException;
 
-	DataContainer searchGroups(FieldProcessor fp, Site site, Integer siteId, Integer groupId) throws BusinessException;
+	DataContainer searchGroups(FieldProcessor fp, Site site, Integer siteId, Integer groupId, String groupName) throws BusinessException;
 
 	DataContainer searchApplications(FieldProcessor fp, Integer siteId, Integer appId, boolean assignedOnly)
 			throws BusinessException;

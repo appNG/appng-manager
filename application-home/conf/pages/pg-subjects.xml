@@ -20,6 +20,7 @@
 					<get-param name="groupid" />
 					<get-param name="f_type" />
 					<get-param name="f_name" />
+					<get-param name="f_gn" />
 				</get-params>
 				<post-params>
 					<post-param name="form_action" />
@@ -82,6 +83,7 @@
 					<datasource id="groups">
 						<params>
 							<param name="groupid">${id}</param>
+							<param name="groupName">${f_gn}</param>
 						</params>
 					</datasource>
 				</element>

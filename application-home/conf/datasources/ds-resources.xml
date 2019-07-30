@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<datasources xmlns="http://www.appng.org/schema/platform"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
 
 	<datasource id="resources">
@@ -15,16 +14,19 @@
 			</params>
 			<meta-data bindClass="org.appng.api.model.Resource">
 				<field name="name" type="text" readonly="true">
+					<sort />
 					<label>name</label>
 				</field>
 				<field name="resourceType" type="text" readonly="true">
+					<sort />
 					<label>type</label>
 				</field>
 				<field name="size" type="int" readonly="true">
+					<sort />
 					<label>size</label>
 				</field>
-				<field name="version" type="date" readonly="true"
-					format="yyyy-MM-dd HH:mm:ss">
+				<field name="version" type="date" readonly="true" format="yyyy-MM-dd HH:mm:ss">
+					<sort />
 					<label>version</label>
 				</field>
 				<field type="linkpanel" name="actions">
@@ -32,15 +34,13 @@
 				</field>
 			</meta-data>
 			<linkpanel location="top" id="others">
-				<link target="/applications/update/${appid}/resource/upload#tab_resources"
-					mode="intern">
+				<link target="/applications/update/${appid}/resource/upload#tab_resources" mode="intern">
 					<label>upload</label>
 					<icon>upload</icon>
 				</link>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern"
-					target="/applications/update/${appid}/resource/update/${current.id}#tab_resources">
+				<link mode="intern" target="/applications/update/${appid}/resource/update/${current.id}#tab_resources">
 					<label>view</label>
 					<icon>edit</icon>
 					<condition expression="${'JAR' ne current.resourceType.name()}" />

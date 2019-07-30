@@ -10,9 +10,6 @@
 			<param name="form_action">update</param>
 		</params>
 		<meta-data binding="repository" bindClass="org.appng.application.manager.form.RepositoryForm">
-			<field name="id" type="text" readonly="true" binding="repository.id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" binding="repository.name">
 				<label id="name">Name</label>
 				<validation>
@@ -76,9 +73,6 @@
 			<option value="SNAPSHOT" name="Only Snapshot-Applications" selected="false" />
 		</selection>
 		<result>
-			<field name="id" type="text">
-				<value>1</value>
-			</field>
 			<field name="name" type="text">
 				<value>Local</value>
 			</field>
@@ -86,7 +80,7 @@
 				<value>local repo</value>
 			</field>
 			<field name="version" type="date">
-				<value>2019-05-15 10:10:44</value>
+				<value>2019-07-30 15:14:44</value>
 			</field>
 			<field name="uri" type="text">
 				<value>file:///home/mm/workspace/appng/appng-manager/target/</value>
