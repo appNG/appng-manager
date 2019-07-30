@@ -184,6 +184,7 @@
 			<params>
 				<param name="repositoryid" />
 				<param name="packagename" />
+				<param name="packageFilter" />
 			</params>
 			<meta-data bindClass="org.appng.core.model.InstallablePackage" result-selector="${current.name eq packagename}">
 				<field name="name" type="text" readonly="true" displayLength="30">
@@ -236,7 +237,7 @@
 			</linkpanel>
 		</config>
 		<bean id="installation">
-			<option name="repository" id="${repositoryid}" />
+			<option name="repository" id="${repositoryid}" packageFilter="${packageFilter}"/>
 			<option name="sort" key="name" order="ASC" />
 		</bean>
 	</datasource>

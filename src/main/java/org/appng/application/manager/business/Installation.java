@@ -27,10 +27,14 @@ import org.appng.api.Options;
 import org.appng.api.Request;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
+import org.appng.api.support.SelectionBuilder;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.model.InstallablePackage;
+import org.appng.xml.platform.Selection;
+import org.appng.xml.platform.SelectionGroup;
+import org.appng.xml.platform.SelectionType;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -51,6 +55,7 @@ public class Installation extends ServiceAware implements DataProvider, ActionPr
 
 	public static final String REPOSITORY = "repository";
 	private static final String PACKAGE_OPTION = "package";
+	private static final String PACKAGE_FILTER = "packageFilter";
 	private static final String PACKAGE_NAME = "packageName";
 	private static final String PACKAGE_VERSION = "packageVersion";
 	private static final String PACKAGE_TIMESTAMP = "packageTimestamp";
@@ -91,12 +96,19 @@ public class Installation extends ServiceAware implements DataProvider, ActionPr
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		Service service = getService();
-		Integer repositoryId = request.convert(options.getOptionValue(REPOSITORY, ID), Integer.class);
-		String applicationName = request.convert(options.getOptionValue(PACKAGE_OPTION, PACKAGE_NAME), String.class);
+		Integer repositoryId = options.getInteger(REPOSITORY, ID);
+		String packageFilter = options.getString(REPOSITORY, PACKAGE_FILTER);
+		String applicationName = options.getString(PACKAGE_OPTION, PACKAGE_NAME);
 		DataContainer data = new DataContainer(fp);
 		try {
 			if (null != repositoryId && null == applicationName) {
-				data = service.searchInstallablePackages(request, fp, repositoryId);
+
+				Selection packageFilterSelection = new SelectionBuilder<String>("pf").defaultOption("pf", packageFilter)
+						.title(MessageConstants.NAME).type(SelectionType.TEXT).select(packageFilter).build();
+				SelectionGroup filter = new SelectionGroup();
+				filter.getSelections().add(packageFilterSelection);
+				data = service.searchInstallablePackages(request, fp, repositoryId, packageFilter);
+				data.getSelectionGroups().add(filter);
 			} else if (null != repositoryId && null != applicationName) {
 				data = service.searchPackageVersions(request, fp, repositoryId, applicationName);
 			}
