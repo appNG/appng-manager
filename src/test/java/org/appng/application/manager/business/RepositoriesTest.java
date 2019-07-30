@@ -95,8 +95,8 @@ public class RepositoriesTest extends AbstractTest {
 		siteDatasource.perform("test");
 
 		XPathDifferenceHandler differenceListener = new XPathDifferenceHandler(false);
-		differenceListener.ignoreDifference("/datasource[1]/data[1]/resultset[1]/result[1]/field[6]/value[1]/text()[1]");
-		differenceListener.ignoreDifference("/datasource[1]/data[1]/resultset[1]/result[2]/field[6]/value[1]/text()[1]");
+		differenceListener.ignoreDifference("/datasource[1]/data[1]/resultset[1]/result[1]/field[5]/value[1]/text()[1]");
+		differenceListener.ignoreDifference("/datasource[1]/data[1]/resultset[1]/result[2]/field[5]/value[1]/text()[1]");
 		validate(siteDatasource.getDatasource(), differenceListener);
 	}
 
