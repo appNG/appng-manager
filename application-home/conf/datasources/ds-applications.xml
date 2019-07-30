@@ -18,7 +18,7 @@
 					<sort />
 					<label>displayName</label>
 				</field>
-				<field name="packageVersion" type="text">
+				<field name="applicationVersion" type="text">
 					<sort />
 					<label>version</label>
 				</field>
@@ -111,18 +111,23 @@
 				<param name="defaultlinkanchor" />
 				<param name="mode" />
 			</params>
-			<meta-data bindClass="org.appng.core.domain.SiteApplication" binding="application" result-selector="${current.application.id eq appid}">
-				<field name="name" type="text">
-					<sort prio="0" order="asc" name="application.name" ignore-case="true" />
+			<meta-data bindClass="org.appng.core.domain.SiteApplication" result-selector="${current.application.id eq appid}">
+				<field name="application.name" type="text">
+					<sort prio="0" order="asc" ignore-case="true" />
 					<label>name</label>
 				</field>
-				<field name="displayName" type="text">
+				<field name="application.displayName" type="text">
+					<sort />
 					<label>displayName</label>
 				</field>
-				<field name="privileged" type="checkbox">
+				<field name="application.applicationVersion" type="text">
+					<sort />
+					<label>version</label>
+				</field>
+				<field name="application.privileged" type="checkbox">
 					<label>privileged</label>
 				</field>
-				<field name="fileBased" type="checkbox">
+				<field name="application.fileBased" type="checkbox">
 					<label>filebased</label>
 				</field>
 				<field name="actions" type="linkpanel">
@@ -156,10 +161,15 @@
 			</params>
 			<meta-data bindClass="org.appng.core.domain.SiteApplication">
 				<field name="application.name" type="text">
-					<sort prio="0" order="asc" name="application.name" ignore-case="true"/>
+					<sort prio="0" order="asc" name="name" ignore-case="true"/>
 					<label>name</label>
 				</field>
+				<field name="application.displayName" type="text">
+					<sort name="displayName"/>
+					<label>displayName</label>
+				</field>
 				<field name="application.applicationVersion" type="text">
+					<sort name="applicationVersion"/>
 					<label>version</label>
 				</field>
 				<field name="active" type="image">
