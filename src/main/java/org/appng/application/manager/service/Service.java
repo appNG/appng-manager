@@ -89,7 +89,7 @@ public interface Service {
 
 	DataContainer searchRepositories(Request request, FieldProcessor fp, Integer repositoryId);
 
-	DataContainer searchInstallablePackages(Request request, FieldProcessor fp, Integer repositoryId,String filter)
+	DataContainer searchInstallablePackages(Request request, FieldProcessor fp, Integer repositoryId, String filter)
 			throws BusinessException;
 
 	DataContainer searchPackageVersions(Request request, FieldProcessor fp, Integer repositoryId, String packageName)
