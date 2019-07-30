@@ -6,9 +6,6 @@
 			<param name="permissionid">1</param>
 		</params>
 		<meta-data bindClass="org.appng.core.domain.PermissionImpl">
-			<field name="id" type="int" format="#" readonly="true" binding="id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" binding="name">
 				<label id="name">Name</label>
 			</field>
@@ -19,9 +16,6 @@
 	</config>
 	<data>
 		<result>
-			<field name="id" type="int">
-				<value>1</value>
-			</field>
 			<field name="name" type="text">
 				<value>do.this</value>
 			</field>

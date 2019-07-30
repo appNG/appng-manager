@@ -24,8 +24,7 @@
 					</pattern>
 				</validation>
 				<messages ref="name">
-					<message ref="name" class="ERROR">Another user with this username
-						already exists.</message>
+					<message ref="name" class="ERROR">Another user with this username already exists.</message>
 				</messages>
 			</field>
 			<field name="realname" type="text" binding="subject.realname">

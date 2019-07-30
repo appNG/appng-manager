@@ -797,7 +797,6 @@ public class ManagerService extends CoreService implements Service {
 				Page<SiteApplication> applications = siteApplicationRepository.search(searchQuery, pageable);
 				data.setPage(applications);
 			} else {
-				// page uses wrong property path application.x
 				Page<ApplicationImpl> allApplications = applicationRepository.search(pageable);
 				List<SiteApplication> applications = new ArrayList<SiteApplication>();
 				Site site = siteRepository.findOne(siteId);

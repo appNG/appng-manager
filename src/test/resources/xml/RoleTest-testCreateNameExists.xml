@@ -20,14 +20,12 @@
 						<message ref="role.name" class="ERROR" code="{validation.string.max}">Enter at most 64 characters</message>
 					</size>
 					<pattern regexp="([a-zA-Z0-9_\.-]{3,}[ ]*)+([a-zA-Z0-9_\.-][ ]*)+">
-						<message ref="role.name" class="ERROR" code="{validation.name}">Please enter a valid name, which may only consist of
-							letters,
+						<message ref="role.name" class="ERROR" code="{validation.name}">Please enter a valid name, which may only consist of letters,
 							numbers, spaces, dots, underscores and hyphens</message>
 					</pattern>
 				</validation>
 				<messages ref="name">
-					<message ref="name" class="ERROR">A Role with this name already
-						exists.</message>
+					<message ref="name" class="ERROR">A Role with this name already exists.</message>
 				</messages>
 			</field>
 			<field name="description" type="text" binding="role.description">

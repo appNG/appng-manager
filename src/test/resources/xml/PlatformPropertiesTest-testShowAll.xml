@@ -42,8 +42,7 @@
 				</permissions>
 				<label id="platform.reload">Reload platform</label>
 				<icon>reload</icon>
-				<confirmation id="platform.reload.confirm">Do you really want to reload the
-					platform?</confirmation>
+				<confirmation id="platform.reload.confirm">Do you really want to reload the platform?</confirmation>
 			</link>
 		</linkpanel>
 		<linkpanel id="actions" location="inline">

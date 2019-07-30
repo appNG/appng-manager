@@ -18,8 +18,7 @@
 						<message ref="name" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
 					</notNull>
 					<pattern regexp="[a-zA-Z0-9\-\.]{3,}">
-						<message ref="name" class="ERROR" code="{validation.permission}">Please enter a valid name, which may only consist of
-							letters,
+						<message ref="name" class="ERROR" code="{validation.permission}">Please enter a valid name, which may only consist of letters,
 							numbers, dots and hyphens</message>
 					</pattern>
 				</validation>
@@ -36,8 +35,7 @@
 	</config>
 	<condition expression="${form_action eq 'create-permission' and not empty appid}" />
 	<messages>
-		<message ref="create-permission" class="OK">Permission has been
-			created.</message>
+		<message ref="create-permission" class="OK">Permission has been created.</message>
 	</messages>
 	<datasource id="new-permission" />
 	<data>

@@ -18,14 +18,12 @@
 						<message ref="name" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
 					</notNull>
 					<pattern regexp="[a-zA-Z0-9\-\.]{3,}">
-						<message ref="name" class="ERROR" code="{validation.permission}">Please enter a valid name, which may only consist of
-							letters,
+						<message ref="name" class="ERROR" code="{validation.permission}">Please enter a valid name, which may only consist of letters,
 							numbers, dots and hyphens</message>
 					</pattern>
 				</validation>
 				<messages ref="name">
-					<message ref="name" class="ERROR">A permission with this name
-						already exists!</message>
+					<message ref="name" class="ERROR">A permission with this name already exists!</message>
 				</messages>
 			</field>
 			<field name="description" type="text" binding="description">
