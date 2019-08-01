@@ -109,7 +109,7 @@ public interface Service {
 
 	DataContainer searchRole(FieldProcessor fp, Integer roleId, Integer appId) throws BusinessException;
 
-	DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId) throws BusinessException;
+	DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name, String domain) throws BusinessException;
 
 	DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
 			List<String> languages) throws BusinessException;

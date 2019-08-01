@@ -142,6 +142,8 @@ public class ManagerService extends CoreService implements Service {
 
 	private Logger logger = LoggerFactory.getLogger(ManagerService.class);
 	private static final String FILTER_GROUP_NAME = "f_gn";
+	private static final String FILTER_SITE_NAME = "f_sn";
+	private static final String FILTER_SITE_DOMAIN = "f_sd";
 
 	private SelectionFactory selectionFactory;
 	private OptionGroupFactory optionGroupFactory;
@@ -930,7 +932,7 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId)
+	public DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name, String domain)
 			throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (siteId != null) {
@@ -941,8 +943,16 @@ public class ManagerService extends CoreService implements Service {
 			addSelectionsForSite(site, data);
 			data.setItem(new SiteForm(site));
 		} else {
+			SearchQuery<SiteImpl> siteQuery = siteRepository.createSearchQuery();
+			if (StringUtils.isNotBlank(name)) {
+				siteQuery.contains("name", name);
+			}
+			if (StringUtils.isNotBlank(domain)) {
+				siteQuery.contains("domain", domain);
+			}
+			Page<SiteImpl> sites = siteRepository.search(siteQuery, fp.getPageable());
+
 			Map<String, Site> siteMap = environment.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
-			Page<SiteImpl> sites = siteRepository.search(fp.getPageable());
 			for (SiteImpl siteImpl : sites) {
 				Site site = siteMap.get(siteImpl.getName());
 				if (null != site) {
@@ -950,6 +960,16 @@ public class ManagerService extends CoreService implements Service {
 					siteImpl.setStartupTime(site.getStartupTime());
 				}
 			}
+			Selection nameFilter = new SelectionBuilder<String>(FILTER_SITE_NAME)
+					.defaultOption(FILTER_SITE_NAME, name).title(MessageConstants.NAME).type(SelectionType.TEXT)
+					.select(name).build();
+			Selection domainFilter = new SelectionBuilder<String>(FILTER_SITE_DOMAIN)
+					.defaultOption(FILTER_SITE_DOMAIN, domain).title(MessageConstants.DOMAIN).type(SelectionType.TEXT)
+					.select(domain).build();
+			SelectionGroup filter = new SelectionGroup();
+			filter.getSelections().add(nameFilter);
+			filter.getSelections().add(domainFilter);
+			data.getSelectionGroups().add(filter);
 			data.setPage(sites);
 		}
 		return data;

@@ -18,9 +18,11 @@ package org.appng.application.manager.business;
 import java.io.IOException;
 
 import org.appng.api.FieldProcessor;
+import org.appng.api.Platform;
 import org.appng.api.ProcessingException;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
+import org.appng.application.manager.form.PropertyForm;
 import org.appng.application.manager.form.SiteForm;
 import org.appng.core.domain.SiteImpl;
 import org.junit.FixMethodOrder;
@@ -40,6 +42,13 @@ public class SitesTest extends AbstractTest {
 		siteToCreate.setHost("localhost");
 		siteToCreate.setDomain("localhost");
 		siteToCreate.setActive(true);
+
+		//prepares using appNG >= 1.19.1
+		PropertyForm form = new PropertyForm();
+		form.getProperty().setName(Platform.Property.MESSAGING_ENABLED);
+		form.getProperty().setDefaultString(Boolean.FALSE.toString());
+		getAction("propertyEvent", "create-platform-property").withParam(FORM_ACTION, "create-platform-property")
+				.getCallableAction(form).perform();
 
 		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
 				.getCallableAction(siteForm);
@@ -88,6 +97,15 @@ public class SitesTest extends AbstractTest {
 		createSite();
 
 		CallableDataSource siteDatasource = getDataSource("sites").getCallableDataSource();
+		siteDatasource.perform("test");
+
+		validate(siteDatasource.getDatasource());
+	}
+
+	@Test
+	public void testShowSitesFiltered() throws Exception {
+		CallableDataSource siteDatasource = getDataSource("sites").withParam("name", "site")
+				.withParam("domain", "example").getCallableDataSource();
 		siteDatasource.perform("test");
 
 		validate(siteDatasource.getDatasource());
