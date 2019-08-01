@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <messages xmlns="http://www.appng.org/schema/platform" ref="createGroup">
-    <message ref="createGroup" class="OK">Group has been created.</message>
+	<message ref="createGroup" class="OK">Group has been created.</message>
 </messages>

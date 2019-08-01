@@ -1,65 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<action xmlns="http://www.appng.org/schema/platform" id="update-permission" eventId="permissionEvent" async="false">
-    <config>
-        <title id="permission.edit">Edit Permission</title>
-        <permissions>
-            <permission ref="permission.edit" mode="set"></permission>
-        </permissions>
-        <params>
-            <param name="form_action">update-permission</param>
-            <param name="appid">1</param>
-            <param name="permissionid">1</param>
-        </params>
-        <meta-data bindClass="org.appng.core.domain.PermissionImpl">
-            <field name="id" type="int" format="#" readonly="true" binding="id">
-                <label id="id">ID</label>
-            </field>
-            <field name="name" type="text" binding="name">
-                <label id="name">Name</label>
-                <validation>
-                    <notNull>
-                        <message ref="name" class="ERROR">Field must not be empty</message>
-                    </notNull>
-                    <pattern regexp="[a-zA-Z0-9\-\.]{3,}">
-                        <message ref="name" class="ERROR">Please enter a valid name, which may only consist of letters, numbers, dots and hyphens</message>
-                    </pattern>
-                </validation>
-            </field>
-            <field name="description" type="longtext" binding="description">
-                <label id="description">Description</label>
-                <validation>
-                    <size min="0" max="8192">
-                        <message ref="description" class="ERROR">Enter at most 8192 characters</message>
-                    </size>
-                </validation>
-            </field>
-        </meta-data>
-    </config>
-    <condition expression="${form_action eq 'update-permission' and not empty appid and not empty permissionid}"/>
-    <messages>
-        <message ref="update-permission" class="OK">Permission has been updated.</message>
-    </messages>
-    <datasource id="permission">
-        <params>
-            <param name="permissionid">1</param>
-        </params>
-    </datasource>
-    <data>
-        <result>
-            <field name="id" type="int">
-                <value>1</value>
-            </field>
-            <field name="name" type="text">
-                <value>do.somethingelse</value>
-            </field>
-            <field name="description" type="longtext">
-                <value>new description</value>
-            </field>
-        </result>
-    </data>
-    <bean id="permissions">
-        <option name="application" id="1"/>
-        <option name="id" id="1"/>
-        <option name="action" id="update"/>
-    </bean>
+<action xmlns="http://www.appng.org/schema/platform" id="update-permission" eventId="permissionEvent"
+	async="false">
+	<config>
+		<title id="permission.edit">Edit Permission</title>
+		<permissions>
+			<permission ref="permission.edit" mode="set"></permission>
+		</permissions>
+		<params>
+			<param name="form_action">update-permission</param>
+			<param name="appid">1</param>
+			<param name="permissionid">1</param>
+		</params>
+		<meta-data bindClass="org.appng.core.domain.PermissionImpl">
+			<field name="name" type="text" binding="name">
+				<label id="name">Name</label>
+				<validation>
+					<notNull>
+						<message ref="name" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+					<pattern regexp="[a-zA-Z0-9\-\.]{3,}">
+						<message ref="name" class="ERROR" code="{validation.permission}">Please enter a valid name, which may only consist of letters,
+							numbers, dots and hyphens</message>
+					</pattern>
+				</validation>
+			</field>
+			<field name="description" type="longtext" binding="description">
+				<label id="description">Description</label>
+				<validation>
+					<size min="0" max="8192">
+						<message ref="description" class="ERROR" code="{validation.string.max}">Enter at most 8192 characters</message>
+					</size>
+				</validation>
+			</field>
+		</meta-data>
+	</config>
+	<condition expression="${form_action eq 'update-permission' and not empty appid and not empty permissionid}" />
+	<messages>
+		<message ref="update-permission" class="OK">Permission has been updated.</message>
+	</messages>
+	<datasource id="permission">
+		<params>
+			<param name="permissionid">1</param>
+		</params>
+	</datasource>
+	<data>
+		<result>
+			<field name="name" type="text">
+				<value>do.somethingelse</value>
+			</field>
+			<field name="description" type="longtext">
+				<value>new description</value>
+			</field>
+		</result>
+	</data>
+	<bean id="permissions">
+		<option name="application" id="1" />
+		<option name="id" id="1" />
+		<option name="action" id="update" />
+	</bean>
 </action>

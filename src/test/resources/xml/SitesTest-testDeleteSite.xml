@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <messages xmlns="http://www.appng.org/schema/platform" ref="delete">
-    <message ref="delete" class="OK">Site has been deleted.</message>
+	<message ref="delete" class="OK">Site has been deleted.</message>
 </messages>

@@ -10,18 +10,15 @@
 			</permissions>
 			<params />
 			<meta-data bindClass="org.appng.api.model.Application">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
-					<sort />
+					<sort prio="0" order="asc" ignore-case="true"/>
 					<label>name</label>
 				</field>
 				<field name="displayName" type="text">
 					<sort />
 					<label>displayName</label>
 				</field>
-				<field name="packageVersion" type="text">
+				<field name="applicationVersion" type="text">
 					<sort />
 					<label>version</label>
 				</field>
@@ -38,14 +35,14 @@
 				</field>
 			</meta-data>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/applications/update/#{id}" default="true">
+				<link mode="intern" target="/applications/update/${current.id}" default="true">
 					<label>edit</label>
 					<icon>edit</icon>
 					<permissions>
 						<permission ref="application.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/applications&#63;form_action=delete&#38;appid=#{id}">
+				<link mode="intern" target="/applications&#63;form_action=delete&#38;appid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="application.delete.confirm" params="#{name}"></confirmation>
@@ -66,9 +63,6 @@
 				<param name="appid" />
 			</params>
 			<meta-data bindClass="org.appng.core.domain.ApplicationImpl">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text" readonly="true">
 					<label>name</label>
 				</field>
@@ -117,20 +111,23 @@
 				<param name="defaultlinkanchor" />
 				<param name="mode" />
 			</params>
-			<meta-data bindClass="org.appng.core.domain.SiteApplication" binding="application" result-selector="${current.application.id eq appid}">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
-				<field name="name" type="text">
+			<meta-data bindClass="org.appng.core.domain.SiteApplication" result-selector="${current.application.id eq appid}">
+				<field name="application.name" type="text">
+					<sort prio="0" order="asc" ignore-case="true" />
 					<label>name</label>
 				</field>
-				<field name="displayName" type="text">
+				<field name="application.displayName" type="text">
+					<sort />
 					<label>displayName</label>
 				</field>
-				<field name="privileged" type="checkbox">
+				<field name="application.applicationVersion" type="text">
+					<sort />
+					<label>version</label>
+				</field>
+				<field name="application.privileged" type="checkbox">
 					<label>privileged</label>
 				</field>
-				<field name="fileBased" type="checkbox">
+				<field name="application.fileBased" type="checkbox">
 					<label>filebased</label>
 				</field>
 				<field name="actions" type="linkpanel">
@@ -138,7 +135,8 @@
 				</field>
 			</meta-data>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="${defaultlink}?selectedappid=${current.application.id}${defaultlinkanchor}" default="true">
+				<link mode="intern" target="${defaultlink}?selectedappid=${current.application.id}${defaultlinkanchor}"
+					default="true">
 					<label>select</label>
 					<icon>edit</icon>
 					<permissions>
@@ -162,13 +160,16 @@
 				<param name="siteid" />
 			</params>
 			<meta-data bindClass="org.appng.core.domain.SiteApplication">
-				<field name="application.id" type="int">
-					<label>id</label>
-				</field>
 				<field name="application.name" type="text">
+					<sort prio="0" order="asc" name="name" ignore-case="true"/>
 					<label>name</label>
 				</field>
+				<field name="application.displayName" type="text">
+					<sort name="displayName"/>
+					<label>displayName</label>
+				</field>
 				<field name="application.applicationVersion" type="text">
+					<sort name="applicationVersion"/>
 					<label>version</label>
 				</field>
 				<field name="active" type="image">

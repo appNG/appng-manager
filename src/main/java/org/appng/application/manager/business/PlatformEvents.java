@@ -34,9 +34,9 @@ import org.appng.api.Request;
 import org.appng.api.Scope;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
+import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.SelectionFactory;
 import org.appng.application.manager.MessageConstants;
-import org.appng.application.manager.builder.SelectionBuilder;
 import org.appng.application.manager.service.PlatformEventService;
 import org.appng.core.domain.PlatformEvent;
 import org.appng.xml.platform.Selection;
@@ -110,7 +110,7 @@ public class PlatformEvents implements DataProvider {
 
 	private Selection getStringSelection(String id, List<String> values, String selected, String label) {
 		SelectionBuilder<String> builder = new SelectionBuilder<String>(id);
-		return builder.label(label).options(values).select(selected).type(SelectionType.SELECT)
+		return builder.title(label).options(values).select(selected).type(SelectionType.SELECT)
 				.defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).build();
 	}
 

@@ -9,12 +9,10 @@
 				<permission ref="subject.list" mode="set" />
 			</permissions>
 			<params>
-				<param name="userid" />
+				<param name="userId" />
+				<param name="groupId" />
 			</params>
-			<meta-data bindClass="org.appng.api.model.Subject" result-selector="${current.id eq userid}">
-				<field name="id" type="int">
-					<label>id</label>
-				</field>
+			<meta-data bindClass="org.appng.api.model.Subject" result-selector="${current.id eq userId}">
 				<field name="name" type="text">
 					<sort prio="0" order="asc" ignore-case="true" />
 					<label>name</label>
@@ -46,14 +44,14 @@
 				</link>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/users/user/update/#{id}" default="true">
+				<link mode="intern" target="/users/user/update/${current.id}" default="true">
 					<label>edit</label>
 					<icon>edit</icon>
 					<permissions>
 						<permission ref="subject.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/users&#63;form_action=delete&#38;userid=#{id}">
+				<link mode="intern" target="/users&#63;form_action=delete&#38;userid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="subject.delete.confirm" params="#{name}" />
@@ -64,6 +62,7 @@
 			</linkpanel>
 		</config>
 		<bean id="subjects">
+			<option name="subject" groupId="${groupId}"/>
 		</bean>
 	</datasource>
 
@@ -71,12 +70,9 @@
 		<config>
 			<title>subject</title>
 			<params>
-				<param name="userid" />
+				<param name="userId" />
 			</params>
 			<meta-data binding="subject" bindClass="org.appng.application.manager.form.SubjectForm">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text" readonly="true">
 					<label>name</label>
 				</field>
@@ -112,7 +108,7 @@
 			</meta-data>
 		</config>
 		<bean id="subjects">
-			<option name="subject" id="${userid}" />
+			<option name="subject" id="${userId}" />
 		</bean>
 	</datasource>
 

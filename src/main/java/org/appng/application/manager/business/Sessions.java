@@ -17,13 +17,12 @@ package org.appng.application.manager.business;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOCase;
@@ -39,15 +38,16 @@ import org.appng.api.Platform;
 import org.appng.api.Request;
 import org.appng.api.Scope;
 import org.appng.api.model.Application;
+import org.appng.api.model.Named;
 import org.appng.api.model.Site;
 import org.appng.api.support.OptionOwner;
+import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.SelectionFactory;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.controller.Controller;
 import org.appng.core.controller.Session;
 import org.appng.core.controller.SessionListener;
-import org.appng.xml.platform.Label;
 import org.appng.xml.platform.Option;
 import org.appng.xml.platform.Selection;
 import org.appng.xml.platform.SelectionGroup;
@@ -55,6 +55,9 @@ import org.appng.xml.platform.SelectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Lazy
 @Component
@@ -106,7 +109,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 		String fLgn = request.getParameter(F_LGN);
 
 		Set<String> userAgents = new TreeSet<String>();
-		userAgents.add("");
+		userAgents.add(StringUtils.EMPTY);
 		Boolean currentSiteOnly = request.convert(options.getOptionValue("site", "currentSiteOnly"), Boolean.class);
 		List<Session> sessions = getSessions(options, request, currentSiteOnly, imutableSessions, userAgents, fDmn,
 				fSess, fAgnt, fUsr, getDate(fCrBf), getDate(fCrAf), fLgn);
@@ -212,27 +215,26 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 	}
 
 	protected Selection getDomainFilter(Request request, String fSite) {
-		Selection domainFilter = new Selection();
-		domainFilter.setId(F_DMN);
-		domainFilter.setTitle(new Label());
-		domainFilter.getTitle().setId(MessageConstants.DOMAIN);
-		domainFilter.getOptions().add(new Option());
-		domainFilter.setType(SelectionType.SELECT);
 		Map<String, Site> siteMap = request.getEnvironment().getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
-		List<Site> sites = new ArrayList<Site>(siteMap.values());
-		Collections.sort(sites, new Comparator<Site>() {
-			public int compare(Site o1, Site o2) {
-				return o1.getDomain().compareTo(o2.getDomain());
-			}
-		});
-		for (Site s : sites) {
-			Option o = new Option();
-			domainFilter.getOptions().add(o);
-			o.setValue(s.getName());
-			o.setName(s.getDomain());
-			o.setSelected(s.getName().equals(fSite));
+		List<NamedSite> sites = siteMap.values().stream().sorted((s1, s2) -> s1.getDomain().compareTo(s2.getDomain()))
+				.map(s -> NamedSite.forSite(s)).collect(Collectors.toList());
+
+		return new SelectionBuilder<NamedSite>(F_DMN).title(MessageConstants.DOMAIN).defaultOption(null, null)
+				.type(SelectionType.SELECT).options(sites).selector(o -> o.getValue().equals(fSite)).build();
+	}
+
+	@Data
+	@RequiredArgsConstructor
+	@SuppressWarnings("serial")
+	static class NamedSite implements Named<String> {
+		private final String id;
+		private final String name;
+		private String description;
+
+		static NamedSite forSite(Site s) {
+			return new NamedSite(s.getName(), s.getDomain());
 		}
-		return domainFilter;
+
 	}
 
 	private void expire(String currentSession, Session session, String siteName) {

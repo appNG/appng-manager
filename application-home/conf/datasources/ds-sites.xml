@@ -8,11 +8,11 @@
 			<permissions>
 				<permission ref="site.list" mode="set" />
 			</permissions>
-			<params />
+			<params>
+				<param name="name" />
+				<param name="domain" />
+			</params>
 			<meta-data bindClass="org.appng.api.model.Site">
-				<field name="id" type="int" hidden="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
 					<sort prio="0" order="asc" ignore-case="true" />
 					<label>name</label>
@@ -56,14 +56,14 @@
 				</link>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/sites/update/#{id}" default="true">
+				<link mode="intern" target="/sites/update/${current.id}" default="true">
 					<label>edit</label>
 					<icon>edit</icon>
 					<permissions>
 						<permission ref="site.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/sites&#63;form_action=delete&#38;siteid=#{id}">
+				<link mode="intern" target="/sites&#63;form_action=delete&#38;siteid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="site.delete.confirm" params="#{name}" />
@@ -71,7 +71,7 @@
 						<permission ref="site.delete" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/sites&#63;form_action=reload&#38;siteid=#{id}">
+				<link mode="intern" target="/sites&#63;form_action=reload&#38;siteid=${current.id}">
 					<label>reload</label>
 					<icon>reload</icon>
 					<permissions>
@@ -81,6 +81,7 @@
 			</linkpanel>
 		</config>
 		<bean id="sites">
+			<option name="site" siteName="${name}" siteDomain="${domain}"/>
 		</bean>
 	</datasource>
 
@@ -91,9 +92,6 @@
 				<param name="siteid" />
 			</params>
 			<meta-data binding="site" bindClass="org.appng.application.manager.form.SiteForm">
-				<field name="id" type="int" readonly="true">
-					<label>id</label>
-				</field>
 				<field name="name" type="text" readonly="true">
 					<label>name</label>
 				</field>

@@ -35,6 +35,9 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.io.FileUtils;
@@ -65,6 +68,7 @@ import org.appng.api.model.Site.SiteState;
 import org.appng.api.model.Subject;
 import org.appng.api.model.UserType;
 import org.appng.api.support.OptionGroupFactory;
+import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.OptionGroupFactory.OptionGroup;
 import org.appng.api.support.OptionOwner.Selector;
 import org.appng.api.support.SelectionFactory;
@@ -126,6 +130,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -138,6 +143,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ManagerService extends CoreService implements Service {
 
 	private Logger logger = LoggerFactory.getLogger(ManagerService.class);
+	private static final String FILTER_GROUP_NAME = "f_gn";
+	private static final String FILTER_SITE_NAME = "f_sn";
+	private static final String FILTER_SITE_DOMAIN = "f_sd";
 
 	private SelectionFactory selectionFactory;
 	private OptionGroupFactory optionGroupFactory;
@@ -297,7 +305,7 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public DataContainer searchGroups(FieldProcessor fp, Site site, Integer siteId, Integer groupId)
+	public DataContainer searchGroups(FieldProcessor fp, Site site, Integer siteId, Integer groupId, String groupName)
 			throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (groupId != null) {
@@ -307,10 +315,27 @@ public class ManagerService extends CoreService implements Service {
 			}
 			Selection selection = getRoleSelection(group, site.getId());
 
+			List<String> users = group.getSubjects().stream()
+					.map(s -> String.format("%s (%s)", s.getAuthName(), s.getRealname())).sorted()
+					.collect(Collectors.toList());
+			if (!users.isEmpty()) {
+				Selection subjects = new SelectionBuilder<String>("subjects").title(MessageConstants.SUBJECTS)
+						.type(SelectionType.CHECKBOX).options(users).select(users).build();
+				data.getSelections().add(subjects);
+			} else {
+				fp.getMetaData().getFields().remove(fp.getField("group.subjects"));
+			}
 			data.getSelections().add(selection);
 			data.setItem(new GroupForm(group));
 		} else {
-			Page<GroupImpl> groups = groupRepository.search(fp.getPageable());
+			Selection nameFilter = new SelectionBuilder<String>(FILTER_GROUP_NAME)
+					.defaultOption(FILTER_GROUP_NAME, groupName).title(MessageConstants.NAME).type(SelectionType.TEXT)
+					.select(groupName).build();
+			SelectionGroup filter = new SelectionGroup();
+			filter.getSelections().add(nameFilter);
+			data.getSelectionGroups().add(filter);
+			SearchQuery<GroupImpl> groupQuery = groupRepository.createSearchQuery().contains("name", groupName);
+			Page<GroupImpl> groups = groupRepository.search(groupQuery, fp.getPageable());
 			data.setPage(groups);
 		}
 		return data;
@@ -359,8 +384,8 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	public DataContainer searchInstallablePackages(Request request, FieldProcessor fp, Integer repositoryId)
-			throws BusinessException {
+	public DataContainer searchInstallablePackages(Request request, FieldProcessor fp, Integer repositoryId,
+			String filter) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (null != repositoryId) {
 			RepositoryImpl repository = repoRepository.findOne(repositoryId);
@@ -373,6 +398,18 @@ public class ManagerService extends CoreService implements Service {
 					identifiers.addAll(templates);
 
 					List<InstallablePackage> packages = repository.getInstallablePackages(identifiers);
+
+					if (StringUtils.isNotBlank(filter)) {
+						// we can't rely on filtering being supported by the repository,
+						// so do it manually
+						Stream<InstallablePackage> pckgStream = packages.stream();
+						if (filter.contains("*")) {
+							pckgStream = pckgStream.filter(p -> p.getName().matches(filter.replace("*", ".*?")));
+						} else {
+							pckgStream = pckgStream.filter(p -> p.getName().startsWith(filter));
+						}
+						packages = pckgStream.collect(Collectors.toList());
+					}
 					data.setPage(packages, fp.getPageable());
 				}
 			} catch (Exception e) {
@@ -416,14 +453,15 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link Packages}-object from a certain repository. {@link Packages} are made available to other appNG
-	 * instances via the {@link RepositoryService}.
+	 * Returns a {@link Packages}-object from a certain repository. {@link Packages}
+	 * are made available to other appNG instances via the
+	 * {@link RepositoryService}.
 	 */
-	public Packages searchPackages(Environment environment, FieldProcessor fp, String repositoryName, String digest)
-			throws BusinessException {
+	public Packages searchPackages(Environment environment, FieldProcessor fp, String repositoryName, String digest,
+			String packageName) throws BusinessException {
 		try {
 			Repository repository = getRepository(environment, repositoryName, digest);
-			return repository.getPackages();
+			return repository.getPackages(packageName);
 		} catch (Exception e) {
 			logger.error("error retrieving packages", e);
 		}
@@ -431,8 +469,9 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link PackageVersions}-object from a certain repository. {@link PackageVersions} are made available to
-	 * other appNG instances via the {@link RepositoryService}.
+	 * Returns a {@link PackageVersions}-object from a certain repository.
+	 * {@link PackageVersions} are made available to other appNG instances via the
+	 * {@link RepositoryService}.
 	 */
 	public PackageVersions searchPackageVersions(Environment environment, FieldProcessor fp, String repositoryName,
 			String packageName, String digest) throws BusinessException {
@@ -777,7 +816,6 @@ public class ManagerService extends CoreService implements Service {
 				Page<SiteApplication> applications = siteApplicationRepository.search(searchQuery, pageable);
 				data.setPage(applications);
 			} else {
-				// page uses wrong property path application.x
 				Page<ApplicationImpl> allApplications = applicationRepository.search(pageable);
 				List<SiteApplication> applications = new ArrayList<SiteApplication>();
 				Site site = siteRepository.findOne(siteId);
@@ -896,7 +934,7 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId)
+	public DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name, String domain)
 			throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (siteId != null) {
@@ -907,8 +945,16 @@ public class ManagerService extends CoreService implements Service {
 			addSelectionsForSite(site, data);
 			data.setItem(new SiteForm(site));
 		} else {
+			SearchQuery<SiteImpl> siteQuery = siteRepository.createSearchQuery();
+			if (StringUtils.isNotBlank(name)) {
+				siteQuery.contains("name", name);
+			}
+			if (StringUtils.isNotBlank(domain)) {
+				siteQuery.contains("domain", domain);
+			}
+			Page<SiteImpl> sites = siteRepository.search(siteQuery, fp.getPageable());
+
 			Map<String, Site> siteMap = environment.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
-			Page<SiteImpl> sites = siteRepository.search(fp.getPageable());
 			for (SiteImpl siteImpl : sites) {
 				Site site = siteMap.get(siteImpl.getName());
 				if (null != site) {
@@ -916,6 +962,16 @@ public class ManagerService extends CoreService implements Service {
 					siteImpl.setStartupTime(site.getStartupTime());
 				}
 			}
+			Selection nameFilter = new SelectionBuilder<String>(FILTER_SITE_NAME)
+					.defaultOption(FILTER_SITE_NAME, name).title(MessageConstants.NAME).type(SelectionType.TEXT)
+					.select(name).build();
+			Selection domainFilter = new SelectionBuilder<String>(FILTER_SITE_DOMAIN)
+					.defaultOption(FILTER_SITE_DOMAIN, domain).title(MessageConstants.DOMAIN).type(SelectionType.TEXT)
+					.select(domain).build();
+			SelectionGroup filter = new SelectionGroup();
+			filter.getSelections().add(nameFilter);
+			filter.getSelections().add(domainFilter);
+			data.getSelectionGroups().add(filter);
 			data.setPage(sites);
 		}
 		return data;
@@ -996,7 +1052,7 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	public DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
-			List<String> languages) throws BusinessException {
+			List<String> languages, Integer groupId) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (subjectId != null) {
 			SubjectImpl subject = subjectRepository.findOne(subjectId);
@@ -1011,22 +1067,33 @@ public class ManagerService extends CoreService implements Service {
 		} else {
 			String filterParamType = "f_type";
 			String filterParamName = "f_name";
+			String filterParamGroup = "f_gid";
 			String typeFormRequest = request.getParameter(filterParamType);
 			UserType userType = null != typeFormRequest && UserType.names().contains(typeFormRequest)
-					? UserType.valueOf(typeFormRequest) : null;
+					? UserType.valueOf(typeFormRequest)
+					: null;
 			String name = request.getParameter(filterParamName);
 
+			Pageable pageable = fp.getPageable();
 			SearchQuery<SubjectImpl> searchQuery = subjectRepository.createSearchQuery();
+			searchQuery.setAppendEntityAlias(false);
 			if (StringUtils.isNotBlank(name)) {
-				searchQuery.like("name", "%" + name + "%");
+				searchQuery.contains("e.name", name);
 			} else {
-				name = "";
+				name = StringUtils.EMPTY;
 			}
 			if (null != userType) {
-				searchQuery.equals("userType", userType);
+				searchQuery.equals("e.userType", userType);
+			}
+			if (null != groupId) {
+				searchQuery.join("join e.groups g");
+				searchQuery.equals("g.id", groupId);
+				List<Order> orders = StreamSupport.stream(pageable.getSort().spliterator(), false)
+						.map(o -> new Order(o.getDirection(), "e." + o.getProperty())).collect(Collectors.toList());
+				pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders));
 			}
 
-			Page<SubjectImpl> subjects = subjectRepository.search(searchQuery, fp.getPageable());
+			Page<SubjectImpl> subjects = subjectRepository.search(searchQuery, pageable);
 			for (SubjectImpl subject : subjects) {
 				subject.setTypeName(getUserTypeNameProvider(request).getName(subject.getUserType()));
 			}
@@ -1038,9 +1105,21 @@ public class ManagerService extends CoreService implements Service {
 			Selection userName = selectionFactory.fromObjects(filterParamName, MessageConstants.NAME,
 					new String[] { name }, new String[] { name });
 			userName.setType(SelectionType.TEXT);
+
+			List<GroupImpl> groups = groupRepository.findAll(new Sort(Direction.ASC, "name"));
+			Selector groupSelector = o -> {
+				if (null != groupId && groupId.toString().equals(o.getValue())) {
+					o.setSelected(true);
+				}
+			};
+			Selection groupSelection = new SelectionBuilder<GroupImpl>(filterParamGroup).title(MessageConstants.GROUP)
+					.options(groups).defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).selector(groupSelector)
+					.type(SelectionType.SELECT).build();
+
 			SelectionGroup filterGroup = new SelectionGroup();
 			filterGroup.getSelections().add(userName);
 			filterGroup.getSelections().add(userTypes);
+			filterGroup.getSelections().add(groupSelection);
 			data.getSelectionGroups().add(filterGroup);
 			data.setPage(subjects);
 		}

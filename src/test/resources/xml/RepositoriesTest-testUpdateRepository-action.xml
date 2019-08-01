@@ -1,112 +1,106 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <action xmlns="http://www.appng.org/schema/platform" id="update" eventId="repositoryEvent" async="false">
-    <config>
-        <title id="repository.edit">Edit repository</title>
-        <permissions>
-            <permission ref="repository.edit" mode="set"></permission>
-        </permissions>
-        <params>
-            <param name="repositoryid">1</param>
-            <param name="form_action">update</param>
-        </params>
-        <meta-data binding="repository" bindClass="org.appng.application.manager.form.RepositoryForm">
-            <field name="id" type="text" readonly="true" binding="repository.id">
-                <label id="id">ID</label>
-            </field>
-            <field name="name" type="text" binding="repository.name">
-                <label id="name">Name</label>
-                <validation>
-                    <notNull>
-                        <message ref="repository.name" class="ERROR">Field must not be empty</message>
-                    </notNull>
-                    <size min="0" max="64">
-                        <message ref="repository.name" class="ERROR">Enter at most 64 characters</message>
-                    </size>
-                </validation>
-            </field>
-            <field name="description" type="text" binding="repository.description">
-                <label id="description">Description</label>
-                <validation>
-                    <size min="0" max="8192">
-                        <message ref="repository.description" class="ERROR">Enter at most 8192 characters</message>
-                    </size>
-                </validation>
-            </field>
-            <field name="version" type="date" format="yyyy-MM-dd HH:mm:ss" readonly="true" binding="repository.version">
-                <label id="version">Version</label>
-            </field>
-            <field name="uri" type="text" binding="repository.uri">
-                <label id="uri">URI</label>
-            </field>
-            <field name="repositoryMode" type="list:select" binding="repository.repositoryMode">
-                <label id="mode">Mode</label>
-                <condition expression="true"/>
-            </field>
-            <field name="published" type="checkbox" binding="repository.published">
-                <label id="published">Published</label>
-                <condition expression="true"/>
-            </field>
-            <field name="digest" type="text" binding="repository.digest">
-                <label id="digest">Digest</label>
-            </field>
-            <field name="active" type="checkbox" binding="repository.active">
-                <label id="active">Active</label>
-            </field>
-        </meta-data>
-    </config>
-    <condition expression="${form_action eq 'update'}"/>
-    <messages>
-        <message ref="update" class="OK">Repository has been updated.</message>
-    </messages>
-    <datasource id="repository">
-        <params>
-            <param name="repositoryid">1</param>
-        </params>
-    </datasource>
-    <data>
-        <selection id="repositoryType">
-            <title id="repositoryType">repositoryType</title>
-            <option value="LOCAL" name="Local Repository" selected="true"/>
-            <option value="REMOTE" name="Published Repository" selected="false"/>
-        </selection>
-        <selection id="repositoryMode">
-            <title id="repositoryMode">repositoryMode</title>
-            <option value="ALL" name="All Applications" selected="true"/>
-            <option value="STABLE" name="Only Stable-Applications" selected="false"/>
-            <option value="SNAPSHOT" name="Only Snapshot-Applications" selected="false"/>
-        </selection>
-        <result>
-            <field name="id" type="text">
-                <value>1</value>
-            </field>
-            <field name="name" type="text">
-                <value>Local</value>
-            </field>
-            <field name="description" type="text">
-                <value>local repo</value>
-            </field>
-            <field name="version" type="date">
-                <value>2016-09-27 13:53:51</value>
-            </field>
-            <field name="uri" type="text">
-                <value>file:/srv/www</value>
-            </field>
-            <field name="repositoryMode" type="list:select">
-                <value>ALL</value>
-            </field>
-            <field name="published" type="checkbox">
-                <value>false</value>
-            </field>
-            <field name="digest" type="text">
-                <value></value>
-            </field>
-            <field name="active" type="checkbox">
-                <value>false</value>
-            </field>
-        </result>
-    </data>
-    <bean id="repositories">
-        <option name="repository" id="1"/>
-        <option name="action" id="update"/>
-    </bean>
+	<config>
+		<title id="repository.edit">Edit repository</title>
+		<permissions>
+			<permission ref="repository.edit" mode="set"></permission>
+		</permissions>
+		<params>
+			<param name="repositoryid">1</param>
+			<param name="form_action">update</param>
+		</params>
+		<meta-data binding="repository" bindClass="org.appng.application.manager.form.RepositoryForm">
+			<field name="name" type="text" binding="repository.name">
+				<label id="name">Name</label>
+				<validation>
+					<notNull>
+						<message ref="repository.name" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+					<size min="0" max="64">
+						<message ref="repository.name" class="ERROR" code="{validation.string.max}">Enter at most 64 characters</message>
+					</size>
+				</validation>
+			</field>
+			<field name="description" type="text" binding="repository.description">
+				<label id="description">Description</label>
+				<validation>
+					<size min="0" max="8192">
+						<message ref="repository.description" class="ERROR" code="{validation.string.max}">Enter at most 8192 characters</message>
+					</size>
+				</validation>
+			</field>
+			<field name="version" type="date" format="yyyy-MM-dd HH:mm:ss" readonly="true" binding="repository.version">
+				<label id="version">Version</label>
+			</field>
+			<field name="uri" type="text" binding="repository.uri">
+				<label id="uri">URI</label>
+			</field>
+			<field name="repositoryMode" type="list:select" binding="repository.repositoryMode">
+				<label id="mode">Mode</label>
+				<condition expression="true" />
+			</field>
+			<field name="published" type="checkbox" binding="repository.published">
+				<label id="published">Published</label>
+				<condition expression="true" />
+			</field>
+			<field name="digest" type="text" binding="repository.digest">
+				<label id="digest">Digest</label>
+			</field>
+			<field name="active" type="checkbox" binding="repository.active">
+				<label id="active">Active</label>
+			</field>
+		</meta-data>
+	</config>
+	<condition expression="${form_action eq 'update'}" />
+	<messages>
+		<message ref="update" class="OK">Repository has been updated.</message>
+	</messages>
+	<datasource id="repository">
+		<params>
+			<param name="repositoryid">1</param>
+		</params>
+	</datasource>
+	<data>
+		<selection id="repositoryType">
+			<title id="repositoryType">repositoryType</title>
+			<option value="LOCAL" name="Local Repository" selected="true" />
+			<option value="REMOTE" name="Published Repository" selected="false" />
+		</selection>
+		<selection id="repositoryMode">
+			<title id="repositoryMode">repositoryMode</title>
+			<option value="ALL" name="All Applications" selected="true" />
+			<option value="STABLE" name="Only Stable-Applications" selected="false" />
+			<option value="SNAPSHOT" name="Only Snapshot-Applications" selected="false" />
+		</selection>
+		<result>
+			<field name="name" type="text">
+				<value>Local</value>
+			</field>
+			<field name="description" type="text">
+				<value>local repo</value>
+			</field>
+			<field name="version" type="date">
+				<value>2019-07-30 15:14:44</value>
+			</field>
+			<field name="uri" type="text">
+				<value>file:///home/mm/workspace/appng/appng-manager/target/</value>
+			</field>
+			<field name="repositoryMode" type="list:select">
+				<value>ALL</value>
+			</field>
+			<field name="published" type="checkbox">
+				<value>false</value>
+			</field>
+			<field name="digest" type="text">
+				<value></value>
+			</field>
+			<field name="active" type="checkbox">
+				<value>false</value>
+			</field>
+		</result>
+	</data>
+	<bean id="repositories">
+		<option name="repository" id="1" />
+		<option name="action" id="update" />
+	</bean>
 </action>
