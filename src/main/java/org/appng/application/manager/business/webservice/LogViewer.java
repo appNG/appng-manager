@@ -16,8 +16,11 @@
 package org.appng.application.manager.business.webservice;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +32,8 @@ import org.appng.api.Webservice;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.api.model.Subject;
+import org.appng.application.manager.business.LogConfig;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -45,17 +50,25 @@ import org.springframework.stereotype.Component;
 
 @Lazy
 @Component
-@org.springframework.context.annotation.Scope("request")
-public class LogViewer implements Webservice {
+public class LogViewer implements Webservice, InitializingBean {
 
-	private static final String LOG_LOCATION = "WEB-INF/log/";
+	private static final String WEBAPP_ROOT = "${webapp.root}";
+	private static final String APPNG_APPENDER = "log4j.appender.appng.File";
 	protected static final String PERM_LOG_VIEWER = "platform.logfile";
 
 	@Value("${platform." + Platform.Property.PLATFORM_ROOT_PATH + "}")
 	private String rootPath;
 
-	@Value("${platform." + Platform.Property.LOGFILE + "}")
-	private String logfile;
+	private String logFileLocation;
+
+	public void afterPropertiesSet() throws Exception {
+		try (InputStream propsIs = new FileInputStream(new File(rootPath, LogConfig.LOG4J_PROPS))) {
+			Properties log4jProps = new Properties();
+			log4jProps.load(propsIs);
+			logFileLocation = log4jProps.getProperty(APPNG_APPENDER);
+			logFileLocation = logFileLocation.replace(WEBAPP_ROOT, rootPath);
+		}
+	}
 
 	public byte[] processRequest(Site site, Application application, Environment environment, Request request)
 			throws BusinessException {
@@ -96,7 +109,7 @@ public class LogViewer implements Webservice {
 	}
 
 	File getLogfile() {
-		return new File(rootPath, LOG_LOCATION + logfile);
+		return new File(logFileLocation);
 	}
 
 	public String getContentType() {
