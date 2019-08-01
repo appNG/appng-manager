@@ -112,7 +112,7 @@ public interface Service {
 	DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name, String domain) throws BusinessException;
 
 	DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
-			List<String> languages) throws BusinessException;
+			List<String> languages, Integer groupId) throws BusinessException;
 
 	DataContainer searchPermissions(FieldProcessor fp, Integer permissionId, Integer appId) throws BusinessException;
 

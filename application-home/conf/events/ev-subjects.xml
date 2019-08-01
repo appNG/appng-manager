@@ -29,17 +29,17 @@
 			</permissions>
 			<params>
 				<param name="form_action" />
-				<param name="userid" />
+				<param name="userId" />
 			</params>
 		</config>
 		<condition expression="${form_action eq 'update'}" />
 		<datasource id="user">
 			<params>
-				<param name="userid">${userid}</param>
+				<param name="userId">${userId}</param>
 			</params>
 		</datasource>
 		<bean id="subjects">
-			<option name="subject" id="${userid}" />
+			<option name="subject" id="${userId}" />
 			<option name="action" id="update" />
 		</bean>
 	</action>
@@ -52,12 +52,12 @@
 			</permissions>
 			<params>
 				<param name="form_action" />
-				<param name="userid" />
+				<param name="userId" />
 			</params>
 		</config>
 		<condition expression="${form_action eq 'delete'}" />
 		<bean id="subjects">
-			<option name="subject" id="${userid}" />
+			<option name="subject" id="${userId}" />
 			<option name="action" id="delete" />
 		</bean>
 	</action>

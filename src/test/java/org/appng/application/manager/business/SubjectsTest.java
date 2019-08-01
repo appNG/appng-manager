@@ -119,8 +119,8 @@ public class SubjectsTest extends AbstractTest {
 
 	@Test
 	public void testDelete() throws ProcessingException, IOException {
-		CallableAction callableAction = getAction(SUBJECT_EVENT, "delete").withParam("userid", "2")
-				.withParam("form_action", "delete").getCallableAction(null);
+		CallableAction callableAction = getAction(SUBJECT_EVENT, "delete").withParam("userId", "2")
+				.withParam(FORM_ACTION, "delete").getCallableAction(null);
 
 		FieldProcessor fieldProcessor = callableAction.perform();
 		validate(fieldProcessor.getMessages(), differenceListener);
@@ -128,7 +128,7 @@ public class SubjectsTest extends AbstractTest {
 
 	@Test
 	public void testShowOne() throws Exception {
-		CallableDataSource siteDatasource = getDataSource("user").withParam("userid", "1").getCallableDataSource();
+		CallableDataSource siteDatasource = getDataSource("user").withParam("userId", "1").getCallableDataSource();
 		siteDatasource.perform("test");
 
 		validate(siteDatasource.getDatasource(), differenceListener);
@@ -147,6 +147,13 @@ public class SubjectsTest extends AbstractTest {
 	}
 
 	@Test
+	public void testShowAllFilterGroup() throws Exception {
+		CallableDataSource siteDatasource = getDataSource("users").withParam("groupId", "1").getCallableDataSource();
+		siteDatasource.perform("test");
+		validate(siteDatasource.getDatasource());
+	}
+
+	@Test
 	public void testUpdate() throws Exception {
 		SubjectImpl s = getSubject();
 		s.setRealname("Jane Doe");
@@ -154,7 +161,7 @@ public class SubjectsTest extends AbstractTest {
 		SubjectForm form = new SubjectForm(s);
 		form.setPassword("newpassword");
 		form.setPasswordConfirmation("newpassword");
-		CallableAction callableAction = getAction(SUBJECT_EVENT, "update").withParam("userid", "1")
+		CallableAction callableAction = getAction(SUBJECT_EVENT, "update").withParam("userId", "1")
 				.withParam(FORM_ACTION, "update").getCallableAction(form);
 
 		FieldProcessor fieldProcessor = callableAction.perform();

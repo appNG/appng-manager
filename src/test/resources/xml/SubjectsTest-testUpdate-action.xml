@@ -7,7 +7,7 @@
 		</permissions>
 		<params>
 			<param name="form_action">update</param>
-			<param name="userid">1</param>
+			<param name="userId">1</param>
 		</params>
 		<meta-data binding="subject" bindClass="org.appng.application.manager.form.SubjectForm">
 			<field name="name" type="text" readonly="true" binding="subject.name">
@@ -76,7 +76,7 @@
 	</messages>
 	<datasource id="user">
 		<params>
-			<param name="userid">1</param>
+			<param name="userId">1</param>
 		</params>
 	</datasource>
 	<data>
