@@ -1,3 +1,29 @@
+Release Notes - appNG Manager - Version 1.15.0 (2019-08-01)
+-----------------------------------------------------------
+* [MGR-78] - Release of 1.15.0
+* [MGR-77] - Support Filtering Users by group
+* [MGR-76] - Support filtering sites by name and domain
+* [MGR-75] - Use org.appng.api.support.SelectionBuilder
+* [MGR-70] - Use appNG 1.19.0
+* [MGR-73] - Move to 1.15.x branch
+* [MGR-67] - Add possibility to search groups by name, show users that belong to a group
+* [MGR-66] - UI Cleanup: Remove IDs from overview, fix/apply default sorting
+* [MGR-65] - Logviewer must support a different location for appNG.log
+* [MGR-58] - Support searching/filtering package name of a repository
+
+Release Notes - appNG Manager - Version 1.14.0 (2019-01-03)
+-----------------------------------------------------------
+* [MGR-61] - Update license header to 2019
+* [MGR-60] - Release of 1.14..0
+* [MGR-59] - Bump Version to 1.14.0, move to branch appng-manager-1.14.x
+* [MGR-56] - Sort sites and users by name by default
+* [MGR-55] - It should be possible to filter for sessions with an active user
+* [MGR-54] - Make ManagerService and RepositoryService a singleton
+* [MGR-53] - Writing and reporting of database related platform events
+* [MGR-52] - Filtering events for a username does not work if it starts/ends with a space
+* [MGR-51] - Installing latest stable/snapshot directly from package overview fails
+* [MGR-50] - Updating admin group causes NPE
+
 Release Notes - appNG Manager - Version 1.13.1 (2018-05-11)
 -----------------------------------------------------------
 * [MGR-48] - Release version 1.13.1
