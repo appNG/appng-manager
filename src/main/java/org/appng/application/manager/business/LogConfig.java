@@ -47,7 +47,7 @@ import org.springframework.stereotype.Component;
 @Scope("request")
 public class LogConfig extends ServiceAware implements DataProvider, ActionProvider<LogFile> {
 
-	static final String LOG4J_PROPS = "WEB-INF/conf/log4j.properties";
+	public static final String LOG4J_PROPS = "WEB-INF/conf/log4j.properties";
 
 	@Value("${platform." + Platform.Property.PLATFORM_ROOT_PATH + "}")
 	private String rootPath;
