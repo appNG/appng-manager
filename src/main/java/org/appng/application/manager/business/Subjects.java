@@ -107,7 +107,8 @@ public class Subjects extends ServiceAware implements DataProvider, ActionProvid
 			data = service.getNewSubject(request, fp, defaultTimezone, languages);
 		} else {
 			try {
-				data = service.searchSubjects(request, fp, subjectId, defaultTimezone, languages);
+				Integer groupId = options.getInteger(SUBJECT, "groupId");
+				data = service.searchSubjects(request, fp, subjectId, defaultTimezone, languages, groupId);
 			} catch (BusinessException ex) {
 				String message = request.getMessage(ex.getMessageKey(), ex.getMessageArgs());
 				log.error(message, ex);

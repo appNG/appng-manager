@@ -9,9 +9,10 @@
 				<permission ref="subject.list" mode="set" />
 			</permissions>
 			<params>
-				<param name="userid" />
+				<param name="userId" />
+				<param name="groupId" />
 			</params>
-			<meta-data bindClass="org.appng.api.model.Subject" result-selector="${current.id eq userid}">
+			<meta-data bindClass="org.appng.api.model.Subject" result-selector="${current.id eq userId}">
 				<field name="name" type="text">
 					<sort prio="0" order="asc" ignore-case="true" />
 					<label>name</label>
@@ -61,6 +62,7 @@
 			</linkpanel>
 		</config>
 		<bean id="subjects">
+			<option name="subject" groupId="${groupId}"/>
 		</bean>
 	</datasource>
 
@@ -68,7 +70,7 @@
 		<config>
 			<title>subject</title>
 			<params>
-				<param name="userid" />
+				<param name="userId" />
 			</params>
 			<meta-data binding="subject" bindClass="org.appng.application.manager.form.SubjectForm">
 				<field name="name" type="text" readonly="true">
@@ -106,7 +108,7 @@
 			</meta-data>
 		</config>
 		<bean id="subjects">
-			<option name="subject" id="${userid}" />
+			<option name="subject" id="${userId}" />
 		</bean>
 	</datasource>
 

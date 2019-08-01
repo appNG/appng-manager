@@ -37,6 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.io.FileUtils;
@@ -129,6 +130,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -1050,7 +1052,7 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	public DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
-			List<String> languages) throws BusinessException {
+			List<String> languages, Integer groupId) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (subjectId != null) {
 			SubjectImpl subject = subjectRepository.findOne(subjectId);
@@ -1065,23 +1067,33 @@ public class ManagerService extends CoreService implements Service {
 		} else {
 			String filterParamType = "f_type";
 			String filterParamName = "f_name";
+			String filterParamGroup = "f_gid";
 			String typeFormRequest = request.getParameter(filterParamType);
 			UserType userType = null != typeFormRequest && UserType.names().contains(typeFormRequest)
 					? UserType.valueOf(typeFormRequest)
 					: null;
 			String name = request.getParameter(filterParamName);
 
+			Pageable pageable = fp.getPageable();
 			SearchQuery<SubjectImpl> searchQuery = subjectRepository.createSearchQuery();
+			searchQuery.setAppendEntityAlias(false);
 			if (StringUtils.isNotBlank(name)) {
-				searchQuery.like("name", "%" + name + "%");
+				searchQuery.contains("e.name", name);
 			} else {
-				name = "";
+				name = StringUtils.EMPTY;
 			}
 			if (null != userType) {
-				searchQuery.equals("userType", userType);
+				searchQuery.equals("e.userType", userType);
+			}
+			if (null != groupId) {
+				searchQuery.join("join e.groups g");
+				searchQuery.equals("g.id", groupId);
+				List<Order> orders = StreamSupport.stream(pageable.getSort().spliterator(), false)
+						.map(o -> new Order(o.getDirection(), "e." + o.getProperty())).collect(Collectors.toList());
+				pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders));
 			}
 
-			Page<SubjectImpl> subjects = subjectRepository.search(searchQuery, fp.getPageable());
+			Page<SubjectImpl> subjects = subjectRepository.search(searchQuery, pageable);
 			for (SubjectImpl subject : subjects) {
 				subject.setTypeName(getUserTypeNameProvider(request).getName(subject.getUserType()));
 			}
@@ -1093,9 +1105,21 @@ public class ManagerService extends CoreService implements Service {
 			Selection userName = selectionFactory.fromObjects(filterParamName, MessageConstants.NAME,
 					new String[] { name }, new String[] { name });
 			userName.setType(SelectionType.TEXT);
+
+			List<GroupImpl> groups = groupRepository.findAll(new Sort(Direction.ASC, "name"));
+			Selector groupSelector = o -> {
+				if (null != groupId && groupId.toString().equals(o.getValue())) {
+					o.setSelected(true);
+				}
+			};
+			Selection groupSelection = new SelectionBuilder<GroupImpl>(filterParamGroup).title(MessageConstants.GROUP)
+					.options(groups).defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).selector(groupSelector)
+					.type(SelectionType.SELECT).build();
+
 			SelectionGroup filterGroup = new SelectionGroup();
 			filterGroup.getSelections().add(userName);
 			filterGroup.getSelections().add(userTypes);
+			filterGroup.getSelections().add(groupSelection);
 			data.getSelectionGroups().add(filterGroup);
 			data.setPage(subjects);
 		}

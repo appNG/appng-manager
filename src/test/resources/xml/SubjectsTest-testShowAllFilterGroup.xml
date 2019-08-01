@@ -7,7 +7,7 @@
 		</permissions>
 		<params>
 			<param name="userId" />
-			<param name="groupId" />
+			<param name="groupId">1</param>
 		</params>
 		<meta-data bindClass="org.appng.api.model.Subject" result-selector="${current.id eq userId}">
 			<field name="name" type="text" binding="name">
@@ -74,7 +74,7 @@
 			<selection id="f_gid" type="select">
 				<title id="group">Group</title>
 				<option value="" name="" />
-				<option value="1" name="admins" selected="false" />
+				<option value="1" name="admins" selected="true" />
 				<option value="2" name="users" selected="false" />
 			</selection>
 		</selectionGroup>
