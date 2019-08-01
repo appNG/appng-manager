@@ -8,7 +8,10 @@
 			<permissions>
 				<permission ref="site.list" mode="set" />
 			</permissions>
-			<params />
+			<params>
+				<param name="name" />
+				<param name="domain" />
+			</params>
 			<meta-data bindClass="org.appng.api.model.Site">
 				<field name="name" type="text">
 					<sort prio="0" order="asc" ignore-case="true" />
@@ -78,6 +81,7 @@
 			</linkpanel>
 		</config>
 		<bean id="sites">
+			<option name="site" siteName="${name}" siteDomain="${domain}"/>
 		</bean>
 	</datasource>
 

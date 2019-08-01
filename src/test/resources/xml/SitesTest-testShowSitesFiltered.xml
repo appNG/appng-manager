@@ -6,8 +6,8 @@
 			<permission ref="site.list" mode="set"></permission>
 		</permissions>
 		<params>
-			<param name="name" />
-			<param name="domain" />
+			<param name="name">site</param>
+			<param name="domain">example</param>
 		</params>
 		<meta-data bindClass="org.appng.api.model.Site">
 			<field name="name" type="text" binding="name">
@@ -81,55 +81,15 @@
 		<selectionGroup>
 			<selection id="f_sn" type="text">
 				<title id="name">Name</title>
-				<option value="" name="f_sn" />
+				<option value="site" name="f_sn" />
 			</selection>
 			<selection id="f_sd" type="text">
 				<title id="domain">Domain</title>
-				<option value="" name="f_sd" />
+				<option value="example" name="f_sd" />
 			</selection>
 		</selectionGroup>
 		<resultset chunk="0" chunkname="sites" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
-			lastchunk="0" hits="2">
-			<result>
-				<field name="name" type="text">
-					<value>localhost</value>
-				</field>
-				<field name="host" type="text">
-					<value>localhost</value>
-				</field>
-				<field name="domain" type="text">
-					<value>localhost</value>
-				</field>
-				<field name="description" type="text">
-					<value></value>
-				</field>
-				<field name="active" type="image">
-					<value>true</value>
-					<icon type="class">led_green</icon>
-				</field>
-				<field name="running" type="image">
-					<value>false</value>
-					<icon type="class">led_red</icon>
-				</field>
-				<field name="startupTime" type="date">
-					<value></value>
-				</field>
-				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/sites/update/1" default="true">
-						<label id="edit">Edit</label>
-						<icon>edit</icon>
-					</link>
-					<link id="actions[2]" mode="intern" target="/sites?form_action=delete&amp;siteid=1">
-						<label id="delete">Delete</label>
-						<icon>delete</icon>
-						<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "localhost"?</confirmation>
-					</link>
-					<link id="actions[3]" mode="intern" target="/sites?form_action=reload&amp;siteid=1">
-						<label id="reload">Reload</label>
-						<icon>reload</icon>
-					</link>
-				</linkpanel>
-			</result>
+			lastchunk="0" hits="1">
 			<result>
 				<field name="name" type="text">
 					<value>site2</value>
