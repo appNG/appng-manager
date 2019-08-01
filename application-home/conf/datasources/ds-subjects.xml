@@ -62,7 +62,7 @@
 			</linkpanel>
 		</config>
 		<bean id="subjects">
-		<option name="subject" groupId="${groupId}"/>
+			<option name="subject" groupId="${groupId}"/>
 		</bean>
 	</datasource>
 
