@@ -17,6 +17,7 @@ package org.appng.application.manager.business;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -80,20 +81,20 @@ public class PlatformEvents implements DataProvider {
 
 		selections.add(selectionFactory.getTextSelection("eX", MessageConstants.EVENT, filter.getEX()));
 
-		List<String> users = platformEventEventService.getUsers();
+		Collection<String> users = platformEventEventService.getUsers();
 		Selection userSelection = getStringSelection("eU", users, filter.getEU(), MessageConstants.USER);
 		selections.add(userSelection);
 
-		List<String> applications = platformEventEventService.getApplications();
+		Collection<String> applications = platformEventEventService.getApplications();
 		Selection applicationSelection = getStringSelection("eAp", applications, filter.getEAp(),
 				MessageConstants.APPLICATION);
 		selections.add(applicationSelection);
 
-		List<String> hostNames = platformEventEventService.getOrigins();
+		Collection<String> hostNames = platformEventEventService.getOrigins();
 		Selection hostSelection = getStringSelection("eH", hostNames, filter.getEH(), MessageConstants.HOST);
 		selections.add(hostSelection);
 
-		List<String> hosts = platformEventEventService.getHostNames();
+		Collection<String> hosts = platformEventEventService.getHostNames();
 		Selection hostNameSelection = getStringSelection("eN", hosts, filter.getEN(), MessageConstants.HOST_NAME);
 		selections.add(hostNameSelection);
 
@@ -108,7 +109,7 @@ public class PlatformEvents implements DataProvider {
 		return dataContainer;
 	}
 
-	private Selection getStringSelection(String id, List<String> values, String selected, String label) {
+	private Selection getStringSelection(String id, Collection<String> values, String selected, String label) {
 		SelectionBuilder<String> builder = new SelectionBuilder<String>(id);
 		return builder.title(label).options(values).select(selected).type(SelectionType.SELECT)
 				.defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).build();

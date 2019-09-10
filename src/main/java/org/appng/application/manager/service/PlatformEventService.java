@@ -15,7 +15,10 @@
  */
 package org.appng.application.manager.service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 import org.appng.application.manager.business.PlatformEvents.EventFilter;
@@ -58,19 +61,25 @@ public class PlatformEventService {
 		return getEvents(new PageRequest(0, Integer.MAX_VALUE), eventFilter).getContent();
 	}
 
-	public List<String> getUsers() {
-		return platformEventRepository.findDistinctUsers();
+	public Collection<String> getUsers() {
+		return removeNulls(platformEventRepository.findDistinctUsers());
 	}
 
-	public List<String> getApplications() {
-		return platformEventRepository.findDistinctApplications();
+	public Collection<String> getApplications() {
+		return removeNulls(platformEventRepository.findDistinctApplications());
 	}
 
-	public List<String> getHostNames() {
-		return platformEventRepository.findDistinctHostNames();
+	public Collection<String> getHostNames() {
+		return removeNulls(platformEventRepository.findDistinctHostNames());
 	}
 
-	public List<String> getOrigins() {
-		return platformEventRepository.findDistinctOrigins();
+	public Collection<String> getOrigins() {
+		return removeNulls(platformEventRepository.findDistinctOrigins());
+	}
+
+	private Collection<String> removeNulls(List<String> items) {
+		SortedSet<String> set = new TreeSet<>(items);
+		set.remove(null);
+		return set;
 	}
 }
