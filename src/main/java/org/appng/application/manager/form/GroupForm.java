@@ -22,13 +22,19 @@ import javax.validation.Valid;
 
 import org.appng.core.domain.GroupImpl;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Bindclass used for creating/updating a {@link GroupImpl}.
  * 
  * @author Matthias Müller
  * 
  */
+@Getter
+@Setter
 public class GroupForm {
+
 	private GroupImpl group;
 
 	private List<Integer> roleIds = new ArrayList<Integer>();
@@ -44,18 +50,6 @@ public class GroupForm {
 	@Valid
 	public GroupImpl getGroup() {
 		return group;
-	}
-
-	public void setGroup(GroupImpl group) {
-		this.group = group;
-	}
-
-	public List<Integer> getRoleIds() {
-		return roleIds;
-	}
-
-	public void setRoleIds(List<Integer> roleIds) {
-		this.roleIds = roleIds;
 	}
 
 }

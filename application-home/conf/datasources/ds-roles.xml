@@ -76,6 +76,12 @@
 				<field name="permissions" type="list:select" binding="permissionIds">
 					<label>permissions</label>
 				</field>
+				<field name="groupIds" type="list:checkbox" readonly="true">
+					<label>groups</label>
+				</field>
+				<field name="subjectIds" type="list:checkbox" readonly="true">
+					<label>subjects</label>
+				</field>
 			</meta-data>
 		</config>
 		<bean id="roles">
