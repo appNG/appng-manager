@@ -17,6 +17,7 @@ package org.appng.application.manager.business;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -83,7 +84,7 @@ public class PlatformEvents implements DataProvider {
 
 		selections.add(selectionFactory.getTextSelection(EventFilter.EVENT, MessageConstants.EVENT, filter.getEX()));
 
-		List<String> users = platformEventEventService.getUsers();
+		Collection<String> users = platformEventEventService.getUsers();
 		Selection userSelection;
 		if (users.size() > application.getProperties().getInteger(ManagerSettings.EVENT_FILTER_MAX_USERS)) {
 			String username = StringUtils.trimToEmpty(filter.getEU());
@@ -94,17 +95,17 @@ public class PlatformEvents implements DataProvider {
 		}
 		selections.add(userSelection);
 
-		List<String> applications = platformEventEventService.getApplications();
+		Collection<String> applications = platformEventEventService.getApplications();
 		Selection applicationSelection = getStringSelection(EventFilter.APP, applications, filter.getEAp(),
 				MessageConstants.APPLICATION);
 		selections.add(applicationSelection);
 
-		List<String> hostNames = platformEventEventService.getOrigins();
+		Collection<String> hostNames = platformEventEventService.getOrigins();
 		Selection hostSelection = getStringSelection(EventFilter.HOST, hostNames, filter.getEH(),
 				MessageConstants.HOST);
 		selections.add(hostSelection);
 
-		List<String> hosts = platformEventEventService.getHostNames();
+		Collection<String> hosts = platformEventEventService.getHostNames();
 		Selection hostNameSelection = getStringSelection(EventFilter.HOSTNAME, hosts, filter.getEN(),
 				MessageConstants.HOST_NAME);
 		selections.add(hostNameSelection);
@@ -122,7 +123,7 @@ public class PlatformEvents implements DataProvider {
 		return dataContainer;
 	}
 
-	private Selection getStringSelection(String id, List<String> values, String selected, String label) {
+	private Selection getStringSelection(String id, Collection<String> values, String selected, String label) {
 		SelectionBuilder<String> builder = new SelectionBuilder<String>(id);
 		return builder.title(label).options(values).select(selected).type(SelectionType.SELECT)
 				.defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).build();
