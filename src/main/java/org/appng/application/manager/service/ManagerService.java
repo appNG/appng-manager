@@ -709,22 +709,23 @@ public class ManagerService extends CoreService implements Service {
 				Selection groupSelection = new SelectionBuilder<String>("groupIds").title(MessageConstants.GROUPS)
 						.type(SelectionType.CHECKBOX).options(groups).disable(groups).select(groups).build();
 				data.getSelections().add(groupSelection);
+
+				SearchQuery<SubjectImpl> subjectQuery = subjectRepository.createSearchQuery();
+				subjectQuery.distinct();
+				subjectQuery.setAppendEntityAlias(false);
+				subjectQuery.join("join e.groups g");
+				subjectQuery.in("g", groupList);
+				List<SubjectImpl> subjectList = subjectRepository.search(subjectQuery, null).getContent();
+
+				if (!subjectList.isEmpty()) {
+					Selection subjectSelection = getSubjectSelection(subjectList, "subjectIds");
+					data.getSelections().add(subjectSelection);
+				} else {
+					fp.getMetaData().getFields().remove(fp.getField("subjectIds"));
+				}
+
 			} else {
 				fp.getMetaData().getFields().remove(fp.getField("groupIds"));
-			}
-
-			SearchQuery<SubjectImpl> subjectQuery = subjectRepository.createSearchQuery();
-			subjectQuery.distinct();
-			subjectQuery.setAppendEntityAlias(false);
-			subjectQuery.join("join e.groups g");
-			subjectQuery.in("g", groupList);
-			List<SubjectImpl> subjectList = subjectRepository.search(subjectQuery, null).getContent();
-
-			if (!subjectList.isEmpty()) {
-				Selection subjectSelection = getSubjectSelection(subjectList, "subjectIds");
-				data.getSelections().add(subjectSelection);
-			} else {
-				fp.getMetaData().getFields().remove(fp.getField("subjectIds"));
 			}
 
 			Selection selection = getPermissionSelection(role.getApplication().getId(), role);
