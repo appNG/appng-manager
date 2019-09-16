@@ -17,7 +17,6 @@ package org.appng.application.manager.service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
@@ -78,8 +77,10 @@ public class PlatformEventService {
 	}
 
 	private Collection<String> removeNulls(List<String> items) {
-		SortedSet<String> set = new TreeSet<>(items);
-		set.remove(null);
-		return set;
+		while(items.remove(null)) {
+			//do
+		}
+		return new TreeSet<>(items);
 	}
+
 }
