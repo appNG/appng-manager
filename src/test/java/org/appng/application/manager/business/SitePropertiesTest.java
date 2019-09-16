@@ -17,19 +17,26 @@ package org.appng.application.manager.business;
 
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.appng.api.FieldProcessor;
 import org.appng.api.ProcessingException;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.PropertyForm;
+import org.appng.application.manager.service.ManagerService;
 import org.appng.core.domain.PropertyImpl;
 import org.appng.core.domain.SiteImpl;
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SitePropertiesTest extends AbstractTest {
+
+	@Autowired
+	private ManagerService managerService;
 
 	private static final String PROPERTY_EVENT = "propertyEvent";
 
@@ -45,13 +52,29 @@ public class SitePropertiesTest extends AbstractTest {
 		site.setHost("localhost");
 		siteRepository.save(site);
 
-		ActionCall actionCall = getAction(PROPERTY_EVENT, "create-site-property").withParam(FORM_ACTION,
-				"create-site-property").withParam("siteid", "1");
+		ActionCall actionCall = getAction(PROPERTY_EVENT, "create-site-property")
+				.withParam(FORM_ACTION, "create-site-property").withParam("siteid", "1");
 		CallableAction action = actionCall.getCallableAction(new PropertyForm(new PropertyImpl(TESTPROPERTY, "5")));
 		FieldProcessor perform = action.perform();
 		validate(perform.getMessages());
 
 		actionCall.getCallableAction(new PropertyForm(new PropertyImpl("anotherproperty", "foobar"))).perform();
+
+		PropertyImpl multilined = new PropertyImpl("multilined", null);
+		multilined.setClob("foo!\nbar!\n");
+		multilined.setActualString(StringUtils.EMPTY);
+		actionCall.getCallableAction(new PropertyForm(multilined)).perform();
+
+		PropertyImpl saved = managerService.getProperty("platform.site.localhost.multilined");
+		Assert.assertNull(saved.getActualString());
+
+		ActionCall update = getAction(PROPERTY_EVENT, "update-site-property")
+				.withParam(FORM_ACTION, "update-site-property")
+				.withParam("propertyid", "platform.site.localhost.multilined");
+		update.getCallableAction(new PropertyForm(multilined)).perform();
+
+		saved = managerService.getProperty("platform.site.localhost.multilined");
+		Assert.assertNull(saved.getActualString());
 	}
 
 	@Test
@@ -74,12 +97,11 @@ public class SitePropertiesTest extends AbstractTest {
 
 	@Test
 	public void testUpdate() throws ProcessingException, IOException {
-		ActionCall actionCall = getAction(PROPERTY_EVENT, "update-site-property").withParam(FORM_ACTION,
-				"update-site-property").withParam("propertyid", PROPERTY_NAME);
+		ActionCall actionCall = getAction(PROPERTY_EVENT, "update-site-property")
+				.withParam(FORM_ACTION, "update-site-property").withParam("propertyid", PROPERTY_NAME);
 		PropertyImpl property = new PropertyImpl(TESTPROPERTY, "7", "9");
 		property.setClob("");
-		CallableAction action = actionCall
-				.getCallableAction(new PropertyForm(property));
+		CallableAction action = actionCall.getCallableAction(new PropertyForm(property));
 		FieldProcessor perform = action.perform();
 		validate(perform.getMessages());
 

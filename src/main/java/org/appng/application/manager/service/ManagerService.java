@@ -1459,6 +1459,9 @@ public class ManagerService extends CoreService implements Service {
 					throw new BusinessException("no such property");
 				}
 				request.setPropertyValues(propertyForm, new PropertyForm(currentProperty), fp.getMetaData());
+				if (StringUtils.isNotBlank(currentProperty.getClob())) {
+					currentProperty.setActualString(null);
+				}
 			} else {
 				throw new BusinessException("no propertyname given");
 			}
