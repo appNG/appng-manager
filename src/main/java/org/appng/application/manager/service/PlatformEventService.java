@@ -49,7 +49,7 @@ public class PlatformEventService {
 		query.equals("origin", StringUtils.trimToNull(eventFilter.getEH()));
 		query.equals("hostName", StringUtils.trimToNull(eventFilter.getEN()));
 		if (StringUtils.isNotBlank(eventFilter.getEU())) {
-			query.equals("user", eventFilter.getEU());
+			query.contains("user", eventFilter.getEU());
 		}
 		query.equals("application", StringUtils.trimToNull(eventFilter.getEAp()));
 		query.in("type", eventFilter.eventTypes());
