@@ -22,16 +22,23 @@ import javax.validation.Valid;
 
 import org.appng.core.domain.RoleImpl;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Bindclass used for creating/updating a {@link RoleImpl}.
  * 
  * @author Matthias Müller
  * 
  */
+@Getter
+@Setter
 public class RoleForm {
 
 	private RoleImpl role;
 	private List<Integer> permissionIds = new ArrayList<Integer>();
+	private List<Integer> groupIds = new ArrayList<Integer>();
+	private List<Integer> userIds = new ArrayList<Integer>();
 
 	public RoleForm() {
 		this(new RoleImpl());
@@ -45,17 +52,4 @@ public class RoleForm {
 	public RoleImpl getRole() {
 		return role;
 	}
-
-	public void setRole(RoleImpl role) {
-		this.role = role;
-	}
-
-	public List<Integer> getPermissionIds() {
-		return permissionIds;
-	}
-
-	public void setPermissionIds(List<Integer> permissionIds) {
-		this.permissionIds = permissionIds;
-	}
-
 }
