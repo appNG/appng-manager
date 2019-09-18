@@ -339,7 +339,7 @@
 					</action>
 				</element>
 				<element>
-					<action id="reload" eventId="siteEvent" onSuccess="/sites">
+					<action id="reload" eventId="siteEvent" onSuccess="/sites" forceForward="true">
 						<params>
 							<param name="form_action">${form_action}</param>
 							<param name="siteid">${siteid}</param>
