@@ -68,9 +68,9 @@ import org.appng.api.model.Site.SiteState;
 import org.appng.api.model.Subject;
 import org.appng.api.model.UserType;
 import org.appng.api.support.OptionGroupFactory;
-import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.OptionGroupFactory.OptionGroup;
 import org.appng.api.support.OptionOwner.Selector;
+import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.SelectionFactory;
 import org.appng.api.support.environment.EnvironmentKeys;
 import org.appng.application.manager.MessageConstants;
@@ -108,6 +108,7 @@ import org.appng.core.model.RepositoryType;
 import org.appng.core.model.RepositoryUtils;
 import org.appng.core.service.CoreService;
 import org.appng.core.service.InitializerService;
+import org.appng.core.service.MigrationService;
 import org.appng.core.service.MigrationService.MigrationStatus;
 import org.appng.core.service.PropertySupport;
 import org.appng.core.xml.repository.PackageVersions;
@@ -137,7 +138,6 @@ import org.springframework.transaction.annotation.Transactional;
  * The {@link Service}-implementation extending {@link CoreService}.
  * 
  * @author Matthias Müller
- * 
  */
 @Transactional(rollbackFor = BusinessException.class)
 public class ManagerService extends CoreService implements Service {
