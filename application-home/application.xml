@@ -334,7 +334,7 @@
 		<property id="databaseReportSender" description="the sender for the database report email">report@example.com</property>
 		<property id="databaseReportSubject" description="the subject for the database report email">appNG database report</property>
 		<property id="databaseReportText" description="the text for the database report email">See attached file for a report of the database related platform events.</property>
-		<property id="monitorUseBearer" description="should to monitor service use the platform's secert as a bearer token?">true</property>
+		<property id="monitorUseBearer" description="should to monitor service use the platform's shared secret as a bearer token?">true</property>
 	</properties>
 
 </application>
