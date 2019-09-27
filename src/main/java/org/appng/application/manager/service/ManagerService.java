@@ -108,7 +108,6 @@ import org.appng.core.model.RepositoryType;
 import org.appng.core.model.RepositoryUtils;
 import org.appng.core.service.CoreService;
 import org.appng.core.service.InitializerService;
-import org.appng.core.service.MigrationService;
 import org.appng.core.service.MigrationService.MigrationStatus;
 import org.appng.core.service.PropertySupport;
 import org.appng.core.xml.repository.PackageVersions;
@@ -1762,7 +1761,7 @@ public class ManagerService extends CoreService implements Service {
 	public void grantSites(Integer siteId, Integer appId, Set<Integer> grantedSiteIds) {
 		SiteApplication siteApplication = getSiteApplication(siteId, appId);
 		siteApplication.getGrantedSites().clear();
-		List<SiteImpl> sites = siteRepository.findAll(grantedSiteIds);
+		List<SiteImpl> sites = siteRepository.findAllById(grantedSiteIds);
 		siteApplication.getGrantedSites().addAll(sites);
 	}
 
