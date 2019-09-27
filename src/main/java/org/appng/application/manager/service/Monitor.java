@@ -13,6 +13,7 @@ import org.appng.api.RequestUtil;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.api.model.Site.SiteState;
+import org.appng.application.manager.ManagerSettings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,10 +36,10 @@ public class Monitor {
 	}
 
 	@GetMapping(path = "/monitor", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<Map<String, SiteInfo>> getState(Environment env, Site site,
+	public ResponseEntity<Map<String, SiteInfo>> getState(Environment env, Site site, Application app,
 			@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) List<String> auths) {
 
-		Boolean useBearer = site.getProperties().getBoolean("monitorUseBearer", true);
+		Boolean useBearer = app.getProperties().getBoolean(ManagerSettings.MONITOR_USE_BEARER, true);
 		if (useBearer && (null == auths || !auths.contains("Bearer " + sharedSecret))) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
