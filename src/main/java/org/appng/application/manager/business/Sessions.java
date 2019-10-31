@@ -81,7 +81,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 		String sessionId = options.getOptionValue("session", "id");
 		List<Session> sessions = SessionListener.getSessions();
 		String currentSession = env.getAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID);
-		Integer siteId = request.convert(options.getOptionValue("site", "id"), Integer.class);
+		Integer siteId = options.getInteger("site", "id");
 		String siteName = null == siteId ? null : getService().getNameForSite(siteId);
 		String expireSessions = SessionListener.ALL;
 		if (null == sessionId) {

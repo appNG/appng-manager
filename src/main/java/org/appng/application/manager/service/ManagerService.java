@@ -79,7 +79,6 @@ import org.appng.application.manager.form.SiteForm;
 import org.appng.application.manager.form.SubjectForm;
 import org.appng.application.manager.form.UploadForm;
 import org.appng.application.manager.soap.endpoint.RepositoryService;
-import org.appng.core.controller.AppngCache;
 import org.appng.core.domain.ApplicationImpl;
 import org.appng.core.domain.DatabaseConnection;
 import org.appng.core.domain.GroupImpl;
@@ -1705,10 +1704,6 @@ public class ManagerService extends CoreService implements Service {
 
 	public void setTimezoneMessages(MessageSource timezoneMessages) {
 		this.timezoneMessages = timezoneMessages;
-	}
-
-	public List<AppngCache> getCacheEntries(Integer siteId) {
-		return super.getCacheEntries(siteId);
 	}
 
 	public Map<String, String> getCacheStatistics(Integer siteId) {
