@@ -16,6 +16,7 @@
 package org.appng.application.manager.business;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -23,23 +24,16 @@ import org.appng.api.Scope;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.core.controller.Session;
-import org.appng.core.controller.SessionListener;
-import org.appng.core.service.CacheService;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
+import org.springframework.test.context.ContextConfiguration;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ContextConfiguration(locations = "classpath:beans-test.xml")
 public class SessionsTest extends AbstractTest {
-
-	@BeforeClass
-	public static void initCache() {
-		CacheService.createCacheManager(null);
-		new SessionListener().contextInitialized(null);
-	}
 
 	@Test
 	public void testShowSessions() throws Exception {
@@ -71,7 +65,7 @@ public class SessionsTest extends AbstractTest {
 		CallableAction callableAction = getAction("sessionEvent", "expire").withParam("action", "expire")
 				.withParam("sessid", "47124712").getCallableAction(null);
 		callableAction.perform();
-		Assert.assertTrue(session.isExpired());
+		Assert.assertTrue(getSession(session.getId()).isExpired());
 	}
 
 	@Test
@@ -85,9 +79,9 @@ public class SessionsTest extends AbstractTest {
 		CallableAction callableAction = getAction("sessionEvent", "expireAll").withParam("action", "expireAll")
 				.getCallableAction(null);
 		callableAction.perform();
-		Assert.assertTrue(sessionA.isExpired());
-		Assert.assertTrue(sessionB.isExpired());
-		Assert.assertFalse(sessionC.isExpired());
+		Assert.assertTrue(getSession(sessionA.getId()).isExpired());
+		Assert.assertTrue(getSession(sessionB.getId()).isExpired());
+		Assert.assertFalse(getSession(sessionC.getId()).isExpired());
 	}
 
 	private List<Session> setSessions() throws ParseException {
@@ -126,12 +120,13 @@ public class SessionsTest extends AbstractTest {
 		return setSessions(sessionA, sessionB);
 	}
 
-	private List<Session> setSessions(Session... sessions) {
-		javax.cache.Cache<String, Session> cache = CacheService.getCacheManager().getCache("sessions");
-		cache.removeAll();
-		for (Session session : sessions) {
-			cache.put(session.getId(), session);
-		}
-		return SessionListener.getSessions();
+	private Session getSession(String id) {
+		return SessionsTestBean.getSession(id);
 	}
+
+	private List<Session> setSessions(Session... sessions) {
+		SessionsTestBean.setSessions(Arrays.asList(sessions));
+		return SessionsTestBean.SESSIONS;
+	}
+
 }

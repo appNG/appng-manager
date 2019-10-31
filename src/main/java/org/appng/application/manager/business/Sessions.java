@@ -79,7 +79,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 	public void perform(Site site, Application application, Environment env, Options options, Request request,
 			Void formBean, FieldProcessor fieldProcessor) {
 		String sessionId = options.getOptionValue("session", "id");
-		List<Session> sessions = SessionListener.getSessions();
+		List<Session> sessions = getSessions();
 		String currentSession = env.getAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID);
 		Integer siteId = options.getInteger("site", "id");
 		String siteName = null == siteId ? null : getService().getNameForSite(siteId);
@@ -101,7 +101,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fieldProcessor) {
 		DataContainer dataContainer = new DataContainer(fieldProcessor);
-		List<Session> imutableSessions = SessionListener.getSessions();
+		List<Session> imutableSessions = getSessions();
 
 		String fDmn = request.getParameter(F_DMN);
 		String fSess = request.getParameter(F_SESS);
@@ -240,9 +240,13 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 
 	}
 
-	private void expire(String currentSession, Session session, String siteName) {
+	protected void expire(String currentSession, Session session, String siteName) {
 		if (!session.getId().equals(currentSession) && (siteName == null || session.getSite().equals(siteName))) {
 			SessionListener.markSessionExpired(session.getId());
 		}
+	}
+
+	protected List<Session> getSessions() {
+		return SessionListener.getSessions();
 	}
 }

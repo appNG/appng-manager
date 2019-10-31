@@ -11,4 +11,6 @@
 	</jdbc:initialize-database>
 
 
+<bean id="sessions" class="org.appng.application.manager.business.SessionsTestBean" primary="true"/>
+
 </beans>
