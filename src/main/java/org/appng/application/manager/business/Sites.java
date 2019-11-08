@@ -89,16 +89,20 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 				reloadPlatform(site, application, request, fp);
 				okMessage = MessageConstants.PLATFORM_RELOADED;
 			} else if (ACTION_START.equals(action)) {
+				errorMessage = MessageConstants.SITE_START_ERROR;
 				String siteName = service.startSite(request, application, siteId, fp);
 				if (null != siteName) {
 					site.sendEvent(new StartSiteEvent(siteName));
 				}
 			} else if (ACTION_STOP.equals(action)) {
 				if (!site.getId().equals(siteId)) {
+					errorMessage = MessageConstants.SITE_STOP_ERROR;
 					String siteName = service.stopSite(request, application, siteId, fp);
 					if (null != siteName) {
 						site.sendEvent(new StopSiteEvent(siteName));
 					}
+				} else {
+					fp.addErrorMessage(request.getMessage(MessageConstants.SITE_STOP_IS_CURRENT, site.getName()));
 				}
 			}
 			if (null != okMessage) {
