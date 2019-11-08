@@ -18,6 +18,8 @@ package org.appng.application.manager.business;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.catalina.Manager;
+import org.appng.api.Environment;
 import org.appng.core.controller.Session;
 import org.mockito.Mockito;
 
@@ -25,7 +27,8 @@ public class SessionsTestBean extends Sessions {
 
 	public static List<Session> SESSIONS;
 
-	public List<Session> getSessions() {
+	@Override
+	protected List<Session> getSessionsFromManager(Environment env) {
 		return SESSIONS;
 	}
 
@@ -37,14 +40,15 @@ public class SessionsTestBean extends Sessions {
 		return SESSIONS.stream().filter(s -> s.getId().equals(id)).findFirst().get();
 	}
 
-	protected void expire(String currentSession, Session session, String siteName) {
+	@Override
+	protected boolean expire(String currentSession, String sessionId, String siteName, Manager manager) {
 		SESSIONS = new ArrayList<>(SESSIONS);
-		SESSIONS.remove(session);
+		SESSIONS.remove(new Session(sessionId));
 		Session mocked = Mockito.mock(Session.class);
-		String id = session.getId();
-		Mockito.when(mocked.getId()).thenReturn(id);
-		Mockito.when(mocked.isExpired()).thenReturn(!id.equals(currentSession));
+		Mockito.when(mocked.getId()).thenReturn(sessionId);
+		Mockito.when(mocked.isExpired()).thenReturn(!sessionId.equals(currentSession));
 		SESSIONS.add(mocked);
+		return true;
 	}
 
 }

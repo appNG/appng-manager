@@ -15,6 +15,7 @@
  */
 package org.appng.application.manager.business;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +25,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javax.servlet.ServletContext;
+
+import org.apache.catalina.Manager;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +47,7 @@ import org.appng.api.model.Site;
 import org.appng.api.support.OptionOwner;
 import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.SelectionFactory;
+import org.appng.api.support.environment.DefaultEnvironment;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.controller.Session;
@@ -52,15 +57,14 @@ import org.appng.xml.platform.Selection;
 import org.appng.xml.platform.SelectionGroup;
 import org.appng.xml.platform.SelectionType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@Lazy
+@Slf4j
 @Component
-@org.springframework.context.annotation.Scope("request")
 public class Sessions extends ServiceAware implements ActionProvider<Void>, DataProvider {
 
 	private static final String F_CR_AF = "fCrAf";
@@ -76,32 +80,41 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 	@Autowired
 	private SelectionFactory selectionFactory;
 
-	public void perform(Site site, Application application, Environment env, Options options, Request request,
-			Void formBean, FieldProcessor fieldProcessor) {
+	public void perform(Site site, Application application, Environment environment, Options options, Request request,
+			Void formBean, FieldProcessor fp) {
 		String sessionId = options.getOptionValue("session", "id");
-		List<Session> sessions = getSessions();
-		String currentSession = env.getAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID);
+		String currentSession = environment.getAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID);
 		Integer siteId = options.getInteger("site", "id");
 		String siteName = null == siteId ? null : getService().getNameForSite(siteId);
-		String expireSessions = SessionListener.ALL;
 		if (null == sessionId) {
+			List<Session> sessions = getSessionsFromManager(environment);
+			int cnt = 0;
 			for (Session session : sessions) {
-				expire(currentSession, session, siteName);
+				if (expire(currentSession, session.getId(), siteName, getManager(environment))) {
+					cnt++;
+				}
 			}
-			fieldProcessor.addOkMessage(request.getMessage(MessageConstants.SESSIONS_EXPIRED, sessions.size()));
+			if (null == siteName) {
+				fp.addOkMessage(request.getMessage(MessageConstants.SESSIONS_EXPIRED_GLOBAL, cnt));
+			} else {
+				fp.addOkMessage(request.getMessage(MessageConstants.SESSIONS_EXPIRED_SITE, cnt, siteName));
+			}
 		} else {
-			expireSessions = sessionId;
-			Session session = sessions.get(sessions.indexOf(new Session(sessionId)));
-			fieldProcessor.addOkMessage(request.getMessage(MessageConstants.SESSION_EXPIRED));
-			expire(currentSession, session, siteName);
+			boolean expired = expire(currentSession, sessionId, siteName, getManager(environment));
+			if (expired) {
+				fp.addOkMessage(
+						request.getMessage(MessageConstants.SESSION_EXPIRED, new Session(sessionId).getShortId()));
+			} else {
+				fp.addErrorMessage(
+						request.getMessage(MessageConstants.SESSION_EXPIRED_FAIL, new Session(sessionId).getShortId()));
+			}
 		}
-		env.setAttribute(Scope.SESSION, SessionListener.EXPIRE_SESSIONS, expireSessions);
 	}
 
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fieldProcessor) {
 		DataContainer dataContainer = new DataContainer(fieldProcessor);
-		List<Session> imutableSessions = getSessions();
+		List<Session> immutableSessions = getSessionsFromManager(environment);
 
 		String fDmn = request.getParameter(F_DMN);
 		String fSess = request.getParameter(F_SESS);
@@ -114,13 +127,34 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 		Set<String> userAgents = new TreeSet<String>();
 		userAgents.add(StringUtils.EMPTY);
 		Boolean currentSiteOnly = request.convert(options.getOptionValue("site", "currentSiteOnly"), Boolean.class);
-		List<Session> sessions = getSessions(options, request, currentSiteOnly, imutableSessions, userAgents, fDmn,
+		List<Session> sessions = getSessions(options, request, currentSiteOnly, immutableSessions, userAgents, fDmn,
 				fSess, fAgnt, fUsr, getDate(fCrBf), getDate(fCrAf), fLgn);
 
 		addFilters(request, currentSiteOnly, dataContainer, userAgents, fAgnt, fDmn, fUsr);
 
 		dataContainer.setPage(sessions, fieldProcessor.getPageable());
 		return dataContainer;
+	}
+
+	protected List<Session> getSessionsFromManager(Environment env) {
+		List<Session> immutableSessions = new ArrayList<>();
+		for (org.apache.catalina.Session session : getManager(env).findSessions()) {
+			immutableSessions.add(getSessionMetaData(session));
+		}
+		return immutableSessions;
+	}
+
+	private Session getSessionMetaData(org.apache.catalina.Session session) {
+		Session metaData = (Session) session.getSession().getAttribute(SessionListener.META_DATA);
+		if (null == metaData) {
+			metaData = new Session(session.getId());
+		}
+		return metaData;
+	}
+
+	private Manager getManager(Environment environment) {
+		ServletContext servletCtx = ((DefaultEnvironment) environment).getServletContext();
+		return (Manager) servletCtx.getAttribute(SessionListener.SESSION_MANAGER);
 	}
 
 	protected List<Session> getSessions(Options options, Request request, Boolean currentSiteOnly,
@@ -240,13 +274,22 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 
 	}
 
-	protected void expire(String currentSession, Session session, String siteName) {
-		if (!session.getId().equals(currentSession) && (siteName == null || session.getSite().equals(siteName))) {
-			SessionListener.markSessionExpired(session.getId());
+	protected boolean expire(String currentSession, String sessionId, String siteName, Manager manager) {
+		Session sessionMetaData = null;
+		try {
+			org.apache.catalina.Session session = manager.findSession(sessionId);
+			if (null != session) {
+				sessionMetaData = getSessionMetaData(session);
+				if (!sessionMetaData.getId().equals(currentSession)
+						&& (siteName == null || sessionMetaData.getSite().equals(siteName))) {
+					session.expire();
+					return true;
+				}
+			}
+		} catch (IOException e) {
+			log.error("error expiring session", e);
 		}
+		return false;
 	}
 
-	protected List<Session> getSessions() {
-		return SessionListener.getSessions();
-	}
 }
