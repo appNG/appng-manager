@@ -339,6 +339,22 @@
 					</action>
 				</element>
 				<element>
+					<action id="start" eventId="siteEvent" onSuccess="/sites" forceForward="true">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="siteid">${siteid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action id="stop" eventId="siteEvent" onSuccess="/sites" forceForward="true">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="siteid">${siteid}</param>
+						</params>
+					</action>
+				</element>
+				<element>
 					<action id="reload" eventId="siteEvent" onSuccess="/sites" forceForward="true">
 						<params>
 							<param name="form_action">${form_action}</param>

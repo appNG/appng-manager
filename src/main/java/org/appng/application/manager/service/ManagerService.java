@@ -108,7 +108,6 @@ import org.appng.core.model.RepositoryType;
 import org.appng.core.model.RepositoryUtils;
 import org.appng.core.service.CoreService;
 import org.appng.core.service.InitializerService;
-import org.appng.core.service.MigrationService;
 import org.appng.core.service.MigrationService.MigrationStatus;
 import org.appng.core.service.PropertySupport;
 import org.appng.core.xml.repository.PackageVersions;
@@ -963,11 +962,13 @@ public class ManagerService extends CoreService implements Service {
 	public DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name,
 			String domain) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
+		Map<String, Site> siteMap = environment.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
 		if (siteId != null) {
 			SiteImpl site = siteRepository.findOne(siteId);
 			if (null == site) {
 				throw new BusinessException("no such site: " + siteId, MessageConstants.SITE_NOT_EXISTS);
 			}
+			setSiteState(siteMap, site);
 			addSelectionsForSite(site, data);
 			data.setItem(new SiteForm(site));
 		} else {
@@ -980,13 +981,8 @@ public class ManagerService extends CoreService implements Service {
 			}
 			Page<SiteImpl> sites = siteRepository.search(siteQuery, fp.getPageable());
 
-			Map<String, Site> siteMap = environment.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
 			for (SiteImpl siteImpl : sites) {
-				Site site = siteMap.get(siteImpl.getName());
-				if (null != site) {
-					siteImpl.setRunning(SiteState.STARTED.equals(site.getState()));
-					siteImpl.setStartupTime(site.getStartupTime());
-				}
+				setSiteState(siteMap, siteImpl);
 			}
 			Selection nameFilter = new SelectionBuilder<String>(FILTER_SITE_NAME).defaultOption(FILTER_SITE_NAME, name)
 					.title(MessageConstants.NAME).type(SelectionType.TEXT).select(name).build();
@@ -1000,6 +996,18 @@ public class ManagerService extends CoreService implements Service {
 			data.setPage(sites);
 		}
 		return data;
+	}
+
+	private void setSiteState(Map<String, Site> siteMap, SiteImpl siteImpl) {
+		Site site = siteMap.get(siteImpl.getName());
+		if (null != site) {
+			siteImpl.setState(site.getState());
+			siteImpl.setRunning(SiteState.STARTED.equals(site.getState()));
+			siteImpl.setStartupTime(site.getStartupTime());
+		} else {
+			siteImpl.setState(SiteState.STOPPED);
+			siteImpl.setRunning(false);
+		}
 	}
 
 	private void addSelectionsForSite(final SiteImpl site, DataContainer data) {
@@ -1511,7 +1519,7 @@ public class ManagerService extends CoreService implements Service {
 	public void reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
 			throws BusinessException {
 		try {
-			InitializerService initializerService = application.getBean(InitializerService.class);
+			InitializerService initializerService = getInitializerService(application);
 			SiteImpl site = getSite(siteId);
 			if (null != site) {
 				String siteName = site.getName();
@@ -1529,6 +1537,57 @@ public class ManagerService extends CoreService implements Service {
 		} catch (Exception e) {
 			request.handleException(fp, e);
 		}
+	}
+
+	private InitializerService getInitializerService(Application application) {
+		return application.getBean(InitializerService.class);
+	}
+
+	public String startSite(Request request, Application application, Integer siteId, FieldProcessor fp)
+			throws BusinessException {
+		SiteImpl site = getSite(siteId);
+		Environment env = request.getEnvironment();
+		Map<String, Site> siteMap = env.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
+		Site activeSite = siteMap.get(site.getName());
+		if (null == activeSite) {
+			if (site.isActive()) {
+				try {
+					getInitializerService(application).loadSite(env, site, true, fp);
+					fp.addOkMessage(request.getMessage(MessageConstants.SITE_STARTED, site.getName()));
+					return site.getName();
+				} catch (InvalidConfigurationException e) {
+					throw new BusinessException(e);
+				}
+			} else {
+				fp.addErrorMessage(
+						request.getMessage(MessageConstants.SITE_START_NOT_ACTIVE, site.getName(), site.getState()));
+			}
+		} else {
+			fp.addErrorMessage(
+					request.getMessage(MessageConstants.SITE_START_IS_RUNNING, site.getName(), site.getState()));
+		}
+		return null;
+	}
+
+	public String stopSite(Request request, Application application, Integer siteId, FieldProcessor fp)
+			throws BusinessException {
+		SiteImpl site = getSite(siteId);
+		Environment env = request.getEnvironment();
+		Map<String, Site> siteMap = env.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
+		Site activeSite = siteMap.get(site.getName());
+		if (null != activeSite) {
+			if (SiteState.STARTED.equals(activeSite.getState())) {
+				getInitializerService(application).shutDownSite(env, site);
+				fp.addOkMessage(request.getMessage(MessageConstants.SITE_STOPPED, site.getName()));
+				return site.getName();
+			} else {
+				fp.addErrorMessage(
+						request.getMessage(MessageConstants.SITE_STOP_NOT_STARTED, site.getName(), site.getState()));
+			}
+		} else {
+			fp.addErrorMessage(request.getMessage(MessageConstants.SITE_STOP_NOT_RUNNING, site.getName()));
+		}
+		return null;
 	}
 
 	public DataContainer getNewSubject(Request request, FieldProcessor fp, String timezone, List<String> languages) {
