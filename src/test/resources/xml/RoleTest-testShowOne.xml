@@ -6,9 +6,6 @@
 			<param name="id">1</param>
 		</params>
 		<meta-data binding="role" bindClass="org.appng.application.manager.form.RoleForm">
-			<field name="id" type="int" format="#" readonly="true" binding="role.id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" binding="role.name">
 				<label id="name">Name</label>
 			</field>
@@ -17,6 +14,12 @@
 			</field>
 			<field name="permissions" type="list:select" binding="permissionIds">
 				<label id="permissions">Permissions</label>
+			</field>
+			<field name="groupIds" type="list:checkbox" readonly="true" binding="role.groupIds">
+				<label id="groups">Groups</label>
+			</field>
+			<field name="subjectIds" type="list:checkbox" readonly="true" binding="role.subjectIds">
+				<label id="subjects">Users</label>
 			</field>
 		</meta-data>
 	</config>
@@ -30,9 +33,6 @@
 			</optionGroup>
 		</selection>
 		<result>
-			<field name="id" type="int">
-				<value>1</value>
-			</field>
 			<field name="name" type="text">
 				<value>role1</value>
 			</field>
@@ -40,6 +40,12 @@
 				<value></value>
 			</field>
 			<field name="permissions" type="list:select">
+				<value></value>
+			</field>
+			<field name="groupIds" type="list:checkbox">
+				<value></value>
+			</field>
+			<field name="subjectIds" type="list:checkbox">
 				<value></value>
 			</field>
 		</result>

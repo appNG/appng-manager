@@ -17,6 +17,8 @@ package org.appng.application.manager.business;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +38,7 @@ import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.SelectionFactory;
+import org.appng.application.manager.ManagerSettings;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.PlatformEventService;
 import org.appng.core.domain.PlatformEvent;
@@ -54,6 +57,7 @@ import lombok.Data;
 @Service
 public class PlatformEvents implements DataProvider {
 
+	public static final String EVENT_FILTER = "eventFilter";
 	private static final FastDateFormat FDF = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
 	private PlatformEventService platformEventEventService;
@@ -73,51 +77,72 @@ public class PlatformEvents implements DataProvider {
 		SelectionGroup group = new SelectionGroup();
 		List<Selection> selections = group.getSelections();
 
-		Selection typeFilter = selectionFactory.fromEnum("eT", MessageConstants.TYPE, PlatformEvent.Type.values(),
-				filter.eventTypes());
+		Selection typeFilter = selectionFactory.fromEnum(EventFilter.TYPE, MessageConstants.TYPE,
+				PlatformEvent.Type.values(), filter.eventTypes());
 		typeFilter.setType(SelectionType.CHECKBOX);
 		selections.add(typeFilter);
 
-		selections.add(selectionFactory.getTextSelection("eX", MessageConstants.EVENT, filter.getEX()));
+		selections.add(selectionFactory.getTextSelection(EventFilter.EVENT, MessageConstants.EVENT, filter.getEX()));
 
-		List<String> users = platformEventEventService.getUsers();
-		Selection userSelection = getStringSelection("eU", users, filter.getEU(), MessageConstants.USER);
+		Collection<String> users = platformEventEventService.getUsers();
+		Selection userSelection;
+		if (users.size() > application.getProperties().getInteger(ManagerSettings.EVENT_FILTER_MAX_USERS)) {
+			String username = StringUtils.trimToEmpty(filter.getEU());
+			userSelection = new SelectionBuilder<String>(EventFilter.USER).title(MessageConstants.USER)
+					.options(Arrays.asList(username)).select(username).type(SelectionType.TEXT).build();
+		} else {
+			userSelection = getStringSelection(EventFilter.USER, users, filter.getEU(), MessageConstants.USER);
+		}
 		selections.add(userSelection);
 
-		List<String> applications = platformEventEventService.getApplications();
-		Selection applicationSelection = getStringSelection("eAp", applications, filter.getEAp(),
+		Collection<String> applications = platformEventEventService.getApplications();
+		Selection applicationSelection = getStringSelection(EventFilter.APP, applications, filter.getEAp(),
 				MessageConstants.APPLICATION);
 		selections.add(applicationSelection);
 
-		List<String> hostNames = platformEventEventService.getOrigins();
-		Selection hostSelection = getStringSelection("eH", hostNames, filter.getEH(), MessageConstants.HOST);
+		Collection<String> hostNames = platformEventEventService.getOrigins();
+		Selection hostSelection = getStringSelection(EventFilter.HOST, hostNames, filter.getEH(),
+				MessageConstants.HOST);
 		selections.add(hostSelection);
 
-		List<String> hosts = platformEventEventService.getHostNames();
-		Selection hostNameSelection = getStringSelection("eN", hosts, filter.getEN(), MessageConstants.HOST_NAME);
+		Collection<String> hosts = platformEventEventService.getHostNames();
+		Selection hostNameSelection = getStringSelection(EventFilter.HOSTNAME, hosts, filter.getEN(),
+				MessageConstants.HOST_NAME);
 		selections.add(hostNameSelection);
 
-		selections.add(selectionFactory.getDateSelection("eA", MessageConstants.CREATED_AFTER, filter.getEA(), FDF));
-		selections.add(selectionFactory.getDateSelection("eB", MessageConstants.CREATED_BEFORE, filter.getEB(), FDF));
+		selections.add(selectionFactory.getDateSelection(EventFilter.AFTER, MessageConstants.CREATED_AFTER,
+				filter.getEA(), FDF));
+		selections.add(selectionFactory.getDateSelection(EventFilter.BEFORE, MessageConstants.CREATED_BEFORE,
+				filter.getEB(), FDF));
 
 		DataContainer dataContainer = new DataContainer(fieldProcessor);
 		dataContainer.getSelectionGroups().add(group);
-		environment.setAttribute(Scope.SESSION, "eventFilter", filter.copy());
+		environment.setAttribute(Scope.SESSION, EVENT_FILTER, filter.copy());
 		Page<PlatformEvent> events = platformEventEventService.getEvents(fieldProcessor.getPageable(), filter);
 		dataContainer.setPage(events);
 		return dataContainer;
 	}
 
-	private Selection getStringSelection(String id, List<String> values, String selected, String label) {
+	private Selection getStringSelection(String id, Collection<String> values, String selected, String label) {
 		SelectionBuilder<String> builder = new SelectionBuilder<String>(id);
 		return builder.title(label).options(values).select(selected).type(SelectionType.SELECT)
 				.defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).build();
 	}
 
 	@Data
-	@Component("eventFilter")
+	@Component(EVENT_FILTER)
 	@RequestScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 	public static class EventFilter implements DataProvider, Serializable {
+
+		static final String BEFORE = "eB";
+		static final String AFTER = "eA";
+		static final String EVENT = "eX";
+		static final String USER = "eU";
+		static final String HOST = "eH";
+		static final String HOSTNAME = "eN";
+		static final String APP = "eAp";
+		static final String TYPE = "eT";
+
 		/** before */
 		private Date eB;
 		/** after */

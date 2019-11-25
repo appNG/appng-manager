@@ -82,20 +82,20 @@ public interface Service {
 	void createPermission(Request request, PermissionImpl permission, Integer appId, FieldProcessor fp)
 			throws BusinessException;
 
-	DataContainer searchGroups(FieldProcessor fp, Site site, Integer siteId, Integer groupId) throws BusinessException;
+	DataContainer searchGroups(FieldProcessor fp, Site site, Integer siteId, Integer groupId, String groupName) throws BusinessException;
 
 	DataContainer searchApplications(FieldProcessor fp, Integer siteId, Integer appId, boolean assignedOnly)
 			throws BusinessException;
 
 	DataContainer searchRepositories(Request request, FieldProcessor fp, Integer repositoryId);
 
-	DataContainer searchInstallablePackages(Request request, FieldProcessor fp, Integer repositoryId)
+	DataContainer searchInstallablePackages(Request request, FieldProcessor fp, Integer repositoryId, String filter)
 			throws BusinessException;
 
 	DataContainer searchPackageVersions(Request request, FieldProcessor fp, Integer repositoryId, String packageName)
 			throws BusinessException;
 
-	Packages searchPackages(Environment env, FieldProcessor fp, String repositoryName, String digest)
+	Packages searchPackages(Environment env, FieldProcessor fp, String repositoryName, String digest, String packageName)
 			throws BusinessException;
 
 	PackageVersions searchPackageVersions(Environment environment, FieldProcessor fp, String repositoryName, String packageName,
@@ -109,10 +109,10 @@ public interface Service {
 
 	DataContainer searchRole(FieldProcessor fp, Integer roleId, Integer appId) throws BusinessException;
 
-	DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId) throws BusinessException;
+	DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name, String domain) throws BusinessException;
 
 	DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
-			List<String> languages) throws BusinessException;
+			List<String> languages, Integer groupId) throws BusinessException;
 
 	DataContainer searchPermissions(FieldProcessor fp, Integer permissionId, Integer appId) throws BusinessException;
 

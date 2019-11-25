@@ -3,12 +3,9 @@
 	<config>
 		<title id="subject">Subject</title>
 		<params>
-			<param name="userid">1</param>
+			<param name="userId">1</param>
 		</params>
 		<meta-data binding="subject" bindClass="org.appng.application.manager.form.SubjectForm">
-			<field name="id" type="int" format="#" readonly="true" binding="subject.id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" readonly="true" binding="subject.name">
 				<label id="name">Name</label>
 			</field>
@@ -571,9 +568,6 @@
 			</optionGroup>
 		</selection>
 		<result>
-			<field name="id" type="int">
-				<value>1</value>
-			</field>
 			<field name="name" type="text">
 				<value>admin</value>
 			</field>

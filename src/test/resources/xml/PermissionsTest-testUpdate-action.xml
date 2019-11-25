@@ -12,9 +12,6 @@
 			<param name="permissionid">1</param>
 		</params>
 		<meta-data bindClass="org.appng.core.domain.PermissionImpl">
-			<field name="id" type="int" format="#" readonly="true" binding="id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" binding="name">
 				<label id="name">Name</label>
 				<validation>
@@ -22,8 +19,7 @@
 						<message ref="name" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
 					</notNull>
 					<pattern regexp="[a-zA-Z0-9\-\.]{3,}">
-						<message ref="name" class="ERROR" code="{validation.permission}">Please enter a valid name, which may only consist of
-							letters,
+						<message ref="name" class="ERROR" code="{validation.permission}">Please enter a valid name, which may only consist of letters,
 							numbers, dots and hyphens</message>
 					</pattern>
 				</validation>
@@ -40,8 +36,7 @@
 	</config>
 	<condition expression="${form_action eq 'update-permission' and not empty appid and not empty permissionid}" />
 	<messages>
-		<message ref="update-permission" class="OK">Permission has been
-			updated.</message>
+		<message ref="update-permission" class="OK">Permission has been updated.</message>
 	</messages>
 	<datasource id="permission">
 		<params>
@@ -50,9 +45,6 @@
 	</datasource>
 	<data>
 		<result>
-			<field name="id" type="int">
-				<value>1</value>
-			</field>
 			<field name="name" type="text">
 				<value>do.somethingelse</value>
 			</field>

@@ -104,7 +104,9 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 			data = service.getNewSite(fp);
 		} else {
 			try {
-				data = service.searchSites(environment, fp, siteId);
+				String name = options.getString(SITE, "siteName");
+				String domain = options.getString(SITE, "siteDomain");
+				data = service.searchSites(environment, fp, siteId, name, domain);
 			} catch (BusinessException e) {
 				String message = request.getMessage(e.getMessageKey(), e.getMessageArgs());
 				log.error(message, e);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<datasources xmlns="http://www.appng.org/schema/platform"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.appng.org/schema/platform  http://www.appng.org/schema/platform/appng-platform.xsd ">
 
 	<datasource id="groups">
@@ -10,13 +11,11 @@
 			</permissions>
 			<params>
 				<param name="groupid" />
+				<param name="groupName" />
 			</params>
 			<meta-data bindClass="org.appng.api.model.Group" result-selector="${current.id eq groupid}">
-				<field name="id" type="int">
-					<label>id</label>
-				</field>
 				<field name="name" type="text">
-					<sort />
+					<sort prio="0" order="asc" />
 					<label>name</label>
 				</field>
 				<field name="description" type="text">
@@ -36,25 +35,27 @@
 				</link>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/users/group/update/#{id}#tab_groups" default="true">
+				<link mode="intern" target="/users/group/update/${current.id}#tab_groups" default="true">
 					<label>edit</label>
 					<icon>edit</icon>
 					<permissions>
 						<permission ref="group.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/users&#63;form_action=deleteGroup&#38;groupid=#{id}">
+				<link mode="intern" target="/users&#63;form_action=deleteGroup&#38;groupid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
-					<condition expression="${not current.defaultAdmin}"/>
-					<confirmation id="group.delete.confirm" params="#{name}" />
+					<condition expression="${not current.defaultAdmin}" />
+					<confirmation id="group.delete.confirm" params="${current.name}" />
 					<permissions>
 						<permission ref="group.delete" mode="set" />
 					</permissions>
 				</link>
 			</linkpanel>
 		</config>
-		<bean id="groups" />
+		<bean id="groups">
+			<option name="group" groupName="${groupName}" />
+		</bean>
 	</datasource>
 
 	<datasource id="group">
@@ -72,6 +73,9 @@
 				</field>
 				<field name="roles" type="list:select" binding="roleIds">
 					<label>roles</label>
+				</field>
+				<field name="subjects" type="list:checkbox" readonly="true">
+					<label>subjects</label>
 				</field>
 			</meta-data>
 		</config>

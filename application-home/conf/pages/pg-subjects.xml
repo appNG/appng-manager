@@ -20,6 +20,8 @@
 					<get-param name="groupid" />
 					<get-param name="f_type" />
 					<get-param name="f_name" />
+					<get-param name="f_gn" />
+					<get-param name="f_gid" />
 				</get-params>
 				<post-params>
 					<post-param name="form_action" />
@@ -41,7 +43,7 @@
 				<element passive="true">
 					<action eventId="subjectEvent" id="update" onSuccess="/users">
 						<params>
-							<param name="userid">${id}</param>
+							<param name="userId">${id}</param>
 							<param name="form_action">${form_action}</param>
 						</params>
 						<condition expression="${action eq 'update' and entity eq 'user'}" />
@@ -51,7 +53,8 @@
 				<element>
 					<datasource id="users">
 						<params>
-							<param name="userid">${id}</param>
+							<param name="userId">${id}</param>
+							<param name="groupId">${f_gid}</param>
 						</params>
 					</datasource>
 				</element>
@@ -82,6 +85,7 @@
 					<datasource id="groups">
 						<params>
 							<param name="groupid">${id}</param>
+							<param name="groupName">${f_gn}</param>
 						</params>
 					</datasource>
 				</element>
@@ -93,7 +97,7 @@
 				<element>
 					<action eventId="subjectEvent" id="delete" onSuccess="/users">
 						<params>
-							<param name="userid">${userid}</param>
+							<param name="userId">${userid}</param>
 							<param name="form_action">${form_action}</param>
 						</params>
 					</action>

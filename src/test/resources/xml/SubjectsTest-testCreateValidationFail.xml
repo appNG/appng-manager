@@ -89,8 +89,7 @@
 			<field name="passwordConfirmation" type="password" binding="passwordConfirmation">
 				<label id="password.confirmation">Password confirmation</label>
 				<messages ref="passwordConfirmation">
-					<message ref="passwordConfirmation" class="ERROR">Please confirm
-						the password.</message>
+					<message ref="passwordConfirmation" class="ERROR">Please confirm the password.</message>
 				</messages>
 			</field>
 			<field name="groups" type="list:checkbox" binding="groupIds">

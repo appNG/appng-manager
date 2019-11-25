@@ -19,8 +19,7 @@
 						<message ref="site.name" class="ERROR" code="{validation.string.max}">Enter at most 64 characters</message>
 					</size>
 					<pattern regexp="[a-zA-Z0-9\-]{3,}">
-						<message ref="site.name" class="ERROR" code="{validation.nameStrict}">Please enter a valid name, which may only consist of
-							letters,
+						<message ref="site.name" class="ERROR" code="{validation.nameStrict}">Please enter a valid name, which may only consist of letters,
 							numbers and hyphens</message>
 					</pattern>
 				</validation>

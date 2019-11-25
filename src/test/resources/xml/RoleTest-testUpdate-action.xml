@@ -11,9 +11,6 @@
 			<param name="roleid">1</param>
 		</params>
 		<meta-data binding="role" bindClass="org.appng.application.manager.form.RoleForm">
-			<field name="id" type="int" format="#" readonly="true" binding="role.id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" binding="role.name">
 				<label id="name">Name</label>
 				<validation>
@@ -24,8 +21,7 @@
 						<message ref="role.name" class="ERROR" code="{validation.string.max}">Enter at most 64 characters</message>
 					</size>
 					<pattern regexp="([a-zA-Z0-9_\.-]{3,}[ ]*)+([a-zA-Z0-9_\.-][ ]*)+">
-						<message ref="role.name" class="ERROR" code="{validation.name}">Please enter a valid name, which may only consist of
-							letters,
+						<message ref="role.name" class="ERROR" code="{validation.name}">Please enter a valid name, which may only consist of letters,
 							numbers, spaces, dots, underscores and hyphens</message>
 					</pattern>
 				</validation>
@@ -40,6 +36,12 @@
 			</field>
 			<field name="permissions" type="list:select" binding="permissionIds">
 				<label id="permissions">Permissions</label>
+			</field>
+			<field name="groupIds" type="list:checkbox" readonly="true" binding="role.groupIds">
+				<label id="groups">Groups</label>
+			</field>
+			<field name="subjectIds" type="list:checkbox" readonly="true" binding="role.subjectIds">
+				<label id="subjects">Users</label>
 			</field>
 		</meta-data>
 	</config>
@@ -62,9 +64,6 @@
 			</optionGroup>
 		</selection>
 		<result>
-			<field name="id" type="int">
-				<value>1</value>
-			</field>
 			<field name="name" type="text">
 				<value>role.updated</value>
 			</field>
@@ -72,6 +71,12 @@
 				<value>new description</value>
 			</field>
 			<field name="permissions" type="list:select">
+				<value></value>
+			</field>
+			<field name="groupIds" type="list:checkbox">
+				<value></value>
+			</field>
+			<field name="subjectIds" type="list:checkbox">
 				<value></value>
 			</field>
 		</result>

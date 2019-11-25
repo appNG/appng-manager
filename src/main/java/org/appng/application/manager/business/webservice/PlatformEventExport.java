@@ -22,6 +22,7 @@ import org.appng.api.Scope;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.application.manager.MessageConstants;
+import org.appng.application.manager.business.PlatformEvents;
 import org.appng.application.manager.business.PlatformEvents.EventFilter;
 import org.appng.application.manager.service.PlatformEventService;
 import org.appng.core.domain.PlatformEvent;
@@ -51,7 +52,7 @@ public class PlatformEventExport implements AttachmentWebservice {
 			throws BusinessException {
 		if (environment.isSubjectAuthenticated() && request.getPermissionProcessor().hasPermission("platform.events")) {
 
-			EventFilter filter = environment.getAttribute(Scope.SESSION, "eventFilter");
+			EventFilter filter = environment.getAttribute(Scope.SESSION, PlatformEvents.EVENT_FILTER);
 			List<PlatformEvent> events = platformEventEventService.getEvents(filter);
 			try {
 				try (ByteArrayOutputStream out = getEventReport(events, messageSource)) {

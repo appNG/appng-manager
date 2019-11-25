@@ -6,9 +6,6 @@
 			<param name="siteid">1</param>
 		</params>
 		<meta-data binding="site" bindClass="org.appng.application.manager.form.SiteForm">
-			<field name="id" type="int" format="#" readonly="true" binding="site.id">
-				<label id="id">ID</label>
-			</field>
 			<field name="name" type="text" readonly="true" binding="site.name">
 				<label id="name">Name</label>
 			</field>
@@ -34,9 +31,6 @@
 			<title id="template">Template</title>
 		</selection>
 		<result>
-			<field name="id" type="int">
-				<value>1</value>
-			</field>
 			<field name="name" type="text">
 				<value>localhost</value>
 			</field>
