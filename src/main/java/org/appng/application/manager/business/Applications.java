@@ -40,7 +40,6 @@ import lombok.extern.slf4j.Slf4j;
  * Provides CRUD-operations for a {@link ApplicationImpl}.
  * 
  * @author Matthias Müller
- * 
  */
 
 @Lazy
@@ -61,7 +60,7 @@ public class Applications extends ServiceAware implements DataProvider, ActionPr
 		String errorMessage = null;
 		String okMessage = null;
 		Service service = getService();
-		Integer applicationId = request.convert(options.getOptionValue(APPLICATION, ID), Integer.class);
+		Integer applicationId = options.getInteger(APPLICATION, ID);
 		try {
 			if (ACTION_UPDATE.equals(action)) {
 				applicationBean.setId(applicationId);
@@ -74,7 +73,7 @@ public class Applications extends ServiceAware implements DataProvider, ActionPr
 				okMessage = MessageConstants.APPLICATION_DELETED;
 			} else if (ACTION_CONFIGURE_APPLICATION.equals(action)) {
 				MigrationStatus migrationStatus = null;
-				Integer siteId = request.convert(options.getOptionValue(SITE, ID), Integer.class);
+				Integer siteId = options.getInteger(SITE, ID);
 				String formAction = options.getOptionValue(ACTION, FORM_ACTION);
 				if (ACTIVATE_APPLICATION.equals(formAction)) {
 					errorMessage = MessageConstants.APPLICATION_UPDATE_ERROR;
@@ -106,8 +105,8 @@ public class Applications extends ServiceAware implements DataProvider, ActionPr
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		Service service = getService();
-		Integer applicationId = request.convert(options.getOptionValue(APPLICATION, ID), Integer.class);
-		Integer siteId = request.convert(options.getOptionValue(SITE, ID), Integer.class);
+		Integer applicationId = options.getInteger(APPLICATION, ID);
+		Integer siteId = options.getInteger(SITE, ID);
 
 		DataContainer data = null;
 		try {

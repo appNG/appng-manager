@@ -45,7 +45,6 @@ import org.springframework.stereotype.Component;
  * the platform.
  * 
  * @author Matthias Müller
- * 
  */
 
 @Lazy
@@ -60,7 +59,7 @@ public class Dictionary extends ServiceAware implements DataProvider {
 		ResourceBundle bundle = null;
 		List<Property> properties = new ArrayList<Property>();
 
-		Integer applicationId = request.convert(options.getOptionValue("application", "id"), Integer.class);
+		Integer applicationId = options.getInteger("application", "id");
 		Locale locale = environment.getLocale();
 		if (null != applicationId) {
 			ResourceBundleMessageSource messageSource = getBundleForApplication(site, environment, applicationId);

@@ -41,7 +41,7 @@ import org.appng.application.manager.form.RoleForm;
 import org.appng.application.manager.form.SiteForm;
 import org.appng.application.manager.form.SubjectForm;
 import org.appng.application.manager.form.UploadForm;
-import org.appng.core.controller.AppngCache;
+import org.appng.core.controller.CachedResponse;
 import org.appng.core.domain.DatabaseConnection;
 import org.appng.core.domain.PermissionImpl;
 import org.appng.core.domain.PlatformEvent.Type;
@@ -225,7 +225,7 @@ public interface Service {
 
 	String getNameForSite(Integer siteId);
 
-	List<AppngCache> getCacheEntries(Integer siteId);
+	List<CachedResponse> getCacheEntries(Integer siteId);
 
 	Map<String, String> getCacheStatistics(Integer siteId);
 

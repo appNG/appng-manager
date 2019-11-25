@@ -39,7 +39,6 @@ import lombok.extern.slf4j.Slf4j;
  * Provides CRUD-operations for a {@link PermissionImpl}.
  * 
  * @author Matthias Müller
- * 
  */
 
 @Slf4j
@@ -55,10 +54,10 @@ public class Permissions extends ServiceAware implements ActionProvider<Permissi
 		String errorMessage = null;
 		String okMessage = null;
 		Service service = getService();
-		Integer permissionId = request.convert(options.getOptionValue(ID, ID), Integer.class);
+		Integer permissionId = options.getInteger(ID, ID);
 		try {
 			if (ACTION_CREATE.equals(action)) {
-				Integer applicationId = request.convert(options.getOptionValue(APPLICATION, ID), Integer.class);
+				Integer applicationId = options.getInteger(APPLICATION, ID);
 				service.createPermission(request, permission, applicationId, fp);
 				okMessage = MessageConstants.PERMISSION_CREATED;
 			} else if (ACTION_UPDATE.equals(action)) {
@@ -84,8 +83,8 @@ public class Permissions extends ServiceAware implements ActionProvider<Permissi
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		Service service = getService();
-		Integer permissionId = request.convert(options.getOptionValue(ID, ID), Integer.class);
-		Integer applicationId = request.convert(options.getOptionValue(APPLICATION, ID), Integer.class);
+		Integer permissionId = options.getInteger(ID, ID);
+		Integer applicationId = options.getInteger(APPLICATION, ID);
 		DataContainer data = null;
 		if (permissionId == null && ACTION_CREATE.equals(getAction(options))) {
 			data = service.getNewPermission(fp);

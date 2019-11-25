@@ -16,13 +16,12 @@
 package org.appng.application.manager.business;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.collections4.keyvalue.DefaultMapEntry;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOCase;
@@ -40,22 +39,20 @@ import org.appng.api.support.SelectionFactory;
 import org.appng.api.support.SelectionFactory.Selection;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.ServiceAware;
-import org.appng.core.controller.AppngCache;
+import org.appng.core.controller.CachedResponse;
 import org.appng.core.controller.filter.PageCacheFilter;
+import org.appng.core.service.CacheService;
 import org.appng.xml.platform.SelectionGroup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
  * Provides methods to interact with the page cache. Elements are stored in the cache by the {@link PageCacheFilter}.
  * 
  * @author Matthias Herlitzius
- *
+ * @author Matthias Müller
  */
-@Lazy
 @Component
-@org.springframework.context.annotation.Scope("request")
 public class Cache extends ServiceAware implements ActionProvider<Void>, DataProvider {
 
 	private static final String F_ETR = "fEtr";
@@ -72,29 +69,33 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fieldProcessor) {
 		String mode = options.getOptionValue("mode", ID);
-		Integer siteId = request.convert(options.getOptionValue("site", ID), Integer.class);
+		Integer siteId = options.getInteger("site", ID);
 		DataContainer dataContainer = new DataContainer(fieldProcessor);
 		if (STATISTICS.equals(mode)) {
-			List<Entry<String, String>> result = new ArrayList<Entry<String, String>>();
+			List<Entry<String, String>> result = new ArrayList<>();
 			Map<String, String> cacheStatistics = getService().getCacheStatistics(siteId);
-			for (Entry<String, String> e : cacheStatistics.entrySet()) {
-				result.add(e);
-			}
-			Collections.sort(result, new Comparator<Entry<String, String>>() {
-				public int compare(Entry<String, String> o1, Entry<String, String> o2) {
-					return o1.getKey().compareTo(o2.getKey());
-				}
-			});
-			dataContainer.setPage(result, fieldProcessor.getPageable());
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_NAME));
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_SIZE));
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_HITS));
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_HITS_PERCENT));
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_MISSES));
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_MISSES_PERCENT));
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_PUTS));
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_AVG_PUT_TIME));
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_GETS));
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_AVG_GET_TIME));
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_REMOVALS));
+			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_AVG_REMOVAL_TIME));
+			dataContainer.setItems(result);
 		} else if (ENTRIES.equals(mode)) {
-			List<AppngCache> allCacheEntries = getService().getCacheEntries(siteId);
-			List<CacheEntry> cacheEntries = new ArrayList<CacheEntry>();
+			List<CachedResponse> allCacheEntries = getService().getCacheEntries(siteId);
+			List<CacheEntry> cacheEntries = new ArrayList<>();
 			String entryName = request.getParameter(F_ETR);
 			String entryType = request.getParameter(F_CTYPE);
 			boolean filterName = StringUtils.isNotBlank(entryName);
 			boolean filterType = StringUtils.isNotBlank(entryType);
 
-			for (AppngCache entry : allCacheEntries) {
+			for (CachedResponse entry : allCacheEntries) {
 				String entryId = entry.getId();
 				boolean nameMatches = !filterName || FilenameUtils
 						.wildcardMatch(entryId.substring(entryId.indexOf('/')), entryName, IOCase.INSENSITIVE);
@@ -116,19 +117,24 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 		return dataContainer;
 	}
 
-	public class CacheEntry {
-		private AppngCache appngCache;
+	private Entry<String, String> getStatEntry(Request request, Map<String, String> statistics, String statKey) {
+		return new DefaultMapEntry<String, String>(request.getMessage("cache.statistics." + statKey),
+				statistics.get(statKey));
+	}
 
-		public CacheEntry(AppngCache appngCache) {
-			this.appngCache = appngCache;
+	public class CacheEntry {
+		private CachedResponse response;
+
+		public CacheEntry(CachedResponse response) {
+			this.response = response;
 		}
 
 		public String getPath() {
-			return appngCache.getDomain() + getId().substring(getId().indexOf('/'));
+			return response.getDomain() + getId().substring(getId().indexOf('/'));
 		}
 
 		public String getType() {
-			String contentType = appngCache.getContentType();
+			String contentType = response.getContentType();
 			if (null == contentType) {
 				return "<unknown>";
 			}
@@ -137,38 +143,36 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 		}
 
 		public String getId() {
-			return appngCache.getId();
+			return response.getId();
 		}
 
 		public long getHits() {
-			return appngCache.getHitCount();
+			return response.getHitCount();
 		}
 
 		public Date getCreated() {
-			return appngCache.getCreatedOrUpdated();
+			return response.getCreationTime();
 		}
 
 		public Date getExpires() {
-			return appngCache.getExpirationTime();
+			return response.getExpirationTime();
 		}
 
 		public double getSize() {
-			return (double) appngCache.getContentLength() / FileUtils.ONE_KB;
+			return (double) response.getContentLength() / FileUtils.ONE_KB;
 		}
 	}
 
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
 			Void formBean, FieldProcessor fieldProcessor) {
 		String action = getAction(options);
+		Integer siteId = options.getInteger("site", "id");
 		if (ACTION_EXPIRE_CACHE_ELEMENT.equals(action)) {
 			String cacheElement = options.getOptionValue("cacheElement", "id");
-			Integer siteId = request.convert(options.getOptionValue("site", "id"), Integer.class);
 			getService().expireCacheElement(request, fieldProcessor, siteId, cacheElement);
 		} else if (ACTION_CLEAR_CACHE_STATISTICS.equals(action)) {
-			Integer siteId = request.convert(options.getOptionValue("site", "id"), Integer.class);
 			getService().clearCacheStatistics(request, fieldProcessor, siteId);
 		} else if (ACTION_CLEAR_CACHE.equals(action)) {
-			Integer siteId = request.convert(options.getOptionValue("site", "id"), Integer.class);
 			getService().clearCache(request, fieldProcessor, siteId);
 		}
 	}

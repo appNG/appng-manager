@@ -43,7 +43,6 @@ import lombok.extern.slf4j.Slf4j;
  * Provides CRUD-operations for a {@link PropertyImpl}.
  * 
  * @author Matthias Müller
- * 
  */
 
 @Slf4j
@@ -58,9 +57,9 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		Service service = getService();
-		Integer siteId = request.convert(options.getOptionValue(PROPERTIES, "siteId"), Integer.class);
-		Integer applicationId = request.convert(options.getOptionValue(PROPERTIES, "applicationId"), Integer.class);
-		String propertyName = request.convert(options.getOptionValue(PROPERTY, "id"), String.class);
+		Integer siteId = options.getInteger(PROPERTIES, "siteId");
+		Integer applicationId = options.getInteger(PROPERTIES, "applicationId");
+		String propertyName = options.getString(PROPERTY, "id");
 		DataContainer data = null;
 		if (ACTION_CREATE.equals(getAction(options))) {
 			data = service.getNewProperty(fp);
@@ -98,9 +97,8 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 		try {
 			if (ACTION_CREATE.equals(action)) {
 				errorMessage = MessageConstants.PROPERTY_CREATE_ERROR;
-				Integer siteId = request.convert(options.getOption(PROPERTIES).getString("siteId"), Integer.class);
-				Integer applicationId = request.convert(options.getOption(PROPERTIES).getString("applicationId"),
-						Integer.class);
+				Integer siteId = options.getInteger(PROPERTIES, "siteId");
+				Integer applicationId = options.getInteger(PROPERTIES, "applicationId");
 				service.createProperty(request, propertyForm, siteId, applicationId, fp);
 				okMessage = MessageConstants.PROPERTY_CREATED;
 			} else if (ACTION_UPDATE.equals(action)) {

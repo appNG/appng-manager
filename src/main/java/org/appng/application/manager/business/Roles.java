@@ -39,7 +39,6 @@ import lombok.extern.slf4j.Slf4j;
  * Provides CRUD-operations for a {@link org.appng.core.domain.RoleImpl}.
  * 
  * @author Matthias Müller
- * 
  */
 
 @Slf4j
@@ -54,15 +53,15 @@ public class Roles extends ServiceAware implements DataProvider, ActionProvider<
 
 		String okMessage = null;
 		Service service = getService();
-		Integer applicationroleId = request.convert(options.getOptionValue(ID, ID), Integer.class);
+		Integer applicationroleId = options.getInteger(ID, ID);
 
 		try {
 			if (ACTION_CREATE.equals(action)) {
-				Integer applicationId = request.convert(options.getOptionValue(APPLICATION, ID), Integer.class);
+				Integer applicationId = options.getInteger(APPLICATION, ID);
 				service.createRole(request, roleForm, applicationId, fp);
 				okMessage = MessageConstants.ROLE_CREATED;
 			} else if (ACTION_UPDATE.equals(action)) {
-				Integer roleId = request.convert(options.getOptionValue(ID, ID), Integer.class);
+				Integer roleId = options.getInteger(ID, ID);
 				roleForm.getRole().setId(roleId);
 				service.updateRole(request, roleForm, fp);
 				okMessage = MessageConstants.ROLE_UPDATED;
@@ -81,8 +80,8 @@ public class Roles extends ServiceAware implements DataProvider, ActionProvider<
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		Service service = getService();
-		Integer applicationRoleId = request.convert(options.getOptionValue(ID, ID), Integer.class);
-		Integer applicationId = request.convert(options.getOptionValue(APPLICATION, ID), Integer.class);
+		Integer applicationRoleId = options.getInteger(ID, ID);
+		Integer applicationId = options.getInteger(APPLICATION, ID);
 		DataContainer data = null;
 		if (null == applicationRoleId && ACTION_CREATE.equals(getAction(options))) {
 			data = service.getNewRole(fp, applicationId);

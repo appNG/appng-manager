@@ -36,7 +36,6 @@ import org.springframework.stereotype.Component;
  * Provides CRUD-operations for a {@link org.appng.core.domain.Template}.
  * 
  * @author Matthias Müller
- * 
  */
 
 @Lazy

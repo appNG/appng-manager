@@ -41,6 +41,7 @@ import org.flywaydb.core.internal.dbsupport.DbSupport;
 import org.flywaydb.core.internal.dbsupport.SqlScript;
 import org.flywaydb.core.internal.dbsupport.hsql.HsqlDbSupport;
 import org.flywaydb.core.internal.dbsupport.mysql.MySQLDbSupport;
+import org.flywaydb.core.internal.dbsupport.postgresql.PostgreSQLDbSupport;
 import org.flywaydb.core.internal.dbsupport.sqlserver.SQLServerDbSupport;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -71,7 +72,7 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
 			SqlStatement formBean, FieldProcessor fieldProcessor) {
-		Integer dcId = request.convert(options.getOptionValue("connection", "id"), Integer.class);
+		Integer dcId = options.getInteger("connection", "id");
 		String sql = formBean.getContent();
 		Map<String, String> sessionParams = application.getSessionParams(site, environment);
 		sessionParams.put("sql" + dcId, sql);
@@ -191,6 +192,9 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 		switch (type) {
 		case MYSQL:
 			dbSupport = new MySQLDbSupport(null);
+			break;
+		case POSTGRESQL:
+			dbSupport = new PostgreSQLDbSupport(null);
 			break;
 		case MSSQL:
 			dbSupport = new SQLServerDbSupport(null);

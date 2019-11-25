@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.appng</groupId>
 		<artifactId>appng-application-parent</artifactId>
-		<version>1.20.0</version>
+		<version>1.21.0-SNAPSHOT</version>
 	</parent>
 
 	<scm>
@@ -356,11 +356,23 @@
 		<dependency>
 			<groupId>org.appng</groupId>
 			<artifactId>appng-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.hazelcast</groupId>
+					<artifactId>hazelcast-client</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.appng</groupId>
 			<artifactId>appng-testsupport</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-catalina</artifactId>
+			<version>8.5.47</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

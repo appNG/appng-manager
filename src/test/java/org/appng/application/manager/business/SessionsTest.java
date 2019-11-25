@@ -16,7 +16,6 @@
 package org.appng.application.manager.business;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,8 +29,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
+import org.springframework.test.context.ContextConfiguration;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ContextConfiguration(locations = "classpath:beans-test.xml")
 public class SessionsTest extends AbstractTest {
 
 	@Test
@@ -60,11 +61,11 @@ public class SessionsTest extends AbstractTest {
 	@Test
 	public void testExpire() throws Exception {
 		Session session = new Session("47124712");
-		environment.setAttribute(Scope.PLATFORM, "sessions", Arrays.asList(session));
+		setSessions(session);
 		CallableAction callableAction = getAction("sessionEvent", "expire").withParam("action", "expire")
 				.withParam("sessid", "47124712").getCallableAction(null);
 		callableAction.perform();
-		Assert.assertTrue(session.isExpired());
+		Assert.assertTrue(getSession(session.getId()).isExpired());
 	}
 
 	@Test
@@ -74,17 +75,16 @@ public class SessionsTest extends AbstractTest {
 		Session sessionC = Mockito.spy(new Session("47134713"));
 		Mockito.when(sessionC.isAllowExpire()).thenReturn(false);
 		environment.setAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID, sessionC.getId());
-		environment.setAttribute(Scope.PLATFORM, "sessions", Arrays.asList(sessionA, sessionB, sessionC));
+		setSessions(sessionA, sessionB, sessionC);
 		CallableAction callableAction = getAction("sessionEvent", "expireAll").withParam("action", "expireAll")
 				.getCallableAction(null);
 		callableAction.perform();
-		Assert.assertTrue(sessionA.isExpired());
-		Assert.assertTrue(sessionB.isExpired());
-		Assert.assertFalse(sessionC.isExpired());
+		Assert.assertTrue(getSession(sessionA.getId()).isExpired());
+		Assert.assertTrue(getSession(sessionB.getId()).isExpired());
+		Assert.assertFalse(getSession(sessionC.getId()).isExpired());
 	}
 
 	private List<Session> setSessions() throws ParseException {
-		List<Session> sessions = new ArrayList<Session>();
 		Session sessionA = Mockito.mock(Session.class);
 		Mockito.when(sessionA.getId()).thenReturn("47114711");
 		Mockito.when(sessionA.getShortId()).thenReturn("47114711");
@@ -100,7 +100,6 @@ public class SessionsTest extends AbstractTest {
 		Mockito.when(sessionA.getUserAgent()).thenReturn("Mozilla");
 		Mockito.when(sessionA.isAllowExpire()).thenReturn(true);
 		Mockito.when(sessionA.clone()).thenReturn(sessionA);
-		sessions.add(sessionA);
 
 		Session sessionB = Mockito.mock(Session.class);
 		Mockito.when(sessionB.getId()).thenReturn("47124712");
@@ -117,8 +116,17 @@ public class SessionsTest extends AbstractTest {
 		Mockito.when(sessionB.getUserAgent()).thenReturn("Mozilla");
 		Mockito.when(sessionB.isAllowExpire()).thenReturn(false);
 		Mockito.when(sessionB.clone()).thenReturn(sessionB);
-		sessions.add(sessionB);
-		environment.setAttribute(Scope.PLATFORM, "sessions", sessions);
-		return sessions;
+
+		return setSessions(sessionA, sessionB);
 	}
+
+	private Session getSession(String id) {
+		return SessionsTestBean.getSession(id);
+	}
+
+	private List<Session> setSessions(Session... sessions) {
+		SessionsTestBean.setSessions(Arrays.asList(sessions));
+		return SessionsTestBean.SESSIONS;
+	}
+
 }

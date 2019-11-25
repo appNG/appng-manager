@@ -139,7 +139,8 @@ public class Environment implements DataProvider {
 			String entryKey = StringNormalizer.replaceNonPrintableCharacters(key, qm);
 			Object value = entryMap.get(key);
 			Object entryValue = (value instanceof String)
-					? StringNormalizer.replaceNonPrintableCharacters((String) value, qm) : value;
+					? StringNormalizer.replaceNonPrintableCharacters((String) value, qm)
+					: value;
 			entries.add(new DefaultMapEntry(entryKey, entryValue));
 		}
 		return entries;
