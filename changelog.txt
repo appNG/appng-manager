@@ -1,4 +1,4 @@
-Release Notes - appNG Manager - Version 1.16.0 (2019-25-11)
+Release Notes - appNG Manager - Version 1.16.0 (2019-11-25)
 -----------------------------------------------------------
 [MGR-87] - Release of 1.16.0
 [MGR-85] - Format error in platform event containing the size of appNG's root database
