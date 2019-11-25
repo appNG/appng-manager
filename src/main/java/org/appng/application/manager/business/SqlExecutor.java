@@ -41,6 +41,7 @@ import org.flywaydb.core.internal.dbsupport.DbSupport;
 import org.flywaydb.core.internal.dbsupport.SqlScript;
 import org.flywaydb.core.internal.dbsupport.hsql.HsqlDbSupport;
 import org.flywaydb.core.internal.dbsupport.mysql.MySQLDbSupport;
+import org.flywaydb.core.internal.dbsupport.postgresql.PostgreSQLDbSupport;
 import org.flywaydb.core.internal.dbsupport.sqlserver.SQLServerDbSupport;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -191,6 +192,9 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 		switch (type) {
 		case MYSQL:
 			dbSupport = new MySQLDbSupport(null);
+			break;
+		case POSTGRESQL:
+			dbSupport = new PostgreSQLDbSupport(null);
 			break;
 		case MSSQL:
 			dbSupport = new SQLServerDbSupport(null);

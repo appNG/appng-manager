@@ -107,7 +107,6 @@ import org.appng.core.model.RepositoryType;
 import org.appng.core.model.RepositoryUtils;
 import org.appng.core.service.CoreService;
 import org.appng.core.service.InitializerService;
-import org.appng.core.service.MigrationService;
 import org.appng.core.service.MigrationService.MigrationStatus;
 import org.appng.core.service.PropertySupport;
 import org.appng.core.xml.repository.PackageVersions;
