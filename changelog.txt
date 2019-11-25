@@ -1,3 +1,14 @@
+Release Notes - appNG Manager - Version 1.16.0 (2019-25-11)
+-----------------------------------------------------------
+[MGR-87] - Release of 1.16.0
+[MGR-85] - Format error in platform event containing the size of appNG's root database
+[MGR-83] - Improve overview and details for database connections
+[MGR-82] - When reloading a site, forceForward="true" should be used
+[MGR-81] - Replace username selection for filtering platform events with a textfield, when a threshold is exceeded
+[MGR-80] - For a single role, show a readonly list of all groups and users containing it
+[MGR-79] - Default value is set when creating/editing multilined properties
+[MGR-71] - Possible NPE in PlatformEvents
+
 Release Notes - appNG Manager - Version 1.15.0 (2019-08-01)
 -----------------------------------------------------------
 * [MGR-78] - Release of 1.15.0
