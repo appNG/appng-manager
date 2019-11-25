@@ -15,7 +15,7 @@
 				<param name="linkTab" />
 				<param name="editTab" />
 			</params>
-			<meta-data bindClass="org.appng.core.domain.DatabaseConnection">
+			<meta-data bindClass="org.appng.application.manager.form.DatabaseConnectionForm" binding="item">
 				<field name="type" type="text">
 					<label>type</label>
 				</field>
@@ -31,10 +31,16 @@
 				<field name="databaseSize" type="decimal">
 					<label id="sizeMB" />
 				</field>
+				<field name="state" binding="state" type="image" readonly="true">
+					<label id="state" />
+					<icon condition="${current.item.active and not current.pendingMigrations}">led_green</icon>
+					<icon condition="${current.item.active and current.pendingMigrations}">led_red</icon>
+					<icon condition="${not current.item.active}">led_orange</icon>
+				</field>
 				<field name="active" type="image">
 					<label>active</label>
-					<icon condition="${current.active}">led_green</icon>
-					<icon condition="${not current.active}">led_red</icon>
+					<icon condition="${current.item.active}">led_green</icon>
+					<icon condition="${not current.item.active}">led_red</icon>
 				</field>
 				<field name="actions" type="linkpanel">
 					<label>actions</label>
@@ -49,21 +55,21 @@
 			</linkpanel>
 
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="${editLink}${current.id}${editTab}" default="true">
+				<link mode="intern" target="${editLink}${current.item.id}${editTab}" default="true">
 					<label>edit</label>
 					<icon>edit</icon>
 				</link>
-				<link mode="intern" target="${deleteLink}${current.id}">
+				<link mode="intern" target="${deleteLink}${current.item.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<condition expression="${not empty deleteLink}" />
 					<confirmation id="connection.delete.confirm" params="#{name}" />
 				</link>
-				<link mode="intern" target="${testLink}${current.id}${linkTab}">
+				<link mode="intern" target="${testLink}${current.item.id}${linkTab}">
 					<label>test</label>
 					<icon>start</icon>
 				</link>
-				<link mode="intern" target="${resetLink}${current.id}">
+				<link mode="intern" target="${resetLink}${current.item.id}">
 					<label>reset</label>
 					<icon>reload</icon>
 					<condition expression="${not empty resetLink}" />
@@ -101,8 +107,11 @@
 				<field name="installedBy" type="text">
 					<label id="migration.installedBy" />
 				</field>
-				<field name="state.displayName" type="text">
+				<field name="state" type="image" readonly="true">
 					<label id="migration.state" />
+					<icon condition="${current.state.name() eq 'SUCCESS'}">led_green</icon>
+					<icon condition="${current.state.name() eq 'PENDING'}">led_orange</icon>
+					<icon condition="${not (current.state.name() eq 'SUCCESS' or current.state.name() eq 'PENDING')}">led_red</icon>
 				</field>
 			</meta-data>
 		</config>

@@ -15,6 +15,12 @@
 			<field name="permissions" type="list:select" binding="permissionIds">
 				<label id="permissions">Permissions</label>
 			</field>
+			<field name="groupIds" type="list:checkbox" readonly="true" binding="role.groupIds">
+				<label id="groups">Groups</label>
+			</field>
+			<field name="subjectIds" type="list:checkbox" readonly="true" binding="role.subjectIds">
+				<label id="subjects">Users</label>
+			</field>
 		</meta-data>
 	</config>
 	<data>
@@ -34,6 +40,12 @@
 				<value></value>
 			</field>
 			<field name="permissions" type="list:select">
+				<value></value>
+			</field>
+			<field name="groupIds" type="list:checkbox">
+				<value></value>
+			</field>
+			<field name="subjectIds" type="list:checkbox">
 				<value></value>
 			</field>
 		</result>

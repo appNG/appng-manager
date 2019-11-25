@@ -24,8 +24,11 @@
 			<field name="installedBy" type="text" binding="installedBy">
 				<label id="migration.installedBy">User</label>
 			</field>
-			<field name="state.displayName" type="text" binding="state.displayName">
+			<field name="state" type="image" readonly="true" binding="state">
 				<label id="migration.state">State</label>
+				<icon condition="${current.state.name() eq 'SUCCESS'}">led_green</icon>
+				<icon condition="${current.state.name() eq 'PENDING'}">led_orange</icon>
+				<icon condition="${not (current.state.name() eq 'SUCCESS' or current.state.name() eq 'PENDING')}">led_red</icon>
 			</field>
 		</meta-data>
 	</config>
@@ -51,8 +54,9 @@
 				<field name="installedBy" type="text">
 					<value></value>
 				</field>
-				<field name="state.displayName" type="text">
-					<value>Pending</value>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
 				</field>
 			</result>
 			<result>
@@ -74,8 +78,9 @@
 				<field name="installedBy" type="text">
 					<value></value>
 				</field>
-				<field name="state.displayName" type="text">
-					<value>Pending</value>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
 				</field>
 			</result>
 			<result>
@@ -97,8 +102,9 @@
 				<field name="installedBy" type="text">
 					<value></value>
 				</field>
-				<field name="state.displayName" type="text">
-					<value>Pending</value>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
 				</field>
 			</result>
 			<result>
@@ -120,8 +126,9 @@
 				<field name="installedBy" type="text">
 					<value></value>
 				</field>
-				<field name="state.displayName" type="text">
-					<value>Pending</value>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
 				</field>
 			</result>
 			<result>
@@ -143,8 +150,9 @@
 				<field name="installedBy" type="text">
 					<value></value>
 				</field>
-				<field name="state.displayName" type="text">
-					<value>Pending</value>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
 				</field>
 			</result>
 			<result>
@@ -166,8 +174,9 @@
 				<field name="installedBy" type="text">
 					<value></value>
 				</field>
-				<field name="state.displayName" type="text">
-					<value>Pending</value>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
 				</field>
 			</result>
 			<result>
@@ -189,8 +198,9 @@
 				<field name="installedBy" type="text">
 					<value></value>
 				</field>
-				<field name="state.displayName" type="text">
-					<value>Pending</value>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
 				</field>
 			</result>
 			<result>
@@ -212,8 +222,9 @@
 				<field name="installedBy" type="text">
 					<value></value>
 				</field>
-				<field name="state.displayName" type="text">
-					<value>Pending</value>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
 				</field>
 			</result>
 			<result>
@@ -235,8 +246,9 @@
 				<field name="installedBy" type="text">
 					<value></value>
 				</field>
-				<field name="state.displayName" type="text">
-					<value>Pending</value>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
 				</field>
 			</result>
 			<result>
@@ -258,8 +270,9 @@
 				<field name="installedBy" type="text">
 					<value></value>
 				</field>
-				<field name="state.displayName" type="text">
-					<value>Pending</value>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
 				</field>
 			</result>
 			<result>
@@ -281,8 +294,9 @@
 				<field name="installedBy" type="text">
 					<value></value>
 				</field>
-				<field name="state.displayName" type="text">
-					<value>Pending</value>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
 				</field>
 			</result>
 		</resultset>

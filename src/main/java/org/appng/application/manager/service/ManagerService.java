@@ -68,9 +68,9 @@ import org.appng.api.model.Site.SiteState;
 import org.appng.api.model.Subject;
 import org.appng.api.model.UserType;
 import org.appng.api.support.OptionGroupFactory;
-import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.OptionGroupFactory.OptionGroup;
 import org.appng.api.support.OptionOwner.Selector;
+import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.SelectionFactory;
 import org.appng.api.support.environment.EnvironmentKeys;
 import org.appng.application.manager.MessageConstants;
@@ -108,6 +108,7 @@ import org.appng.core.model.RepositoryType;
 import org.appng.core.model.RepositoryUtils;
 import org.appng.core.service.CoreService;
 import org.appng.core.service.InitializerService;
+import org.appng.core.service.MigrationService;
 import org.appng.core.service.MigrationService.MigrationStatus;
 import org.appng.core.service.PropertySupport;
 import org.appng.core.xml.repository.PackageVersions;
@@ -137,7 +138,6 @@ import org.springframework.transaction.annotation.Transactional;
  * The {@link Service}-implementation extending {@link CoreService}.
  * 
  * @author Matthias Müller
- * 
  */
 @Transactional(rollbackFor = BusinessException.class)
 public class ManagerService extends CoreService implements Service {
@@ -313,19 +313,15 @@ public class ManagerService extends CoreService implements Service {
 			if (null == group) {
 				throw new BusinessException("no such group : " + groupId, MessageConstants.GROUP_NOT_EXISTS);
 			}
-			Selection selection = getRoleSelection(group, site.getId());
+			Selection roleSelection = getRoleSelection(group, site.getId());
+			data.getSelections().add(roleSelection);
 
-			List<String> users = group.getSubjects().stream()
-					.map(s -> String.format("%s (%s)", s.getAuthName(), s.getRealname())).sorted()
-					.collect(Collectors.toList());
-			if (!users.isEmpty()) {
-				Selection subjects = new SelectionBuilder<String>("subjects").title(MessageConstants.SUBJECTS)
-						.type(SelectionType.CHECKBOX).options(users).select(users).build();
+			if (!group.getSubjects().isEmpty()) {
+				Selection subjects = getSubjectSelection(group.getSubjects(), "subjects");
 				data.getSelections().add(subjects);
 			} else {
 				fp.getMetaData().getFields().remove(fp.getField("group.subjects"));
 			}
-			data.getSelections().add(selection);
 			data.setItem(new GroupForm(group));
 		} else {
 			Selection nameFilter = new SelectionBuilder<String>(FILTER_GROUP_NAME)
@@ -339,6 +335,13 @@ public class ManagerService extends CoreService implements Service {
 			data.setPage(groups);
 		}
 		return data;
+	}
+
+	private Selection getSubjectSelection(Collection<? extends Subject> subjects, String id) {
+		List<String> users = subjects.stream().map(s -> String.format("%s (%s)", s.getAuthName(), s.getRealname()))
+				.sorted().collect(Collectors.toList());
+		return new SelectionBuilder<String>(id).title(MessageConstants.SUBJECTS).type(SelectionType.CHECKBOX)
+				.options(users).select(users).disable(users).build();
 	}
 
 	private Selection getRoleSelection(Group group, Integer siteId) {
@@ -453,9 +456,8 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link Packages}-object from a certain repository. {@link Packages}
-	 * are made available to other appNG instances via the
-	 * {@link RepositoryService}.
+	 * Returns a {@link Packages}-object from a certain repository. {@link Packages} are made available to other appNG
+	 * instances via the {@link RepositoryService}.
 	 */
 	public Packages searchPackages(Environment environment, FieldProcessor fp, String repositoryName, String digest,
 			String packageName) throws BusinessException {
@@ -469,9 +471,8 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link PackageVersions}-object from a certain repository.
-	 * {@link PackageVersions} are made available to other appNG instances via the
-	 * {@link RepositoryService}.
+	 * Returns a {@link PackageVersions}-object from a certain repository. {@link PackageVersions} are made available to
+	 * other appNG instances via the {@link RepositoryService}.
 	 */
 	public PackageVersions searchPackageVersions(Environment environment, FieldProcessor fp, String repositoryName,
 			String packageName, String digest) throws BusinessException {
@@ -702,6 +703,31 @@ public class ManagerService extends CoreService implements Service {
 			if (null == role) {
 				throw new BusinessException("no such Role " + roleId, MessageConstants.ROLE_NOT_EXISTS);
 			}
+			List<GroupImpl> groupList = groupRepository.findGroupsForApplicationRole(roleId);
+			List<String> groups = groupList.stream().map(GroupImpl::getName).sorted().collect(Collectors.toList());
+			if (!groups.isEmpty()) {
+				Selection groupSelection = new SelectionBuilder<String>("groupIds").title(MessageConstants.GROUPS)
+						.type(SelectionType.CHECKBOX).options(groups).disable(groups).select(groups).build();
+				data.getSelections().add(groupSelection);
+
+				SearchQuery<SubjectImpl> subjectQuery = subjectRepository.createSearchQuery();
+				subjectQuery.distinct();
+				subjectQuery.setAppendEntityAlias(false);
+				subjectQuery.join("join e.groups g");
+				subjectQuery.in("g", groupList);
+				List<SubjectImpl> subjectList = subjectRepository.search(subjectQuery, null).getContent();
+
+				if (!subjectList.isEmpty()) {
+					Selection subjectSelection = getSubjectSelection(subjectList, "subjectIds");
+					data.getSelections().add(subjectSelection);
+				} else {
+					fp.getMetaData().getFields().remove(fp.getField("subjectIds"));
+				}
+
+			} else {
+				fp.getMetaData().getFields().remove(fp.getField("groupIds"));
+			}
+
 			Selection selection = getPermissionSelection(role.getApplication().getId(), role);
 			data.getSelections().add(selection);
 			RoleForm form = new RoleForm(role);
@@ -934,8 +960,8 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name, String domain)
-			throws BusinessException {
+	public DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name,
+			String domain) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (siteId != null) {
 			SiteImpl site = siteRepository.findOne(siteId);
@@ -962,9 +988,8 @@ public class ManagerService extends CoreService implements Service {
 					siteImpl.setStartupTime(site.getStartupTime());
 				}
 			}
-			Selection nameFilter = new SelectionBuilder<String>(FILTER_SITE_NAME)
-					.defaultOption(FILTER_SITE_NAME, name).title(MessageConstants.NAME).type(SelectionType.TEXT)
-					.select(name).build();
+			Selection nameFilter = new SelectionBuilder<String>(FILTER_SITE_NAME).defaultOption(FILTER_SITE_NAME, name)
+					.title(MessageConstants.NAME).type(SelectionType.TEXT).select(name).build();
 			Selection domainFilter = new SelectionBuilder<String>(FILTER_SITE_DOMAIN)
 					.defaultOption(FILTER_SITE_DOMAIN, domain).title(MessageConstants.DOMAIN).type(SelectionType.TEXT)
 					.select(domain).build();
@@ -1459,6 +1484,9 @@ public class ManagerService extends CoreService implements Service {
 					throw new BusinessException("no such property");
 				}
 				request.setPropertyValues(propertyForm, new PropertyForm(currentProperty), fp.getMetaData());
+				if (StringUtils.isNotBlank(currentProperty.getClob())) {
+					currentProperty.setActualString(null);
+				}
 			} else {
 				throw new BusinessException("no propertyname given");
 			}

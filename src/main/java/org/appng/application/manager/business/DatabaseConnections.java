@@ -28,6 +28,7 @@ import org.appng.api.Options;
 import org.appng.api.Request;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
+import org.appng.application.manager.form.DatabaseConnectionForm;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.DatabaseConnection;
 import org.flywaydb.core.api.MigrationInfo;
@@ -41,7 +42,6 @@ import org.springframework.stereotype.Component;
  * Provides CRUD-operations for a {@link DatabaseConnection}.
  * 
  * @author Matthias Müller
- * 
  */
 
 @Lazy
@@ -58,7 +58,7 @@ public class DatabaseConnections extends ServiceAware implements DataProvider, A
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
 			DatabaseConnection databaseConnection, FieldProcessor fp) {
 		String action = options.getOptionValue(ACTION, ID);
-		Integer conId = request.convert(options.getOptionValue(OPT_CONNECTION, ID), Integer.class);
+		Integer conId = options.getInteger(OPT_CONNECTION, ID);
 		if (ACTION_UPDATE.equals(action)) {
 			databaseConnection.setId(conId);
 			getService().updateDatabaseConnection(request, fp, databaseConnection);
@@ -78,7 +78,7 @@ public class DatabaseConnections extends ServiceAware implements DataProvider, A
 		DataContainer dataContainer = new DataContainer(fp);
 		if (null == dcId) {
 			Page<DatabaseConnection> connections = getService().getDatabaseConnections(siteId, fp);
-			dataContainer.setPage(connections);
+			dataContainer.setPage(connections.map(c -> new DatabaseConnectionForm(c)));
 		} else if ("migrations".equals(options.getString(ID, "mode"))) {
 			DatabaseConnection databaseConnection = getService().getDatabaseConnection(dcId, true);
 			MigrationInfoService migrationInfoService = databaseConnection.getMigrationInfoService();

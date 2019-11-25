@@ -12,38 +12,44 @@
 			<param name="linkTab" />
 			<param name="editTab" />
 		</params>
-		<meta-data bindClass="org.appng.core.domain.DatabaseConnection">
-			<field name="type" type="text" binding="type">
+		<meta-data binding="item" bindClass="org.appng.application.manager.form.DatabaseConnectionForm">
+			<field name="type" type="text" binding="item.type">
 				<label id="type">Type</label>
 			</field>
-			<field name="name" type="text" binding="name">
+			<field name="name" type="text" binding="item.name">
 				<label id="name">Name</label>
 			</field>
-			<field name="jdbcUrl" type="text" binding="jdbcUrl">
+			<field name="jdbcUrl" type="text" binding="item.jdbcUrl">
 				<label id="jdbcUrl">JDBC-URL</label>
 			</field>
-			<field name="userName" type="text" binding="userName">
+			<field name="userName" type="text" binding="item.userName">
 				<label id="userName">User-Name</label>
 			</field>
-			<field name="databaseSize" type="decimal" format="#.##" binding="databaseSize">
+			<field name="databaseSize" type="decimal" format="#.##" binding="item.databaseSize">
 				<label id="sizeMB">Size (MB)</label>
 			</field>
-			<field name="active" type="image" binding="active">
-				<label id="active">Active</label>
-				<icon condition="${current.active}">led_green</icon>
-				<icon condition="${not current.active}">led_red</icon>
+			<field name="state" type="image" readonly="true" binding="state">
+				<label id="state">state</label>
+				<icon condition="${current.item.active and not current.pendingMigrations}">led_green</icon>
+				<icon condition="${current.item.active and current.pendingMigrations}">led_red</icon>
+				<icon condition="${not current.item.active}">led_orange</icon>
 			</field>
-			<field name="actions" type="linkpanel" binding="actions">
+			<field name="active" type="image" binding="item.active">
+				<label id="active">Active</label>
+				<icon condition="${current.item.active}">led_green</icon>
+				<icon condition="${not current.item.active}">led_red</icon>
+			</field>
+			<field name="actions" type="linkpanel" binding="item.actions">
 				<label id="actions">Actions</label>
 			</field>
 		</meta-data>
 		<linkpanel id="create" location="both" />
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="${current.id}" default="true">
+			<link id="actions[1]" mode="intern" target="${current.item.id}" default="true">
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[3]" mode="intern" target="${current.id}">
+			<link id="actions[3]" mode="intern" target="${current.item.id}">
 				<label id="test">Test</label>
 				<icon>start</icon>
 			</link>
@@ -67,6 +73,10 @@
 				</field>
 				<field name="databaseSize" type="decimal">
 					<value></value>
+				</field>
+				<field name="state" type="image">
+					<value>UNKNOWN</value>
+					<icon type="class">led_red</icon>
 				</field>
 				<field name="active" type="image">
 					<value>true</value>
