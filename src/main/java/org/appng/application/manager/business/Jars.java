@@ -40,7 +40,6 @@ import org.springframework.stereotype.Component;
  * A {@link DataProvider} providing information about the JAR-files used by a site/the platform.
  * 
  * @author Matthias Herlitzius
- * 
  */
 
 @Lazy
@@ -50,7 +49,7 @@ public class Jars extends ServiceAware implements DataProvider {
 
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
-		Integer siteId = request.convert(options.getOptionValue(Sites.SITE, ID), Integer.class);
+		Integer siteId = options.getInteger(Sites.SITE, ID);
 		DataContainer data = new DataContainer(fp);
 		List<JarInfo> jars;
 		if (null == options.getOptionValue("tomcatJars", "show")) {

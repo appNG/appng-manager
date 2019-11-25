@@ -45,7 +45,6 @@ import lombok.extern.slf4j.Slf4j;
  * Provides CRUD-operations for a {@link SubjectImpl}.
  * 
  * @author Matthias Müller
- * 
  */
 
 @Slf4j
@@ -62,7 +61,7 @@ public class Subjects extends ServiceAware implements DataProvider, ActionProvid
 		String errorMessage = null;
 		String okMessage = null;
 		Service service = getService();
-		Integer subjectId = request.convert(options.getOptionValue(SUBJECT, ID), Integer.class);
+		Integer subjectId = options.getInteger(SUBJECT, ID);
 		try {
 			if (ACTION_CREATE.equals(action)) {
 				errorMessage = MessageConstants.SUBJECT_CREATE_ERROR;
@@ -99,7 +98,7 @@ public class Subjects extends ServiceAware implements DataProvider, ActionProvid
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		Service service = getService();
-		Integer subjectId = request.convert(options.getOptionValue(SUBJECT, ID), Integer.class);
+		Integer subjectId = options.getInteger(SUBJECT, ID);
 		List<String> languages = site.getProperties().getList(SiteProperties.SUPPORTED_LANGUAGES, ",");
 		String defaultTimezone = site.getProperties().getString(Platform.Property.TIME_ZONE);
 		DataContainer data = null;

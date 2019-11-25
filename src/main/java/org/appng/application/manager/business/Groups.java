@@ -40,7 +40,6 @@ import lombok.extern.slf4j.Slf4j;
  * Provides CRUD-operations for a {@link GroupImpl}.
  * 
  * @author Matthias Müller
- * 
  */
 
 @Slf4j
@@ -57,7 +56,7 @@ public class Groups extends ServiceAware implements ActionProvider<GroupForm>, D
 		String errorMessage = null;
 		String okMessage = null;
 		Service service = getService();
-		Integer groupId = request.convert(options.getOptionValue(GROUP, ID), Integer.class);
+		Integer groupId = options.getInteger(GROUP, ID);
 		try {
 			if (ACTION_CREATE.equals(action)) {
 				service.createGroup(request, groupForm, site, fp);

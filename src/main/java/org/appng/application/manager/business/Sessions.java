@@ -126,7 +126,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 
 		Set<String> userAgents = new TreeSet<String>();
 		userAgents.add(StringUtils.EMPTY);
-		Boolean currentSiteOnly = request.convert(options.getOptionValue("site", "currentSiteOnly"), Boolean.class);
+		Boolean currentSiteOnly = options.getBoolean("site", "currentSiteOnly");
 		List<Session> sessions = getSessions(options, request, currentSiteOnly, immutableSessions, userAgents, fDmn,
 				fSess, fAgnt, fUsr, getDate(fCrBf), getDate(fCrAf), fLgn);
 
@@ -160,7 +160,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 	protected List<Session> getSessions(Options options, Request request, Boolean currentSiteOnly,
 			List<Session> imutableSessions, Set<String> userAgents, final String fSite, final String fSessid,
 			final String fAgnt, String fUsr, final Date fcrBfDate, final Date fcrAfDate, final String fLgn) {
-		Integer siteId = request.convert(options.getOptionValue("site", "id"), Integer.class);
+		Integer siteId = options.getInteger("site", "id");
 		String currentSiteName = null == siteId ? null : getService().getNameForSite(siteId);
 		List<Session> sessions = new ArrayList<Session>();
 		for (Session session : imutableSessions) {

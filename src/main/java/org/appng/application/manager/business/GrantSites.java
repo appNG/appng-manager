@@ -48,8 +48,8 @@ public class GrantSites extends ServiceAware implements ActionProvider<GrantForm
 			Request request, FieldProcessor fieldProcessor) {
 		DataContainer dataContainer = new DataContainer(fieldProcessor);
 
-		Integer siteId = request.convert(options.getOptionValue(IDS, SITE_ID), Integer.class);
-		Integer applicationId = request.convert(options.getOptionValue(IDS, APPLICATION_ID), Integer.class);
+		Integer siteId = options.getInteger(IDS, SITE_ID);
+		Integer applicationId = options.getInteger(IDS, APPLICATION_ID);
 
 		SiteApplication siteApplication = getService().getSiteApplication(siteId, applicationId);
 
@@ -70,8 +70,8 @@ public class GrantSites extends ServiceAware implements ActionProvider<GrantForm
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
 			GrantForm grantForm, FieldProcessor fieldProcessor) {
 
-		Integer siteId = request.convert(options.getOptionValue(IDS, SITE_ID), Integer.class);
-		Integer applicationId = request.convert(options.getOptionValue(IDS, APPLICATION_ID), Integer.class);
+		Integer siteId = options.getInteger(IDS, SITE_ID);
+		Integer applicationId = options.getInteger(IDS, APPLICATION_ID);
 		Set<Integer> grantedSiteIds = grantForm.getGrantedSiteIds();
 		getService().grantSites(siteId, applicationId, grantedSiteIds);
 

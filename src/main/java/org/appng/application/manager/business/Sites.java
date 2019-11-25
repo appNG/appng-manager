@@ -42,7 +42,6 @@ import lombok.extern.slf4j.Slf4j;
  * Provides CRUD-operations for a {@link SiteImpl}, furthermore supports reloading a site.
  * 
  * @author Matthias Müller
- * 
  */
 
 @Slf4j
@@ -59,7 +58,7 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 		String errorMessage = null;
 		String okMessage = null;
 		Service service = getService();
-		Integer siteId = request.convert(options.getOptionValue(SITE, ID), Integer.class);
+		Integer siteId = options.getInteger(SITE, ID);
 
 		try {
 			if (ACTION_CREATE.equals(action)) {
@@ -98,7 +97,7 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		Service service = getService();
-		Integer siteId = request.convert(options.getOptionValue(SITE, ID), Integer.class);
+		Integer siteId = options.getInteger(SITE, ID);
 		DataContainer data = null;
 		if (null == siteId && ACTION_CREATE.equals(getAction(options))) {
 			data = service.getNewSite(fp);

@@ -42,9 +42,7 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 
  * @author Matthias Herlitzius
- * 
  */
 
 @Slf4j
@@ -66,11 +64,10 @@ public class Installation extends ServiceAware implements DataProvider, ActionPr
 		String errorMessage = null;
 		String okMessage = null;
 		Service service = getService();
-		Integer repositoryId = request.convert(options.getOptionValue(REPOSITORY, ID), Integer.class);
-		String packageName = request.convert(options.getOptionValue(PACKAGE_OPTION, PACKAGE_NAME), String.class);
-		String packageVersion = request.convert(options.getOptionValue(PACKAGE_OPTION, PACKAGE_VERSION), String.class);
-		String packageTimestamp = request.convert(options.getOptionValue(PACKAGE_OPTION, PACKAGE_TIMESTAMP),
-				String.class);
+		Integer repositoryId = options.getInteger(REPOSITORY, ID);
+		String packageName = options.getString(PACKAGE_OPTION, PACKAGE_NAME);
+		String packageVersion = options.getString(PACKAGE_OPTION, PACKAGE_VERSION);
+		String packageTimestamp = options.getString(PACKAGE_OPTION, PACKAGE_TIMESTAMP);
 
 		try {
 			if (ACTION_INSTALL.equals(action)) {

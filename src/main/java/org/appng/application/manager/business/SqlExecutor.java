@@ -72,7 +72,7 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
 			SqlStatement formBean, FieldProcessor fieldProcessor) {
-		Integer dcId = request.convert(options.getOptionValue("connection", "id"), Integer.class);
+		Integer dcId = options.getInteger("connection", "id");
 		String sql = formBean.getContent();
 		Map<String, String> sessionParams = application.getSessionParams(site, environment);
 		sessionParams.put("sql" + dcId, sql);
