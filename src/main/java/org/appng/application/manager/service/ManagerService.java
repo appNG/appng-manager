@@ -1760,7 +1760,7 @@ public class ManagerService extends CoreService implements Service {
 	public void grantSites(Integer siteId, Integer appId, Set<Integer> grantedSiteIds) {
 		SiteApplication siteApplication = getSiteApplication(siteId, appId);
 		siteApplication.getGrantedSites().clear();
-		List<SiteImpl> sites = siteRepository.findAll(grantedSiteIds);
+		List<SiteImpl> sites = siteRepository.findAllById(grantedSiteIds);
 		siteApplication.getGrantedSites().addAll(sites);
 	}
 

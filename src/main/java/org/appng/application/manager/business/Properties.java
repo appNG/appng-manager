@@ -33,7 +33,6 @@ import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.PropertyImpl;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -72,11 +71,7 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 				} else {
 					@SuppressWarnings("unchecked")
 					Page<PropertyImpl> page = (Page<PropertyImpl>) data.getPage();
-					data.setPage(page.map(new Converter<PropertyImpl, PropertyWrapper>() {
-						public PropertyWrapper convert(PropertyImpl p) {
-							return new PropertyWrapper(p);
-						}
-					}));
+					data.setPage(page.map(p -> new PropertyWrapper(p)));
 				}
 			} catch (BusinessException ex) {
 				String message = request.getMessage(ex.getMessageKey(), ex.getMessageArgs());
