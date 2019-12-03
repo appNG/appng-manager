@@ -137,6 +137,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  * @author Matthias Müller
  */
+@org.springframework.stereotype.Service
 @Transactional(rollbackFor = BusinessException.class)
 public class ManagerService extends CoreService implements Service {
 
@@ -746,7 +747,7 @@ public class ManagerService extends CoreService implements Service {
 	private Selection getPermissionSelection(Integer appId, RoleImpl role) {
 		Set<Permission> permissionsFromRole = role.getPermissions();
 		List<PermissionImpl> allPermissions = permissionRepository.findByApplicationId(appId,
-				new Sort(Direction.ASC, "name"));
+				Sort.by(Direction.ASC, "name"));
 		Map<String, List<Permission>> permissionGroups = new HashMap<String, List<Permission>>();
 		Pattern pattern = Pattern.compile("([^\\.]+)((.)*)");
 		for (Permission permission : allPermissions) {
@@ -854,7 +855,7 @@ public class ManagerService extends CoreService implements Service {
 					}
 					applications.add(siteApplication);
 				}
-				Pageable currentPage = new PageRequest(allApplications.getNumber(), allApplications.getSize(),
+				Pageable currentPage = PageRequest.of(allApplications.getNumber(), allApplications.getSize(),
 						allApplications.getSort());
 				Page<SiteApplication> page = new PageImpl<SiteApplication>(applications, currentPage,
 						allApplications.getTotalElements());
@@ -1113,7 +1114,7 @@ public class ManagerService extends CoreService implements Service {
 				searchQuery.equals("g.id", groupId);
 				List<Order> orders = StreamSupport.stream(pageable.getSort().spliterator(), false)
 						.map(o -> new Order(o.getDirection(), "e." + o.getProperty())).collect(Collectors.toList());
-				pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders));
+				pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(orders));
 			}
 
 			Page<SubjectImpl> subjects = subjectRepository.search(searchQuery, pageable);
@@ -1129,7 +1130,7 @@ public class ManagerService extends CoreService implements Service {
 					new String[] { name }, new String[] { name });
 			userName.setType(SelectionType.TEXT);
 
-			List<GroupImpl> groups = groupRepository.findAll(new Sort(Direction.ASC, "name"));
+			List<GroupImpl> groups = groupRepository.findAll(Sort.by(Direction.ASC, "name"));
 			Selector groupSelector = o -> {
 				if (null != groupId && groupId.toString().equals(o.getValue())) {
 					o.setSelected(true);
@@ -1151,7 +1152,7 @@ public class ManagerService extends CoreService implements Service {
 
 	private void addSelectionsForSubject(Request request, DataContainer data, SubjectImpl subject, String timezone,
 			List<String> languages) {
-		List<? extends Group> allGroups = groupRepository.findAll(new Sort(Direction.ASC, "name"));
+		List<? extends Group> allGroups = groupRepository.findAll(Sort.by(Direction.ASC, "name"));
 		Selection selection = selectionFactory.fromNamed("groups", MessageConstants.GROUPS, allGroups,
 				subject.getGroups());
 		data.getSelections().add(selection);
@@ -1737,7 +1738,7 @@ public class ManagerService extends CoreService implements Service {
 		SiteApplication siteApplication = getSiteApplication(siteId, appId);
 		Site grantedSite = siteApplication.getSite();
 		Application application = siteApplication.getApplication();
-		List<SiteImpl> allSites = siteRepository.findAll(new Sort("name"));
+		List<SiteImpl> allSites = siteRepository.findAll(Sort.by("name"));
 		allSites.remove(grantedSite);
 		for (SiteImpl site : new ArrayList<SiteImpl>(allSites)) {
 			SiteApplication granted = siteApplicationRepository

@@ -57,7 +57,7 @@ public class PlatformEventService {
 	}
 
 	public List<PlatformEvent> getEvents(EventFilter eventFilter) {
-		return getEvents(new PageRequest(0, Integer.MAX_VALUE), eventFilter).getContent();
+		return getEvents(PageRequest.of(0, Integer.MAX_VALUE), eventFilter).getContent();
 	}
 
 	public Collection<String> getUsers() {

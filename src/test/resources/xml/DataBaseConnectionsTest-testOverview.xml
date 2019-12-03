@@ -66,7 +66,7 @@
 					<value>appNG HSQL</value>
 				</field>
 				<field name="jdbcUrl" type="text">
-					<value>jdbc:hsqldb:hsql://localhost:9001/hsql-testdb</value>
+					<value>jdbc:hsqldb:mem:hsql-testdb</value>
 				</field>
 				<field name="userName" type="text">
 					<value>sa</value>

@@ -18,9 +18,7 @@ package org.appng.application.manager.business;
 import org.appng.api.support.CallableDataSource;
 import org.appng.testsupport.validation.WritingXmlValidator;
 import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
 
-//@ContextConfiguration(locations = { "classpath:/beans-test.xml" })
 public class DataBaseConnectionsTest extends AbstractTest {
 
 	static {

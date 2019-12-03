@@ -15,23 +15,41 @@
  */
 package org.appng.application.manager.business;
 
+import java.util.Properties;
+
 import org.appng.api.support.CallableAction;
+import org.appng.testsupport.TestBase;
+import org.appng.testsupport.validation.WritingXmlValidator;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration(locations = { "classpath:/beans-test.xml"})
-public class SqlExecutorTest extends AbstractTest {
+@ContextConfiguration(classes = ManagerTestConfig.class, initializers = SqlExecutorTest.class)
+public class SqlExecutorTest extends TestBase {
 
+	public SqlExecutorTest() {
+		super("appng-manager", APPLICATION_HOME);
+		setUseFullClassname(false);
+		setEntityPackage("org.appng.core.domain");
+		setRepositoryBase("org.appng.core.repository");
+	}
+	
 	@Test
 	public void testExecute() throws Exception {
-
-		String sql = "--comment\r\nselect id,name version from site;\r\nselect count(*) from application;\n--comment";
+		String sql = "--comment\r\nselect id,name version from site;\r\nselect count(*) from application;\n--comment\n";
 		CallableAction callableAction = getAction("databaseConnectionEvent", "executeSql")
 				.withParam(FORM_ACTION, "executeSql").withParam("id", "1")
 				.getCallableAction(new SqlExecutor.SqlStatement(sql, null, false));
 
 		callableAction.perform();
+		WritingXmlValidator.writeXml = true;
 		validate(callableAction.getAction());
 	}
 
+	@Override
+	protected Properties getProperties() {
+		Properties properties = super.getProperties();
+		properties.put("createDatabase", "true");
+		return properties;
+	}
 }

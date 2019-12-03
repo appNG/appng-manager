@@ -26,7 +26,7 @@
 		</properties>
 	</persistence-unit>
 
-	<persistence-unit name="hsql-testdb" transaction-type="RESOURCE_LOCAL">
+	<persistence-unit name="hsql-testdb__" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>org.appng.core.domain.DatabaseConnection</class>
 		<class>org.appng.core.domain.SubjectImpl</class>
@@ -39,6 +39,10 @@
 		<class>org.appng.core.domain.RoleImpl</class>
 		<class>org.appng.core.domain.PermissionImpl</class>
 		<class>org.appng.core.domain.PropertyImpl</class>
+		<class>org.appng.core.domain.Template</class>
+		<class>org.appng.core.domain.TemplateResource</class>
+		<class>org.appng.core.domain.PlatformEvent</class>
+		<class>org.appng.core.domain.JobExecutionRecord</class>
 		<properties>
 			<property name="hibernate.connection.url" value="jdbc:hsqldb:hsql://localhost:9001/hsql-testdb" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />

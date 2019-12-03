@@ -36,13 +36,12 @@ import org.appng.api.model.Site;
 import org.appng.application.manager.business.SqlExecutor.SqlStatement;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.DatabaseConnection;
-import org.appng.core.domain.DatabaseConnection.DatabaseType;
-import org.flywaydb.core.internal.dbsupport.DbSupport;
-import org.flywaydb.core.internal.dbsupport.SqlScript;
-import org.flywaydb.core.internal.dbsupport.hsql.HsqlDbSupport;
-import org.flywaydb.core.internal.dbsupport.mysql.MySQLDbSupport;
-import org.flywaydb.core.internal.dbsupport.postgresql.PostgreSQLDbSupport;
-import org.flywaydb.core.internal.dbsupport.sqlserver.SQLServerDbSupport;
+import org.flywaydb.core.api.configuration.FluentConfiguration;
+import org.flywaydb.core.internal.database.DatabaseFactory;
+import org.flywaydb.core.internal.database.base.Database;
+import org.flywaydb.core.internal.resource.StringResource;
+import org.flywaydb.core.internal.sqlscript.SqlScript;
+import org.flywaydb.core.internal.sqlscript.SqlStatementBuilderFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
@@ -80,7 +79,7 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 		DataSource dataSource = new SingleConnectionDataSource(databaseConnection.getJdbcUrl(),
 				databaseConnection.getUserName(), new String(databaseConnection.getPassword()), true);
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		List<String> queries = getQueries(sql, databaseConnection.getType());
+		List<String> queries = getQueries(sql, databaseConnection);
 		StringBuilder results = new StringBuilder();
 		for (String query : queries) {
 			SqlStatement statementResult = processSingleStatement(query, jdbcTemplate);
@@ -187,23 +186,11 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 
 	}
 
-	public List<String> getQueries(String sql, DatabaseType type) {
-		DbSupport dbSupport = null;
-		switch (type) {
-		case MYSQL:
-			dbSupport = new MySQLDbSupport(null);
-			break;
-		case POSTGRESQL:
-			dbSupport = new PostgreSQLDbSupport(null);
-			break;
-		case MSSQL:
-			dbSupport = new SQLServerDbSupport(null);
-			break;
-		case HSQL:
-			dbSupport = new HsqlDbSupport(null);
-			break;
-		}
-		SqlScript sqlScript = new SqlScript(sql, dbSupport);
+	public List<String> getQueries(String sql, DatabaseConnection connection) {
+		Database<?> db = DatabaseFactory
+				.createDatabase(new FluentConfiguration().dataSource(connection.getDataSource()), true);
+		SqlStatementBuilderFactory ssbf = db.createSqlStatementBuilderFactory();
+		SqlScript sqlScript = new SqlScript(ssbf, new StringResource(sql), false);
 		List<String> queries = new ArrayList<String>();
 		sqlScript.getSqlStatements().forEach(query -> queries.add(query.getSql()));
 		return queries;

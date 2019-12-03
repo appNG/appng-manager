@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-		http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/tx
-		http://www.springframework.org/schema/tx/spring-tx.xsd	
-		http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd">
-
-	<context:component-scan base-package="org.appng.application.manager" />
-	<tx:annotation-driven transaction-manager="coreTxManager" proxy-target-class="true" />
-	<bean class="org.appng.api.support.OptionGroupFactory" />
-
-	<bean id="service" class="org.appng.application.manager.service.ManagerService">
-		<property name="timezoneMessages">
-			<bean class="org.springframework.context.support.ResourceBundleMessageSource">
-				<property name="alwaysUseMessageFormat" value="true" />
-				<property name="basename" value="timezones" />
-				<property name="defaultEncoding" value="UTF-8" />
-				<property name="useCodeAsDefaultMessage" value="true" />
-			</bean>
-		</property>
-	</bean>
-
-	<bean id="mailTransport" class="org.appng.mail.impl.DefaultTransport">
-		<constructor-arg value="${site.mailHost:localhost}" />
-		<constructor-arg value="${site.mailPort:25}" />
-		<property name="disableSend" value="${site.mailDisabled:true}" />
-	</bean>
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="platformEventReportJob" class="org.appng.application.manager.job.PlatformEventReportJob">
 		<property name="jobDataMap">
@@ -48,13 +21,13 @@
 			</map>
 		</property>
 	</bean>
-	
+
 	<bean id="logDatabaseSize" class="org.appng.application.manager.job.LogDatabaseSize">
 		<property name="jobDataMap">
 			<map>
 				<entry key="enabled" value="true" />
 				<entry key="runOnce" value="true" />
-				<entry key="cronExpression" value="0 0 1 1/1 * ? *"/>
+				<entry key="cronExpression" value="0 0 1 1/1 * ? *" />
 			</map>
 		</property>
 	</bean>

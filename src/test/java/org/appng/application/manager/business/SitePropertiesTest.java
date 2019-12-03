@@ -23,7 +23,7 @@ import org.appng.api.ProcessingException;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.PropertyForm;
-import org.appng.application.manager.service.ManagerService;
+import org.appng.application.manager.service.Service;
 import org.appng.core.domain.PropertyImpl;
 import org.appng.core.domain.SiteImpl;
 import org.junit.Assert;
@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class SitePropertiesTest extends AbstractTest {
 
 	@Autowired
-	private ManagerService managerService;
+	private Service managerService;
 
 	private static final String PROPERTY_EVENT = "propertyEvent";
 
