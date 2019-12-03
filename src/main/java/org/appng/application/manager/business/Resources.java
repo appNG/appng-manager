@@ -42,7 +42,6 @@ import lombok.extern.slf4j.Slf4j;
  * ApplicationResources action class reads all resources of a application
  * 
  * @author Matthias Herlitzius
- * 
  */
 
 @Slf4j
@@ -59,8 +58,8 @@ public class Resources extends ServiceAware implements ActionProvider<ResourceFo
 		String action = getAction(options);
 		String errorMessage = null;
 		Service service = getService();
-		Integer applicationId = request.convert(options.getOptionValue(APPLICATION, ID), Integer.class);
-		Integer resourceId = request.convert(options.getOptionValue(RESOURCE, ID), Integer.class);
+		Integer applicationId = options.getInteger(APPLICATION, ID);
+		Integer resourceId = options.getInteger(RESOURCE, ID);
 		String resourceName = null;
 		try {
 			if (ACTION_DELETE.equals(action)) {
@@ -82,10 +81,10 @@ public class Resources extends ServiceAware implements ActionProvider<ResourceFo
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		Service service = getService();
-		Integer applicationId = request.convert(options.getOptionValue(APPLICATION, ID), Integer.class);
+		Integer applicationId = options.getInteger(APPLICATION, ID);
 
 		String resourceType = options.getOptionValue(RESOURCE, TYPE);
-		Integer resourceId = request.convert(options.getOptionValue(RESOURCE, ID), Integer.class);
+		Integer resourceId = options.getInteger(RESOURCE, ID);
 		ResourceType type = null;
 		if (StringUtils.isNotBlank(resourceType)) {
 			type = ResourceType.valueOf(resourceType);

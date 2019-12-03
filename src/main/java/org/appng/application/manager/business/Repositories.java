@@ -41,7 +41,6 @@ import lombok.extern.slf4j.Slf4j;
  * Provides CRUD-operations for a {@link org.appng.core.domain.RepositoryImpl}.
  * 
  * @author Matthias Herlitzius
- * 
  */
 
 @Slf4j
@@ -61,7 +60,7 @@ public class Repositories extends ServiceAware implements DataProvider, ActionPr
 		String errorMessage = null;
 		String okMessage = null;
 		Service service = getService();
-		Integer repositoryId = request.convert(options.getOptionValue(REPOSITORY, ID), Integer.class);
+		Integer repositoryId = options.getInteger(REPOSITORY, ID);
 		String archiveName = null;
 		try {
 			if (ACTION_CREATE.equals(action)) {
@@ -100,7 +99,7 @@ public class Repositories extends ServiceAware implements DataProvider, ActionPr
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		Service service = getService();
-		Integer repositoryId = request.convert(options.getOptionValue(REPOSITORY, ID), Integer.class);
+		Integer repositoryId = options.getInteger(REPOSITORY, ID);
 		DataContainer data = null;
 		if (null == repositoryId && ACTION_CREATE.equals(getAction(options))) {
 			data = service.getNewRepository(request, fp);

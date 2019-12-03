@@ -46,7 +46,6 @@ import lombok.extern.slf4j.Slf4j;
  * Allows displaying and uploading resources for a {@link Application}.
  * 
  * @author Matthias Müller
- * 
  */
 
 @Slf4j
@@ -75,7 +74,7 @@ public class Upload extends ServiceAware implements ActionProvider<UploadForm>, 
 			UploadForm form, FieldProcessor fp) {
 
 		Service service = getService();
-		Integer applicationId = request.convert(options.getOptionValue(APPLICATION, ID), Integer.class);
+		Integer applicationId = options.getInteger(APPLICATION, ID);
 
 		try {
 			service.createResource(request, site, applicationId, form, fp);
