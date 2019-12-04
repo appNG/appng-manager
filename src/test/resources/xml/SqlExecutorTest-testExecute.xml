@@ -26,20 +26,51 @@
 	<data>
 		<result>
 			<field name="content" type="longtext">
-				<value>--comment&#xD;
-					select id,name version from site;&#xD;
-					select count(*) from application;
-					--comment</value>
+				<value>--comment&#13;
+					select id,name version from site;&#13;
+					SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='PUBLIC';&#13;
+					--comment
+				</value>
 			</field>
 			<field name="result" type="richtext">
-				<value>&lt;div style='background:#F0F0F0;border:1px solid grey'&gt;select id,name version from
-					site&lt;/div&gt;&lt;table border='1px solid grey' cellpadding='0'
+				<value>&lt;div style='background:#F0F0F0;border:1px solid grey'&gt;--comment&#13;
+					select id,name version from site&lt;/div&gt;&lt;table border='1px solid grey' cellpadding='0'
 					cellspacing='0'&gt;&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;NAME&lt;/th&gt;&lt;/tr&gt;&lt;/table&gt;&lt;div&gt;0
-					row(s) selected&lt;/div&gt;&lt;p/&gt;&lt;div style='background:#F0F0F0;border:1px solid grey'&gt;select count(*)
-					from application&lt;/div&gt;&lt;table border='1px solid grey' cellpadding='0'
-					cellspacing='0'&gt;&lt;tr&gt;&lt;th&gt;C1&lt;/th&gt;&lt;/tr&gt;&lt;tr
-					style='vertical-align:top'&gt;&lt;td&gt;0&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;div&gt;1 row(s)
-					selected&lt;/div&gt;&lt;p/&gt;</value>
+					row(s) selected&lt;/div&gt;&lt;p/&gt;&lt;div style='background:#F0F0F0;border:1px solid grey'&gt;SELECT TABLE_NAME
+					FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='PUBLIC'&lt;/div&gt;&lt;table border='1px solid grey'
+					cellpadding='0' cellspacing='0'&gt;&lt;tr&gt;&lt;th&gt;TABLE_NAME&lt;/th&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;schema_version&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;APPLICATION&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;AUTHGROUP&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;AUTHGROUP_ROLE&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;DATABASE_CONNECTION&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;PERMISSION&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;PROPERTY&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;REPOSITORY&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;RESOURCE&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;ROLE&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;ROLE_PERMISSION&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;SITE&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;SITE_APPLICATION&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;SITES_GRANTED&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;SUBJECT&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;SUBJECT_AUTHGROUP&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;QRTZ_JOB_DETAILS&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;QRTZ_TRIGGERS&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;QRTZ_SIMPLE_TRIGGERS&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;QRTZ_CRON_TRIGGERS&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;QRTZ_SIMPROP_TRIGGERS&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;QRTZ_BLOB_TRIGGERS&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;QRTZ_CALENDARS&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;QRTZ_PAUSED_TRIGGER_GRPS&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;QRTZ_FIRED_TRIGGERS&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;QRTZ_SCHEDULER_STATE&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;QRTZ_LOCKS&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;TEMPLATE&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;TEMPLATE_RESOURCE&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;PLATFORM_EVENT&lt;/td&gt;&lt;/tr&gt;&lt;tr
+					style='vertical-align:top'&gt;&lt;td&gt;JOB_EXECUTION_RECORD&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;div&gt;31
+					row(s) selected&lt;/div&gt;&lt;p/&gt;</value>
 			</field>
 		</result>
 	</data>

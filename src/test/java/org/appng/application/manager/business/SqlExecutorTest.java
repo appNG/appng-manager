@@ -15,41 +15,30 @@
  */
 package org.appng.application.manager.business;
 
-import java.util.Properties;
-
 import org.appng.api.support.CallableAction;
-import org.appng.testsupport.TestBase;
-import org.appng.testsupport.validation.WritingXmlValidator;
+import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.junit.Test;
-import org.junit.rules.TestName;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-@ContextConfiguration(classes = ManagerTestConfig.class, initializers = SqlExecutorTest.class)
-public class SqlExecutorTest extends TestBase {
+public class SqlExecutorTest extends AbstractTest {
 
-	public SqlExecutorTest() {
-		super("appng-manager", APPLICATION_HOME);
-		setUseFullClassname(false);
-		setEntityPackage("org.appng.core.domain");
-		setRepositoryBase("org.appng.core.repository");
-	}
-	
 	@Test
 	public void testExecute() throws Exception {
-		String sql = "--comment\r\nselect id,name version from site;\r\nselect count(*) from application;\n--comment\n";
+
+		DriverManagerDataSource dataSource = new DriverManagerDataSource("jdbc:hsqldb:mem:hsql-testdb", "sa", "");
+		Flyway fw = new FluentConfiguration().dataSource(dataSource).table("schema_version")
+				.locations("db/migration/hsql").load();
+		fw.migrate();
+
+		String sql = "--comment\r\nselect id,name version from site;\r\n"
+				+ "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='PUBLIC';\r\n" + "--comment\n";
 		CallableAction callableAction = getAction("databaseConnectionEvent", "executeSql")
 				.withParam(FORM_ACTION, "executeSql").withParam("id", "1")
 				.getCallableAction(new SqlExecutor.SqlStatement(sql, null, false));
 
 		callableAction.perform();
-		WritingXmlValidator.writeXml = true;
 		validate(callableAction.getAction());
 	}
 
-	@Override
-	protected Properties getProperties() {
-		Properties properties = super.getProperties();
-		properties.put("createDatabase", "true");
-		return properties;
-	}
 }
