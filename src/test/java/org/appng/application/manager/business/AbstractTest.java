@@ -46,8 +46,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 
 @Ignore
-@ContextConfiguration(classes = ManagerTestConfig.class, initializers = AbstractTest.class)
-public class AbstractTest extends TestBase /* implements PropertySourceFactory */ {
+@ContextConfiguration(locations = { TestBase.TESTCONTEXT_CORE, TestBase.TESTCONTEXT_JPA }, initializers = AbstractTest.class)
+public class AbstractTest extends TestBase {
 
 	@Autowired
 	SiteRepository siteRepository;
@@ -80,10 +80,6 @@ public class AbstractTest extends TestBase /* implements PropertySourceFactory *
 	static {
 		WritingXmlValidator.writeXml = false;
 	}
-
-//	public PropertySource<?> createPropertySource(String name, EncodedResource resource) throws IOException {
-//		return new PropertiesPropertySource("testconfig", getProperties());
-//	}
 
 	protected AbstractTest() {
 		super("appng-manager", APPLICATION_HOME);
@@ -118,7 +114,6 @@ public class AbstractTest extends TestBase /* implements PropertySourceFactory *
 		Properties properties = super.getProperties();
 		properties.put("hibernate.show_sql", "false");
 		properties.put("hibernate.format_sql", "false");
-		properties.put("platform.sharedSecret", "42");
 		return properties;
 	}
 

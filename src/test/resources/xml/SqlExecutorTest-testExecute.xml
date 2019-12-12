@@ -26,14 +26,14 @@
 	<data>
 		<result>
 			<field name="content" type="longtext">
-				<value>--comment&#xD;
-					select id,name version from site;&#xD;
-					select count(*) from application;
-					--comment</value>
+				<value>--comment&#13;
+					select id,name version from site;&#13;
+					select count(*) from application;&#13;
+					--comment&#13; </value>
 			</field>
 			<field name="result" type="richtext">
-				<value>&lt;div style='background:#F0F0F0;border:1px solid grey'&gt;select id,name version from
-					site&lt;/div&gt;&lt;table border='1px solid grey' cellpadding='0'
+				<value>&lt;div style='background:#F0F0F0;border:1px solid grey'&gt;--comment&#13;
+					select id,name version from site&lt;/div&gt;&lt;table border='1px solid grey' cellpadding='0'
 					cellspacing='0'&gt;&lt;tr&gt;&lt;th&gt;ID&lt;/th&gt;&lt;th&gt;NAME&lt;/th&gt;&lt;/tr&gt;&lt;/table&gt;&lt;div&gt;0
 					row(s) selected&lt;/div&gt;&lt;p/&gt;&lt;div style='background:#F0F0F0;border:1px solid grey'&gt;select count(*)
 					from application&lt;/div&gt;&lt;table border='1px solid grey' cellpadding='0'
