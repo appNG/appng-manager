@@ -16,7 +16,6 @@
 package org.appng.application.manager.business;
 
 import org.appng.api.support.CallableAction;
-import org.appng.testsupport.validation.WritingXmlValidator;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -26,15 +25,13 @@ public class SqlExecutorTest extends AbstractTest {
 	@Test
 	public void testExecute() throws Exception {
 
-		String sql = "--comment\r\nselect id,name version from site;\r\nselect count(*) from application;\r\n--comment\r\n";
+		String sql = "-- comment\r\nselect id,name version from site;\r\nselect /*inline comment*/ count(*) from application;\r\n-- comment\r\n";
 		CallableAction callableAction = getAction("databaseConnectionEvent", "executeSql")
 				.withParam(FORM_ACTION, "executeSql").withParam("id", "1")
 				.getCallableAction(new SqlExecutor.SqlStatement(sql, null, false));
 
 		callableAction.perform();
-		WritingXmlValidator.writeXml = true;
 		validate(callableAction.getAction());
-		WritingXmlValidator.writeXml = false;
 	}
 
 }
