@@ -24,6 +24,8 @@ import org.appng.api.FieldProcessor;
 import org.appng.api.Options;
 import org.appng.api.Request;
 import org.appng.api.model.Application;
+import org.appng.api.model.Property;
+import org.appng.api.model.Property.Type;
 import org.appng.api.model.SimpleProperty;
 import org.appng.api.model.Site;
 import org.appng.application.manager.MessageConstants;
@@ -31,6 +33,8 @@ import org.appng.application.manager.form.PropertyForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.PropertyImpl;
+import org.appng.xml.platform.FieldDef;
+import org.appng.xml.platform.FieldType;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
@@ -67,11 +71,17 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 				data = service.searchProperties(fp, siteId, applicationId, propertyName);
 				if (null != data.getItem()) {
 					PropertyForm propertyForm = (PropertyForm) data.getItem();
-					propertyForm.setProperty(new PropertyWrapper(propertyForm.getProperty()));
+					PropertyWrapper propertyWrapper = new PropertyWrapper(propertyForm.getProperty());
+					Type type = propertyWrapper.getType();
+					FieldType expectedType = getFieldTypeForPropertyType(type);
+					FieldDef field = fp.getField("property.value");
+					field.setType(expectedType);
+					field.getLabel().setValue(propertyWrapper.getShortName());
+					propertyForm.setProperty(propertyWrapper);
 				} else {
 					@SuppressWarnings("unchecked")
 					Page<PropertyImpl> page = (Page<PropertyImpl>) data.getPage();
-					data.setPage(page.map(p -> new PropertyWrapper(p)));
+					data.setPage(page.map(p -> new PropertyWrapper(p, true)));
 				}
 			} catch (BusinessException ex) {
 				String message = request.getMessage(ex.getMessageKey(), ex.getMessageArgs());
@@ -82,13 +92,31 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 		return data;
 	}
 
+	private FieldType getFieldTypeForPropertyType(Type type) {
+		switch (type) {
+		case INT:
+			return FieldType.INT;
+		case DECIMAL:
+			return FieldType.DECIMAL;
+		case BOOLEAN:
+			return FieldType.CHECKBOX;
+		case PASSWORD:
+			return FieldType.PASSWORD;
+		case MULTILINE:
+			return FieldType.LONGTEXT;
+		default:
+			return FieldType.TEXT;
+		}
+	}
+
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
 			PropertyForm propertyForm, FieldProcessor fp) {
 		String action = getAction(options);
 		String errorMessage = null;
 		String okMessage = null;
 		Service service = getService();
-		String propertyName = options.getOptionValue(PROPERTY, ID);
+		String propertyName = options.getString(PROPERTY, ID);
+
 		try {
 			if (ACTION_CREATE.equals(action)) {
 				errorMessage = MessageConstants.PROPERTY_CREATE_ERROR;
@@ -117,12 +145,21 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 
 	public class PropertyWrapper extends PropertyImpl {
 		private SimpleProperty property;
+		private boolean hidePassword;
 
 		PropertyWrapper(SimpleProperty property) {
+			this(property, true);
+		}
+
+		PropertyWrapper(SimpleProperty property, boolean hidePassword) {
 			this.property = property;
+			this.hidePassword = hidePassword;
 		}
 
 		public String getActualString() {
+			if (hidePassword && Property.Type.PASSWORD.equals(getType())) {
+				return property.getActualString().replaceAll("\\.", "*");
+			}
 			return property.getActualString();
 		}
 
@@ -142,8 +179,16 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 			return property.getBoolean();
 		}
 
+		public void setBoolean(Boolean value) {
+			property.setActualString(value.toString());
+		}
+
 		public Integer getInteger() {
 			return property.getInteger();
+		}
+
+		public void setInteger(Integer value) {
+			property.setActualString(value.toString());
 		}
 
 		public Float getFloat() {
@@ -172,6 +217,18 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 
 		public String getDefaultString() {
 			return property.getDefaultString();
+		}
+
+		public Type getType() {
+			return property.getType();
+		}
+
+		public Object getValue() {
+			return property.getValue();
+		}
+
+		public void setValue(Object value) {
+			property.setValue(value);
 		}
 
 		public String getDescription() {

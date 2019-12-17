@@ -267,20 +267,12 @@
 				<param name="id" />
 			</params>
 			<meta-data binding="property" bindClass="org.appng.application.manager.form.PropertyForm">
-				<field name="shortName" type="text" readonly="true">
-					<label>name</label>
-				</field>
-				<field name="string" type="text" readonly="true">
-					<label>activeValue</label>
+				<field name="type" type="text" hidden="true" />
+				<field name="value" type="text">
+					<label>value</label>
 				</field>
 				<field name="defaultString" type="text" readonly="true">
 					<label>defaultvalue</label>
-				</field>
-				<field name="actualString" type="text">
-					<label>value</label>
-				</field>
-				<field name="clob" type="longtext" format="auto">
-					<label>clobvalue</label>
 				</field>
 				<field name="description" type="longtext" readonly="true">
 					<label>description</label>

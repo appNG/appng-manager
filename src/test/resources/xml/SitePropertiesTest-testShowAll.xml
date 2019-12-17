@@ -94,7 +94,7 @@
 			</result>
 			<result>
 				<field name="shortName" type="text">
-					<value>multilined</value>
+					<value>multiline</value>
 				</field>
 				<field name="string" type="text">
 					<value></value>
@@ -108,17 +108,17 @@
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" mode="intern"
-						target="/sites/update/1/site-property/update/platform.site.localhost.multilined#tab_site-properties"
+						target="/sites/update/1/site-property/update/platform.site.localhost.multiline#tab_site-properties"
 						default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/sites/update/1?form_action=delete-site-property&amp;propertyid=platform.site.localhost.multilined#tab_site-properties">
+						target="/sites/update/1?form_action=delete-site-property&amp;propertyid=platform.site.localhost.multiline#tab_site-properties">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
-							"multilined"?</confirmation>
+							"multiline"?</confirmation>
 					</link>
 				</linkpanel>
 			</result>

@@ -88,7 +88,8 @@
 			<section>
 				<!-- create -->
 				<element passive="true">
-					<action id="create-site-property" onSuccess="/sites/update/${siteid}#tab_site-properties" eventId="propertyEvent">
+					<action id="create-site-property" onSuccess="/sites/update/${siteid}#tab_site-properties"
+						eventId="propertyEvent">
 						<params>
 							<param name="siteid">${siteid}</param>
 							<param name="form_action">${form_action}</param>
@@ -99,7 +100,8 @@
 				</element>
 				<!-- update -->
 				<element passive="true">
-					<action id="update-site-property" onSuccess="/sites/update/${siteid}#tab_site-properties" eventId="propertyEvent">
+					<action id="update-site-property" onSuccess="/sites/update/${siteid}#tab_site-properties"
+						eventId="propertyEvent">
 						<params>
 							<param name="siteid">${siteid}</param>
 							<param name="propertyid">${subentityid1}</param>
@@ -122,33 +124,11 @@
 			</section>
 
 			<!-- site application properites -->
-			<!-- overview -->
 			<section>
-				<element>
-					<datasource id="select-site-application">
-						<params>
-							<param name="appid">${selectedappid}</param>
-							<param name="siteid">${siteid}</param>
-							<param name="mode">select</param>
-							<param name="defaultlink">/sites/update/${siteid}</param>
-							<param name="defaultlinkanchor">#tab_select-site-application</param>
-						</params>
-						<condition expression="${action eq 'update'}" />
-					</datasource>
-				</element>
-				<element>
-					<datasource id="site-application-properties">
-						<params>
-							<param name="appid">${selectedappid}</param>
-							<param name="siteid">${siteid}</param>
-							<param name="propId">${subentityid2}</param>
-						</params>
-						<condition expression="${action eq 'update' and not empty selectedappid}" />
-					</datasource>
-				</element>
 				<!-- create -->
 				<element passive="true">
-					<action id="create-site-application-property" onSuccess="/sites/update/${siteid}?selectedappid=${subentityid1}#tab_select-site-application"
+					<action id="create-site-application-property"
+						onSuccess="/sites/update/${siteid}?selectedappid=${subentityid1}#tab_select-site-application"
 						eventId="propertyEvent">
 						<params>
 							<param name="siteid">${siteid}</param>
@@ -161,7 +141,8 @@
 				</element>
 				<!-- update -->
 				<element passive="true">
-					<action id="update-site-application-property" onSuccess="/sites/update/${siteid}?selectedappid=${subentityid1}#tab_select-site-application"
+					<action id="update-site-application-property"
+						onSuccess="/sites/update/${siteid}?selectedappid=${subentityid1}#tab_select-site-application"
 						eventId="propertyEvent">
 						<params>
 							<param name="appid">${subentityid1}</param>
@@ -171,6 +152,30 @@
 						<condition
 							expression="${action eq 'update' and not empty siteid and subentity1 eq 'app-property' and subaction1 eq 'update' and not empty subentityid1 and not empty subentityid2}" />
 					</action>
+				</element>
+				<!-- select application -->
+				<element folded="${not empty subentityid1}">
+					<datasource id="select-site-application">
+						<params>
+							<param name="appid">${selectedappid}</param>
+							<param name="siteid">${siteid}</param>
+							<param name="mode">select</param>
+							<param name="defaultlink">/sites/update/${siteid}</param>
+							<param name="defaultlinkanchor">#tab_select-site-application</param>
+						</params>
+						<condition expression="${action eq 'update'}" />
+					</datasource>
+				</element>
+				<!-- overview -->
+				<element>
+					<datasource id="site-application-properties">
+						<params>
+							<param name="appid">${selectedappid}</param>
+							<param name="siteid">${siteid}</param>
+							<param name="propId">${subentityid2}</param>
+						</params>
+						<condition expression="${action eq 'update' and not empty selectedappid}" />
+					</datasource>
 				</element>
 			</section>
 
@@ -211,7 +216,8 @@
 			<!-- Database Connections -->
 			<section>
 				<element passive="true">
-					<action eventId="databaseConnectionEvent" id="updateConnection" onSuccess="/sites/update/${siteid}#tab_databaseConnections">
+					<action eventId="databaseConnectionEvent" id="updateConnection"
+						onSuccess="/sites/update/${siteid}#tab_databaseConnections">
 						<params>
 							<param name="id">${subentityid1}</param>
 							<param name="form_action">${form_action}</param>
@@ -264,7 +270,7 @@
 				</element>
 			</section>
 			<section>
-				<title id="status" />
+				<title id="cache" />
 				<element folded="false">
 					<datasource id="cacheStatistics">
 						<params>
@@ -284,6 +290,8 @@
 						<condition expression="${not empty siteid}" />
 					</datasource>
 				</element>
+			</section>
+			<section>
 				<element folded="false">
 					<datasource id="sessions">
 						<params>
@@ -298,7 +306,8 @@
 			<!-- hidden inline actions -->
 			<section hidden="true">
 				<element>
-					<action eventId="databaseConnectionEvent" id="delete" onSuccess="/sites/update/${siteid}#tab_databaseConnections">
+					<action eventId="databaseConnectionEvent" id="delete"
+						onSuccess="/sites/update/${siteid}#tab_databaseConnections">
 						<params>
 							<param name="form_action">${form_action}</param>
 							<param name="id">${conId}</param>
@@ -309,7 +318,8 @@
 					</action>
 				</element>
 				<element>
-					<action eventId="databaseConnectionEvent" id="testConnection" onSuccess="/sites/update/${siteid}#tab_databaseConnections">
+					<action eventId="databaseConnectionEvent" id="testConnection"
+						onSuccess="/sites/update/${siteid}#tab_databaseConnections">
 						<params>
 							<param name="form_action">${form_action}</param>
 							<param name="id">${conId}</param>
@@ -320,7 +330,8 @@
 					</action>
 				</element>
 				<element>
-					<action eventId="databaseConnectionEvent" id="resetConnection" onSuccess="/sites/update/${siteid}#tab_databaseConnections">
+					<action eventId="databaseConnectionEvent" id="resetConnection"
+						onSuccess="/sites/update/${siteid}#tab_databaseConnections">
 						<params>
 							<param name="form_action">${form_action}</param>
 							<param name="id">${conId}</param>
@@ -347,7 +358,8 @@
 					</action>
 				</element>
 				<element>
-					<action id="toggle-applicationstate" onSuccess="/sites/update/${siteid}#tab_site-applications" eventId="applicationEvent" forceForward="false">
+					<action id="toggle-applicationstate" onSuccess="/sites/update/${siteid}#tab_site-applications"
+						eventId="applicationEvent" forceForward="false">
 						<params>
 							<param name="siteid">${siteid}</param>
 							<param name="appid">${appid}</param>
@@ -356,7 +368,8 @@
 					</action>
 				</element>
 				<element>
-					<action eventId="propertyEvent" id="delete-site-property" onSuccess="/sites/update/${siteid}#tab_site-properties">
+					<action eventId="propertyEvent" id="delete-site-property"
+						onSuccess="/sites/update/${siteid}#tab_site-properties">
 						<params>
 							<param name="form_action">${form_action}</param>
 							<param name="propertyid">${propertyid}</param>
@@ -406,7 +419,8 @@
 					</action>
 				</element>
 				<element>
-					<action id="clearCacheStatistics" eventId="cacheEvent" onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
+					<action id="clearCacheStatistics" eventId="cacheEvent"
+						onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
 						<params>
 							<param name="action">${action}</param>
 							<param name="siteid">${siteid}</param>

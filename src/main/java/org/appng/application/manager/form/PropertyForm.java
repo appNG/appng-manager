@@ -24,6 +24,7 @@ import org.appng.api.FormValidator;
 import org.appng.api.Options;
 import org.appng.api.Request;
 import org.appng.api.model.Application;
+import org.appng.api.model.Property;
 import org.appng.api.model.Site;
 import org.appng.core.domain.PropertyImpl;
 
@@ -31,7 +32,6 @@ import org.appng.core.domain.PropertyImpl;
  * Bindclass used for creating/updating a {@link PropertyImpl}.
  * 
  * @author Matthias Müller
- * 
  */
 public class PropertyForm implements FormValidator {
 	private PropertyImpl property;
@@ -61,6 +61,7 @@ public class PropertyForm implements FormValidator {
 		if (isCreate) {
 			fieldValue = getProperty().getDefaultString();
 			fieldName = "property.defaultString";
+			property.determineType();
 		} else {
 			fieldValue = getProperty().getActualString();
 			fieldName = "property.actualString";
@@ -71,6 +72,11 @@ public class PropertyForm implements FormValidator {
 			String message = application.getMessage(environment.getLocale(), "property.stringOrClob");
 			fp.addErrorMessage(fp.getField("property.clob"), message);
 			fp.addErrorMessage(fp.getField(fieldName), message);
+		}
+		if (Property.Type.BOOLEAN.equals(getProperty().getType())) {
+			String stringValue = getProperty().getString();
+			boolean value = stringValue.equalsIgnoreCase("on") || stringValue.equalsIgnoreCase("true");
+			getProperty().setValue(value);
 		}
 	}
 
