@@ -1485,12 +1485,11 @@ public class ManagerService extends CoreService implements Service {
 				if (null == currentProperty) {
 					throw new BusinessException("no such property");
 				}
-				String actualString = propertyForm.getProperty().getActualString();
 				if (Property.Type.MULTILINE.equals(currentProperty.getType())) {
-					currentProperty.setClob(actualString);
+					currentProperty.setClob(propertyForm.getProperty().getClob());
 					currentProperty.setActualString(null);
 				} else {
-					currentProperty.setActualString(actualString);
+					currentProperty.setActualString(propertyForm.getProperty().getActualString());
 				}
 			} else {
 				throw new BusinessException("no propertyname given");
