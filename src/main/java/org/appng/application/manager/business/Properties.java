@@ -15,6 +15,7 @@
  */
 package org.appng.application.manager.business;
 
+import org.apache.commons.lang3.StringUtils;
 import org.appng.api.ActionProvider;
 import org.appng.api.BusinessException;
 import org.appng.api.DataContainer;
@@ -76,6 +77,12 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 					FieldType expectedType = getFieldTypeForPropertyType(type);
 					FieldDef field = fp.getField("property.value");
 					field.setType(expectedType);
+					if (FieldType.DECIMAL.equals(expectedType)) {
+						String value = propertyWrapper.getActualString();
+						int dotIdx = value.indexOf('.');
+						int fraction = dotIdx > 0 ? value.substring(dotIdx + 1).length() : 3;
+						field.setFormat("#." + StringUtils.repeat('#', fraction));
+					}
 					field.getLabel().setValue(propertyWrapper.getShortName());
 					propertyForm.setProperty(propertyWrapper);
 				} else {
