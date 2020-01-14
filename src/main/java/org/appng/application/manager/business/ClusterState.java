@@ -53,7 +53,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@org.springframework.context.annotation.Scope("request")
 public class ClusterState implements DataProvider, ActionProvider<Void> {
 
 	public DataContainer getData(Site site, Application application, org.appng.api.Environment environment,

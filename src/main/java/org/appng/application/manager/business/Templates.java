@@ -28,8 +28,6 @@ import org.appng.api.model.Application;
 import org.appng.api.model.Identifier;
 import org.appng.api.model.Site;
 import org.appng.application.manager.service.ServiceAware;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,9 +36,7 @@ import org.springframework.stereotype.Component;
  * @author Matthias Müller
  */
 
-@Lazy
 @Component
-@Scope("request")
 public class Templates extends ServiceAware implements DataProvider, ActionProvider<Void> {
 
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,

@@ -34,13 +34,9 @@ import org.appng.api.Webservice;
 import org.appng.api.XMLTaglet;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Lazy
 @Component
-@Scope("request")
 public class Beans implements DataProvider {
 
 	@Override
