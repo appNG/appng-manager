@@ -60,7 +60,6 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 	private static final String STATISTICS = "statistics";
 	private static final String ENTRIES = "entries";
 	private static final String ACTION_EXPIRE_CACHE_ELEMENT = "expireCacheElement";
-	private static final String ACTION_CLEAR_CACHE_STATISTICS = "clearCacheStatistics";
 	private static final String ACTION_CLEAR_CACHE = "clearCache";
 
 	@Autowired
@@ -68,7 +67,7 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fieldProcessor) {
-		String mode = options.getOptionValue("mode", ID);
+		String mode = options.getString("mode", ID);
 		Integer siteId = options.getInteger("site", ID);
 		DataContainer dataContainer = new DataContainer(fieldProcessor);
 		if (STATISTICS.equals(mode)) {
@@ -168,10 +167,8 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 		String action = getAction(options);
 		Integer siteId = options.getInteger("site", "id");
 		if (ACTION_EXPIRE_CACHE_ELEMENT.equals(action)) {
-			String cacheElement = options.getOptionValue("cacheElement", "id");
+			String cacheElement = options.getString("cacheElement", "id");
 			getService().expireCacheElement(request, fieldProcessor, siteId, cacheElement);
-		} else if (ACTION_CLEAR_CACHE_STATISTICS.equals(action)) {
-			getService().clearCacheStatistics(request, fieldProcessor, siteId);
 		} else if (ACTION_CLEAR_CACHE.equals(action)) {
 			getService().clearCache(request, fieldProcessor, siteId);
 		}
