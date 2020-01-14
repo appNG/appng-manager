@@ -39,11 +39,11 @@ public class LogViewerTest extends LogViewer {
 		Mockito.when(subject.isAuthenticated()).thenReturn(true);
 		PermissionProcessor permissionProcessor = Mockito.mock(PermissionProcessor.class);
 		Mockito.when(request.getPermissionProcessor()).thenReturn(permissionProcessor);
-		Mockito.when(request.getParameter("lines")).thenReturn("1");
+		Mockito.when(request.getParameter("lines")).thenReturn("2");
 		Mockito.when(permissionProcessor.hasPermission(PERM_LOG_VIEWER)).thenReturn(true);
 		byte[] processRequest = processRequest(null, null, environment, request);
 		String result = new String(processRequest);
-		Assert.assertEquals("log4j.appender.stdout.layout.ConversionPattern = %d{ISO8601} %-5p [%t] %-30c: %m%n", result);
+		Assert.assertEquals("log4j.appender.appng.File = ${webapp.root}/appNG.log", result);
 	}
 
 	@Override
