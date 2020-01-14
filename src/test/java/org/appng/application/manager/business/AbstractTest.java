@@ -15,12 +15,15 @@
  */
 package org.appng.application.manager.business;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.appng.api.Platform;
 import org.appng.api.SiteProperties;
@@ -46,7 +49,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 
 @Ignore
-@ContextConfiguration(locations = { TestBase.TESTCONTEXT_CORE, TestBase.TESTCONTEXT_JPA }, initializers = AbstractTest.class)
+@ContextConfiguration(locations = { TestBase.TESTCONTEXT_CORE,
+		TestBase.TESTCONTEXT_JPA }, initializers = AbstractTest.class)
 public class AbstractTest extends TestBase {
 
 	@Autowired
@@ -86,6 +90,12 @@ public class AbstractTest extends TestBase {
 		setUseFullClassname(false);
 		setEntityPackage("org.appng.core.domain");
 		setRepositoryBase("org.appng.core.repository");
+		try {
+			FileUtils.copyInputStreamToFile(getClass().getClassLoader().getResourceAsStream("log4j.properties"),
+					new File("target/ROOT/WEB-INF/conf/log4j.properties"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Before
@@ -114,6 +124,7 @@ public class AbstractTest extends TestBase {
 		Properties properties = super.getProperties();
 		properties.put("hibernate.show_sql", "false");
 		properties.put("hibernate.format_sql", "false");
+		properties.put("platform.platformRootPath", "target/ROOT");
 		return properties;
 	}
 
