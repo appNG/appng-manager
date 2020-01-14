@@ -33,8 +33,8 @@
 		</meta-data>
 	</config>
 	<data paginate="false">
-		<resultset chunk="0" chunkname="migrations" chunksize="13" nextchunk="0" previouschunk="0" firstchunk="0"
-			lastchunk="0" hits="13">
+		<resultset chunk="0" chunkname="migrations" chunksize="14" nextchunk="0" previouschunk="0" firstchunk="0"
+			lastchunk="0" hits="14">
 			<result>
 				<field name="installedRank" type="int">
 					<value></value>
@@ -338,6 +338,30 @@
 				</field>
 				<field name="checksum" type="text">
 					<value>1311349447</value>
+				</field>
+				<field name="installedBy" type="text">
+					<value></value>
+				</field>
+				<field name="state" type="image">
+					<value>PENDING</value>
+					<icon type="class">led_orange</icon>
+				</field>
+			</result>
+			<result>
+				<field name="installedRank" type="int">
+					<value></value>
+				</field>
+				<field name="installedOn" type="date">
+					<value></value>
+				</field>
+				<field name="version.version" type="text">
+					<value>4.1.2</value>
+				</field>
+				<field name="description" type="text">
+					<value>add property type</value>
+				</field>
+				<field name="checksum" type="text">
+					<value>-1851785451</value>
 				</field>
 				<field name="installedBy" type="text">
 					<value></value>
