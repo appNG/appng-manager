@@ -24,13 +24,9 @@ import org.appng.api.Webservice;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.api.model.Subject;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Lazy
 @Component
-@Scope("request")
 public class ThreadViewer implements Webservice {
 
 	private static final String PERM_PLATFORM_THREADS = "platform.threads";
@@ -62,8 +58,8 @@ public class ThreadViewer implements Webservice {
 				traceBuilder.append("interrupted: " + t.isInterrupted());
 				ClassLoader classLoader = t.getContextClassLoader();
 				if (null != classLoader) {
-					traceBuilder.append(", classloader: " + classLoader.getClass().getSimpleName() + "#"
-							+ classLoader.hashCode());
+					traceBuilder.append(
+							", classloader: " + classLoader.getClass().getSimpleName() + "#" + classLoader.hashCode());
 				}
 				traceBuilder.append(")");
 				traceBuilder.append(Constants.NEW_LINE);

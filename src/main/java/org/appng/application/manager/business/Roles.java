@@ -29,8 +29,6 @@ import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.form.RoleForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-@Lazy
 @Component
-@Scope("request")
 public class Roles extends ServiceAware implements DataProvider, ActionProvider<RoleForm> {
 
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,

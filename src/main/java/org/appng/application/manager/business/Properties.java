@@ -31,8 +31,6 @@ import org.appng.application.manager.form.PropertyForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.PropertyImpl;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -45,9 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-@Lazy
 @Component
-@Scope("request")
 public class Properties extends ServiceAware implements ActionProvider<PropertyForm>, DataProvider {
 
 	private static final String PROPERTY = "property";

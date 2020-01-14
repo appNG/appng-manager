@@ -35,7 +35,6 @@ import org.appng.api.model.Subject;
 import org.appng.application.manager.business.LogConfig;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
@@ -48,7 +47,6 @@ import org.springframework.stereotype.Component;
  * @author Matthias Müller
  */
 
-@Lazy
 @Component
 public class LogViewer implements Webservice, InitializingBean {
 

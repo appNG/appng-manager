@@ -35,8 +35,6 @@ import org.appng.api.model.Property;
 import org.appng.api.model.Site;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.PropertyImpl;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
@@ -47,9 +45,7 @@ import org.springframework.stereotype.Component;
  * @author Matthias Müller
  */
 
-@Lazy
 @Component
-@Scope("request")
 public class Dictionary extends ServiceAware implements DataProvider {
 
 	private static final String MESSAGES_CORE = "messages-core";

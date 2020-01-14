@@ -33,8 +33,6 @@ import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.DatabaseConnection;
 import org.flywaydb.core.api.MigrationInfo;
 import org.flywaydb.core.api.MigrationInfoService;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -44,9 +42,7 @@ import org.springframework.stereotype.Component;
  * @author Matthias Müller
  */
 
-@Lazy
 @Component
-@Scope("request")
 public class DatabaseConnections extends ServiceAware implements DataProvider, ActionProvider<DatabaseConnection> {
 
 	private static final String ACTION_DELETE = "delete";

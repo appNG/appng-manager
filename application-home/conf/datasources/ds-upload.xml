@@ -14,7 +14,7 @@
 				</field>
 			</meta-data>
 		</config>
-		<bean id="upload">
+		<bean id="resourceUpload">
 		</bean>
 	</datasource>
 </datasources>
