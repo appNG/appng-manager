@@ -36,8 +36,6 @@ import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.PropertyImpl;
 import org.appng.xml.platform.FieldDef;
 import org.appng.xml.platform.FieldType;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
