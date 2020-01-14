@@ -231,8 +231,6 @@ public interface Service {
 
 	void expireCacheElement(Request request, FieldProcessor fieldProcessor, Integer siteId, String cacheElement);
 
-	void clearCacheStatistics(Request request, FieldProcessor fieldProcessor, Integer siteId);
-
 	void clearCache(Request request, FieldProcessor fp, Integer siteId);
 
 	void deleteTemplate(Request request, String name, FieldProcessor fp);

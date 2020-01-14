@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<event id="cacheEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<event id="cacheEvent" xmlns="http://www.appng.org/schema/platform"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
 
 	<config />
@@ -21,6 +22,7 @@
 			<option name="site" id="${siteid}" />
 		</bean>
 	</action>
+
 	<action id="expireCacheElement">
 		<config>
 			<title>cache.element.expire</title>
@@ -40,21 +42,5 @@
 			<option name="site" id="${siteid}" />
 		</bean>
 	</action>
-	<action id="clearCacheStatistics">
-		<config>
-			<title>cache.statistics.clear</title>
-			<permissions>
-				<permission ref="cache.statistics.clear" mode="set" />
-			</permissions>
-			<params>
-				<param name="action" />
-				<param name="siteid" />
-			</params>
-		</config>
-		<condition expression="${action eq 'clearCacheStatistics'}" />
-		<bean id="cache">
-			<option name="action" id="clearCacheStatistics" />
-			<option name="site" id="${siteid}" />
-		</bean>
-	</action>
+
 </event>

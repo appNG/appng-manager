@@ -9,7 +9,6 @@
 			</permissions>
 			<params>
 				<param name="siteid" />
-				<param name="clearLink" />
 			</params>
 			<meta-data bindClass="java.util.Map.Entry">
 				<field name="key" type="longtext">
@@ -19,15 +18,6 @@
 					<label>value</label>
 				</field>
 			</meta-data>
-			<linkpanel location="bottom" id="other">
-				<link target="${clearLink}" mode="intern">
-					<icon>delete</icon>
-					<label id="cache.statistics.clear" />
-					<permissions>
-						<permission ref="cache.statistics.clear" mode="set" />
-					</permissions>
-				</link>
-			</linkpanel>
 		</config>
 		<bean id="cache">
 			<option name="mode" id="statistics" />
