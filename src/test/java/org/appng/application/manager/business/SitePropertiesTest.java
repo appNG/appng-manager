@@ -20,6 +20,7 @@ import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.appng.api.FieldProcessor;
 import org.appng.api.ProcessingException;
+import org.appng.api.model.Property.Type;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.PropertyForm;
@@ -60,20 +61,21 @@ public class SitePropertiesTest extends AbstractTest {
 
 		actionCall.getCallableAction(new PropertyForm(new PropertyImpl("anotherproperty", "foobar"))).perform();
 
-		PropertyImpl multilined = new PropertyImpl("multilined", null);
-		multilined.setClob("foo!\nbar!\n");
-		multilined.setActualString(StringUtils.EMPTY);
-		actionCall.getCallableAction(new PropertyForm(multilined)).perform();
+		PropertyImpl multiline = new PropertyImpl("multiline", null);
+		multiline.setType(Type.MULTILINE);
+		multiline.setClob("foo!\nbar!\n");
+		multiline.setActualString(StringUtils.EMPTY);
+		actionCall.getCallableAction(new PropertyForm(multiline)).perform();
 
-		PropertyImpl saved = managerService.getProperty("platform.site.localhost.multilined");
+		PropertyImpl saved = managerService.getProperty("platform.site.localhost.multiline");
 		Assert.assertNull(saved.getActualString());
 
 		ActionCall update = getAction(PROPERTY_EVENT, "update-site-property")
 				.withParam(FORM_ACTION, "update-site-property")
-				.withParam("propertyid", "platform.site.localhost.multilined");
-		update.getCallableAction(new PropertyForm(multilined)).perform();
+				.withParam("propertyid", "platform.site.localhost.multiline");
+		update.getCallableAction(new PropertyForm(multiline)).perform();
 
-		saved = managerService.getProperty("platform.site.localhost.multilined");
+		saved = managerService.getProperty("platform.site.localhost.multiline");
 		Assert.assertNull(saved.getActualString());
 	}
 
@@ -100,6 +102,7 @@ public class SitePropertiesTest extends AbstractTest {
 		ActionCall actionCall = getAction(PROPERTY_EVENT, "update-site-property")
 				.withParam(FORM_ACTION, "update-site-property").withParam("propertyid", PROPERTY_NAME);
 		PropertyImpl property = new PropertyImpl(TESTPROPERTY, "7", "9");
+		property.setType(Type.INT);
 		property.setClob("");
 		CallableAction action = actionCall.getCallableAction(new PropertyForm(property));
 		FieldProcessor perform = action.perform();

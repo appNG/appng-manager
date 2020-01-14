@@ -24,6 +24,7 @@ import org.appng.api.ProcessingException;
 import org.appng.api.SiteProperties;
 import org.appng.api.model.Property;
 import org.appng.api.model.SimpleProperty;
+import org.appng.api.model.Property.Type;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.PropertyForm;
@@ -56,8 +57,8 @@ public class PlatformPropertiesTest extends AbstractTest {
 		form.getProperty().setClob("foo");
 		CallableAction action = getCreateAction().getCallableAction(form);
 		FieldProcessor fp = action.perform();
-		assertError(fp.getField("property.defaultString"), "Please set the value or the multilined value.");
-		assertError(fp.getField("property.clob"), "Please set the value or the multilined value.");
+		assertError(fp.getField("property.defaultString"), "Please set the value or the multiline value.");
+		assertError(fp.getField("property.clob"), "Please set the value or the multiline value.");
 	}
 
 	private void assertError(FieldDef field, String message) {
@@ -89,6 +90,7 @@ public class PlatformPropertiesTest extends AbstractTest {
 	@Test
 	public void testUpdate() throws ProcessingException, IOException {
 		PropertyImpl property = new PropertyImpl("testproperty", "7", "9");
+		property.setType(Type.INT);
 		property.setClob("");
 		CallableAction action = getUpdateAction(new PropertyForm(property));
 		FieldProcessor perform = action.perform();
@@ -103,18 +105,17 @@ public class PlatformPropertiesTest extends AbstractTest {
 	@Test
 	public void testUpdateStringOrClob() throws ProcessingException, IOException {
 		PropertyImpl property = new PropertyImpl("testproperty", "7", "9");
+		property.setType(Type.INT);
 		property.setClob("aa");
 		CallableAction action = getUpdateAction(new PropertyForm(property));
 		FieldProcessor fp = action.perform();
-		assertError(fp.getField("property.actualString"), "Please set the value or the multilined value.");
-		assertError(fp.getField("property.clob"), "Please set the value or the multilined value.");
+		FieldDef value = fp.getField("property.value");
+		Assert.assertNull(value.getMessages());
 	}
 
 	protected CallableAction getUpdateAction(PropertyForm form) throws ProcessingException {
-		ActionCall actionCall = getAction(PROPERTY_EVENT, "update-platform-property")
-				.withParam(FORM_ACTION, "update-platform-property").withParam("propertyid", "platform.testproperty");
-		CallableAction action = actionCall.getCallableAction(form);
-		return action;
+		return getAction(PROPERTY_EVENT, "update-platform-property").withParam(FORM_ACTION, "update-platform-property")
+				.withParam("propertyid", "platform.testproperty").getCallableAction(form);
 	}
 
 	@Override

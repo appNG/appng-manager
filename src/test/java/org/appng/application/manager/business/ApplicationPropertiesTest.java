@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import org.appng.api.FieldProcessor;
 import org.appng.api.ProcessingException;
+import org.appng.api.model.Property.Type;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.PropertyForm;
@@ -76,6 +77,7 @@ public class ApplicationPropertiesTest extends AbstractTest {
 				.withParam(FORM_ACTION, "update-application-property").withParam("propertyid", PROPERTY_NAME)
 				.withParam("appid", "1");
 		PropertyImpl property = new PropertyImpl(TESTPROPERTY, "7", "9");
+		property.setType(Type.INT);
 		property.setClob("");
 		CallableAction action = actionCall
 				.getCallableAction(new PropertyForm(property));

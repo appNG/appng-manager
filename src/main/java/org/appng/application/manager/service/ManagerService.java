@@ -59,6 +59,7 @@ import org.appng.api.model.Identifier;
 import org.appng.api.model.NameProvider;
 import org.appng.api.model.Nameable;
 import org.appng.api.model.Permission;
+import org.appng.api.model.Property;
 import org.appng.api.model.Resource;
 import org.appng.api.model.ResourceType;
 import org.appng.api.model.Resources;
@@ -1450,6 +1451,9 @@ public class ManagerService extends CoreService implements Service {
 			if (null == property) {
 				throw new BusinessException("no such property " + propertyName, MessageConstants.PROPERTY_NOT_EXISTS);
 			}
+			if (null == property.getType()) {
+				property.determineType();
+			}
 			data.setItem(new PropertyForm(property));
 		} else {
 			Page<PropertyImpl> properties = getProperties(siteId, appId, fp.getPageable());
@@ -1481,9 +1485,11 @@ public class ManagerService extends CoreService implements Service {
 				if (null == currentProperty) {
 					throw new BusinessException("no such property");
 				}
-				request.setPropertyValues(propertyForm, new PropertyForm(currentProperty), fp.getMetaData());
-				if (StringUtils.isNotBlank(currentProperty.getClob())) {
+				if (Property.Type.MULTILINE.equals(currentProperty.getType())) {
+					currentProperty.setClob(propertyForm.getProperty().getClob());
 					currentProperty.setActualString(null);
+				} else {
+					currentProperty.setActualString(propertyForm.getProperty().getActualString());
 				}
 			} else {
 				throw new BusinessException("no propertyname given");
