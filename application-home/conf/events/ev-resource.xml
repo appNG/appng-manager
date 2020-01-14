@@ -63,7 +63,7 @@
 		</config>
 		<condition expression="${form_action eq 'upload' and not empty appid}" />
 		<datasource id="upload" />
-		<bean id="upload">
+		<bean id="resourceUpload">
 			<option name="application" id="${appid}" />
 		</bean>
 	</action>

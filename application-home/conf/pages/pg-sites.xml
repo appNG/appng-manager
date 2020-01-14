@@ -271,11 +271,10 @@
 			</section>
 			<section>
 				<title id="cache" />
-				<element folded="false">
+				<element folded="true">
 					<datasource id="cacheStatistics">
 						<params>
 							<param name="siteid">${siteid}</param>
-							<param name="clearLink">/sites/update/${siteid}&#63;action=clearCacheStatistics</param>
 						</params>
 						<condition expression="${not empty siteid}" />
 					</datasource>
@@ -417,16 +416,6 @@
 							<param name="siteid">${siteid}</param>
 						</params>
 					</action>
-				</element>
-				<element>
-					<action id="clearCacheStatistics" eventId="cacheEvent"
-						onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
-						<params>
-							<param name="action">${action}</param>
-							<param name="siteid">${siteid}</param>
-						</params>
-					</action>
-				</element>
 			</section>
 		</structure>
 	</page>

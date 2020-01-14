@@ -38,13 +38,9 @@ import org.appng.application.manager.business.LogConfig.LogFile;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.PlatformEvent;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Lazy
 @Component
-@Scope("request")
 public class LogConfig extends ServiceAware implements DataProvider, ActionProvider<LogFile> {
 
 	public static final String LOG4J_PROPS = "WEB-INF/conf/log4j.properties";

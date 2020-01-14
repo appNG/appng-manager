@@ -1833,12 +1833,6 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public void clearCacheStatistics(Request request, FieldProcessor fp, Integer siteId) {
-		String cacheStatisticsCleared = MessageConstants.CACHE_STATISTICS_CLEARED;
-		clearCacheStatistics(siteId);
-		fp.addNoticeMessage(request.getMessage(cacheStatisticsCleared));
-	}
-
 	public void clearCache(Request request, FieldProcessor fp, Integer siteId) {
 		String cacheCleared = MessageConstants.CACHE_CLEARED;
 		clearCache(siteId);

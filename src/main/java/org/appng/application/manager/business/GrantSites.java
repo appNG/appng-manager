@@ -31,13 +31,9 @@ import org.appng.application.manager.form.GrantForm;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.SiteApplication;
 import org.appng.xml.platform.Selection;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Lazy
 @Component
-@Scope("request")
 public class GrantSites extends ServiceAware implements ActionProvider<GrantForm>, DataProvider {
 
 	private static final String APPLICATION_ID = "applicationId";

@@ -50,9 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-@Lazy
 @Component
-@Scope("request")
 public class Properties extends ServiceAware implements ActionProvider<PropertyForm>, DataProvider {
 
 	private static final String PROPERTY = "property";

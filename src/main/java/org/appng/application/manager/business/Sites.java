@@ -32,8 +32,6 @@ import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.SiteImpl;
 import org.appng.core.service.InitializerService;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -45,9 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-@Lazy
 @Component
-@Scope("request")
 public class Sites extends ServiceAware implements DataProvider, ActionProvider<SiteForm> {
 
 	public static final String SITE = "site";

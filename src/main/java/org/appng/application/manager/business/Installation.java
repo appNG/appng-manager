@@ -35,8 +35,6 @@ import org.appng.core.model.InstallablePackage;
 import org.appng.xml.platform.Selection;
 import org.appng.xml.platform.SelectionGroup;
 import org.appng.xml.platform.SelectionType;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,9 +44,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-@Lazy
 @Component
-@Scope("request")
 public class Installation extends ServiceAware implements DataProvider, ActionProvider<Void> {
 
 	public static final String REPOSITORY = "repository";

@@ -30,8 +30,6 @@ import org.appng.application.manager.form.GroupForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.GroupImpl;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +41,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-@Lazy
 @Component
-@Scope("request")
 public class Groups extends ServiceAware implements ActionProvider<GroupForm>, DataProvider {
 
 	private static final String GROUP = "group";

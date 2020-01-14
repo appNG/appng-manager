@@ -56,12 +56,9 @@ import org.appng.tools.os.OperatingSystem;
 import org.appng.tools.os.StringConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-@Lazy
 @Component
-@org.springframework.context.annotation.Scope("request")
 public class SystemReport implements AttachmentWebservice {
 
 	private static final String EXT_TXT = ".txt";
@@ -88,8 +85,7 @@ public class SystemReport implements AttachmentWebservice {
 	public byte[] processRequest(Site site, Application application, Environment environment, Request request)
 			throws BusinessException {
 		if (environment.isSubjectAuthenticated() && request.getPermissionProcessor().hasPermission(PERM_REPORT)) {
-			try (
-					final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			try (final ByteArrayOutputStream out = new ByteArrayOutputStream();
 					final ArchiveOutputStream os = new ArchiveStreamFactory()
 							.createArchiveOutputStream(ArchiveStreamFactory.ZIP, out);) {
 				((ZipArchiveOutputStream) os).setLevel(Deflater.BEST_COMPRESSION);
