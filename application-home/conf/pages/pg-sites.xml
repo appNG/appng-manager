@@ -416,6 +416,7 @@
 							<param name="siteid">${siteid}</param>
 						</params>
 					</action>
+				</element>
 			</section>
 		</structure>
 	</page>
