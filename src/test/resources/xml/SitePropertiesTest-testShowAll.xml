@@ -14,10 +14,10 @@
 				<sort order="asc" name="name" prio="0" />
 				<label id="name">Name</label>
 			</field>
-			<field name="string" type="text" displayLength="40" binding="string">
+			<field name="displayValue" type="longtext" displayLength="120" binding="displayValue">
 				<label id="activeValue">Active Value</label>
 			</field>
-			<field name="description" type="text" displayLength="30" binding="description">
+			<field name="description" type="text" displayLength="400" binding="description">
 				<label id="description">Description</label>
 			</field>
 			<field name="changedValue" type="image" binding="changedValue">
@@ -66,7 +66,7 @@
 				<field name="shortName" type="text">
 					<value>anotherproperty</value>
 				</field>
-				<field name="string" type="text">
+				<field name="displayValue" type="longtext">
 					<value>foobar</value>
 				</field>
 				<field name="description" type="text">
@@ -96,8 +96,10 @@
 				<field name="shortName" type="text">
 					<value>multiline</value>
 				</field>
-				<field name="string" type="text">
-					<value></value>
+				<field name="displayValue" type="longtext">
+					<value>foo!
+						bar!
+					</value>
 				</field>
 				<field name="description" type="text">
 					<value></value>
@@ -108,8 +110,7 @@
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" mode="intern"
-						target="/sites/update/1/site-property/update/platform.site.localhost.multiline#tab_site-properties"
-						default="true">
+						target="/sites/update/1/site-property/update/platform.site.localhost.multiline#tab_site-properties" default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
@@ -126,7 +127,7 @@
 				<field name="shortName" type="text">
 					<value>testproperty</value>
 				</field>
-				<field name="string" type="text">
+				<field name="displayValue" type="longtext">
 					<value>5</value>
 				</field>
 				<field name="description" type="text">

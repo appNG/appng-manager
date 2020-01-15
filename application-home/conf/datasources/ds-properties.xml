@@ -16,10 +16,10 @@
 					<sort name="name" />
 					<label>name</label>
 				</field>
-				<field name="string" type="text" displayLength="40">
+				<field name="displayValue" type="longtext" displayLength="120">
 					<label>activeValue</label>
 				</field>
-				<field name="description" type="text" displayLength="30">
+				<field name="description" type="text" displayLength="400">
 					<label>description</label>
 				</field>
 				<field name="changedValue" type="image">
@@ -85,10 +85,10 @@
 					<sort name="name" />
 					<label>name</label>
 				</field>
-				<field name="string" type="text" displayLength="40">
+				<field name="displayValue" type="longtext" displayLength="120">
 					<label>activeValue</label>
 				</field>
-				<field name="description" type="text" displayLength="30">
+				<field name="description" type="text" displayLength="400">
 					<label>description</label>
 				</field>
 				<field name="changedValue" type="image">
@@ -148,10 +148,10 @@
 					<sort name="name" />
 					<label>name</label>
 				</field>
-				<field name="string" type="text" displayLength="40">
+				<field name="displayValue" type="longtext" displayLength="120">
 					<label>activeValue</label>
 				</field>
-				<field name="description" type="text" displayLength="30">
+				<field name="description" type="text" displayLength="400">
 					<label>description</label>
 				</field>
 				<field name="changedValue" type="image">
@@ -212,10 +212,10 @@
 					<sort name="name" />
 					<label>name</label>
 				</field>
-				<field name="string" type="text" displayLength="40">
+				<field name="displayValue" type="longtext" displayLength="120">
 					<label>activeValue</label>
 				</field>
-				<field name="description" type="text" displayLength="30">
+				<field name="description" type="text" displayLength="400">
 					<label>description</label>
 				</field>
 				<field name="changedValue" type="image">

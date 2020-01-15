@@ -159,11 +159,18 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 			this.hidePassword = hidePassword;
 		}
 
+		public String getDisplayValue() {
+			if(Property.Type.MULTILINE.equals(getType())) {
+				return getClob();
+			}
+			return getActualString();
+		}
+		
 		public String getActualString() {
 			if (hidePassword && Property.Type.PASSWORD.equals(getType())) {
-				return property.getActualString().replaceAll("\\.", "*");
+				return getString().replaceAll("\\.", "*");
 			}
-			return property.getActualString();
+			return getString();
 		}
 
 		public Boolean getChangedValue() {
