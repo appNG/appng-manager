@@ -54,11 +54,7 @@ public class Jars extends ServiceAware implements DataProvider {
 			jars = new ArrayList<JarInfo>();
 			File baseFolder = new File(System.getProperty("catalina.base"), "lib");
 			File homeFolder = new File(System.getProperty("catalina.home"), "lib");
-			FilenameFilter jarFilter = new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					return name.endsWith(".jar");
-				}
-			};
+			FilenameFilter jarFilter = (dir, name) -> name.endsWith(".jar");
 			for (String jarfile : baseFolder.list(jarFilter)) {
 				jars.add(JarInfoBuilder.getJarInfo(new File(baseFolder, jarfile)));
 			}

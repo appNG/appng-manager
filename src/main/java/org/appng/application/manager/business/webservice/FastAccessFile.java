@@ -86,8 +86,9 @@ class FastAccessFile {
 			return sb.toString();
 		}
 
+		@Override
 		public void remove() {
-
+			// not needed
 		}
 	}
 

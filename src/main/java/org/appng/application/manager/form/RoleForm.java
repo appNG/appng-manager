@@ -36,9 +36,9 @@ import lombok.Setter;
 public class RoleForm {
 
 	private RoleImpl role;
-	private List<Integer> permissionIds = new ArrayList<Integer>();
-	private List<Integer> groupIds = new ArrayList<Integer>();
-	private List<Integer> userIds = new ArrayList<Integer>();
+	private List<Integer> permissionIds = new ArrayList<>();
+	private List<Integer> groupIds = new ArrayList<>();
+	private List<Integer> userIds = new ArrayList<>();
 
 	public RoleForm() {
 		this(new RoleImpl());

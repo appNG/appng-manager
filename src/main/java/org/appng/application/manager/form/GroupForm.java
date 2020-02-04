@@ -37,7 +37,7 @@ public class GroupForm {
 
 	private GroupImpl group;
 
-	private List<Integer> roleIds = new ArrayList<Integer>();
+	private List<Integer> roleIds = new ArrayList<>();
 
 	public GroupForm() {
 		this(new GroupImpl());

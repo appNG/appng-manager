@@ -62,7 +62,7 @@ In addition to the site attributes, there are a lot of site properties. With sit
 
 As long as a property value has not been changed for a site, appNG uses the `Default-Value`. In this case both fields `Value` and `Multilined value` are empty.
 
-To update a property, enter a value in either the `Value` or `Multilined value` field. Note that it is not possible to save the property if both fields are filled. appNG will use the content of the `Value` or the `Multilined value` field, if it is not empty. After updating a property, a site reload is required.
+To update a property, enter a value in either the `Value` or `Multiline value` field. Note that it is not possible to save the property if both fields are filled. appNG will use the content of the `Value` or the `Multilined value` field, if it is not empty. After updating a property, a site reload is required.
 
 A site property has the following attributes:
 
@@ -72,7 +72,7 @@ A site property has the following attributes:
 | Name | The name of the property.
 | Active Value | As described in <<Reloading a site>>, a property update will be only taken into account after a site reload. This attribute shows the value of the property after the next site reload.
 | Default Value | The default value defined by the platform on site creation.
-| Multilined Value | A _normal_ value has a limited length of 255 characters. If a bigger value is needed, it must be defined in the `Multilined Value` field of a property.
+| Multiline Value | A _normal_ value has a limited length of 255 characters. If a bigger value is needed, it must be defined in the `Multilined Value` field of a property.
 | Description | A short description of the property
 | Changed Value | Is shown in the list of properties. Indicates if a value has been changed for that site (yellow) or if it still uses the platform default (green).
 |====================

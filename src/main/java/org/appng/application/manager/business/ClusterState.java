@@ -65,7 +65,7 @@ public class ClusterState implements DataProvider, ActionProvider<Void> {
 
 		LocalNodeState localNode = getLocalNode(site, environment);
 		LocalNodeState currentNode = localNode;
-		Set<LocalNodeState> items = new HashSet<LocalNodeState>();
+		Set<LocalNodeState> items = new HashSet<>();
 		items.add(localNode);
 
 		boolean clusterAvailable = null != nodeStates;

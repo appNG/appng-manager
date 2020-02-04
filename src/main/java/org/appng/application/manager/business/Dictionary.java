@@ -53,7 +53,7 @@ public class Dictionary extends ServiceAware implements DataProvider {
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		ResourceBundle bundle = null;
-		List<Property> properties = new ArrayList<Property>();
+		List<Property> properties = new ArrayList<>();
 
 		Integer applicationId = options.getInteger("application", "id");
 		Locale locale = environment.getLocale();
@@ -84,7 +84,7 @@ public class Dictionary extends ServiceAware implements DataProvider {
 	}
 
 	private Collection<Property> getPropertiesFromBundle(ResourceBundle bundle) {
-		SortedSet<Property> properties = new TreeSet<Property>();
+		SortedSet<Property> properties = new TreeSet<>();
 		if (null != bundle) {
 			Enumeration<String> keys = bundle.getKeys();
 			while (keys.hasMoreElements()) {

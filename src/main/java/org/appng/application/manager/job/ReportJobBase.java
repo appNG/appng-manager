@@ -65,9 +65,7 @@ abstract class ReportJobBase implements ScheduledJob {
 
 	protected void addReceiver(Mail mail, Properties properties, String propertyName, RecipientType recipientType) {
 		List<String> receivers = properties.getList(propertyName, ";");
-		receivers.forEach(r -> {
-			mail.addReceiver(StringUtils.trim(r), recipientType);
-		});
+		receivers.forEach(r -> mail.addReceiver(StringUtils.trim(r), recipientType));
 	}
 
 	protected Date getIntervalStart() {
@@ -76,7 +74,7 @@ abstract class ReportJobBase implements ScheduledJob {
 		}
 		return interval.getIntervalStart();
 	}
-	
+
 	protected void addReport(Mail mail, EventFilter eventFilter) throws IOException, MailException {
 		List<PlatformEvent> events = service.getEvents(eventFilter);
 		ByteArrayOutputStream out = PlatformEventExport.getEventReport(events, messageSource);
@@ -85,7 +83,7 @@ abstract class ReportJobBase implements ScheduledJob {
 		String fileName = PlatformEventExport.getAttachmentName();
 		mail.addAttachment(in, fileName, MediaType.OPENDOCUMENT_SPREADSHEET.toString());
 	}
-	
+
 	enum ReportIntervall {
 
 		HOUR, DAY, WEEK, MONTH;

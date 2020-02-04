@@ -88,7 +88,7 @@ public class PlatformEvents implements DataProvider {
 		Selection userSelection;
 		if (users.size() > application.getProperties().getInteger(ManagerSettings.EVENT_FILTER_MAX_USERS)) {
 			String username = StringUtils.trimToEmpty(filter.getEU());
-			userSelection = new SelectionBuilder<String>(EventFilter.USER).title(MessageConstants.USER)
+			userSelection = new SelectionBuilder<>(EventFilter.USER).title(MessageConstants.USER)
 					.options(Arrays.asList(username)).select(username).type(SelectionType.TEXT).build();
 		} else {
 			userSelection = getStringSelection(EventFilter.USER, users, filter.getEU(), MessageConstants.USER);
@@ -124,7 +124,7 @@ public class PlatformEvents implements DataProvider {
 	}
 
 	private Selection getStringSelection(String id, Collection<String> values, String selected, String label) {
-		SelectionBuilder<String> builder = new SelectionBuilder<String>(id);
+		SelectionBuilder<String> builder = new SelectionBuilder<>(id);
 		return builder.title(label).options(values).select(selected).type(SelectionType.SELECT)
 				.defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).build();
 	}
