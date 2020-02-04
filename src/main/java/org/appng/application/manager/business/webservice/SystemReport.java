@@ -113,9 +113,7 @@ public class SystemReport implements AttachmentWebservice {
 				addArchiveEntry(os, logConfig.getConfigFile());
 				addArchiveEntry(os, new File(rootPath, "WEB-INF/conf/appNG" + EXT_PROPERTIES));
 				return out.toByteArray();
-			} catch (IOException e) {
-				throw new ApplicationException(e);
-			} catch (ArchiveException e) {
+			} catch (IOException | ArchiveException e) {
 				throw new ApplicationException(e);
 			}
 		}

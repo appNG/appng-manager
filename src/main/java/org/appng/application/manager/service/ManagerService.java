@@ -323,7 +323,7 @@ public class ManagerService extends CoreService implements Service {
 			}
 			data.setItem(new GroupForm(group));
 		} else {
-			Selection nameFilter = new SelectionBuilder<String>(FILTER_GROUP_NAME)
+			Selection nameFilter = new SelectionBuilder<>(FILTER_GROUP_NAME)
 					.defaultOption(FILTER_GROUP_NAME, groupName).title(MessageConstants.NAME).type(SelectionType.TEXT)
 					.select(groupName).build();
 			SelectionGroup filter = new SelectionGroup();
@@ -982,9 +982,9 @@ public class ManagerService extends CoreService implements Service {
 					siteImpl.setStartupTime(site.getStartupTime());
 				}
 			}
-			Selection nameFilter = new SelectionBuilder<String>(FILTER_SITE_NAME).defaultOption(FILTER_SITE_NAME, name)
+			Selection nameFilter = new SelectionBuilder<>(FILTER_SITE_NAME).defaultOption(FILTER_SITE_NAME, name)
 					.title(MessageConstants.NAME).type(SelectionType.TEXT).select(name).build();
-			Selection domainFilter = new SelectionBuilder<String>(FILTER_SITE_DOMAIN)
+			Selection domainFilter = new SelectionBuilder<>(FILTER_SITE_DOMAIN)
 					.defaultOption(FILTER_SITE_DOMAIN, domain).title(MessageConstants.DOMAIN).type(SelectionType.TEXT)
 					.select(domain).build();
 			SelectionGroup filter = new SelectionGroup();
@@ -1120,7 +1120,7 @@ public class ManagerService extends CoreService implements Service {
 			userTypes.getOptions().add(0, new Option());
 			userTypes.setType(SelectionType.SELECT);
 			Selection userName = selectionFactory.fromObjects(filterParamName, MessageConstants.NAME,
-					new String[] { name }, new String[] { name });
+					new String[] { name }, name);
 			userName.setType(SelectionType.TEXT);
 
 			List<GroupImpl> groups = groupRepository.findAll(new Sort(Direction.ASC, "name"));

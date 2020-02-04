@@ -95,7 +95,7 @@ public class Installation extends ServiceAware implements DataProvider, ActionPr
 		try {
 			if (null != repositoryId && null == applicationName) {
 
-				Selection packageFilterSelection = new SelectionBuilder<String>("pf").defaultOption("pf", packageFilter)
+				Selection packageFilterSelection = new SelectionBuilder<>("pf").defaultOption("pf", packageFilter)
 						.title(MessageConstants.NAME).type(SelectionType.TEXT).select(packageFilter).build();
 				SelectionGroup filter = new SelectionGroup();
 				filter.getSelections().add(packageFilterSelection);

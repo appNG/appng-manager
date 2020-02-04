@@ -124,7 +124,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 		String fUsr = request.getParameter(F_USR);
 		String fLgn = request.getParameter(F_LGN);
 
-		Set<String> userAgents = new TreeSet<String>();
+		Set<String> userAgents = new TreeSet<>();
 		userAgents.add(StringUtils.EMPTY);
 		Boolean currentSiteOnly = options.getBoolean("site", "currentSiteOnly");
 		List<Session> sessions = getSessions(options, request, currentSiteOnly, immutableSessions, userAgents, fDmn,
