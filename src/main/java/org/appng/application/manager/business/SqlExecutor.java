@@ -182,7 +182,7 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 	}
 
 	public List<String> getQueries(String sql, DatabaseConnection connection) {
-		List<String> queries = new ArrayList<String>();
+		List<String> queries = new ArrayList<>();
 		try (Database<?> db = DatabaseFactory
 				.createDatabase(new FluentConfiguration().dataSource(connection.getDataSource()), true)) {
 			SqlScript sqlScript = new SqlScript(db.createSqlStatementBuilderFactory(), new StringResource(sql), false);

@@ -31,7 +31,6 @@ import org.appng.api.support.SelectionBuilder;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
-import org.appng.core.model.InstallablePackage;
 import org.appng.xml.platform.Selection;
 import org.appng.xml.platform.SelectionGroup;
 import org.appng.xml.platform.SelectionType;
@@ -106,7 +105,7 @@ public class Installation extends ServiceAware implements DataProvider, ActionPr
 				data = service.searchPackageVersions(request, fp, repositoryId, applicationName);
 			}
 		} catch (BusinessException ex) {
-			data.setPage(new ArrayList<InstallablePackage>(), fp.getPageable());
+			data.setPage(new ArrayList<>(), fp.getPageable());
 		}
 		return data;
 	}

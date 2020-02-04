@@ -162,7 +162,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 			final String fAgnt, String fUsr, final Date fcrBfDate, final Date fcrAfDate, final String fLgn) {
 		Integer siteId = options.getInteger("site", "id");
 		String currentSiteName = null == siteId ? null : getService().getNameForSite(siteId);
-		List<Session> sessions = new ArrayList<Session>();
+		List<Session> sessions = new ArrayList<>();
 		for (Session session : imutableSessions) {
 			String userAgent = session.getUserAgent();
 			if (StringUtils.isBlank(userAgent)) {

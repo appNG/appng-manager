@@ -30,7 +30,6 @@ import org.appng.api.model.Application;
 import org.appng.api.model.Identifier;
 import org.appng.api.model.Permission;
 import org.appng.api.model.ResourceType;
-import org.appng.api.model.Role;
 import org.appng.api.model.Site;
 import org.appng.api.model.Subject;
 import org.appng.application.manager.form.GroupForm;
@@ -46,6 +45,7 @@ import org.appng.core.domain.DatabaseConnection;
 import org.appng.core.domain.PermissionImpl;
 import org.appng.core.domain.PlatformEvent.Type;
 import org.appng.core.domain.RepositoryImpl;
+import org.appng.core.domain.RoleImpl;
 import org.appng.core.domain.SiteApplication;
 import org.appng.core.model.JarInfo;
 import org.appng.core.model.PackageArchive;
@@ -211,7 +211,7 @@ public interface Service {
 
 	DatabaseConnection getDatabaseConnection(Integer dcId, boolean clearPassword);
 
-	Collection<? extends Role> findRolesForSite(Integer siteId);
+	Collection<RoleImpl> findRolesForSite(Integer siteId);
 
 	SiteApplication getSiteApplication(Integer siteId, Integer appId);
 

@@ -19,7 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -123,8 +122,7 @@ public class SystemReport implements AttachmentWebservice {
 		return new byte[0];
 	}
 
-	private void addFile(ArchiveOutputStream os, File srcFile, String currentFolder)
-			throws FileNotFoundException, IOException {
+	private void addFile(ArchiveOutputStream os, File srcFile, String currentFolder) throws IOException {
 		if (null != srcFile && srcFile.exists()) {
 			for (File file : srcFile.listFiles()) {
 				String path = currentFolder + "/" + file.getName();
@@ -145,12 +143,11 @@ public class SystemReport implements AttachmentWebservice {
 		addArchiveEntry(os, name, new ByteArrayInputStream(propsOut.toByteArray()), null);
 	}
 
-	private void addArchiveEntry(ArchiveOutputStream os, File file) throws FileNotFoundException, IOException {
+	private void addArchiveEntry(ArchiveOutputStream os, File file) throws IOException {
 		addArchiveEntry(os, file.getName(), file);
 	}
 
-	private void addArchiveEntry(ArchiveOutputStream os, String name, File file)
-			throws FileNotFoundException, IOException {
+	private void addArchiveEntry(ArchiveOutputStream os, String name, File file) throws IOException {
 		if (file.exists()) {
 			addArchiveEntry(os, name, new FileInputStream(file), file.lastModified());
 		}

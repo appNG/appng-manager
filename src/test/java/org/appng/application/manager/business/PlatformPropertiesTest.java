@@ -120,7 +120,7 @@ public class PlatformPropertiesTest extends AbstractTest {
 
 	@Override
 	protected List<Property> getSiteProperties(String prefix) {
-		List<Property> siteProperties = new ArrayList<Property>();
+		List<Property> siteProperties = new ArrayList<>();
 		siteProperties.add(new SimpleProperty(prefix + SiteProperties.SERVICE_PATH, "/service"));
 		siteProperties.add(new SimpleProperty(prefix + SiteProperties.MANAGER_PATH, "ws"));
 		siteProperties.add(new SimpleProperty(prefix + SiteProperties.DEFAULT_PAGE_SIZE, "10"));

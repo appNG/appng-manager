@@ -19,11 +19,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -346,9 +346,9 @@ public class ManagerService extends CoreService implements Service {
 	private Selection getRoleSelection(Group group, Integer siteId) {
 		SiteImpl site = siteRepository.findOne(siteId);
 		Selection selection = selectionFactory.fromObjects("roles", "roles", new Object[0], (Selector) null);
-		for (Application application : sortByName(new ArrayList<Application>(site.getApplications()))) {
+		for (Application application : sortByName(new ArrayList<>(site.getApplications()))) {
 			String name = application.getName();
-			List<Role> roles = new ArrayList<Role>(application.getRoles());
+			List<Role> roles = new ArrayList<>(application.getRoles());
 			OptionGroup roleGroup = optionGroupFactory.fromNamed(name, name, sortByName(roles), group.getRoles());
 			selection.getOptionGroups().add(roleGroup);
 		}
@@ -357,12 +357,7 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	private <T extends Nameable> List<T> sortByName(List<T> items) {
-		Comparator<Nameable> nameComparator = new Comparator<Nameable>() {
-			public int compare(Nameable n1, Nameable n2) {
-				return n1.getName().compareTo(n2.getName());
-			}
-		};
-		Collections.sort(items, nameComparator);
+		Collections.sort(items, (n1, n2) -> n1.getName().compareTo(n2.getName()));
 		return items;
 	}
 
@@ -394,7 +389,7 @@ public class ManagerService extends CoreService implements Service {
 			try {
 				if (null != repository) {
 					Page<ApplicationImpl> applications = applicationRepository.search(fp.getPageable());
-					List<Identifier> identifiers = new ArrayList<Identifier>(applications.getContent());
+					List<Identifier> identifiers = new ArrayList<>(applications.getContent());
 
 					List<Identifier> templates = getInstalledTemplates();
 					identifiers.addAll(templates);
@@ -438,7 +433,7 @@ public class ManagerService extends CoreService implements Service {
 			if ((null != repositoryId) && (StringUtils.isNotBlank(packageName))) {
 				RepositoryImpl repository = repoRepository.findOne(repositoryId);
 				if (null != repository) {
-					List<Identifier> packages = new ArrayList<Identifier>(applicationRepository.findAll());
+					List<Identifier> packages = new ArrayList<>(applicationRepository.findAll());
 
 					List<Identifier> templates = getInstalledTemplates();
 					packages.addAll(templates);
@@ -566,9 +561,9 @@ public class ManagerService extends CoreService implements Service {
 				comparatorChain.addComparator(new PropertyComparator<Resource>("name", true, isAsc));
 				List<Resource> resources = null;
 				if (null == type) {
-					resources = new ArrayList<Resource>(resourceHolder.getResources());
+					resources = new ArrayList<>(resourceHolder.getResources());
 				} else {
-					resources = new ArrayList<Resource>(resourceHolder.getResources(type));
+					resources = new ArrayList<>(resourceHolder.getResources(type));
 				}
 				Collections.sort(resources, comparatorChain);
 				data.setPage(resources, fp.getPageable());
@@ -607,7 +602,7 @@ public class ManagerService extends CoreService implements Service {
 				errorMessage = request.getMessage(MessageConstants.RESOURCE_UPDATED_FILEBASED_ERROR, fileName);
 				File resourceFolder = getResourceFolder(request.getEnvironment(), application.getName(), type);
 				File original = new File(resourceFolder, fileName);
-				FileUtils.write(original, form.getContent(), ResourceForm.ENCODING, false);
+				FileUtils.write(original, form.getContent(), StandardCharsets.UTF_8, false);
 				okMessage = request.getMessage(MessageConstants.RESOURCE_UPDATED_FILEBASED, fileName,
 						FileUtils.sizeOf(original));
 				createEvent(Type.UPDATE,
@@ -748,14 +743,14 @@ public class ManagerService extends CoreService implements Service {
 		Set<Permission> permissionsFromRole = role.getPermissions();
 		List<PermissionImpl> allPermissions = permissionRepository.findByApplicationId(appId,
 				new Sort(Direction.ASC, "name"));
-		Map<String, List<Permission>> permissionGroups = new HashMap<String, List<Permission>>();
+		Map<String, List<Permission>> permissionGroups = new HashMap<>();
 		Pattern pattern = Pattern.compile("([^\\.]+)((.)*)");
 		for (Permission permission : allPermissions) {
 			Matcher matcher = pattern.matcher(permission.getName());
 			if (matcher.matches()) {
 				String group = matcher.group(1);
 				if (!permissionGroups.containsKey(group)) {
-					permissionGroups.put(group, new ArrayList<Permission>());
+					permissionGroups.put(group, new ArrayList<>());
 				}
 				permissionGroups.get(group).add(permission);
 			}
@@ -763,7 +758,7 @@ public class ManagerService extends CoreService implements Service {
 
 		Selection permissionSelection = selectionFactory.fromObjects("permissions", "permissions", new Object[0],
 				(Selector) null);
-		List<String> groupNames = new ArrayList<String>(permissionGroups.keySet());
+		List<String> groupNames = new ArrayList<>(permissionGroups.keySet());
 		Collections.sort(groupNames);
 		for (String permissionGroup : groupNames) {
 			List<Permission> permissions = sortByName(permissionGroups.get(permissionGroup));
@@ -842,7 +837,7 @@ public class ManagerService extends CoreService implements Service {
 				data.setPage(applications);
 			} else {
 				Page<ApplicationImpl> allApplications = applicationRepository.search(pageable);
-				List<SiteApplication> applications = new ArrayList<SiteApplication>();
+				List<SiteApplication> applications = new ArrayList<>();
 				Site site = siteRepository.findOne(siteId);
 				for (Application application : allApplications) {
 					SiteApplication siteApplication = ((SiteImpl) site).getSiteApplication(application.getName());
@@ -1003,7 +998,7 @@ public class ManagerService extends CoreService implements Service {
 
 	private void addSelectionsForSite(final SiteImpl site, DataContainer data) {
 		initSiteProperties(site);
-		List<String> templateNames = new ArrayList<String>();
+		List<String> templateNames = new ArrayList<>();
 		for (Identifier identifier : getInstalledTemplates()) {
 			templateNames.add(identifier.getDisplayName());
 		}
@@ -1059,10 +1054,8 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	private void checkSite(Request request, Site site, FieldProcessor fp, Site currentSite) throws BusinessException {
-		if (fp.hasField("site.name")) {
-			if (!siteRepository.isUnique(site.getId(), "name", site.getName())) {
-				fp.addErrorMessage(fp.getField("site.name"), request.getMessage(MessageConstants.SITE_NAME_EXISTS));
-			}
+		if (fp.hasField("site.name") && !siteRepository.isUnique(site.getId(), "name", site.getName())) {
+			fp.addErrorMessage(fp.getField("site.name"), request.getMessage(MessageConstants.SITE_NAME_EXISTS));
 		}
 		if (!siteRepository.isUnique(site.getId(), "host", site.getHost())) {
 			fp.addErrorMessage(fp.getField("site.host"), request.getMessage(MessageConstants.SITE_HOST_EXISTS));
@@ -1179,7 +1172,7 @@ public class ManagerService extends CoreService implements Service {
 		timezoneSelection.setType(SelectionType.SELECT);
 		List<String> ids = Arrays.asList(TimeZone.getAvailableIDs());
 		Collections.sort(ids);
-		List<TimeZone> timeZones = new ArrayList<TimeZone>();
+		List<TimeZone> timeZones = new ArrayList<>();
 		for (String id : ids) {
 			if (id.matches("(Africa|America|Antarctica|Asia|Atlantic|Australia|Europe|Indian|Pacific).*")) {
 				timeZones.add(TimeZone.getTimeZone(id));
@@ -1219,21 +1212,13 @@ public class ManagerService extends CoreService implements Service {
 			opt.setSelected(id.equals(timeZone));
 			group.getOptions().add(opt);
 
-			Collections.sort(group.getOptions(), new Comparator<Option>() {
-				public int compare(Option o1, Option o2) {
-					return o1.getName().compareTo(o2.getName());
-				}
-			});
+			Collections.sort(group.getOptions(), (o1, o2) -> o1.getName().compareTo(o2.getName()));
 		}
 		return timezoneSelection;
 	}
 
 	private NameProvider<UserType> getUserTypeNameProvider(Request request) {
-		return new NameProvider<UserType>() {
-			public String getName(UserType instance) {
-				return request.getMessage(UserType.class.getSimpleName() + "." + instance.name());
-			}
-		};
+		return instance -> request.getMessage(UserType.class.getSimpleName() + "." + instance.name());
 	}
 
 	public void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp)
@@ -1539,7 +1524,7 @@ public class ManagerService extends CoreService implements Service {
 		DataContainer data = new DataContainer(fp);
 		SubjectForm subjectsForm = new SubjectForm();
 		SubjectImpl subject = subjectsForm.getSubject();
-		subject.setGroups(new ArrayList<Group>());
+		subject.setGroups(new ArrayList<>());
 		subject.setLanguage("");
 		subject.setRealname("");
 		subject.setName("");
@@ -1566,7 +1551,7 @@ public class ManagerService extends CoreService implements Service {
 		GroupImpl group = groupForm.getGroup();
 		group.setDescription("");
 		group.setName("");
-		group.setSubjects(new HashSet<Subject>());
+		group.setSubjects(new HashSet<>());
 		data.setItem(groupForm);
 
 		Selection roleSelection = getRoleSelection(group, site.getId());
@@ -1628,11 +1613,7 @@ public class ManagerService extends CoreService implements Service {
 
 	private <E extends Enum<E>> Selection getTypeSelection(Request request, final Class<E> clazz, final E type,
 			String id, String title) {
-		NameProvider<E> nameProvider = new NameProvider<E>() {
-			public String getName(E instance) {
-				return request.getMessage(clazz.getSimpleName() + "." + instance.name());
-			}
-		};
+		NameProvider<E> nameProvider = instance -> request.getMessage(clazz.getSimpleName() + "." + instance.name());
 		return selectionFactory.fromEnum(id, title, clazz.getEnumConstants(), type, nameProvider);
 	}
 
@@ -1722,7 +1703,7 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public Collection<? extends Role> findRolesForSite(Integer siteId) {
+	public Collection<RoleImpl> findRolesForSite(Integer siteId) {
 		return roleRepository.findRolesForSite(siteId);
 	}
 
@@ -1738,14 +1719,14 @@ public class ManagerService extends CoreService implements Service {
 
 	public List<Selection> getGrantedSelections(Integer siteId, Integer appId) {
 
-		List<SiteImpl> grantedBy = new ArrayList<SiteImpl>();
+		List<SiteImpl> grantedBy = new ArrayList<>();
 
 		SiteApplication siteApplication = getSiteApplication(siteId, appId);
 		Site grantedSite = siteApplication.getSite();
 		Application application = siteApplication.getApplication();
 		List<SiteImpl> allSites = siteRepository.findAll(new Sort("name"));
 		allSites.remove(grantedSite);
-		for (SiteImpl site : new ArrayList<SiteImpl>(allSites)) {
+		for (SiteImpl site : new ArrayList<>(allSites)) {
 			SiteApplication granted = siteApplicationRepository
 					.findByApplicationNameAndGrantedSitesName(application.getName(), site.getName());
 			if (null != granted && !granted.equals(siteApplication)) {
@@ -1757,7 +1738,7 @@ public class ManagerService extends CoreService implements Service {
 		Selection granted = selectionFactory.fromNamed("siteApplication.grantedSites", "sites", allSites,
 				siteApplication.getGrantedSites());
 		Selection grantedSitesBy = selectionFactory.fromNamed("grantedBy", "grantedBy", grantedBy, grantedBy);
-		List<Selection> selections = new ArrayList<Selection>();
+		List<Selection> selections = new ArrayList<>();
 		selections.add(granted);
 		selections.add(grantedSitesBy);
 		return selections;
@@ -1816,10 +1797,6 @@ public class ManagerService extends CoreService implements Service {
 
 	public void setTimezoneMessages(MessageSource timezoneMessages) {
 		this.timezoneMessages = timezoneMessages;
-	}
-
-	public Map<String, String> getCacheStatistics(Integer siteId) {
-		return super.getCacheStatistics(siteId);
 	}
 
 	public void expireCacheElement(Request request, FieldProcessor fp, Integer siteId, String cacheElement) {
