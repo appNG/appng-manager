@@ -1145,26 +1145,25 @@ public class ManagerService extends CoreService implements Service {
 			subject.setTypeName(getUserTypeNameProvider(request).getName(subject.getUserType()));
 		}
 
-		Selection typeFilter = selectionFactory.fromObjects(filterParamType, MessageConstants.TYPE,
-				UserType.values(), getUserTypeNameProvider(request), userType);
+		Selection typeFilter = selectionFactory.fromObjects(filterParamType, MessageConstants.TYPE, UserType.values(),
+				getUserTypeNameProvider(request), userType);
 		typeFilter.getOptions().add(0, new Option());
 		typeFilter.setType(SelectionType.SELECT);
 
 		Selection userNameFilter = selectionFactory.fromObjects(filterParamName, MessageConstants.NAME,
-				new String[] { userName }, new String[] { userName });
+				new String[] { userName }, userName);
 		userNameFilter.setType(SelectionType.TEXT);
 
 		Selection realNameFilter = selectionFactory.fromObjects(filterParamRealName, MessageConstants.REALNAME,
-				new String[] { realName }, new String[] { realName });
+				new String[] { realName }, realName);
 		realNameFilter.setType(SelectionType.TEXT);
 
 		Selection lockedFilter = selectionFactory.fromObjects(filterParamLocked, MessageConstants.LOCKED,
-				new String[] { "all", "true", "false" }, s -> request.getMessage("locked.filter." + s),
-				new String[] { locked });
+				new String[] { "all", "true", "false" }, s -> request.getMessage("locked.filter." + s), locked);
 		lockedFilter.setType(SelectionType.RADIO);
 
 		Selection emailFilter = selectionFactory.fromObjects(filterParamEmail, MessageConstants.EMAIL,
-				new String[] { email }, new String[] { email });
+				new String[] { email }, email);
 		emailFilter.setType(SelectionType.TEXT);
 
 		List<GroupImpl> groups = groupRepository.findAll(new Sort(Direction.ASC, "name"));
