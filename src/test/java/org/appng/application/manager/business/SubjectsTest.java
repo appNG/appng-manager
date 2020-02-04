@@ -50,7 +50,7 @@ public class SubjectsTest extends AbstractTest {
 				if (null == xpathLocation) {
 					xpathLocation = difference.getTestNodeDetail().getXpathLocation();
 				}
-				if (xpathLocation.contains("/data[1]/selection[4]/optionGroup")) {
+				if (xpathLocation.contains("/data[1]/selection[5]/optionGroup")) {
 					return RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
 				}
 				return RETURN_ACCEPT_DIFFERENCE;
