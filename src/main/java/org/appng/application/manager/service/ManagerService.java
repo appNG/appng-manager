@@ -54,6 +54,7 @@ import org.appng.api.RequestUtil;
 import org.appng.api.Scope;
 import org.appng.api.SiteProperties;
 import org.appng.api.model.Application;
+import org.appng.api.model.AuthSubject.PasswordChangePolicy;
 import org.appng.api.model.Group;
 import org.appng.api.model.Identifier;
 import org.appng.api.model.NameProvider;
@@ -1082,65 +1083,109 @@ public class ManagerService extends CoreService implements Service {
 			String timeZone = subject.getTimeZone();
 			addSelectionsForSubject(request, data, subject, timeZone == null ? defaultTimezone : timeZone, languages);
 		} else {
-			String filterParamType = "f_type";
-			String filterParamName = "f_name";
-			String filterParamGroup = "f_gid";
-			String typeFormRequest = request.getParameter(filterParamType);
-			UserType userType = null != typeFormRequest && UserType.names().contains(typeFormRequest)
-					? UserType.valueOf(typeFormRequest)
-					: null;
-			String name = request.getParameter(filterParamName);
-
-			Pageable pageable = fp.getPageable();
-			SearchQuery<SubjectImpl> searchQuery = subjectRepository.createSearchQuery();
-			searchQuery.setAppendEntityAlias(false);
-			if (StringUtils.isNotBlank(name)) {
-				searchQuery.contains("e.name", name);
-			} else {
-				name = StringUtils.EMPTY;
-			}
-			if (null != userType) {
-				searchQuery.equals("e.userType", userType);
-			}
-			if (null != groupId) {
-				searchQuery.join("join e.groups g");
-				searchQuery.equals("g.id", groupId);
-				List<Order> orders = StreamSupport.stream(pageable.getSort().spliterator(), false)
-						.map(o -> new Order(o.getDirection(), "e." + o.getProperty())).collect(Collectors.toList());
-				pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders));
-			}
-
-			Page<SubjectImpl> subjects = subjectRepository.search(searchQuery, pageable);
-			for (SubjectImpl subject : subjects) {
-				subject.setTypeName(getUserTypeNameProvider(request).getName(subject.getUserType()));
-			}
-
-			Selection userTypes = selectionFactory.fromObjects(filterParamType, MessageConstants.TYPE,
-					UserType.values(), getUserTypeNameProvider(request), userType);
-			userTypes.getOptions().add(0, new Option());
-			userTypes.setType(SelectionType.SELECT);
-			Selection userName = selectionFactory.fromObjects(filterParamName, MessageConstants.NAME,
-					new String[] { name }, name);
-			userName.setType(SelectionType.TEXT);
-
-			List<GroupImpl> groups = groupRepository.findAll(new Sort(Direction.ASC, "name"));
-			Selector groupSelector = o -> {
-				if (null != groupId && groupId.toString().equals(o.getValue())) {
-					o.setSelected(true);
-				}
-			};
-			Selection groupSelection = new SelectionBuilder<GroupImpl>(filterParamGroup).title(MessageConstants.GROUP)
-					.options(groups).defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).selector(groupSelector)
-					.type(SelectionType.SELECT).build();
-
-			SelectionGroup filterGroup = new SelectionGroup();
-			filterGroup.getSelections().add(userName);
-			filterGroup.getSelections().add(userTypes);
-			filterGroup.getSelections().add(groupSelection);
-			data.getSelectionGroups().add(filterGroup);
+			Page<SubjectImpl> subjects = searchSubjects(request, data, fp, groupId);
 			data.setPage(subjects);
 		}
 		return data;
+	}
+
+	private Page<SubjectImpl> searchSubjects(Request request, DataContainer data, FieldProcessor fp, Integer groupId) {
+		String filterParamType = "f_type";
+		String filterParamName = "f_name";
+		String filterParamRealName = "f_rlnme";
+		String filterParamGroup = "f_gid";
+		String filterParamLocked = "f_lckd";
+		String filterParamEmail = "f_eml";
+		String typeFromRequest = request.getParameter(filterParamType);
+		String locked = request.getParameter(filterParamLocked);
+		UserType userType = null != typeFromRequest && UserType.names().contains(typeFromRequest)
+				? UserType.valueOf(typeFromRequest)
+				: null;
+		String userName = request.getParameter(filterParamName);
+		String realName = request.getParameter(filterParamRealName);
+		String email = request.getParameter(filterParamEmail);
+
+		Pageable pageable = fp.getPageable();
+		SearchQuery<SubjectImpl> searchQuery = subjectRepository.createSearchQuery();
+		searchQuery.setAppendEntityAlias(false);
+		if (StringUtils.isNotBlank(userName)) {
+			searchQuery.contains("e.name", userName);
+		} else {
+			userName = StringUtils.EMPTY;
+		}
+		if (StringUtils.isNotBlank(realName)) {
+			searchQuery.contains("e.realname", realName);
+		} else {
+			realName = StringUtils.EMPTY;
+		}
+		if (StringUtils.isNotBlank(email)) {
+			searchQuery.contains("e.email", email);
+		} else {
+			email = StringUtils.EMPTY;
+		}
+
+		if (null != userType) {
+			searchQuery.equals("e.userType", userType);
+		}
+		if ("true".equalsIgnoreCase(locked)) {
+			searchQuery.equals("e.locked", true);
+		} else if ("false".equalsIgnoreCase(locked)) {
+			searchQuery.equals("e.locked", false);
+		}
+		if (null != groupId) {
+			searchQuery.join("join e.groups g");
+			searchQuery.equals("g.id", groupId);
+			List<Order> orders = StreamSupport.stream(pageable.getSort().spliterator(), false)
+					.map(o -> new Order(o.getDirection(), "e." + o.getProperty())).collect(Collectors.toList());
+			pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders));
+		}
+
+		Page<SubjectImpl> subjects = subjectRepository.search(searchQuery, pageable);
+		for (SubjectImpl subject : subjects) {
+			subject.setTypeName(getUserTypeNameProvider(request).getName(subject.getUserType()));
+		}
+
+		Selection typeFilter = selectionFactory.fromObjects(filterParamType, MessageConstants.TYPE,
+				UserType.values(), getUserTypeNameProvider(request), userType);
+		typeFilter.getOptions().add(0, new Option());
+		typeFilter.setType(SelectionType.SELECT);
+
+		Selection userNameFilter = selectionFactory.fromObjects(filterParamName, MessageConstants.NAME,
+				new String[] { userName }, new String[] { userName });
+		userNameFilter.setType(SelectionType.TEXT);
+
+		Selection realNameFilter = selectionFactory.fromObjects(filterParamRealName, MessageConstants.REALNAME,
+				new String[] { realName }, new String[] { realName });
+		realNameFilter.setType(SelectionType.TEXT);
+
+		Selection lockedFilter = selectionFactory.fromObjects(filterParamLocked, MessageConstants.LOCKED,
+				new String[] { "all", "true", "false" }, s -> request.getMessage("locked.filter." + s),
+				new String[] { locked });
+		lockedFilter.setType(SelectionType.RADIO);
+
+		Selection emailFilter = selectionFactory.fromObjects(filterParamEmail, MessageConstants.EMAIL,
+				new String[] { email }, new String[] { email });
+		emailFilter.setType(SelectionType.TEXT);
+
+		List<GroupImpl> groups = groupRepository.findAll(new Sort(Direction.ASC, "name"));
+		Selector groupSelector = o -> {
+			if (null != groupId && groupId.toString().equals(o.getValue())) {
+				o.setSelected(true);
+			}
+		};
+		Selection groupFilter = new SelectionBuilder<GroupImpl>(filterParamGroup).title(MessageConstants.GROUP)
+				.options(groups).defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).selector(groupSelector)
+				.type(SelectionType.SELECT).build();
+
+		SelectionGroup filterGroup = new SelectionGroup();
+		filterGroup.getSelections().add(userNameFilter);
+		filterGroup.getSelections().add(realNameFilter);
+		filterGroup.getSelections().add(emailFilter);
+		filterGroup.getSelections().add(typeFilter);
+		filterGroup.getSelections().add(groupFilter);
+		filterGroup.getSelections().add(lockedFilter);
+		data.getSelectionGroups().add(filterGroup);
+		return subjects;
 	}
 
 	private void addSelectionsForSubject(Request request, DataContainer data, SubjectImpl subject, String timezone,
@@ -1157,6 +1202,12 @@ public class ManagerService extends CoreService implements Service {
 		Selection localeSelection = selectionFactory.fromObjects("language", MessageConstants.LANGUAGE,
 				languages.toArray(), subject.getLanguage());
 		data.getSelections().add(localeSelection);
+
+		Selection pwPolicySelection = new SelectionBuilder<PasswordChangePolicy>("passwordChangePolicy")
+				.title(MessageConstants.PASSWORD_CHANGE_POLICY).type(SelectionType.RADIO)
+				.options(Arrays.asList(PasswordChangePolicy.values())).select(subject.getPasswordChangePolicy())
+				.name(p -> request.getMessage(PasswordChangePolicy.class.getSimpleName() + "." + p.name())).build();
+		data.getSelections().add(pwPolicySelection);
 
 		Selection timezoneSelection = getTimezoneSelection(request.getLocale(), timezone);
 		data.getSelections().add(timezoneSelection);
