@@ -82,54 +82,52 @@ public class PlatformEventExport implements AttachmentWebservice {
 
 	public static ByteArrayOutputStream getEventReport(List<PlatformEvent> events, MessageSource messageSource)
 			throws IOException {
-		Workbook wb = new XSSFWorkbook();
-		Sheet sheet = wb.createSheet();
-		int row = 0, col = 0;
+		try (Workbook wb = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+			Sheet sheet = wb.createSheet();
+			int row = 0, col = 0;
 
-		Font headerFont = wb.createFont();
-		headerFont.setBold(true);
-		CellStyle headerStyle = wb.createCellStyle();
-		headerStyle.setFont(headerFont);
+			Font headerFont = wb.createFont();
+			headerFont.setBold(true);
+			CellStyle headerStyle = wb.createCellStyle();
+			headerStyle.setFont(headerFont);
 
-		Row header = sheet.createRow(row++);
-		createHeader(header, col++, headerStyle, messageSource, MessageConstants.DATE);
-		createHeader(header, col++, headerStyle, messageSource, MessageConstants.TYPE);
-		createHeader(header, col++, headerStyle, messageSource, MessageConstants.EVENT);
-		createHeader(header, col++, headerStyle, messageSource, MessageConstants.APPLICATION);
-		createHeader(header, col++, headerStyle, messageSource, MessageConstants.CONTEXT);
-		createHeader(header, col++, headerStyle, messageSource, MessageConstants.USER);
-		createHeader(header, col++, headerStyle, messageSource, MessageConstants.HOST);
-		createHeader(header, col++, headerStyle, messageSource, MessageConstants.HOST_NAME);
-		createHeader(header, col++, headerStyle, messageSource, MessageConstants.REQUEST);
-		createHeader(header, col++, headerStyle, messageSource, MessageConstants.SESSION);
+			Row header = sheet.createRow(row++);
+			createHeader(header, col++, headerStyle, messageSource, MessageConstants.DATE);
+			createHeader(header, col++, headerStyle, messageSource, MessageConstants.TYPE);
+			createHeader(header, col++, headerStyle, messageSource, MessageConstants.EVENT);
+			createHeader(header, col++, headerStyle, messageSource, MessageConstants.APPLICATION);
+			createHeader(header, col++, headerStyle, messageSource, MessageConstants.CONTEXT);
+			createHeader(header, col++, headerStyle, messageSource, MessageConstants.USER);
+			createHeader(header, col++, headerStyle, messageSource, MessageConstants.HOST);
+			createHeader(header, col++, headerStyle, messageSource, MessageConstants.HOST_NAME);
+			createHeader(header, col++, headerStyle, messageSource, MessageConstants.REQUEST);
+			createHeader(header, col++, headerStyle, messageSource, MessageConstants.SESSION);
 
-		for (PlatformEvent e : events) {
-			col = 0;
-			Row item = sheet.createRow(row++);
-			item.createCell(col++).setCellValue(CELL_FORMAT.format(e.getCreated()));
-			item.createCell(col++).setCellValue(e.getType().name());
-			item.createCell(col++).setCellValue(e.getEvent());
-			item.createCell(col++).setCellValue(e.getApplication());
-			item.createCell(col++).setCellValue(e.getContext());
-			item.createCell(col++).setCellValue(e.getUser());
-			item.createCell(col++).setCellValue(e.getOrigin());
-			item.createCell(col++).setCellValue(e.getHostName());
-			item.createCell(col++).setCellValue(e.getRequestId());
-			item.createCell(col++).setCellValue(e.getSessionId());
-		}
-		for (int i = 0; i < 10; i++) {
-			if (i == 2) {
-				sheet.setColumnWidth(i, sheet.getColumnWidth(i) * 4);
-			} else {
-				sheet.autoSizeColumn(i);
+			for (PlatformEvent e : events) {
+				col = 0;
+				Row item = sheet.createRow(row++);
+				item.createCell(col++).setCellValue(CELL_FORMAT.format(e.getCreated()));
+				item.createCell(col++).setCellValue(e.getType().name());
+				item.createCell(col++).setCellValue(e.getEvent());
+				item.createCell(col++).setCellValue(e.getApplication());
+				item.createCell(col++).setCellValue(e.getContext());
+				item.createCell(col++).setCellValue(e.getUser());
+				item.createCell(col++).setCellValue(e.getOrigin());
+				item.createCell(col++).setCellValue(e.getHostName());
+				item.createCell(col++).setCellValue(e.getRequestId());
+				item.createCell(col++).setCellValue(e.getSessionId());
 			}
+			for (int i = 0; i < 10; i++) {
+				if (i == 2) {
+					sheet.setColumnWidth(i, sheet.getColumnWidth(i) * 4);
+				} else {
+					sheet.autoSizeColumn(i);
+				}
+			}
+			sheet.setAutoFilter(new CellRangeAddress(0, sheet.getLastRowNum(), 0, 9));
+			wb.write(out);
+			return out;
 		}
-		sheet.setAutoFilter(new CellRangeAddress(0, sheet.getLastRowNum(), 0, 9));
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		wb.write(out);
-		wb.close();
-		out.close();
-		return out;
 	}
 
 	private static void createHeader(Row header, int col, CellStyle headerStyle, MessageSource messageSource,
