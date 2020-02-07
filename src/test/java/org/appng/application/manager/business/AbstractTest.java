@@ -24,10 +24,8 @@ import java.util.Properties;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.appng.api.Platform;
 import org.appng.api.SiteProperties;
-import org.appng.api.auth.PasswordPolicy;
 import org.appng.api.model.Property;
 import org.appng.api.model.SimpleProperty;
 import org.appng.api.support.environment.DefaultEnvironment;
@@ -39,6 +37,7 @@ import org.appng.core.repository.RepoRepository;
 import org.appng.core.repository.RoleRepository;
 import org.appng.core.repository.SiteApplicationRepository;
 import org.appng.core.repository.SiteRepository;
+import org.appng.core.security.ConfigurablePasswordPolicy;
 import org.appng.testsupport.TestBase;
 import org.appng.testsupport.validation.WritingXmlValidator;
 import org.junit.Before;
@@ -103,20 +102,9 @@ public class AbstractTest extends TestBase {
 		((DefaultEnvironment) environment).setSubject(subject);
 		Mockito.when(subject.getId()).thenReturn(42);
 		Mockito.when(site.getId()).thenReturn(1);
-		Mockito.when(site.getPasswordPolicy()).thenReturn(new PasswordPolicy() {
-
-			public boolean isValidPassword(char[] password) {
-				return true;
-			}
-
-			public String getErrorMessageKey() {
-				return null;
-			}
-
-			public String generatePassword() {
-				return RandomStringUtils.random(6);
-			}
-		});
+		ConfigurablePasswordPolicy policy = new ConfigurablePasswordPolicy();
+		policy.configure(null);
+		Mockito.when(site.getPasswordPolicy()).thenReturn(policy);
 	}
 
 	@Override

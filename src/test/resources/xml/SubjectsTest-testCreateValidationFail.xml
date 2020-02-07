@@ -82,15 +82,19 @@
 			</field>
 			<field name="password" type="password" binding="password">
 				<label id="password">Password</label>
+				<validation />
 				<messages ref="password">
-					<message ref="password" class="ERROR">Please enter the password.</message>
+					<message ref="password" class="ERROR">Password must contain 1 or more lowercase letters.</message>
+					<message ref="password" class="ERROR">Password must contain 1 or more uppercase letters.</message>
+					<message ref="password" class="ERROR">Password must contain 1 or more numbers.</message>
+					<message ref="password" class="ERROR">Password must contain 1 or more special characters. Allowed are
+						!"#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</message>
+					<message ref="password" class="ERROR">Password must be at least 8 characters long.</message>
+					<message ref="password" class="ERROR">Password contains illegal character: '§'</message>
 				</messages>
 			</field>
 			<field name="passwordConfirmation" type="password" binding="passwordConfirmation">
 				<label id="password.confirmation">Password confirmation</label>
-				<messages ref="passwordConfirmation">
-					<message ref="passwordConfirmation" class="ERROR">Please confirm the password.</message>
-				</messages>
 			</field>
 			<field name="groups" type="list:checkbox" binding="groupIds">
 				<label id="groups">Groups</label>

@@ -26,6 +26,7 @@ import org.appng.api.DataContainer;
 import org.appng.api.Environment;
 import org.appng.api.FieldProcessor;
 import org.appng.api.Request;
+import org.appng.api.auth.PasswordPolicy;
 import org.appng.api.model.Application;
 import org.appng.api.model.Identifier;
 import org.appng.api.model.Permission;
@@ -74,7 +75,7 @@ public interface Service {
 
 	void createSite(Request request, SiteForm sitesForm, FieldProcessor fp) throws BusinessException;
 
-	void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp) throws BusinessException;
+	void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp, PasswordPolicy policy) throws BusinessException;
 
 	void createProperty(Request request, PropertyForm propertyForm, Integer siteId, Integer appId, FieldProcessor fp)
 			throws BusinessException;
@@ -130,7 +131,7 @@ public interface Service {
 
 	void updateSite(Request request, SiteForm sitesForm, FieldProcessor fp) throws BusinessException;
 
-	Boolean updateSubject(Request request, SubjectForm form, FieldProcessor fp) throws BusinessException;
+	Boolean updateSubject(Request request, SubjectForm form, FieldProcessor fp, PasswordPolicy policy) throws BusinessException;
 
 	void updateProperty(Request request, PropertyForm propertyForm, FieldProcessor fp) throws BusinessException;
 

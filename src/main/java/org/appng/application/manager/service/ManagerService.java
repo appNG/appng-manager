@@ -53,6 +53,7 @@ import org.appng.api.Request;
 import org.appng.api.RequestUtil;
 import org.appng.api.Scope;
 import org.appng.api.SiteProperties;
+import org.appng.api.auth.PasswordPolicy;
 import org.appng.api.model.Application;
 import org.appng.api.model.AuthSubject.PasswordChangePolicy;
 import org.appng.api.model.Group;
@@ -1271,8 +1272,8 @@ public class ManagerService extends CoreService implements Service {
 		return instance -> request.getMessage(UserType.class.getSimpleName() + "." + instance.name());
 	}
 
-	public void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp)
-			throws BusinessException {
+	public void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp,
+			PasswordPolicy policy) throws BusinessException {
 		try {
 			SubjectImpl subject = form.getSubject();
 			SubjectImpl subjectByName = getSubjectByName(subject.getName(), false);
@@ -1282,7 +1283,7 @@ public class ManagerService extends CoreService implements Service {
 			}
 
 			if (form.isLocalUser()) {
-				updatePassword(form.getPassword().toCharArray(), form.getPasswordConfirmation().toCharArray(), subject);
+				updatePassword(policy, null, form.getPassword().toCharArray(), subject);
 			}
 			subjectRepository.save(subject);
 			assignGroupsToSubject(request, subject.getId(), form.getGroupIds(), fp);
@@ -1291,8 +1292,9 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public Boolean updateSubject(Request request, SubjectForm subjectForm, FieldProcessor fp) throws BusinessException {
-		Boolean updated = false;
+	public Boolean updateSubject(Request request, SubjectForm subjectForm, FieldProcessor fp, PasswordPolicy policy)
+			throws BusinessException {
+		Boolean passwordUpdated = false;
 		SubjectImpl subject = subjectForm.getSubject();
 		try {
 			if (subject.getId() != null) {
@@ -1302,8 +1304,7 @@ public class ManagerService extends CoreService implements Service {
 				}
 				if (!StringUtils.isEmpty(subjectForm.getPassword())
 						&& !StringUtils.isEmpty(subjectForm.getPasswordConfirmation())) {
-					updated = updatePassword(subjectForm.getPassword().toCharArray(),
-							subjectForm.getPasswordConfirmation().toCharArray(), currentSubject);
+					passwordUpdated = updatePassword(policy, null, subjectForm.getPassword().toCharArray(), subject).isValid();
 				}
 				assignGroupsToSubject(request, subject.getId(), subjectForm.getGroupIds(), fp);
 				request.setPropertyValues(subjectForm, new SubjectForm(currentSubject), fp.getMetaData());
@@ -1313,7 +1314,7 @@ public class ManagerService extends CoreService implements Service {
 		} catch (Exception e) {
 			request.handleException(fp, e);
 		}
-		return updated;
+		return passwordUpdated;
 	}
 
 	public void assignGroupsToSubject(Request request, Integer subjectId, List<Integer> groupIds, FieldProcessor fp)

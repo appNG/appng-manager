@@ -71,8 +71,9 @@ public class SubjectsTest extends AbstractTest {
 
 		SubjectImpl newSubject = getSubject();
 		SubjectForm subjectForm = new SubjectForm(newSubject);
-		subjectForm.setPassword("secret");
-		subjectForm.setPasswordConfirmation("secret");
+		String password = site.getPasswordPolicy().generatePassword();
+		subjectForm.setPassword(password);
+		subjectForm.setPasswordConfirmation(password);
 		subjectForm.getGroupIds().add(1);
 		subjectForm.getGroupIds().add(2);
 
@@ -87,8 +88,8 @@ public class SubjectsTest extends AbstractTest {
 		SubjectImpl anotherSubject = getSubject();
 		anotherSubject.setName("user");
 		SubjectForm anotherForm = new SubjectForm(anotherSubject);
-		anotherForm.setPassword("foobar");
-		anotherForm.setPasswordConfirmation("foobar");
+		anotherForm.setPassword(password);
+		anotherForm.setPasswordConfirmation(password);
 		anotherForm.getGroupIds().add(1);
 		callableAction = getAction(SUBJECT_EVENT, "create").withParam(FORM_ACTION, "create").getCallableAction(
 				anotherForm);
@@ -99,6 +100,8 @@ public class SubjectsTest extends AbstractTest {
 	@Test
 	public void testCreateValidationFail() throws Exception {
 		SubjectForm form = new SubjectForm();
+		form.setPassword("§");
+		form.setPasswordConfirmation("§");
 		form.getSubject().setUserType(UserType.LOCAL_USER);
 		CallableAction callableAction = getAction(SUBJECT_EVENT, "create").withParam(FORM_ACTION, "create")
 				.getCallableAction(form);
@@ -109,8 +112,9 @@ public class SubjectsTest extends AbstractTest {
 	@Test
 	public void testCreateNameExists() throws Exception {
 		SubjectForm form = new SubjectForm(getSubject());
-		form.setPassword("foobar");
-		form.setPasswordConfirmation("foobar");
+		String password = site.getPasswordPolicy().generatePassword();
+		form.setPassword(password);
+		form.setPasswordConfirmation(password);
 		CallableAction callableAction = getAction(SUBJECT_EVENT, "create").withParam(FORM_ACTION, "create")
 				.getCallableAction(form);
 		callableAction.perform();
@@ -159,8 +163,9 @@ public class SubjectsTest extends AbstractTest {
 		s.setRealname("Jane Doe");
 		s.setTimeZone("Europe/Zurich");
 		SubjectForm form = new SubjectForm(s);
-		form.setPassword("newpassword");
-		form.setPasswordConfirmation("newpassword");
+		String password = site.getPasswordPolicy().generatePassword();
+		form.setPassword(password);
+		form.setPasswordConfirmation(password);
 		CallableAction callableAction = getAction(SUBJECT_EVENT, "update").withParam("userId", "1")
 				.withParam(FORM_ACTION, "update").getCallableAction(form);
 
