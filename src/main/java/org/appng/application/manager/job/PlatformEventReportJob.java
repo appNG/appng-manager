@@ -27,6 +27,7 @@ import org.appng.application.manager.ManagerSettings;
 import org.appng.application.manager.business.PlatformEvents.EventFilter;
 import org.appng.application.manager.service.PlatformEventService;
 import org.appng.application.manager.service.RoleService;
+import org.appng.core.domain.SubjectImpl;
 import org.appng.mail.Mail;
 import org.appng.mail.Mail.RecipientType;
 import org.appng.mail.MailTransport;
@@ -51,7 +52,7 @@ public class PlatformEventReportJob extends ReportJobBase {
 		Properties properties = application.getProperties();
 		List<String> receivers = properties.getList(ManagerSettings.EVENT_REPORT_RECEIVERS, ";");
 
-		Collection<? extends org.appng.api.model.Subject> reportReceivers = roleService.getSubjectsForRole(application,
+		Collection<SubjectImpl> reportReceivers = roleService.getSubjectsForRole(application,
 				ROLE_EVENT_REPORT_RECEIVER);
 
 		if (!(receivers.isEmpty() && reportReceivers.isEmpty())) {

@@ -80,7 +80,7 @@ public class PlatformEventService {
 		while(items.remove(null)) {
 			//do
 		}
-		return new TreeSet<>(items);
+		return new TreeSet<>();
 	}
 
 }

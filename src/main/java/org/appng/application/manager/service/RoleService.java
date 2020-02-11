@@ -16,14 +16,12 @@
 package org.appng.application.manager.service;
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.appng.api.BusinessException;
 import org.appng.api.model.Application;
-import org.appng.api.model.Subject;
 import org.appng.core.domain.SubjectImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,13 +39,12 @@ public class RoleService {
 		this.em = em;
 	}
 
-	public Collection<? extends Subject> getSubjectsForRole(Application application, String roleName) {
+	public Collection<SubjectImpl> getSubjectsForRole(Application application, String roleName) {
 		TypedQuery<SubjectImpl> query = em.createQuery(
 				"select s from GroupImpl g join g.subjects s join g.roles r where r.name=:name and r.application.id=:applicationId",
 				SubjectImpl.class);
 		query.setParameter("name", roleName).setParameter("applicationId", application.getId());
-		List<SubjectImpl> result = query.getResultList();
-		return result;
+		return query.getResultList();
 	}
 
 }

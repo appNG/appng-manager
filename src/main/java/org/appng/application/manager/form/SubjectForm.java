@@ -15,6 +15,7 @@
  */
 package org.appng.application.manager.form;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,22 +25,25 @@ import org.apache.commons.lang3.StringUtils;
 import org.appng.api.Environment;
 import org.appng.api.FieldProcessor;
 import org.appng.api.FormValidator;
+import org.appng.api.MessageParam;
 import org.appng.api.Options;
 import org.appng.api.Request;
 import org.appng.api.auth.PasswordPolicy;
+import org.appng.api.auth.PasswordPolicy.ValidationResult;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.api.model.UserType;
 import org.appng.application.manager.MessageConstants;
 import org.appng.core.domain.SubjectImpl;
+import org.appng.xml.platform.FieldDef;
+import org.appng.xml.platform.Validation;
 
 /**
  * Bindclass used for creating/updating a {@link SubjectImpl}.
  * 
  * @author Matthias Müller
- * 
  */
-public class SubjectForm implements FormValidator {
+public class SubjectForm implements FormValidator, Serializable {
 	private SubjectImpl subject;
 	private List<Integer> groupIds = new ArrayList<Integer>();
 	private String password;
@@ -63,10 +67,11 @@ public class SubjectForm implements FormValidator {
 			}
 
 			String action = options.getOptionValue("action", "id");
+			FieldDef passwordField = fp.getField("password");
 			if ("create".equals(action)) {
 				if (null == password) {
 					String message = request.getMessage(MessageConstants.SUBJECT_ENTER_PASSWORD);
-					fp.addErrorMessage(fp.getField("password"), message);
+					fp.addErrorMessage(passwordField, message);
 				}
 				if (null == passwordConfirmation) {
 					String message = request.getMessage(MessageConstants.SUBJECT_ENTER_PASSWORD_CONFIRMATION);
@@ -76,13 +81,17 @@ public class SubjectForm implements FormValidator {
 
 			PasswordPolicy passwordPolicy = site.getPasswordPolicy();
 			if (!StringUtils.isEmpty(password)) {
-				if (!passwordPolicy.isValidPassword(password.toCharArray())) {
-					String message = request.getMessage(passwordPolicy.getErrorMessageKey());
-					fp.addErrorMessage(fp.getField("password"), message);
-				} else {
-					if (!StringUtils.equals(password, passwordConfirmation)) {
-						String message = request.getMessage(MessageConstants.SUBJECT_PASSWORDS_NO_MATCH);
-						fp.addErrorMessage(fp.getField("passwordConfirmation"), message);
+				ValidationResult validationResult = passwordPolicy.validatePassword(getSubject().getAuthName(), null,
+						password.toCharArray());
+				if (!StringUtils.equals(password, passwordConfirmation)) {
+					String message = request.getMessage(MessageConstants.SUBJECT_PASSWORDS_NO_MATCH);
+					passwordField.setValidation(new Validation());
+					fp.addErrorMessage(fp.getField("passwordConfirmation"), message);
+				} else if (!validationResult.isValid()) {
+					passwordField.setValidation(new Validation());
+					for (MessageParam m : validationResult.getMessages()) {
+						String errMssg = request.getMessage(m.getMessageKey(), m.getMessageArgs());
+						fp.addErrorMessage(passwordField, errMssg);
 					}
 				}
 			}

@@ -16,5 +16,5 @@
 package org.appng.application.manager.business.webservice;
 
 class Constants {
-	static String NEW_LINE = "\r\n";
+	static final String NEW_LINE = "\r\n";
 }

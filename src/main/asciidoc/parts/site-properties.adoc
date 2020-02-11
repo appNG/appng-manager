@@ -30,6 +30,13 @@ A detailed list of the available properties can be found here:
 |authLogoutActionValue|text|Backend|The value for the parameter defining the action on the `authLogoutPage`|`logout`
 |authLogoutPage|text|Backend|The name of the logout-page within the application defined in `authApplication`|`webform`
 |authLogoutRef|text|Backend|The reference-path for the logout-action|`webform/logout`
+|cacheEnabled|boolean|Caching|Set to `true` to enable caching for this site.|`false`
+|cacheExceptions|multiline text|Caching|URL path prefixes which are never cached. Contains one prefix per line (multiline value).|`/manager`
+|cacheStatistics|boolean|Caching|Set to `true` to enable caching statistics|`false`
+|cacheTimeToLive|int|Caching|The default TTL for a cache entry in seconds, if there's no matching path defined in `cacheTimeouts`.|`1800`
+|cacheTimeouts|multiline text|Caching|The cache timeouts as a multiline property, key=value|
+|cacheTimeoutsAntStyle|boolean|Caching|Use Ant-style path matching for `cacheTimeouts`?|`true`
+|cacheClearOnShutdown|boolean|Caching|Whether or not the Ehcache is cleared on a site shutdown/reload|`true`
 |csrfProtectionEnabled|boolean|Backend|Set to `true` to enable CSRF-protection for this site|`false`
 |csrfProtectedMethods|text|Backend|a comma-separated list of HTTP-methods to enable CSRF protection for (see `csrfProtectionEnabled`)|`POST,PUT`
 |csrfProtectedPaths|text|Backend|a comma-separated list of path-prefixes to enable CSRF protection for (see `csrfProtectionEnabled`)|`/manager`
@@ -38,11 +45,6 @@ A detailed list of the available properties can be found here:
 |defaultPageSize|int|UI|The default page size (items per page)|`25`
 |defaultApplication|text|Backend|The application to be called after a successful login|`appng-manager`
 |documentDir|text|Content|A semicolon-separated list of folder-names (relative to `wwwDir`) containing JSP-files and static resources|`/de`
-|ehcacheEnabled|boolean|Caching|Set to `true` to enable Ehcache for this site|`false`
-|ehcacheExceptions|multilined text|Caching|URL path prefixes which are never cached. Contains one prefix per line.|`/manager`
-|ehcacheBlockingTimeout|int|Caching|The time, in milliseconds, to wait for the filter before a `LockTimeoutException` is thrown|`10000`
-|ehcacheStatistics|boolean|Caching|Set to `true` to enable Ehcache statistics|`false`
-|ehcacheClearOnShutdown|boolean|Caching|Whether or not the Ehcache is cleared on a site shutdown/reload|`true`
 |encoding|text|Content|The encoding for file-resources|`UTF-8`
 |enforcePrimaryDomain|boolean|Backend|Set to `true` to enforce the protocol used by the site (http or https)|`false`
 |errorPage|text|Content|The name of the default error-page (without extension) relative to `wwwDir`|`error`

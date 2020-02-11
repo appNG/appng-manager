@@ -165,7 +165,8 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 			}
 			return getActualString();
 		}
-		
+
+		@Override
 		public String getActualString() {
 			if (hidePassword && Property.Type.PASSWORD.equals(getType())) {
 				return getString().replaceAll("\\.", "*");
@@ -173,6 +174,7 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 			return getString();
 		}
 
+		@Override
 		public Boolean getChangedValue() {
 			return property.getChangedValue();
 		}
@@ -181,10 +183,12 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 			return getName().substring(getName().lastIndexOf('.') + 1);
 		}
 
+		@Override
 		public String getString() {
 			return property.getString();
 		}
 
+		@Override
 		public Boolean getBoolean() {
 			return property.getBoolean();
 		}
@@ -193,6 +197,7 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 			property.setActualString(value.toString());
 		}
 
+		@Override
 		public Integer getInteger() {
 			return property.getInteger();
 		}
@@ -201,46 +206,57 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 			property.setActualString(value.toString());
 		}
 
+		@Override
 		public Float getFloat() {
 			return property.getFloat();
 		}
 
+		@Override
 		public Double getDouble() {
 			return property.getDouble();
 		}
 
+		@Override
 		public byte[] getBlob() {
 			return property.getBlob();
 		}
 
+		@Override
 		public String getClob() {
 			return property.getClob();
 		}
 
+		@Override
 		public String getName() {
 			return property.getName();
 		}
 
+		@Override
 		public boolean isMandatory() {
 			return property.isMandatory();
 		}
 
+		@Override
 		public String getDefaultString() {
 			return property.getDefaultString();
 		}
 
+		@Override
 		public Type getType() {
 			return property.getType();
 		}
 
+		@Override
 		public Object getValue() {
 			return property.getValue();
 		}
 
+		@Override
 		public void setValue(Object value) {
 			property.setValue(value);
 		}
 
+		@Override
 		public String getDescription() {
 			return property.getDescription();
 		}

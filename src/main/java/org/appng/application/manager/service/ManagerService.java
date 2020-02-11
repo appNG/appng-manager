@@ -19,11 +19,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,7 +53,9 @@ import org.appng.api.Request;
 import org.appng.api.RequestUtil;
 import org.appng.api.Scope;
 import org.appng.api.SiteProperties;
+import org.appng.api.auth.PasswordPolicy;
 import org.appng.api.model.Application;
+import org.appng.api.model.AuthSubject.PasswordChangePolicy;
 import org.appng.api.model.Group;
 import org.appng.api.model.Identifier;
 import org.appng.api.model.NameProvider;
@@ -323,7 +325,7 @@ public class ManagerService extends CoreService implements Service {
 			}
 			data.setItem(new GroupForm(group));
 		} else {
-			Selection nameFilter = new SelectionBuilder<String>(FILTER_GROUP_NAME)
+			Selection nameFilter = new SelectionBuilder<>(FILTER_GROUP_NAME)
 					.defaultOption(FILTER_GROUP_NAME, groupName).title(MessageConstants.NAME).type(SelectionType.TEXT)
 					.select(groupName).build();
 			SelectionGroup filter = new SelectionGroup();
@@ -346,9 +348,9 @@ public class ManagerService extends CoreService implements Service {
 	private Selection getRoleSelection(Group group, Integer siteId) {
 		SiteImpl site = siteRepository.findOne(siteId);
 		Selection selection = selectionFactory.fromObjects("roles", "roles", new Object[0], (Selector) null);
-		for (Application application : sortByName(new ArrayList<Application>(site.getApplications()))) {
+		for (Application application : sortByName(new ArrayList<>(site.getApplications()))) {
 			String name = application.getName();
-			List<Role> roles = new ArrayList<Role>(application.getRoles());
+			List<Role> roles = new ArrayList<>(application.getRoles());
 			OptionGroup roleGroup = optionGroupFactory.fromNamed(name, name, sortByName(roles), group.getRoles());
 			selection.getOptionGroups().add(roleGroup);
 		}
@@ -357,12 +359,7 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	private <T extends Nameable> List<T> sortByName(List<T> items) {
-		Comparator<Nameable> nameComparator = new Comparator<Nameable>() {
-			public int compare(Nameable n1, Nameable n2) {
-				return n1.getName().compareTo(n2.getName());
-			}
-		};
-		Collections.sort(items, nameComparator);
+		Collections.sort(items, (n1, n2) -> n1.getName().compareTo(n2.getName()));
 		return items;
 	}
 
@@ -394,7 +391,7 @@ public class ManagerService extends CoreService implements Service {
 			try {
 				if (null != repository) {
 					Page<ApplicationImpl> applications = applicationRepository.search(fp.getPageable());
-					List<Identifier> identifiers = new ArrayList<Identifier>(applications.getContent());
+					List<Identifier> identifiers = new ArrayList<>(applications.getContent());
 
 					List<Identifier> templates = getInstalledTemplates();
 					identifiers.addAll(templates);
@@ -438,7 +435,7 @@ public class ManagerService extends CoreService implements Service {
 			if ((null != repositoryId) && (StringUtils.isNotBlank(packageName))) {
 				RepositoryImpl repository = repoRepository.findOne(repositoryId);
 				if (null != repository) {
-					List<Identifier> packages = new ArrayList<Identifier>(applicationRepository.findAll());
+					List<Identifier> packages = new ArrayList<>(applicationRepository.findAll());
 
 					List<Identifier> templates = getInstalledTemplates();
 					packages.addAll(templates);
@@ -566,9 +563,9 @@ public class ManagerService extends CoreService implements Service {
 				comparatorChain.addComparator(new PropertyComparator<Resource>("name", true, isAsc));
 				List<Resource> resources = null;
 				if (null == type) {
-					resources = new ArrayList<Resource>(resourceHolder.getResources());
+					resources = new ArrayList<>(resourceHolder.getResources());
 				} else {
-					resources = new ArrayList<Resource>(resourceHolder.getResources(type));
+					resources = new ArrayList<>(resourceHolder.getResources(type));
 				}
 				Collections.sort(resources, comparatorChain);
 				data.setPage(resources, fp.getPageable());
@@ -607,7 +604,7 @@ public class ManagerService extends CoreService implements Service {
 				errorMessage = request.getMessage(MessageConstants.RESOURCE_UPDATED_FILEBASED_ERROR, fileName);
 				File resourceFolder = getResourceFolder(request.getEnvironment(), application.getName(), type);
 				File original = new File(resourceFolder, fileName);
-				FileUtils.write(original, form.getContent(), ResourceForm.ENCODING, false);
+				FileUtils.write(original, form.getContent(), StandardCharsets.UTF_8, false);
 				okMessage = request.getMessage(MessageConstants.RESOURCE_UPDATED_FILEBASED, fileName,
 						FileUtils.sizeOf(original));
 				createEvent(Type.UPDATE,
@@ -748,14 +745,14 @@ public class ManagerService extends CoreService implements Service {
 		Set<Permission> permissionsFromRole = role.getPermissions();
 		List<PermissionImpl> allPermissions = permissionRepository.findByApplicationId(appId,
 				new Sort(Direction.ASC, "name"));
-		Map<String, List<Permission>> permissionGroups = new HashMap<String, List<Permission>>();
+		Map<String, List<Permission>> permissionGroups = new HashMap<>();
 		Pattern pattern = Pattern.compile("([^\\.]+)((.)*)");
 		for (Permission permission : allPermissions) {
 			Matcher matcher = pattern.matcher(permission.getName());
 			if (matcher.matches()) {
 				String group = matcher.group(1);
 				if (!permissionGroups.containsKey(group)) {
-					permissionGroups.put(group, new ArrayList<Permission>());
+					permissionGroups.put(group, new ArrayList<>());
 				}
 				permissionGroups.get(group).add(permission);
 			}
@@ -763,7 +760,7 @@ public class ManagerService extends CoreService implements Service {
 
 		Selection permissionSelection = selectionFactory.fromObjects("permissions", "permissions", new Object[0],
 				(Selector) null);
-		List<String> groupNames = new ArrayList<String>(permissionGroups.keySet());
+		List<String> groupNames = new ArrayList<>(permissionGroups.keySet());
 		Collections.sort(groupNames);
 		for (String permissionGroup : groupNames) {
 			List<Permission> permissions = sortByName(permissionGroups.get(permissionGroup));
@@ -842,7 +839,7 @@ public class ManagerService extends CoreService implements Service {
 				data.setPage(applications);
 			} else {
 				Page<ApplicationImpl> allApplications = applicationRepository.search(pageable);
-				List<SiteApplication> applications = new ArrayList<SiteApplication>();
+				List<SiteApplication> applications = new ArrayList<>();
 				Site site = siteRepository.findOne(siteId);
 				for (Application application : allApplications) {
 					SiteApplication siteApplication = ((SiteImpl) site).getSiteApplication(application.getName());
@@ -987,9 +984,9 @@ public class ManagerService extends CoreService implements Service {
 					siteImpl.setStartupTime(site.getStartupTime());
 				}
 			}
-			Selection nameFilter = new SelectionBuilder<String>(FILTER_SITE_NAME).defaultOption(FILTER_SITE_NAME, name)
+			Selection nameFilter = new SelectionBuilder<>(FILTER_SITE_NAME).defaultOption(FILTER_SITE_NAME, name)
 					.title(MessageConstants.NAME).type(SelectionType.TEXT).select(name).build();
-			Selection domainFilter = new SelectionBuilder<String>(FILTER_SITE_DOMAIN)
+			Selection domainFilter = new SelectionBuilder<>(FILTER_SITE_DOMAIN)
 					.defaultOption(FILTER_SITE_DOMAIN, domain).title(MessageConstants.DOMAIN).type(SelectionType.TEXT)
 					.select(domain).build();
 			SelectionGroup filter = new SelectionGroup();
@@ -1003,7 +1000,7 @@ public class ManagerService extends CoreService implements Service {
 
 	private void addSelectionsForSite(final SiteImpl site, DataContainer data) {
 		initSiteProperties(site);
-		List<String> templateNames = new ArrayList<String>();
+		List<String> templateNames = new ArrayList<>();
 		for (Identifier identifier : getInstalledTemplates()) {
 			templateNames.add(identifier.getDisplayName());
 		}
@@ -1059,10 +1056,8 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	private void checkSite(Request request, Site site, FieldProcessor fp, Site currentSite) throws BusinessException {
-		if (fp.hasField("site.name")) {
-			if (!siteRepository.isUnique(site.getId(), "name", site.getName())) {
-				fp.addErrorMessage(fp.getField("site.name"), request.getMessage(MessageConstants.SITE_NAME_EXISTS));
-			}
+		if (fp.hasField("site.name") && !siteRepository.isUnique(site.getId(), "name", site.getName())) {
+			fp.addErrorMessage(fp.getField("site.name"), request.getMessage(MessageConstants.SITE_NAME_EXISTS));
 		}
 		if (!siteRepository.isUnique(site.getId(), "host", site.getHost())) {
 			fp.addErrorMessage(fp.getField("site.host"), request.getMessage(MessageConstants.SITE_HOST_EXISTS));
@@ -1089,65 +1084,108 @@ public class ManagerService extends CoreService implements Service {
 			String timeZone = subject.getTimeZone();
 			addSelectionsForSubject(request, data, subject, timeZone == null ? defaultTimezone : timeZone, languages);
 		} else {
-			String filterParamType = "f_type";
-			String filterParamName = "f_name";
-			String filterParamGroup = "f_gid";
-			String typeFormRequest = request.getParameter(filterParamType);
-			UserType userType = null != typeFormRequest && UserType.names().contains(typeFormRequest)
-					? UserType.valueOf(typeFormRequest)
-					: null;
-			String name = request.getParameter(filterParamName);
-
-			Pageable pageable = fp.getPageable();
-			SearchQuery<SubjectImpl> searchQuery = subjectRepository.createSearchQuery();
-			searchQuery.setAppendEntityAlias(false);
-			if (StringUtils.isNotBlank(name)) {
-				searchQuery.contains("e.name", name);
-			} else {
-				name = StringUtils.EMPTY;
-			}
-			if (null != userType) {
-				searchQuery.equals("e.userType", userType);
-			}
-			if (null != groupId) {
-				searchQuery.join("join e.groups g");
-				searchQuery.equals("g.id", groupId);
-				List<Order> orders = StreamSupport.stream(pageable.getSort().spliterator(), false)
-						.map(o -> new Order(o.getDirection(), "e." + o.getProperty())).collect(Collectors.toList());
-				pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders));
-			}
-
-			Page<SubjectImpl> subjects = subjectRepository.search(searchQuery, pageable);
-			for (SubjectImpl subject : subjects) {
-				subject.setTypeName(getUserTypeNameProvider(request).getName(subject.getUserType()));
-			}
-
-			Selection userTypes = selectionFactory.fromObjects(filterParamType, MessageConstants.TYPE,
-					UserType.values(), getUserTypeNameProvider(request), userType);
-			userTypes.getOptions().add(0, new Option());
-			userTypes.setType(SelectionType.SELECT);
-			Selection userName = selectionFactory.fromObjects(filterParamName, MessageConstants.NAME,
-					new String[] { name }, new String[] { name });
-			userName.setType(SelectionType.TEXT);
-
-			List<GroupImpl> groups = groupRepository.findAll(new Sort(Direction.ASC, "name"));
-			Selector groupSelector = o -> {
-				if (null != groupId && groupId.toString().equals(o.getValue())) {
-					o.setSelected(true);
-				}
-			};
-			Selection groupSelection = new SelectionBuilder<GroupImpl>(filterParamGroup).title(MessageConstants.GROUP)
-					.options(groups).defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).selector(groupSelector)
-					.type(SelectionType.SELECT).build();
-
-			SelectionGroup filterGroup = new SelectionGroup();
-			filterGroup.getSelections().add(userName);
-			filterGroup.getSelections().add(userTypes);
-			filterGroup.getSelections().add(groupSelection);
-			data.getSelectionGroups().add(filterGroup);
+			Page<SubjectImpl> subjects = searchSubjects(request, data, fp, groupId);
 			data.setPage(subjects);
 		}
 		return data;
+	}
+
+	private Page<SubjectImpl> searchSubjects(Request request, DataContainer data, FieldProcessor fp, Integer groupId) {
+		String filterParamType = "f_type";
+		String filterParamName = "f_name";
+		String filterParamRealName = "f_rlnme";
+		String filterParamGroup = "f_gid";
+		String filterParamLocked = "f_lckd";
+		String filterParamEmail = "f_eml";
+		String typeFromRequest = request.getParameter(filterParamType);
+		String locked = request.getParameter(filterParamLocked);
+		UserType userType = null != typeFromRequest && UserType.names().contains(typeFromRequest)
+				? UserType.valueOf(typeFromRequest)
+				: null;
+		String userName = request.getParameter(filterParamName);
+		String realName = request.getParameter(filterParamRealName);
+		String email = request.getParameter(filterParamEmail);
+
+		Pageable pageable = fp.getPageable();
+		SearchQuery<SubjectImpl> searchQuery = subjectRepository.createSearchQuery();
+		searchQuery.setAppendEntityAlias(false);
+		if (StringUtils.isNotBlank(userName)) {
+			searchQuery.contains("e.name", userName);
+		} else {
+			userName = StringUtils.EMPTY;
+		}
+		if (StringUtils.isNotBlank(realName)) {
+			searchQuery.contains("e.realname", realName);
+		} else {
+			realName = StringUtils.EMPTY;
+		}
+		if (StringUtils.isNotBlank(email)) {
+			searchQuery.contains("e.email", email);
+		} else {
+			email = StringUtils.EMPTY;
+		}
+
+		if (null != userType) {
+			searchQuery.equals("e.userType", userType);
+		}
+		if ("true".equalsIgnoreCase(locked)) {
+			searchQuery.equals("e.locked", true);
+		} else if ("false".equalsIgnoreCase(locked)) {
+			searchQuery.equals("e.locked", false);
+		}
+		if (null != groupId) {
+			searchQuery.join("join e.groups g");
+			searchQuery.equals("g.id", groupId);
+			List<Order> orders = StreamSupport.stream(pageable.getSort().spliterator(), false)
+					.map(o -> new Order(o.getDirection(), "e." + o.getProperty())).collect(Collectors.toList());
+			pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders));
+		}
+
+		Page<SubjectImpl> subjects = subjectRepository.search(searchQuery, pageable);
+		for (SubjectImpl subject : subjects) {
+			subject.setTypeName(getUserTypeNameProvider(request).getName(subject.getUserType()));
+		}
+
+		Selection typeFilter = selectionFactory.fromObjects(filterParamType, MessageConstants.TYPE, UserType.values(),
+				getUserTypeNameProvider(request), userType);
+		typeFilter.getOptions().add(0, new Option());
+		typeFilter.setType(SelectionType.SELECT);
+
+		Selection userNameFilter = selectionFactory.fromObjects(filterParamName, MessageConstants.NAME,
+				new String[] { userName }, userName);
+		userNameFilter.setType(SelectionType.TEXT);
+
+		Selection realNameFilter = selectionFactory.fromObjects(filterParamRealName, MessageConstants.REALNAME,
+				new String[] { realName }, realName);
+		realNameFilter.setType(SelectionType.TEXT);
+
+		Selection lockedFilter = selectionFactory.fromObjects(filterParamLocked, MessageConstants.LOCKED,
+				new String[] { "all", "true", "false" }, s -> request.getMessage("locked.filter." + s), locked);
+		lockedFilter.setType(SelectionType.RADIO);
+
+		Selection emailFilter = selectionFactory.fromObjects(filterParamEmail, MessageConstants.EMAIL,
+				new String[] { email }, email);
+		emailFilter.setType(SelectionType.TEXT);
+
+		List<GroupImpl> groups = groupRepository.findAll(new Sort(Direction.ASC, "name"));
+		Selector groupSelector = o -> {
+			if (null != groupId && groupId.toString().equals(o.getValue())) {
+				o.setSelected(true);
+			}
+		};
+		Selection groupFilter = new SelectionBuilder<GroupImpl>(filterParamGroup).title(MessageConstants.GROUP)
+				.options(groups).defaultOption(StringUtils.EMPTY, StringUtils.EMPTY).selector(groupSelector)
+				.type(SelectionType.SELECT).build();
+
+		SelectionGroup filterGroup = new SelectionGroup();
+		filterGroup.getSelections().add(userNameFilter);
+		filterGroup.getSelections().add(realNameFilter);
+		filterGroup.getSelections().add(emailFilter);
+		filterGroup.getSelections().add(typeFilter);
+		filterGroup.getSelections().add(groupFilter);
+		filterGroup.getSelections().add(lockedFilter);
+		data.getSelectionGroups().add(filterGroup);
+		return subjects;
 	}
 
 	private void addSelectionsForSubject(Request request, DataContainer data, SubjectImpl subject, String timezone,
@@ -1165,6 +1203,12 @@ public class ManagerService extends CoreService implements Service {
 				languages.toArray(), subject.getLanguage());
 		data.getSelections().add(localeSelection);
 
+		Selection pwPolicySelection = new SelectionBuilder<PasswordChangePolicy>("passwordChangePolicy")
+				.title(MessageConstants.PASSWORD_CHANGE_POLICY).type(SelectionType.RADIO)
+				.options(Arrays.asList(PasswordChangePolicy.values())).select(subject.getPasswordChangePolicy())
+				.name(p -> request.getMessage(PasswordChangePolicy.class.getSimpleName() + "." + p.name())).build();
+		data.getSelections().add(pwPolicySelection);
+
 		Selection timezoneSelection = getTimezoneSelection(request.getLocale(), timezone);
 		data.getSelections().add(timezoneSelection);
 	}
@@ -1179,7 +1223,7 @@ public class ManagerService extends CoreService implements Service {
 		timezoneSelection.setType(SelectionType.SELECT);
 		List<String> ids = Arrays.asList(TimeZone.getAvailableIDs());
 		Collections.sort(ids);
-		List<TimeZone> timeZones = new ArrayList<TimeZone>();
+		List<TimeZone> timeZones = new ArrayList<>();
 		for (String id : ids) {
 			if (id.matches("(Africa|America|Antarctica|Asia|Atlantic|Australia|Europe|Indian|Pacific).*")) {
 				timeZones.add(TimeZone.getTimeZone(id));
@@ -1219,25 +1263,17 @@ public class ManagerService extends CoreService implements Service {
 			opt.setSelected(id.equals(timeZone));
 			group.getOptions().add(opt);
 
-			Collections.sort(group.getOptions(), new Comparator<Option>() {
-				public int compare(Option o1, Option o2) {
-					return o1.getName().compareTo(o2.getName());
-				}
-			});
+			Collections.sort(group.getOptions(), (o1, o2) -> o1.getName().compareTo(o2.getName()));
 		}
 		return timezoneSelection;
 	}
 
 	private NameProvider<UserType> getUserTypeNameProvider(Request request) {
-		return new NameProvider<UserType>() {
-			public String getName(UserType instance) {
-				return request.getMessage(UserType.class.getSimpleName() + "." + instance.name());
-			}
-		};
+		return instance -> request.getMessage(UserType.class.getSimpleName() + "." + instance.name());
 	}
 
-	public void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp)
-			throws BusinessException {
+	public void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp,
+			PasswordPolicy policy) throws BusinessException {
 		try {
 			SubjectImpl subject = form.getSubject();
 			SubjectImpl subjectByName = getSubjectByName(subject.getName(), false);
@@ -1247,7 +1283,7 @@ public class ManagerService extends CoreService implements Service {
 			}
 
 			if (form.isLocalUser()) {
-				updatePassword(form.getPassword().toCharArray(), form.getPasswordConfirmation().toCharArray(), subject);
+				updatePassword(policy, null, form.getPassword().toCharArray(), subject);
 			}
 			subjectRepository.save(subject);
 			assignGroupsToSubject(request, subject.getId(), form.getGroupIds(), fp);
@@ -1256,8 +1292,9 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public Boolean updateSubject(Request request, SubjectForm subjectForm, FieldProcessor fp) throws BusinessException {
-		Boolean updated = false;
+	public Boolean updateSubject(Request request, SubjectForm subjectForm, FieldProcessor fp, PasswordPolicy policy)
+			throws BusinessException {
+		Boolean passwordUpdated = false;
 		SubjectImpl subject = subjectForm.getSubject();
 		try {
 			if (subject.getId() != null) {
@@ -1267,8 +1304,7 @@ public class ManagerService extends CoreService implements Service {
 				}
 				if (!StringUtils.isEmpty(subjectForm.getPassword())
 						&& !StringUtils.isEmpty(subjectForm.getPasswordConfirmation())) {
-					updated = updatePassword(subjectForm.getPassword().toCharArray(),
-							subjectForm.getPasswordConfirmation().toCharArray(), currentSubject);
+					passwordUpdated = updatePassword(policy, null, subjectForm.getPassword().toCharArray(), subject).isValid();
 				}
 				assignGroupsToSubject(request, subject.getId(), subjectForm.getGroupIds(), fp);
 				request.setPropertyValues(subjectForm, new SubjectForm(currentSubject), fp.getMetaData());
@@ -1278,7 +1314,7 @@ public class ManagerService extends CoreService implements Service {
 		} catch (Exception e) {
 			request.handleException(fp, e);
 		}
-		return updated;
+		return passwordUpdated;
 	}
 
 	public void assignGroupsToSubject(Request request, Integer subjectId, List<Integer> groupIds, FieldProcessor fp)
@@ -1539,7 +1575,7 @@ public class ManagerService extends CoreService implements Service {
 		DataContainer data = new DataContainer(fp);
 		SubjectForm subjectsForm = new SubjectForm();
 		SubjectImpl subject = subjectsForm.getSubject();
-		subject.setGroups(new ArrayList<Group>());
+		subject.setGroups(new ArrayList<>());
 		subject.setLanguage("");
 		subject.setRealname("");
 		subject.setName("");
@@ -1566,7 +1602,7 @@ public class ManagerService extends CoreService implements Service {
 		GroupImpl group = groupForm.getGroup();
 		group.setDescription("");
 		group.setName("");
-		group.setSubjects(new HashSet<Subject>());
+		group.setSubjects(new HashSet<>());
 		data.setItem(groupForm);
 
 		Selection roleSelection = getRoleSelection(group, site.getId());
@@ -1628,11 +1664,7 @@ public class ManagerService extends CoreService implements Service {
 
 	private <E extends Enum<E>> Selection getTypeSelection(Request request, final Class<E> clazz, final E type,
 			String id, String title) {
-		NameProvider<E> nameProvider = new NameProvider<E>() {
-			public String getName(E instance) {
-				return request.getMessage(clazz.getSimpleName() + "." + instance.name());
-			}
-		};
+		NameProvider<E> nameProvider = instance -> request.getMessage(clazz.getSimpleName() + "." + instance.name());
 		return selectionFactory.fromEnum(id, title, clazz.getEnumConstants(), type, nameProvider);
 	}
 
@@ -1722,7 +1754,7 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public Collection<? extends Role> findRolesForSite(Integer siteId) {
+	public Collection<RoleImpl> findRolesForSite(Integer siteId) {
 		return roleRepository.findRolesForSite(siteId);
 	}
 
@@ -1738,14 +1770,14 @@ public class ManagerService extends CoreService implements Service {
 
 	public List<Selection> getGrantedSelections(Integer siteId, Integer appId) {
 
-		List<SiteImpl> grantedBy = new ArrayList<SiteImpl>();
+		List<SiteImpl> grantedBy = new ArrayList<>();
 
 		SiteApplication siteApplication = getSiteApplication(siteId, appId);
 		Site grantedSite = siteApplication.getSite();
 		Application application = siteApplication.getApplication();
 		List<SiteImpl> allSites = siteRepository.findAll(new Sort("name"));
 		allSites.remove(grantedSite);
-		for (SiteImpl site : new ArrayList<SiteImpl>(allSites)) {
+		for (SiteImpl site : new ArrayList<>(allSites)) {
 			SiteApplication granted = siteApplicationRepository
 					.findByApplicationNameAndGrantedSitesName(application.getName(), site.getName());
 			if (null != granted && !granted.equals(siteApplication)) {
@@ -1757,7 +1789,7 @@ public class ManagerService extends CoreService implements Service {
 		Selection granted = selectionFactory.fromNamed("siteApplication.grantedSites", "sites", allSites,
 				siteApplication.getGrantedSites());
 		Selection grantedSitesBy = selectionFactory.fromNamed("grantedBy", "grantedBy", grantedBy, grantedBy);
-		List<Selection> selections = new ArrayList<Selection>();
+		List<Selection> selections = new ArrayList<>();
 		selections.add(granted);
 		selections.add(grantedSitesBy);
 		return selections;
@@ -1816,10 +1848,6 @@ public class ManagerService extends CoreService implements Service {
 
 	public void setTimezoneMessages(MessageSource timezoneMessages) {
 		this.timezoneMessages = timezoneMessages;
-	}
-
-	public Map<String, String> getCacheStatistics(Integer siteId) {
-		return super.getCacheStatistics(siteId);
 	}
 
 	public void expireCacheElement(Request request, FieldProcessor fp, Integer siteId, String cacheElement) {

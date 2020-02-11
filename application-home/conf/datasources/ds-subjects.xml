@@ -30,6 +30,11 @@
 				<field name="language" type="text">
 					<label>language</label>
 				</field>
+				<field name="locked" type="image">
+					<label>locked</label>
+					<icon condition="${current.locked}">led_red</icon>
+					<icon condition="${not current.locked}">led_green</icon>
+				</field>
 				<field type="linkpanel" name="actions">
 					<label>actions</label>
 				</field>
@@ -82,6 +87,15 @@
 				<field name="email" type="text">
 					<label>email</label>
 				</field>
+				<field name="lastLogin" type="date" readonly="true">
+					<label>lastLogin</label>
+				</field>
+				<field name="locked" type="checkbox">
+					<label>locked</label>
+				</field>
+				<field name="expiryDate" type="date">
+					<label>expiryDate</label>
+				</field>
 				<field name="description" type="longtext">
 					<label>description</label>
 				</field>
@@ -93,6 +107,10 @@
 				</field>
 				<field name="timeZone" type="list:select">
 					<label>timezone</label>
+				</field>
+				<field name="passwordChangePolicy" type="list:radio">
+					<label>passwordChangePolicy</label>
+					<condition expression="${current.subject.userType.name() eq 'LOCAL_USER'}" />
 				</field>
 				<field name="password" type="password" binding="password">
 					<label>password</label>

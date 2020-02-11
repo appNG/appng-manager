@@ -22,6 +22,9 @@
 					<get-param name="f_name" />
 					<get-param name="f_gn" />
 					<get-param name="f_gid" />
+					<get-param name="f_lckd" />
+					<get-param name="f_eml" />
+					<get-param name="f_rlnme" />
 				</get-params>
 				<post-params>
 					<post-param name="form_action" />

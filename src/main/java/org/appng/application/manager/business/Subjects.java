@@ -61,14 +61,14 @@ public class Subjects extends ServiceAware implements DataProvider, ActionProvid
 		try {
 			if (ACTION_CREATE.equals(action)) {
 				errorMessage = MessageConstants.SUBJECT_CREATE_ERROR;
-				service.createSubject(request, environment.getLocale(), valueHolder, fp);
+				service.createSubject(request, environment.getLocale(), valueHolder, fp, site.getPasswordPolicy());
 				okMessage = MessageConstants.SUBJECT_CREATED;
 			} else if (ACTION_UPDATE.equals(action)) {
 				SubjectImpl subject = valueHolder.getSubject();
 				subject.setId(subjectId);
 				okMessage = MessageConstants.SUBJECT_UPDATED;
 				errorMessage = MessageConstants.SUBJECT_UPDATE_ERROR;
-				Boolean isUpdated = service.updateSubject(request, valueHolder, fp);
+				Boolean isUpdated = service.updateSubject(request, valueHolder, fp, site.getPasswordPolicy());
 				if (isUpdated) {
 					String passwordMessage = request.getMessage(MessageConstants.SUBJECT_PASSWORD_UPDATED, subjectId);
 					fp.addOkMessage(passwordMessage);

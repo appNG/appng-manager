@@ -45,7 +45,7 @@ public class Beans implements DataProvider {
 		String siteName = opts.getOptionValue("application", "siteName");
 		String applicationName = opts.getOptionValue("application", "appName");
 		Site selectedSite = RequestUtil.getSiteByName(env, siteName);
-		Set<BeanInfo> beanInfos = new TreeSet<BeanInfo>();
+		Set<BeanInfo> beanInfos = new TreeSet<>();
 		if (null != selectedSite) {
 			Application application = selectedSite.getApplication(applicationName);
 			if (null != application) {

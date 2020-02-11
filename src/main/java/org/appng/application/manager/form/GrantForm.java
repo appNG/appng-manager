@@ -28,7 +28,7 @@ public class GrantForm {
 	private boolean showGrantedBy = false;
 
 	public GrantForm() {
-		this.grantedSiteIds = new HashSet<Integer>();
+		this.grantedSiteIds = new HashSet<>();
 	}
 
 	public GrantForm(SiteApplication siteApplication) {

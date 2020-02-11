@@ -57,7 +57,7 @@ public class LogDatabaseSize extends ReportJobBase {
 						rootConnection.getDatabaseSize() };
 				String message = messageSource.getMessage(MessageConstants.EVENT_DATABASE_ROOT_SIZE, messageArgs,
 						Locale.ENGLISH);
-				coreService.createEvent(Type.INFO, message, null);
+				coreService.createEvent(Type.INFO, message);
 			}
 		}
 
@@ -70,12 +70,12 @@ public class LogDatabaseSize extends ReportJobBase {
 							databaseSize };
 					String message = messageSource.getMessage(MessageConstants.EVENT_DATABASE_SIZE, messageArgs,
 							Locale.ENGLISH);
-					coreService.createEvent(Type.INFO, message, null);
+					coreService.createEvent(Type.INFO, message);
 				} else {
 					Object[] messageArgs = new Object[] { dbc.getType().name(), s.getName(), dbc.getJdbcUrl() };
 					String message = messageSource.getMessage(MessageConstants.EVENT_DATABASE_NOTREACHABLE, messageArgs,
 							Locale.ENGLISH);
-					coreService.createEvent(Type.WARN, message, null);
+					coreService.createEvent(Type.WARN, message);
 				}
 			}
 		}
