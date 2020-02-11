@@ -68,7 +68,7 @@
 	</config>
 	<data>
 		<resultset chunk="0" chunkname="platformProperties" chunksize="10" nextchunk="0" previouschunk="0"
-			firstchunk="0" lastchunk="0" hits="2">
+			firstchunk="0" lastchunk="0" hits="4">
 			<result>
 				<field name="shortName" type="text">
 					<value>anotherproperty</value>
@@ -95,6 +95,66 @@
 						<icon>delete</icon>
 						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
 							"anotherproperty"?</confirmation>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="shortName" type="text">
+					<value>booleanProp</value>
+				</field>
+				<field name="displayValue" type="longtext">
+					<value>true</value>
+				</field>
+				<field name="description" type="text">
+					<value>this is bool, man!</value>
+				</field>
+				<field name="changedValue" type="image">
+					<value>false</value>
+					<icon type="class">led_orange</icon>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern"
+						target="/platform/property/update/platform.booleanProp#tab_platformProperties" default="true">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+					<link id="actions[2]" mode="intern"
+						target="/platform?form_action=delete-platform-property&amp;propertyid=platform.booleanProp#tab_platformProperties">
+						<label id="delete">Delete</label>
+						<icon>delete</icon>
+						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
+							"booleanProp"?</confirmation>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="shortName" type="text">
+					<value>multilineProp</value>
+				</field>
+				<field name="displayValue" type="longtext">
+					<value>Hold the line,
+						love isn't always on time,
+						oh oh oh</value>
+				</field>
+				<field name="description" type="text">
+					<value>Toto - Hold the line</value>
+				</field>
+				<field name="changedValue" type="image">
+					<value>true</value>
+					<icon type="class">led_green</icon>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern"
+						target="/platform/property/update/platform.multilineProp#tab_platformProperties" default="true">
+						<label id="edit">Edit</label>
+						<icon>edit</icon>
+					</link>
+					<link id="actions[2]" mode="intern"
+						target="/platform?form_action=delete-platform-property&amp;propertyid=platform.multilineProp#tab_platformProperties">
+						<label id="delete">Delete</label>
+						<icon>delete</icon>
+						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
+							"multilineProp"?</confirmation>
 					</link>
 				</linkpanel>
 			</result>

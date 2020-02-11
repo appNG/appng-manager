@@ -3,12 +3,12 @@
 	<config>
 		<title id="property">property</title>
 		<params>
-			<param name="id">platform.testproperty</param>
+			<param name="id">platform.booleanProp</param>
 		</params>
 		<meta-data binding="property" bindClass="org.appng.application.manager.form.PropertyForm">
 			<field name="type" type="text" hidden="true" binding="property.type" />
-			<field name="value" type="int" format="#" binding="property.value">
-				<label id="value">testproperty</label>
+			<field name="value" type="checkbox" binding="property.value">
+				<label id="value">booleanProp</label>
 			</field>
 			<field name="defaultString" type="text" readonly="true" binding="property.defaultString">
 				<label id="defaultvalue">Default-Value</label>
@@ -21,16 +21,16 @@
 	<data>
 		<result>
 			<field name="type" type="text">
-				<value>INT</value>
+				<value>BOOLEAN</value>
 			</field>
-			<field name="value" type="int">
-				<value>5</value>
+			<field name="value" type="checkbox">
+				<value>true</value>
 			</field>
 			<field name="defaultString" type="text">
-				<value>5</value>
+				<value>true</value>
 			</field>
 			<field name="description" type="longtext">
-				<value></value>
+				<value>this is bool, man!</value>
 			</field>
 		</result>
 	</data>

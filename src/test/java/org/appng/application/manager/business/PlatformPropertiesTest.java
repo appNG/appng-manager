@@ -29,6 +29,7 @@ import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.PropertyForm;
 import org.appng.core.domain.PropertyImpl;
+import org.appng.testsupport.validation.WritingXmlValidator;
 import org.appng.xml.platform.FieldDef;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -39,6 +40,10 @@ import org.junit.runners.MethodSorters;
 public class PlatformPropertiesTest extends AbstractTest {
 
 	private static final String PROPERTY_EVENT = "propertyEvent";
+
+	static {
+		WritingXmlValidator.writeXml = false;
+	}
 
 	@Test
 	public void testCreate() throws ProcessingException, IOException {
@@ -59,6 +64,36 @@ public class PlatformPropertiesTest extends AbstractTest {
 		FieldProcessor fp = action.perform();
 		assertError(fp.getField("property.defaultString"), "Please set the value or the multiline value.");
 		assertError(fp.getField("property.clob"), "Please set the value or the multiline value.");
+	}
+
+	@Test
+	public void testCreateBoolean() throws ProcessingException, IOException {
+		PropertyImpl booleanProp = new PropertyImpl("booleanProp", null);
+		booleanProp.setDescription("this is bool, man!");
+		PropertyForm form = new PropertyForm(booleanProp);
+		form.getProperty().setDefaultString("true");
+		CallableAction action = getCreateAction().getCallableAction(form);
+		action.perform();
+
+		CallableDataSource dataSource = getDataSource("property").withParam("id", "platform.booleanProp")
+				.getCallableDataSource();
+		dataSource.perform("test");
+		validate(dataSource.getDatasource());
+	}
+
+	@Test
+	public void testCreateMultiline() throws ProcessingException, IOException {
+		PropertyImpl multilineProp = new PropertyImpl("multilineProp", null);
+		multilineProp.setDescription("Toto - Hold the line");
+		PropertyForm form = new PropertyForm(multilineProp);
+		form.getProperty().setClob("Hold the line,\nlove isn't always on time,\noh oh oh");
+		CallableAction action = getCreateAction().getCallableAction(form);
+		action.perform();
+
+		CallableDataSource dataSource = getDataSource("property").withParam("id", "platform.multilineProp")
+				.getCallableDataSource();
+		dataSource.perform("test");
+		validate(dataSource.getDatasource());
 	}
 
 	private void assertError(FieldDef field, String message) {
