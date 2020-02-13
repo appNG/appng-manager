@@ -29,7 +29,7 @@
 				<label id="sizeMB">Size (MB)</label>
 			</field>
 			<field name="state" type="image" readonly="true" binding="state">
-				<label id="state">state</label>
+				<label id="status">Status</label>
 				<icon condition="${current.item.active and not current.pendingMigrations}">led_green</icon>
 				<icon condition="${current.item.active and current.pendingMigrations}">led_red</icon>
 				<icon condition="${not current.item.active}">led_orange</icon>
