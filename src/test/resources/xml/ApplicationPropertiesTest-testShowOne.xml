@@ -7,7 +7,7 @@
 		</params>
 		<meta-data binding="property" bindClass="org.appng.application.manager.form.PropertyForm">
 			<field name="type" type="text" hidden="true" binding="property.type" />
-			<field name="value" type="text" binding="property.value">
+			<field name="value" type="int" format="#" binding="property.value">
 				<label id="value">testproperty</label>
 			</field>
 			<field name="defaultString" type="text" readonly="true" binding="property.defaultString">
@@ -21,9 +21,9 @@
 	<data>
 		<result>
 			<field name="type" type="text">
-				<value>TEXT</value>
+				<value>INT</value>
 			</field>
-			<field name="value" type="text">
+			<field name="value" type="int">
 				<value>5</value>
 			</field>
 			<field name="defaultString" type="text">
