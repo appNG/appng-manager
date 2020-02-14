@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1221,14 +1223,10 @@ public class ManagerService extends CoreService implements Service {
 		value.setId(MessageConstants.TIMEZONE);
 		timezoneSelection.setTitle(value);
 		timezoneSelection.setType(SelectionType.SELECT);
-		List<String> ids = Arrays.asList(TimeZone.getAvailableIDs());
-		Collections.sort(ids);
-		List<TimeZone> timeZones = new ArrayList<>();
-		for (String id : ids) {
-			if (id.matches("(Africa|America|Antarctica|Asia|Atlantic|Australia|Europe|Indian|Pacific).*")) {
-				timeZones.add(TimeZone.getTimeZone(id));
-			}
-		}
+		String allowedTimeZones = "(Africa|America|Antarctica|Asia|Atlantic|Australia|Europe|Indian|Pacific).*";
+		List<TimeZone> timeZones = Arrays.asList(TimeZone.getAvailableIDs()).stream()
+				.filter(id -> id.matches(allowedTimeZones)).sorted().map(id -> TimeZone.getTimeZone(id))
+				.collect(Collectors.toList());
 
 		String groupName = "";
 		for (TimeZone tz : timeZones) {
@@ -1253,12 +1251,9 @@ public class ManagerService extends CoreService implements Service {
 			groupName = area;
 			Option opt = new Option();
 			String locationName = timezoneMessages.getMessage(areaKey + "." + location, new Object[0], locale);
-			double offset = (double) tz.getRawOffset() / 1000 / 60 / 60;
-			int hours = (int) offset;
-			int minutes = Math.abs((int) (60 * (double) (offset - hours)));
-			String gmtTimezone = "GMT" + (offset >= 0 ? "+" : "") + StringUtils.leftPad(String.valueOf(hours), 2, "0")
-					+ ":" + StringUtils.leftPad(String.valueOf(minutes), 2, "0");
-			opt.setName(locationName + " (" + gmtTimezone + ")");
+			ZoneOffset zoneOffset = LocalDateTime.now().atZone(tz.toZoneId()).getOffset();
+			String offset = "Z".equals(zoneOffset.getId()) ? "" : zoneOffset.getId();
+			opt.setName(locationName + " (UTC" + offset + ")");
 			opt.setValue(id);
 			opt.setSelected(id.equals(timeZone));
 			group.getOptions().add(opt);
