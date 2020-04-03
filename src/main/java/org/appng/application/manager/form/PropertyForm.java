@@ -75,8 +75,8 @@ public class PropertyForm implements FormValidator {
 		}
 		if (Property.Type.BOOLEAN.equals(getProperty().getType())) {
 			String stringValue = getProperty().getString();
-			boolean value = stringValue.equalsIgnoreCase("on") || stringValue.equalsIgnoreCase("true");
-			getProperty().setValue(value);
+			boolean selected = StringUtils.equalsAnyIgnoreCase(stringValue, "on", "true");
+			getProperty().setValue(selected);
 		}
 	}
 

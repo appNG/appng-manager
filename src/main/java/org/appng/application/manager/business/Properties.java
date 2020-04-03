@@ -160,7 +160,7 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 		}
 
 		public String getDisplayValue() {
-			if(Property.Type.MULTILINE.equals(getType())) {
+			if (Property.Type.MULTILINE.equals(getType())) {
 				return getClob();
 			}
 			return getActualString();
@@ -168,10 +168,12 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 
 		@Override
 		public String getActualString() {
+			String stringValue = getString();
 			if (hidePassword && Property.Type.PASSWORD.equals(getType())) {
-				return getString().replaceAll("\\.", "*");
+				return stringValue.substring(0, 2) + StringUtils.repeat('*', stringValue.length() - 4)
+						+ stringValue.substring(stringValue.length() - 2);
 			}
-			return getString();
+			return stringValue;
 		}
 
 		@Override
