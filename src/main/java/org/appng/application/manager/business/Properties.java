@@ -169,7 +169,7 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 		@Override
 		public String getActualString() {
 			String stringValue = getString();
-			if (hidePassword && Property.Type.PASSWORD.equals(getType())) {
+			if (StringUtils.isNotBlank(stringValue) && hidePassword && Property.Type.PASSWORD.equals(getType())) {
 				return stringValue.substring(0, 2) + StringUtils.repeat('*', stringValue.length() - 4)
 						+ stringValue.substring(stringValue.length() - 2);
 			}
