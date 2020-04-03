@@ -220,7 +220,7 @@ public interface Service {
 
 	void grantSites(Integer siteId, Integer appId, Set<Integer> grantedSiteIds);
 
-	String addArchiveToRepository(Request request, Integer repositoryId, FormUpload archive, FieldProcessor fp);
+	String addArchiveToRepository(Request request, Integer repositoryId, FormUpload archive, FieldProcessor fp) throws BusinessException;
 
 	RepositoryImpl getRepository(Integer repositoryId);
 

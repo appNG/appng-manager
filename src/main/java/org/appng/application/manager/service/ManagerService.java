@@ -1797,8 +1797,7 @@ public class ManagerService extends CoreService implements Service {
 		siteApplication.getGrantedSites().addAll(sites);
 	}
 
-	public String addArchiveToRepository(Request request, Integer repositoryId, FormUpload archive, FieldProcessor fp) {
-		String name = null;
+	public String addArchiveToRepository(Request request, Integer repositoryId, FormUpload archive, FieldProcessor fp) throws BusinessException {
 		File file = archive.getFile();
 		String originalFilename = archive.getOriginalFilename();
 		RepositoryImpl repo = repoRepository.findOne(repositoryId);
@@ -1815,17 +1814,19 @@ public class ManagerService extends CoreService implements Service {
 					fp.addNoticeMessage(message);
 				}
 				logger.info("copied archive from {} to {}", file, targetArchive);
-				name = packageArchive.getPackageInfo().getName();
+				RepositoryCacheFactory.instance().getCache(repo).add(packageArchive);
+				return packageArchive.getPackageInfo().getName();
 			} catch (IOException e) {
 				throw new ApplicationException("error while copying archive to " + targetFolder, e);
+			} finally {
+				FileUtils.deleteQuietly(file);
 			}
 		} else {
 			String message = request.getMessage(MessageConstants.REPOSITORY_ARCHIVE_WRONG_MODE, repositoryMode,
 					(repositoryMode.equals(RepositoryMode.STABLE) ? "snapshot" : "stable"));
 			fp.addErrorMessage(fp.getField("archive"), message);
 		}
-		FileUtils.deleteQuietly(file);
-		return name;
+		return null;
 	}
 
 	public RepositoryImpl getRepository(Integer repositoryId) {
