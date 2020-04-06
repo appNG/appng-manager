@@ -1,3 +1,21 @@
+Release Notes - appNG Manager - Version 1.17.0 (2020-04-06)
+-----------------------------------------------------------
+* [MGR-102] - Provide an overview of LDAP users
+* [MGR-101] - Release of 1.17.0
+* [MGR-100] - Wrong GMT offset for timezones when editing users
+* [MGR-99] - Fix label for status of database connections
+* [MGR-97] - Remove some code smells
+* [MGR-96] - Properly close Flyway Database in SqlExecutor
+* [MGR-95] - Update documentation of caching properties
+* [MGR-94] - Improve management of users
+* [MGR-92] - Update license headers to 2020
+* [MGR-91] - Avoid lazy request scoped beans in org.appng.application.manager.business
+* [MGR-90] - Move Cache management to separate tab, remove action "Clear cache statistics"
+* [MGR-89] - Support type-safe properties
+* [MGR-88] - Use Flyway 5.2.4
+* [MGR-74] - Rework displaying user sessions
+* [MGR-62] - The active value for a multilined property is not being displayed
+
 Release Notes - appNG Manager - Version 1.16.0 (2019-11-25)
 -----------------------------------------------------------
 [MGR-87] - Release of 1.16.0
