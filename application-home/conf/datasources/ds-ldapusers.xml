@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="ldapUsers">
+		<config>
+			<title id="ldap.users" />
+			<params />
+			<meta-data bindClass="org.appng.application.manager.business.LdapUsers.LdapUser">
+				<field name="name" type="text">
+					<label id="name" />
+				</field>
+				<field name="realname" type="text">
+					<label id="realname" />
+				</field>
+				<field name="type" type="text">
+					<label id="type" />
+				</field>
+				<field name="dn" type="text" displayLength="80">
+					<label id="distinguishedName" />
+				</field>
+			</meta-data>
+		</config>
+		<bean id="ldapUsers">
+		</bean>
+	</datasource>
+
+	<datasource id="ldapSettings">
+		<config>
+			<title id="ldap.settings" />
+			<meta-data bindClass="org.appng.api.model.SimpleProperty">
+				<field name="name" type="text">
+					<label id="name" />
+				</field>
+				<field name="value" type="text">
+					<label id="value" />
+				</field>
+			</meta-data>
+		</config>
+		<bean id="ldapUsers">
+			<option name="mode" value="settings" />
+		</bean>
+	</datasource>
+
+</datasources>

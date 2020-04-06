@@ -32,6 +32,7 @@
 			</url-schema>
 		</config>
 		<structure>
+			<!-- subjects -->
 			<section>
 				<!-- create -->
 				<element passive="true">
@@ -62,7 +63,7 @@
 					</datasource>
 				</element>
 			</section>
-
+			<!-- groups -->
 			<section>
 				<!-- create -->
 				<element passive="true">
@@ -93,7 +94,15 @@
 					</datasource>
 				</element>
 			</section>
-
+			<!-- LDAP -->
+			<section>
+				<element>
+					<datasource id="ldapSettings" />
+				</element>
+				<element>
+					<datasource id="ldapUsers" />
+				</element>
+			</section>
 
 			<!-- hidden inline actions -->
 			<section hidden="true">
@@ -105,8 +114,6 @@
 						</params>
 					</action>
 				</element>
-			</section>
-			<section hidden="true">
 				<element>
 					<action eventId="groupEvent" id="deleteGroup" onSuccess="/users#tab_groups">
 						<params>

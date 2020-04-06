@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<datasource xmlns="http://www.appng.org/schema/platform" id="ldapSettings">
+    <config>
+        <title id="ldap.settings">LDAP Settings</title>
+        <meta-data bindClass="org.appng.api.model.SimpleProperty">
+            <field name="name" type="text" binding="name">
+                <label id="name">Name</label>
+            </field>
+            <field name="value" type="text" binding="value">
+                <label id="value">Value</label>
+            </field>
+        </meta-data>
+    </config>
+    <data paginate="false">
+        <resultset chunk="0" chunkname="ldapSettings" chunksize="7" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="7">
+            <result>
+                <field name="name" type="text">
+                    <value>ldapHost</value>
+                </field>
+                <field name="value" type="text">
+                    <value>ldap://localhost:389</value>
+                </field>
+            </result>
+            <result>
+                <field name="name" type="text">
+                    <value>ldapDomain</value>
+                </field>
+                <field name="value" type="text">
+                    <value></value>
+                </field>
+            </result>
+            <result>
+                <field name="name" type="text">
+                    <value>ldapGroupBaseDn</value>
+                </field>
+                <field name="value" type="text">
+                    <value></value>
+                </field>
+            </result>
+            <result>
+                <field name="name" type="text">
+                    <value>ldapUser</value>
+                </field>
+                <field name="value" type="text">
+                    <value></value>
+                </field>
+            </result>
+            <result>
+                <field name="name" type="text">
+                    <value>ldapIdAttribute</value>
+                </field>
+                <field name="value" type="text">
+                    <value></value>
+                </field>
+            </result>
+            <result>
+                <field name="name" type="text">
+                    <value>ldapPrincipalScheme</value>
+                </field>
+                <field name="value" type="text">
+                    <value>DN</value>
+                </field>
+            </result>
+            <result>
+                <field name="name" type="text">
+                    <value>ldapStartTls</value>
+                </field>
+                <field name="value" type="text">
+                    <value>false</value>
+                </field>
+            </result>
+        </resultset>
+    </data>
+</datasource>

@@ -24,10 +24,12 @@ import org.appng.api.FieldProcessor;
 import org.appng.api.InvalidConfigurationException;
 import org.appng.api.Options;
 import org.appng.api.Request;
+import org.appng.api.Scope;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.form.SiteForm;
+import org.appng.application.manager.form.SubjectForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.SiteImpl;
@@ -92,6 +94,7 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
+		environment.setAttribute(Scope.SESSION, "subjectForm", new SubjectForm());
 		Service service = getService();
 		Integer siteId = options.getInteger(SITE, ID);
 		DataContainer data = null;

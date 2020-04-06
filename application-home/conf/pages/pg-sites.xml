@@ -84,7 +84,7 @@
 				</element>
 			</section>
 
-			<!-- site properites -->
+			<!-- site properties -->
 			<section>
 				<!-- create -->
 				<element passive="true">
@@ -269,6 +269,7 @@
 					</datasource>
 				</element>
 			</section>
+			<!-- cache -->
 			<section>
 				<title id="cache" />
 				<element folded="true">
@@ -290,6 +291,7 @@
 					</datasource>
 				</element>
 			</section>
+			<!-- sessions -->
 			<section>
 				<element folded="false">
 					<datasource id="sessions">
