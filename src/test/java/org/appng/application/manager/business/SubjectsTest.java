@@ -19,18 +19,23 @@ import java.io.IOException;
 
 import org.appng.api.FieldProcessor;
 import org.appng.api.ProcessingException;
+import org.appng.api.model.Subject;
 import org.appng.api.model.UserType;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.SubjectForm;
+import org.appng.application.manager.service.ManagerService;
 import org.appng.core.domain.GroupImpl;
 import org.appng.core.domain.SubjectImpl;
+import org.appng.core.security.BCryptPasswordHandler;
 import org.appng.testsupport.validation.DifferenceHandler;
 import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.DifferenceListener;
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SubjectsTest extends AbstractTest {
@@ -38,6 +43,9 @@ public class SubjectsTest extends AbstractTest {
 	private static final String SUBJECT_EVENT = "subjectEvent";
 
 	private DifferenceListener differenceListener;
+
+	@Autowired
+	private ManagerService managerService;
 
 	public SubjectsTest() {
 		// since different JVMs may return a different amount of Timezones, ignore content
@@ -91,8 +99,8 @@ public class SubjectsTest extends AbstractTest {
 		anotherForm.setPassword(password);
 		anotherForm.setPasswordConfirmation(password);
 		anotherForm.getGroupIds().add(1);
-		callableAction = getAction(SUBJECT_EVENT, "create").withParam(FORM_ACTION, "create").getCallableAction(
-				anotherForm);
+		callableAction = getAction(SUBJECT_EVENT, "create").withParam(FORM_ACTION, "create")
+				.getCallableAction(anotherForm);
 
 		callableAction.perform();
 	}
@@ -172,6 +180,10 @@ public class SubjectsTest extends AbstractTest {
 		FieldProcessor fieldProcessor = callableAction.perform();
 		validate(callableAction.getAction(), "-action", differenceListener);
 		validate(fieldProcessor.getMessages(), "-messages");
+
+		Subject subjectByEmail = managerService.getSubjectByEmail(s.getEmail());
+		boolean validPassword = new BCryptPasswordHandler(subjectByEmail).isValidPassword(password);
+		Assert.assertTrue(validPassword);
 	}
 
 	private SubjectImpl getSubject() {

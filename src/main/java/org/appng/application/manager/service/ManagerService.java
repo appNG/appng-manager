@@ -1299,7 +1299,7 @@ public class ManagerService extends CoreService implements Service {
 				}
 				if (!StringUtils.isEmpty(subjectForm.getPassword())
 						&& !StringUtils.isEmpty(subjectForm.getPasswordConfirmation())) {
-					passwordUpdated = updatePassword(policy, null, subjectForm.getPassword().toCharArray(), subject).isValid();
+					passwordUpdated = updatePassword(policy, null, subjectForm.getPassword().toCharArray(), currentSubject).isValid();
 				}
 				assignGroupsToSubject(request, subject.getId(), subjectForm.getGroupIds(), fp);
 				request.setPropertyValues(subjectForm, new SubjectForm(currentSubject), fp.getMetaData());
