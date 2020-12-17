@@ -15,9 +15,7 @@
  */
 package org.appng.application.manager.business;
 
-import java.sql.CallableStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +40,8 @@ import org.flywaydb.core.internal.database.base.Database;
 import org.flywaydb.core.internal.resource.StringResource;
 import org.flywaydb.core.internal.sqlscript.SqlScript;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.support.rowset.ResultSetWrappingSqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -89,28 +87,26 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 	}
 
 	public SqlStatement processSingleStatement(String sql, JdbcTemplate jdbcTemplate) {
-		String result;
+		String sqlResult;
 		boolean hasError = false;
 		try {
-			result = jdbcTemplate.execute(sql, new CallableStatementCallback<String>() {
-				public String doInCallableStatement(CallableStatement ps) throws SQLException, DataAccessException {
-					String result = "";
-					ps.execute();
-					int up = ps.getUpdateCount();
-					ResultSet rs = ps.getResultSet();
-					if (null != rs) {
-						result = buildResultSetTable(new ResultSetWrappingSqlRowSet(rs));
-					} else if (up > -1) {
-						result = "<div>" + up + " row(s) affected</div>";
-					}
-					return result;
+			sqlResult = jdbcTemplate.execute(sql, (PreparedStatementCallback<String>) (ps -> {
+				String result = "";
+				ps.execute();
+				int up = ps.getUpdateCount();
+				ResultSet rs = ps.getResultSet();
+				if (null != rs) {
+					result = buildResultSetTable(new ResultSetWrappingSqlRowSet(rs));
+				} else if (up > -1) {
+					result = "<div>" + up + " row(s) affected</div>";
 				}
-			});
+				return result;
+			}));
 		} catch (DataAccessException e) {
-			result = "<div style='border:1px solid red'>" + e.getCause().getMessage() + "</div>";
+			sqlResult = "<div style='border:1px solid red'>" + e.getCause().getMessage() + "</div>";
 			hasError = true;
 		}
-		return new SqlStatement(sql, result, hasError);
+		return new SqlStatement(sql, sqlResult, hasError);
 	}
 
 	public String buildResultSetTable(SqlRowSet rowSet) {
