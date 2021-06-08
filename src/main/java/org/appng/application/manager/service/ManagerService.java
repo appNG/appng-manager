@@ -327,9 +327,8 @@ public class ManagerService extends CoreService implements Service {
 			}
 			data.setItem(new GroupForm(group));
 		} else {
-			Selection nameFilter = new SelectionBuilder<>(FILTER_GROUP_NAME)
-					.defaultOption(FILTER_GROUP_NAME, groupName).title(MessageConstants.NAME).type(SelectionType.TEXT)
-					.select(groupName).build();
+			Selection nameFilter = new SelectionBuilder<>(FILTER_GROUP_NAME).defaultOption(FILTER_GROUP_NAME, groupName)
+					.title(MessageConstants.NAME).type(SelectionType.TEXT).select(groupName).build();
 			SelectionGroup filter = new SelectionGroup();
 			filter.getSelections().add(nameFilter);
 			data.getSelectionGroups().add(filter);
@@ -454,8 +453,9 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link Packages}-object from a certain repository. {@link Packages} are made available to other appNG
-	 * instances via the {@link RepositoryService}.
+	 * Returns a {@link Packages}-object from a certain repository. {@link Packages}
+	 * are made available to other appNG instances via the
+	 * {@link RepositoryService}.
 	 */
 	public Packages searchPackages(Environment environment, FieldProcessor fp, String repositoryName, String digest,
 			String packageName) throws BusinessException {
@@ -469,8 +469,9 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link PackageVersions}-object from a certain repository. {@link PackageVersions} are made available to
-	 * other appNG instances via the {@link RepositoryService}.
+	 * Returns a {@link PackageVersions}-object from a certain repository.
+	 * {@link PackageVersions} are made available to other appNG instances via the
+	 * {@link RepositoryService}.
 	 */
 	public PackageVersions searchPackageVersions(Environment environment, FieldProcessor fp, String repositoryName,
 			String packageName, String digest) throws BusinessException {
@@ -527,7 +528,7 @@ public class ManagerService extends CoreService implements Service {
 			String appngVer = request.getEnvironment().getAttribute(Scope.PLATFORM, Platform.Environment.APPNG_VERSION);
 			if (pkAppngVer.isPresent() && pkAppngVer.get().compareTo(appngVer) > 0) {
 				String versionMismatch = request.getMessage(MessageConstants.PACKAGE_APP_NG_VERSION_MISMATCH,
-						pkAppngVer, appngVer);
+						pkAppngVer.get(), appngVer);
 				fp.addNoticeMessage(versionMismatch);
 			}
 			installPackage(repositoryId, name, version, timestamp, false, false, isFilebased);
@@ -1299,7 +1300,8 @@ public class ManagerService extends CoreService implements Service {
 				}
 				if (!StringUtils.isEmpty(subjectForm.getPassword())
 						&& !StringUtils.isEmpty(subjectForm.getPasswordConfirmation())) {
-					passwordUpdated = updatePassword(policy, null, subjectForm.getPassword().toCharArray(), currentSubject).isValid();
+					passwordUpdated = updatePassword(policy, null, subjectForm.getPassword().toCharArray(),
+							currentSubject).isValid();
 				}
 				assignGroupsToSubject(request, subject.getId(), subjectForm.getGroupIds(), fp);
 				request.setPropertyValues(subjectForm, new SubjectForm(currentSubject), fp.getMetaData());
@@ -1800,7 +1802,8 @@ public class ManagerService extends CoreService implements Service {
 		siteApplication.getGrantedSites().addAll(sites);
 	}
 
-	public String addArchiveToRepository(Request request, Integer repositoryId, FormUpload archive, FieldProcessor fp) throws BusinessException {
+	public String addArchiveToRepository(Request request, Integer repositoryId, FormUpload archive, FieldProcessor fp)
+			throws BusinessException {
 		File file = archive.getFile();
 		String originalFilename = archive.getOriginalFilename();
 		RepositoryImpl repo = repoRepository.findOne(repositoryId);
