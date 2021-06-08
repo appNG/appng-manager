@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<action xmlns="http://www.appng.org/schema/platform" id="updateConnection" eventId="databaseConnectionEvent">
+	<config>
+		<title id="connection.edit">Edit database connection</title>
+		<description></description>
+		<params>
+			<param name="id">1</param>
+			<param name="form_action">updateConnection</param>
+		</params>
+		<meta-data bindClass="org.appng.core.domain.DatabaseConnection">
+			<field name="type" type="text" readonly="true" binding="type">
+				<label id="type">Type</label>
+			</field>
+			<field name="name" type="text" readonly="true" binding="name">
+				<label id="name">Name</label>
+				<validation>
+					<notNull>
+						<message ref="name" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+				</validation>
+			</field>
+			<field name="jdbcUrl" type="text" readonly="true" binding="jdbcUrl">
+				<label id="jdbcUrl">JDBC-URL</label>
+				<validation>
+					<notNull>
+						<message ref="jdbcUrl" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+				</validation>
+			</field>
+			<field name="userName" type="text" readonly="true" binding="userName">
+				<label id="userName">User-Name</label>
+				<validation>
+					<notNull>
+						<message ref="userName" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+				</validation>
+			</field>
+			<field name="passwordPlain" type="password" readonly="true" binding="passwordPlain">
+				<label id="password">Password</label>
+			</field>
+			<field name="driverClass" type="text" readonly="true" binding="driverClass">
+				<label id="driverClass">Driver-Class</label>
+				<validation>
+					<notNull>
+						<message ref="driverClass" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+				</validation>
+			</field>
+			<field name="managed" type="checkbox" binding="managed">
+				<label id="managed">managed</label>
+				<condition expression="true" />
+			</field>
+			<field name="active" type="checkbox" readonly="true" binding="active">
+				<label id="active">Active</label>
+				<condition expression="true" />
+			</field>
+			<field name="minConnections" type="int" format="#" readonly="true" binding="minConnections">
+				<label id="minConnections">Min. number of connections</label>
+				<validation>
+					<type>
+						<message ref="minConnections" class="ERROR" code="invalid.integer">Please enter a valid integer</message>
+					</type>
+					<notNull>
+						<message ref="minConnections" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+					<min value="1">
+						<message ref="minConnections" class="ERROR" code="{validation.min}">Value must be greater than or equal to 1</message>
+					</min>
+				</validation>
+			</field>
+			<field name="maxConnections" type="int" format="#" readonly="true" binding="maxConnections">
+				<label id="maxConnections">Max. number of connections</label>
+				<validation>
+					<type>
+						<message ref="maxConnections" class="ERROR" code="invalid.integer">Please enter a valid integer</message>
+					</type>
+					<notNull>
+						<message ref="maxConnections" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+					</notNull>
+				</validation>
+			</field>
+			<field name="validationQuery" type="text" readonly="true" binding="validationQuery">
+				<label id="validationQuery">Validation query</label>
+			</field>
+			<field name="description" type="longtext" readonly="true" binding="description">
+				<label id="description">Description</label>
+			</field>
+		</meta-data>
+	</config>
+	<condition expression="${form_action eq 'updateConnection' and not empty id}" />
+	<datasource id="databaseConnection">
+		<params>
+			<param name="id">1</param>
+		</params>
+	</datasource>
+	<data>
+		<result>
+			<field name="type" type="text">
+				<value>HSQL</value>
+			</field>
+			<field name="name" type="text">
+				<value>appNG HSQL</value>
+			</field>
+			<field name="jdbcUrl" type="text">
+				<value>jdbc:hsqldb:hsql://localhost:9001/hsql-testdb</value>
+			</field>
+			<field name="userName" type="text">
+				<value>sa</value>
+			</field>
+			<field name="passwordPlain" type="password">
+				<value></value>
+			</field>
+			<field name="driverClass" type="text">
+				<value>org.hsqldb.jdbc.JDBCDriver</value>
+			</field>
+			<field name="managed" type="checkbox">
+				<value>true</value>
+			</field>
+			<field name="active" type="checkbox">
+				<value>true</value>
+			</field>
+			<field name="minConnections" type="int">
+				<value>1</value>
+			</field>
+			<field name="maxConnections" type="int">
+				<value>20</value>
+			</field>
+			<field name="validationQuery" type="text">
+				<value>select 1</value>
+			</field>
+			<field name="description" type="longtext">
+				<value>appNG Root Database</value>
+			</field>
+		</result>
+	</data>
+	<bean id="databaseConnections">
+		<option name="connection" id="1" />
+		<option name="action" id="update" />
+	</bean>
+</action>

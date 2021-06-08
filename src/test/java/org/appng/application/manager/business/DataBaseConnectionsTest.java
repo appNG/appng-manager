@@ -17,6 +17,7 @@ package org.appng.application.manager.business;
 
 import org.appng.api.support.CallableDataSource;
 import org.appng.testsupport.validation.WritingXmlValidator;
+import org.appng.xml.platform.Action;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -32,6 +33,13 @@ public class DataBaseConnectionsTest extends AbstractTest {
 		CallableDataSource connections = getDataSource("databaseConnections").getCallableDataSource();
 		connections.perform("");
 		validate(connections.getDatasource());
+	}
+
+	@Test
+	public void testUpdate() throws Exception {
+		Action action = getAction("databaseConnectionEvent", "updateConnection")
+				.withParam(FORM_ACTION, "updateConnection").withParam("id", "1").initialize();
+		validate(action);
 	}
 
 	@Test

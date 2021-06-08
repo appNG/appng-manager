@@ -130,39 +130,39 @@
 				<field name="type" type="text" readonly="true">
 					<label>type</label>
 				</field>
-				<field name="name" type="text">
+				<field name="name" type="text" readonly="${current.rootConnection}">
 					<label>name</label>
 				</field>
-				<field name="jdbcUrl" type="text">
+				<field name="jdbcUrl" type="text" readonly="${current.rootConnection}">
 					<label>jdbcUrl</label>
 				</field>
-				<field name="userName" type="text">
+				<field name="userName" type="text" readonly="${current.rootConnection}">
 					<label>userName</label>
 				</field>
-				<field name="passwordPlain" type="password">
+				<field name="passwordPlain" type="password" readonly="${current.rootConnection}">
 					<label>password</label>
 				</field>
-				<field name="driverClass" type="text">
+				<field name="driverClass" type="text" readonly="${current.rootConnection}">
 					<label>driverClass</label>
 				</field>
 				<field name="managed" type="checkbox">
 					<label>managed</label>
 					<condition expression="${current.rootConnection}" />
 				</field>
-				<field name="active" type="checkbox">
+				<field name="active" type="checkbox" readonly="${current.rootConnection}">
 					<label>active</label>
 					<condition expression="${current.rootConnection}" />
 				</field>
-				<field name="minConnections" type="int">
+				<field name="minConnections" type="int" readonly="${current.rootConnection}">
 					<label>minConnections</label>
 				</field>
-				<field name="maxConnections" type="int">
+				<field name="maxConnections" type="int" readonly="${current.rootConnection}">
 					<label>maxConnections</label>
 				</field>
-				<field name="validationQuery" type="text">
+				<field name="validationQuery" type="text" readonly="${current.rootConnection}">
 					<label>validationQuery</label>
 				</field>
-				<field name="description" type="longtext">
+				<field name="description" type="longtext" readonly="${current.rootConnection}">
 					<label>description</label>
 				</field>
 			</meta-data>
