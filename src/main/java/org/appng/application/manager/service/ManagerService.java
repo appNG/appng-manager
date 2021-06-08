@@ -1378,6 +1378,9 @@ public class ManagerService extends CoreService implements Service {
 				case DB_MIGRATED:
 					fp.addOkMessage(request.getMessage(MessageConstants.MIGRATION_SUCCESS));
 					break;
+				case DB_NOT_MIGRATED:
+					fp.addOkMessage(request.getMessage(MessageConstants.MIGRATION_DB_NOT_MIGRATED));
+					break;
 				case NO_DB_SUPPORTED:
 					fp.addOkMessage(request.getMessage(MessageConstants.MIGRATION_NO_DB_SUPPORTED));
 					break;
