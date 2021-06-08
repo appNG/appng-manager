@@ -16,9 +16,9 @@
 package org.appng.application.manager.business;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -34,10 +34,17 @@ import org.appng.api.model.Site;
 import org.appng.application.manager.business.SqlExecutor.SqlStatement;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.domain.DatabaseConnection;
+import org.appng.core.domain.DatabaseConnection.DatabaseType;
+import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
-import org.flywaydb.core.internal.database.DatabaseFactory;
-import org.flywaydb.core.internal.database.base.Database;
+import org.flywaydb.core.internal.database.hsqldb.HSQLDBParser;
+import org.flywaydb.core.internal.database.mysql.MySQLParser;
+import org.flywaydb.core.internal.database.postgresql.PostgreSQLParser;
+import org.flywaydb.core.internal.database.sqlserver.SQLServerParser;
+import org.flywaydb.core.internal.parser.Parser;
+import org.flywaydb.core.internal.parser.ParsingContext;
 import org.flywaydb.core.internal.resource.StringResource;
+import org.flywaydb.core.internal.sqlscript.ParserSqlScript;
 import org.flywaydb.core.internal.sqlscript.SqlScript;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,6 +54,12 @@ import org.springframework.jdbc.support.rowset.ResultSetWrappingSqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Component;
+
+import com.google.common.collect.Streams;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Component
 public class SqlExecutor extends ServiceAware implements DataProvider, ActionProvider<SqlStatement> {
@@ -136,55 +149,36 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 		return sb.toString();
 	}
 
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
 	public static class SqlStatement {
 		private String content;
 		private String result;
 		private boolean hasError;
-
-		public SqlStatement() {
-
-		}
-
-		public SqlStatement(String content, String result, boolean hasError) {
-			this.content = content;
-			this.result = result;
-			this.hasError = hasError;
-		}
-
-		public String getContent() {
-			return content;
-		}
-
-		public void setContent(String content) {
-			this.content = content;
-		}
-
-		public String getResult() {
-			return result;
-		}
-
-		public void setResult(String result) {
-			this.result = result;
-		}
-
-		public boolean isHasError() {
-			return hasError;
-		}
-
-		public void setHasError(boolean hasError) {
-			this.hasError = hasError;
-		}
-
 	}
 
-	public List<String> getQueries(String sql, DatabaseConnection connection) {
-		List<String> queries = new ArrayList<>();
-		try (Database<?> db = DatabaseFactory
-				.createDatabase(new FluentConfiguration().dataSource(connection.getDataSource()), true)) {
-			SqlScript sqlScript = new SqlScript(db.createSqlStatementBuilderFactory(), new StringResource(sql), false);
-			sqlScript.getSqlStatements().forEach(query -> queries.add(query.getSql()));
+	public List<String> getQueries(String sql, DatabaseConnection conn) {
+		Configuration configuration = new FluentConfiguration().dataSource(conn.getJdbcUrl(), conn.getUserName(),
+				conn.getPasswordPlain());
+		Parser parser = getParser(conn.getType(), configuration);
+		SqlScript sqlScript = new ParserSqlScript(parser, new StringResource(sql), null, false);
+		return Streams.stream(sqlScript.getSqlStatements())
+				.map(org.flywaydb.core.internal.sqlscript.SqlStatement::getSql).collect(Collectors.toList());
+	}
+
+	protected Parser getParser(DatabaseType type, Configuration configuration) {
+		ParsingContext parsingContext = new ParsingContext();
+		switch (type) {
+		case MYSQL:
+			return new MySQLParser(configuration, parsingContext);
+		case MSSQL:
+			return new SQLServerParser(configuration, parsingContext);
+		case POSTGRESQL:
+			return new PostgreSQLParser(configuration, parsingContext);
+		default:
+			return new HSQLDBParser(configuration, parsingContext);
 		}
-		return queries;
 	}
 
 }
