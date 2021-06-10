@@ -18,6 +18,7 @@ package org.appng.application.manager.business;
 import org.appng.api.Platform;
 import org.appng.api.Scope;
 import org.appng.api.messaging.Messaging;
+import org.appng.api.model.Site.SiteState;
 import org.appng.api.support.CallableDataSource;
 import org.appng.testsupport.validation.WritingXmlValidator;
 import org.junit.Test;
@@ -34,6 +35,7 @@ public class ClusterStateTest extends AbstractTest {
 		environment.setAttribute(Scope.PLATFORM, Platform.Environment.PLATFORM_CONFIG,
 				Mockito.mock(org.appng.api.model.Properties.class));
 		System.setProperty(Messaging.APPNG_NODE_ID, "node1");
+		Mockito.when(site.getState()).thenReturn(SiteState.STARTED);
 		CallableDataSource siteDatasource = getDataSource("clusterState").getCallableDataSource();
 		siteDatasource.perform("test");
 		validate(siteDatasource.getDatasource().getConfig());
