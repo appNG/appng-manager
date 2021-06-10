@@ -77,23 +77,27 @@ public class LdapUsers implements DataProvider {
 				fp.addErrorMessage(request.getMessage(MessageConstants.LDAP_NOT_WORKING, ldapHost.getString()));
 			}
 		} else {
-
 			List<LdapUser> users = new ArrayList<>();
-
-			List<SubjectImpl> globalGroups = coreService.getSubjectsByType(UserType.GLOBAL_GROUP);
-			for (SubjectImpl globalGroup : globalGroups) {
-				List<SubjectImpl> membersOfGroup = ldapService.getMembersOfGroup(site, globalGroup.getName());
-				users.addAll(membersOfGroup.stream().map(s -> new LdapUser(s.getName(), s.getEmail(), s.getRealname(),
-						UserType.GLOBAL_GROUP, globalGroup.getName())).collect(Collectors.toList()));
+			if (site.getProperties().getBoolean(LdapService.LDAP_DISABLED)) {
+				fp.addInvalidMessage(request.getMessage(MessageConstants.LDAP_DISABLED, LdapService.LDAP_DISABLED));
+			} else {
+				List<SubjectImpl> globalGroups = coreService.getSubjectsByType(UserType.GLOBAL_GROUP);
+				for (SubjectImpl globalGroup : globalGroups) {
+					List<SubjectImpl> membersOfGroup = ldapService.getMembersOfGroup(site, globalGroup.getName());
+					users.addAll(
+							membersOfGroup.stream()
+									.map(s -> new LdapUser(s.getName(), s.getEmail(), s.getRealname(),
+											UserType.GLOBAL_GROUP, globalGroup.getName()))
+									.collect(Collectors.toList()));
+				}
+				List<SubjectImpl> globalUsers = coreService.getSubjectsByType(UserType.GLOBAL_USER);
+				String userDn = siteProps.getString(LdapService.LDAP_ID_ATTRIBUTE) + "=%s,"
+						+ siteProps.getString(LdapService.LDAP_USER_BASE_DN);
+				users.addAll(globalUsers.stream().map(s -> {
+					return new LdapUser(s.getName(), s.getEmail(), s.getRealname(), s.getUserType(),
+							String.format(userDn, s.getName()));
+				}).collect(Collectors.toList()));
 			}
-			List<SubjectImpl> globalUsers = coreService.getSubjectsByType(UserType.GLOBAL_USER);
-			String userDn = siteProps.getString(LdapService.LDAP_ID_ATTRIBUTE) + "=%s,"
-					+ siteProps.getString(LdapService.LDAP_USER_BASE_DN);
-			users.addAll(globalUsers.stream().map(s -> {
-				return new LdapUser(s.getName(), s.getEmail(), s.getRealname(), s.getUserType(),
-						String.format(userDn, s.getName()));
-			}).collect(Collectors.toList()));
-
 			dataContainer.setPage(users, fp.getPageable(), true);
 		}
 		return dataContainer;

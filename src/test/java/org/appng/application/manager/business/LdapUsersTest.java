@@ -53,6 +53,7 @@ public class LdapUsersTest extends AbstractTest {
 		siteProperties.add(new SimpleProperty(prefix + LdapService.LDAP_START_TLS, "false"));
 		siteProperties.add(new SimpleProperty(prefix + LdapService.LDAP_HOST, "ldap://localhost:389"));
 		siteProperties.add(new SimpleProperty(prefix + LdapService.LDAP_PRINCIPAL_SCHEME, "DN"));
+		siteProperties.add(new SimpleProperty(prefix + LdapService.LDAP_DISABLED, "true"));
 		return siteProperties;
 	}
 
