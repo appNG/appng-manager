@@ -365,11 +365,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.appng</groupId>
-			<artifactId>appng-appngizer-jaxb</artifactId>
-			<version>${appNG.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.appng</groupId>
 			<artifactId>appng-testsupport</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -380,8 +375,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
 		</dependency>
 	</dependencies>
 
