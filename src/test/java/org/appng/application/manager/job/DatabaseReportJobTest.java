@@ -8,14 +8,12 @@ import org.appng.application.manager.business.AbstractTest;
 import org.appng.mail.Mail;
 import org.appng.mail.Mail.RecipientType;
 import org.appng.mail.MailTransport;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.net.MediaType;
 
-@Ignore
 public class DatabaseReportJobTest extends AbstractTest {
 
 	@Autowired

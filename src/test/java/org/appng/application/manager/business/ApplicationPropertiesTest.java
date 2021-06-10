@@ -25,11 +25,11 @@ import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.PropertyForm;
 import org.appng.core.domain.ApplicationImpl;
 import org.appng.core.domain.PropertyImpl;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runner.OrderWith;
-import org.junit.runner.manipulation.Alphanumeric;
+import org.junit.runners.MethodSorters;
 
-@OrderWith(Alphanumeric.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApplicationPropertiesTest extends AbstractTest {
 
 	private static final String PROPERTY_EVENT = "propertyEvent";
@@ -44,8 +44,8 @@ public class ApplicationPropertiesTest extends AbstractTest {
 		application.setName("manager");
 		applicationRepository.save(application);
 
-		ActionCall actionCall = getAction(PROPERTY_EVENT, "create-application-property").withParam(FORM_ACTION,
-				"create-application-property").withParam("appid", "1");
+		ActionCall actionCall = getAction(PROPERTY_EVENT, "create-application-property")
+				.withParam(FORM_ACTION, "create-application-property").withParam("appid", "1");
 		CallableAction action = actionCall.getCallableAction(new PropertyForm(new PropertyImpl(TESTPROPERTY, "5")));
 		FieldProcessor perform = action.perform();
 		validate(perform.getMessages());
@@ -79,13 +79,12 @@ public class ApplicationPropertiesTest extends AbstractTest {
 		PropertyImpl property = new PropertyImpl(TESTPROPERTY, "7", "9");
 		property.setType(Type.INT);
 		property.setClob("");
-		CallableAction action = actionCall
-				.getCallableAction(new PropertyForm(property));
+		CallableAction action = actionCall.getCallableAction(new PropertyForm(property));
 		FieldProcessor perform = action.perform();
 		validate(perform.getMessages());
 
-		CallableDataSource dataSource = getDataSource("property").withParam("appid", "1")
-				.withParam("id", PROPERTY_NAME).getCallableDataSource();
+		CallableDataSource dataSource = getDataSource("property").withParam("appid", "1").withParam("id", PROPERTY_NAME)
+				.getCallableDataSource();
 		dataSource.perform("test");
 		validate(dataSource.getDatasource(), "-data");
 	}
