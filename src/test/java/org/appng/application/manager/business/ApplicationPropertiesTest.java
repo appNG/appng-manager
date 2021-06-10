@@ -25,11 +25,11 @@ import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.PropertyForm;
 import org.appng.core.domain.ApplicationImpl;
 import org.appng.core.domain.PropertyImpl;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.runner.OrderWith;
+import org.junit.runner.manipulation.Alphanumeric;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@OrderWith(Alphanumeric.class)
 public class ApplicationPropertiesTest extends AbstractTest {
 
 	private static final String PROPERTY_EVENT = "propertyEvent";
