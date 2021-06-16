@@ -1590,7 +1590,7 @@ public class ManagerService extends CoreService implements Service {
 		Environment env = request.getEnvironment();
 		Map<String, Site> siteMap = env.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
 		Site activeSite = siteMap.get(site.getName());
-		if (null == activeSite) {
+		if (null == activeSite || SiteState.STOPPED.equals(activeSite.getState())) {
 			if (site.isActive()) {
 				try {
 					getInitializerService(application).loadSite(env, site, true, fp);
@@ -1601,11 +1601,11 @@ public class ManagerService extends CoreService implements Service {
 				}
 			} else {
 				fp.addErrorMessage(
-						request.getMessage(MessageConstants.SITE_START_NOT_ACTIVE, site.getName(), site.getState()));
+						request.getMessage(MessageConstants.SITE_START_NOT_ACTIVE, activeSite.getName()));
 			}
 		} else {
 			fp.addErrorMessage(
-					request.getMessage(MessageConstants.SITE_START_IS_RUNNING, site.getName(), site.getState()));
+					request.getMessage(MessageConstants.SITE_START_IS_RUNNING, activeSite.getName(), activeSite.getState()));
 		}
 		return null;
 	}
@@ -1618,7 +1618,7 @@ public class ManagerService extends CoreService implements Service {
 		Site activeSite = siteMap.get(site.getName());
 		if (null != activeSite) {
 			if (SiteState.STARTED.equals(activeSite.getState())) {
-				getInitializerService(application).shutDownSite(env, site);
+				getInitializerService(application).shutDownSite(env, site, false);
 				fp.addOkMessage(request.getMessage(MessageConstants.SITE_STOPPED, site.getName()));
 				return site.getName();
 			} else {
