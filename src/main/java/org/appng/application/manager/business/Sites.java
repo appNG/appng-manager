@@ -32,6 +32,8 @@ import org.appng.application.manager.form.SiteForm;
 import org.appng.application.manager.form.SubjectForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
+import org.appng.application.manager.service.StartSiteEvent;
+import org.appng.application.manager.service.StopSiteEvent;
 import org.appng.core.domain.SiteImpl;
 import org.appng.core.service.InitializerService;
 import org.springframework.stereotype.Component;
@@ -48,6 +50,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class Sites extends ServiceAware implements DataProvider, ActionProvider<SiteForm> {
 
+	protected static final String ACTION_START = "start";
+	protected static final String ACTION_STOP = "stop";
 	public static final String SITE = "site";
 
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
@@ -82,13 +86,33 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 				errorMessage = MessageConstants.PLATFORM_RELOAD_ERROR;
 				reloadPlatform(site, application, request, fp);
 				okMessage = MessageConstants.PLATFORM_RELOADED;
+			} else if (ACTION_START.equals(action)) {
+				errorMessage = MessageConstants.SITE_START_ERROR;
+				String siteName = service.startSite(request, application, siteId, fp);
+				if (null != siteName) {
+					site.sendEvent(new StartSiteEvent(siteName));
+				}
+			} else if (ACTION_STOP.equals(action)) {
+				if (!site.getId().equals(siteId)) {
+					errorMessage = MessageConstants.SITE_STOP_ERROR;
+					String siteName = service.stopSite(request, application, siteId, fp);
+					if (null != siteName) {
+						site.sendEvent(new StopSiteEvent(siteName));
+					}
+				} else {
+					fp.addErrorMessage(request.getMessage(MessageConstants.SITE_STOP_IS_CURRENT, site.getName()));
+				}
 			}
-			String message = request.getMessage(okMessage, siteId);
-			fp.addOkMessage(message);
+			if (null != okMessage) {
+				String message = request.getMessage(okMessage, siteId);
+				fp.addOkMessage(message);
+			}
 		} catch (BusinessException ex) {
-			String message = request.getMessage(errorMessage, siteId);
-			log.error("error during action '" + action + "': " + message, ex);
-			fp.addErrorMessage(message);
+			if (null != errorMessage) {
+				String message = request.getMessage(errorMessage, siteId);
+				log.error("error during action '" + action + "': " + message, ex);
+				fp.addErrorMessage(message);
+			}
 		}
 	}
 

@@ -53,14 +53,30 @@
 			</link>
 		</linkpanel>
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="/sites/update/${current.id}" default="true">
+			<link id="actions[1]" mode="intern" target="/sites?form_action=start&amp;siteid=${current.id}">
+				<condition expression="${current.active and current.state.name() eq 'STOPPED'}" />
+				<permissions>
+					<permission ref="site.reload" mode="set"></permission>
+				</permissions>
+				<label id="start">start</label>
+				<icon>activate</icon>
+			</link>
+			<link id="actions[2]" mode="intern" target="/sites?form_action=stop&amp;siteid=${current.id}">
+				<condition expression="${current.active and current.running}" />
+				<permissions>
+					<permission ref="site.reload" mode="set"></permission>
+				</permissions>
+				<label id="stop">stop</label>
+				<icon>deactivate</icon>
+			</link>
+			<link id="actions[3]" mode="intern" target="/sites/update/${current.id}" default="true">
 				<permissions>
 					<permission ref="site.edit" mode="set"></permission>
 				</permissions>
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[2]" mode="intern" target="/sites?form_action=delete&amp;siteid=${current.id}">
+			<link id="actions[4]" mode="intern" target="/sites?form_action=delete&amp;siteid=${current.id}">
 				<permissions>
 					<permission ref="site.delete" mode="set"></permission>
 				</permissions>
@@ -68,7 +84,9 @@
 				<icon>delete</icon>
 				<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "#{name}"?</confirmation>
 			</link>
-			<link id="actions[3]" mode="intern" target="/sites?form_action=reload&amp;siteid=${current.id}">
+			<link id="actions[5]" mode="intern" target="/sites?form_action=reload&amp;siteid=${current.id}"
+				show-disabled="true">
+				<condition expression="${current.active}" />
 				<permissions>
 					<permission ref="site.reload" mode="set"></permission>
 				</permissions>
@@ -115,16 +133,16 @@
 					<value></value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/sites/update/1" default="true">
+					<link id="actions[3]" mode="intern" target="/sites/update/1" default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[2]" mode="intern" target="/sites?form_action=delete&amp;siteid=1">
+					<link id="actions[4]" mode="intern" target="/sites?form_action=delete&amp;siteid=1">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "localhost"?</confirmation>
 					</link>
-					<link id="actions[3]" mode="intern" target="/sites?form_action=reload&amp;siteid=1">
+					<link id="actions[5]" mode="intern" target="/sites?form_action=reload&amp;siteid=1">
 						<label id="reload">Reload</label>
 						<icon>reload</icon>
 					</link>
@@ -155,16 +173,20 @@
 					<value></value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/sites/update/3" default="true">
+					<link id="actions[1]" mode="intern" target="/sites?form_action=start&amp;siteid=3">
+						<label id="start">start</label>
+						<icon>activate</icon>
+					</link>
+					<link id="actions[3]" mode="intern" target="/sites/update/3" default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[2]" mode="intern" target="/sites?form_action=delete&amp;siteid=3">
+					<link id="actions[4]" mode="intern" target="/sites?form_action=delete&amp;siteid=3">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "site2"?</confirmation>
 					</link>
-					<link id="actions[3]" mode="intern" target="/sites?form_action=reload&amp;siteid=3">
+					<link id="actions[5]" mode="intern" target="/sites?form_action=reload&amp;siteid=3">
 						<label id="reload">Reload</label>
 						<icon>reload</icon>
 					</link>
