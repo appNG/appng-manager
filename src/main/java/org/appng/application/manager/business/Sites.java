@@ -32,8 +32,8 @@ import org.appng.application.manager.form.SiteForm;
 import org.appng.application.manager.form.SubjectForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
-import org.appng.application.manager.service.StartSiteEvent;
-import org.appng.application.manager.service.StopSiteEvent;
+import org.appng.core.controller.messaging.ReloadSiteEvent;
+import org.appng.core.controller.messaging.StopSiteEvent;
 import org.appng.core.domain.SiteImpl;
 import org.appng.core.service.InitializerService;
 import org.springframework.stereotype.Component;
@@ -90,7 +90,7 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 				errorMessage = MessageConstants.SITE_START_ERROR;
 				String siteName = service.startSite(request, application, siteId, fp);
 				if (null != siteName) {
-					site.sendEvent(new StartSiteEvent(siteName));
+					site.sendEvent(new ReloadSiteEvent(siteName));
 				}
 			} else if (ACTION_STOP.equals(action)) {
 				if (!site.getId().equals(siteId)) {
