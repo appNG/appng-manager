@@ -93,6 +93,15 @@
 					</datasource>
 				</element>
 				<element>
+					<datasource id="properties">
+						<params>
+							<param name="nodeId">${entity}</param>
+							<param name="propertyId">${id}</param>
+						</params>
+						<condition expression="${not empty entity}" />
+					</datasource>
+				</element>
+				<element>
 					<datasource id="siteState">
 						<params>
 							<param name="nodeId">${entity}</param>
@@ -151,4 +160,3 @@
 		</structure>
 	</page>
 </pages>
-

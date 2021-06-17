@@ -118,7 +118,7 @@ public interface Service {
 
 	DataContainer searchPermissions(FieldProcessor fp, Integer permissionId, Integer appId) throws BusinessException;
 
-	DataContainer searchProperties(FieldProcessor fp, Integer siteId, Integer appId, String propertyName)
+	DataContainer searchProperties(FieldProcessor fp, String nodeId, Integer siteId, Integer appId, String propertyName)
 			throws BusinessException;
 
 	void updateGroup(Request request, Site site, GroupForm groupForm, FieldProcessor fp) throws BusinessException;

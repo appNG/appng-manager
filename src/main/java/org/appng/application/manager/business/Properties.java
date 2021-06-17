@@ -57,6 +57,7 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
 		Service service = getService();
+		String nodeId = options.getString(PROPERTIES, "nodeId");
 		Integer siteId = options.getInteger(PROPERTIES, "siteId");
 		Integer applicationId = options.getInteger(PROPERTIES, "applicationId");
 		String propertyName = options.getString(PROPERTY, "id");
@@ -65,7 +66,7 @@ public class Properties extends ServiceAware implements ActionProvider<PropertyF
 			data = service.getNewProperty(fp);
 		} else {
 			try {
-				data = service.searchProperties(fp, siteId, applicationId, propertyName);
+				data = service.searchProperties(fp, nodeId, siteId, applicationId, propertyName);
 				if (null != data.getItem()) {
 					PropertyForm propertyForm = (PropertyForm) data.getItem();
 					PropertyWrapper propertyWrapper = new PropertyWrapper(propertyForm.getProperty());

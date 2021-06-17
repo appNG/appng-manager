@@ -1488,7 +1488,7 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	public DataContainer searchProperties(FieldProcessor fp, Integer siteId, Integer appId, String propertyName)
+	public DataContainer searchProperties(FieldProcessor fp, String nodeId, Integer siteId, Integer appId, String propertyName)
 			throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (propertyName != null && propertyName.length() > 0) {
@@ -1501,7 +1501,7 @@ public class ManagerService extends CoreService implements Service {
 			}
 			data.setItem(new PropertyForm(property));
 		} else {
-			Page<PropertyImpl> properties = getProperties(siteId, appId, fp.getPageable());
+			Page<PropertyImpl> properties = getProperties(nodeId, siteId, appId, fp.getPageable());
 			data.setPage(properties);
 		}
 		return data;
