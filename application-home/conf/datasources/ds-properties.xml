@@ -73,6 +73,9 @@
 	<datasource id="node-properties">
 		<config>
 			<title>node.properties</title>
+			<permissions>
+				<permission ref="node.properties" mode="set" />
+			</permissions>
 			<params>
 				<param name="nodeId" />
 				<param name="propertyId" />
@@ -102,6 +105,7 @@
 					<label>property.create</label>
 					<icon>new</icon>
 					<permissions>
+						<permission ref="node.property.create" mode="set" />
 					</permissions>
 				</link>
 			</linkpanel>
@@ -110,6 +114,7 @@
 					<label>edit</label>
 					<icon>edit</icon>
 					<permissions>
+						<permission ref="node.property.edit" mode="set" />
 					</permissions>
 				</link>
 				<link mode="intern" target="/system/node/update/${nodeId}/property/delete-node-property/${propertyId}">
@@ -117,6 +122,7 @@
 					<icon>delete</icon>
 					<confirmation id="property.delete.confirm" params="#{shortName}" />
 					<permissions>
+						<permission ref="node.property.delete" mode="set" />
 					</permissions>
 				</link>
 			</linkpanel>

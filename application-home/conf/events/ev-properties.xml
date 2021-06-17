@@ -66,6 +66,7 @@
 		<config>
 			<title>property.create</title>
 			<permissions>
+				<permission ref="node.property.create" mode="set" />
 			</permissions>
 			<params>
 				<param name="form_action" />
@@ -83,6 +84,7 @@
 		<config>
 			<title>property.edit</title>
 			<permissions>
+				<permission ref="node.property.edit" mode="set" />
 			</permissions>
 			<params>
 				<param name="form_action" />
@@ -104,6 +106,7 @@
 		<config>
 			<title>property.delete</title>
 			<permissions>
+				<permission ref="node.property.delete" mode="set" />
 			</permissions>
 			<params>
 				<param name="form_action" />
