@@ -13,7 +13,9 @@
 					<url-param name="entity" />
 					<url-param name="action" />
 					<url-param name="id" />
-					<url-param name="entity2id" />
+					<url-param name="entity2" />
+					<url-param name="action2" />
+					<url-param name="id2" />
 				</url-params>
 				<get-params>
 					<get-param name="action" />
@@ -88,41 +90,60 @@
 				<element>
 					<datasource id="clusterState">
 						<params>
-							<param name="nodeId">${entity}</param>
+							<param name="nodeId">${entity eq 'node' ? id : ''}</param>
 						</params>
 					</datasource>
+				</element>
+				<element passive="true">
+					<action id="create-node-property" onSuccess="/system/node/update/${id}#tab_clusterState" eventId="propertyEvent">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="nodeId">${id}</param>
+						</params>
+						<condition expression="${entity eq 'node' and action eq 'update' and not empty id and entity2 eq 'node-property' and action2 eq 'create'}" />
+					</action>
+				</element>
+				<element passive="true">
+					<action id="update-node-property" onSuccess="/system/node/update/${id}#tab_clusterState" eventId="propertyEvent">
+						<params>
+							<param name="form_action">${form_action}</param>
+							<param name="nodeId">${id}</param>
+							<param name="propertyId">${id2}</param>
+						</params>
+						<condition expression="${entity eq 'node' and action eq 'update' and not empty id and entity2 eq 'node-property' and action2 eq 'update' and not empty id2}" />
+					</action>
 				</element>
 				<element>
 					<datasource id="properties">
 						<params>
-							<param name="nodeId">${entity}</param>
-							<param name="propertyId">${id}</param>
+							<param name="nodeId">${id}</param>
+							<param name="propertyId">${entity2 eq 'node-property' ? id2 : ''}</param>
 						</params>
-						<condition expression="${not empty entity}" />
+						<condition expression="${entity eq 'node' and not empty id and action eq 'update'}" />
 					</datasource>
 				</element>
 				<element>
 					<datasource id="siteState">
 						<params>
-							<param name="nodeId">${entity}</param>
+							<param name="nodeId">${id}</param>
 						</params>
-						<condition expression="${not empty entity}" />
+						<condition expression="${entity eq 'node' and not empty id}" />
 					</datasource>
 				</element>
 				<element>
 					<datasource id="clusterStateProps">
 						<params>
-							<param name="nodeId">${entity}</param>
+							<param name="nodeId">${id}</param>
 						</params>
-						<condition expression="${not empty entity}" />
+						<condition expression="${entity eq 'node' and not empty id}" />
 					</datasource>
 				</element>
 				<element>
 					<datasource id="clusterStateEnv">
 						<params>
-							<param name="nodeId">${entity}</param>
+							<param name="nodeId">${id}</param>
 						</params>
-						<condition expression="${not empty entity}" />
+						<condition expression="${entity eq 'node' and not empty id}" />
 					</datasource>
 				</element>
 			</section>
@@ -152,6 +173,14 @@
 					<action eventId="platformEvent" id="reloadPlatform" onSuccess="/system">
 						<params>
 							<param name="action">${form_action}</param>
+						</params>
+					</action>
+				</element>
+				<element>
+					<action eventId="propertyEvent" id="delete-node-property" onSuccess="/system/node/${id}/update#tab_clusterStatus">
+						<params>
+							<param name="form_action">${action2}</param>
+							<param name="propertyid">${id2}</param>
 						</params>
 					</action>
 				</element>
