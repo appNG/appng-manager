@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<datasource xmlns="http://www.appng.org/schema/platform" id="node-properties">
+    <config>
+        <title id="node.properties">node.properties</title>
+        <permissions>
+            <permission ref="node.properties" mode="set"></permission>
+        </permissions>
+        <params>
+            <param name="nodeId">foobar</param>
+            <param name="propertyId"/>
+        </params>
+        <meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propertyId}">
+            <field name="shortName" type="text" displayLength="50" binding="shortName">
+                <sort/>
+                <label id="name">Name</label>
+            </field>
+            <field name="displayValue" type="longtext" displayLength="120" binding="displayValue">
+                <label id="activeValue">Active Value</label>
+            </field>
+            <field name="description" type="text" displayLength="400" binding="description">
+                <label id="description">Description</label>
+            </field>
+            <field name="changedValue" type="image" binding="changedValue">
+                <label></label>
+                <icon condition="${!current.changedValue}">led_orange</icon>
+                <icon condition="${current.changedValue}">led_green</icon>
+            </field>
+            <field name="actions" type="linkpanel" binding="actions">
+                <label id="actions">Actions</label>
+            </field>
+        </meta-data>
+        <linkpanel id="other" location="both">
+            <link id="other[1]" mode="intern" target="/system/node/update/foobar/property/create">
+                <permissions>
+                    <permission ref="node.property.create" mode="set"></permission>
+                </permissions>
+                <label id="property.create">Create property</label>
+                <icon>new</icon>
+            </link>
+        </linkpanel>
+        <linkpanel id="actions" location="inline">
+            <link id="actions[1]" mode="intern" target="/system/node/update/foobar/property/update/" default="true">
+                <permissions>
+                    <permission ref="node.property.edit" mode="set"></permission>
+                </permissions>
+                <label id="edit">Edit</label>
+                <icon>edit</icon>
+            </link>
+            <link id="actions[2]" mode="intern" target="/system/node/update/foobar/property/delete-node-property/">
+                <permissions>
+                    <permission ref="node.property.delete" mode="set"></permission>
+                </permissions>
+                <label id="delete">Delete</label>
+                <icon>delete</icon>
+                <confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property "#{shortName}"?</confirmation>
+            </link>
+        </linkpanel>
+    </config>
+    <data>
+        <resultset chunk="0" chunkname="node-properties" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="-1" hits="0"/>
+    </data>
+</datasource>
