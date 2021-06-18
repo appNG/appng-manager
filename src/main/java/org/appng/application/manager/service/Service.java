@@ -76,9 +76,9 @@ public interface Service {
 
 	void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp, PasswordPolicy policy) throws BusinessException;
 
-	void createProperty(Request request, PropertyForm propertyForm, Integer siteId, Integer appId, FieldProcessor fp)
+	void createProperty(Request request, PropertyForm propertyForm, String nodeId, Integer siteId, Integer appId, FieldProcessor fp)
 			throws BusinessException;
-
+	
 	void createPermission(Request request, PermissionImpl permission, Integer appId, FieldProcessor fp)
 			throws BusinessException;
 

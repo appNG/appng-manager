@@ -73,7 +73,7 @@
 				<param name="nodeId" />
 			</params>
 		</config>
-		<condition expression="${form_action eq 'create-node-property'}" />
+		<condition expression="${form_action eq 'create-node-property' and not empty nodeId}" />
 		<datasource id="new-property" />
 		<bean id="properties">
 			<option name="action" id="create" />
@@ -91,7 +91,7 @@
 				<param name="propertyId" />
 			</params>
 		</config>
-		<condition expression="${form_action eq 'update-node-property'}" />
+		<condition expression="${form_action eq 'update-node-property' and not empty propertyId}" />
 		<datasource id="property">
 			<params>
 				<param name="id">${propertyId}</param>
