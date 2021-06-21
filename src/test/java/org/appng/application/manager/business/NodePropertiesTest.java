@@ -18,7 +18,7 @@ import org.junit.runners.MethodSorters;
 public class NodePropertiesTest extends AbstractTest {
 
 	static {
-		WritingXmlValidator.writeXml = true;
+		WritingXmlValidator.writeXml = false;
 	}
 
 	@Test

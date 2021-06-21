@@ -90,8 +90,16 @@
 				<element>
 					<datasource id="clusterState">
 						<params>
-							<param name="nodeId">${entity eq 'node' ? id : ''}</param>
+							<param name="nodeId">${id}</param>
 						</params>
+					</datasource>
+				</element>
+				<element>
+					<datasource id="siteState">
+						<params>
+							<param name="nodeId">${id}</param>
+						</params>
+						<condition expression="${entity eq 'node' and not empty id}" />
 					</datasource>
 				</element>
 				<element passive="true">
@@ -107,25 +115,16 @@
 					<action id="update-node-property" onSuccess="/system/node/update/${id}#tab_clusterState" eventId="propertyEvent">
 						<params>
 							<param name="form_action">${form_action}</param>
-							<param name="nodeId">${id}</param>
 							<param name="propertyId">${id2}</param>
 						</params>
 						<condition expression="${entity eq 'node' and action eq 'update' and not empty id and entity2 eq 'node-property' and action2 eq 'update' and not empty id2}" />
 					</action>
 				</element>
 				<element>
-					<datasource id="properties">
+					<datasource id="node-properties">
 						<params>
 							<param name="nodeId">${id}</param>
-							<param name="propertyId">${entity2 eq 'node-property' ? id2 : ''}</param>
-						</params>
-						<condition expression="${entity eq 'node' and not empty id and action eq 'update'}" />
-					</datasource>
-				</element>
-				<element>
-					<datasource id="siteState">
-						<params>
-							<param name="nodeId">${id}</param>
+							<param name="propertyId">${id2}</param>
 						</params>
 						<condition expression="${entity eq 'node' and not empty id}" />
 					</datasource>
@@ -177,10 +176,10 @@
 					</action>
 				</element>
 				<element>
-					<action eventId="propertyEvent" id="delete-node-property" onSuccess="/system/node/${id}/update#tab_clusterStatus">
+					<action eventId="propertyEvent" id="delete-node-property" onSuccess="/system/node/${id}/update#tab_clusterState">
 						<params>
 							<param name="form_action">${action2}</param>
-							<param name="propertyid">${id2}</param>
+							<param name="propertyId">${id2}</param>
 						</params>
 					</action>
 				</element>

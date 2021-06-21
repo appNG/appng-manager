@@ -111,7 +111,7 @@
 				</field>
 			</meta-data>
 			<linkpanel location="inline" id="actions">
-				<link target="/system/${current.nodeId}#tab_clusterState" mode="intern" default="true">
+				<link target="/system/node/update/${current.nodeId}#tab_clusterState" mode="intern" default="true">
 					<icon>preview</icon>
 					<label id="show" />
 				</link>

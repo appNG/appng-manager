@@ -122,7 +122,7 @@
 			<permission id="node.properties" />
 			<permission id="node.property.create" />
 			<permission id="node.property.edit" />
-			<permission id="node.property.delelte" />
+			<permission id="node.property.delete" />
 		</role>
 
 		<role>
@@ -325,7 +325,7 @@
 		<permission id="node.properties">Show a node's properties</permission>
 		<permission id="node.property.create">Create a node property</permission>
 		<permission id="node.property.edit">Edit a node property</permission>
-		<permission id="node.property.delelte">Delete a node property</permission>
+		<permission id="node.property.delete">Delete a node property</permission>
 	</permissions>
 
 	<properties>

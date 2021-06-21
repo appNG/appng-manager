@@ -101,7 +101,7 @@
 				</field>
 			</meta-data>
 			<linkpanel id="other" location="both">
-				<link mode="intern" target="/system/node/update/${nodeId}/property/create">
+				<link mode="intern" target="/system/node/update/${nodeId}/node-property/create#tab_clusterState">
 					<label>property.create</label>
 					<icon>new</icon>
 					<permissions>
@@ -110,14 +110,14 @@
 				</link>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/system/node/update/${nodeId}/property/update/${propertyId}" default="true">
+				<link mode="intern" target="/system/node/update/${nodeId}/node-property/update/${current.name}#tab_clusterState" default="true">
 					<label>edit</label>
 					<icon>edit</icon>
 					<permissions>
 						<permission ref="node.property.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/system/node/update/${nodeId}/property/delete-node-property/${propertyId}">
+				<link mode="intern" target="/system/node/update/${nodeId}/node-property/delete-node-property/${current.name}#tab_clusterState">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="property.delete.confirm" params="#{shortName}" />
@@ -128,7 +128,7 @@
 			</linkpanel>
 		</config>
 		<bean id="properties">
-			<option name="properties" nodeId="${nodeid}" />
+			<option name="properties" nodeId="${nodeId}" />
 		</bean>
 	</datasource>
 
