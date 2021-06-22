@@ -35,10 +35,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
@@ -391,9 +391,8 @@ public class ManagerService extends CoreService implements Service {
 			RepositoryImpl repository = repoRepository.findOne(repositoryId);
 			try {
 				if (null != repository) {
-					Page<ApplicationImpl> applications = applicationRepository.search(fp.getPageable());
-					List<Identifier> identifiers = new ArrayList<>(applications.getContent());
-
+					List<ApplicationImpl> applications = applicationRepository.findAll();
+					List<Identifier> identifiers = new ArrayList<>(applications);
 					List<Identifier> templates = getInstalledTemplates();
 					identifiers.addAll(templates);
 
@@ -402,13 +401,13 @@ public class ManagerService extends CoreService implements Service {
 					if (StringUtils.isNotBlank(filter)) {
 						// we can't rely on filtering being supported by the repository,
 						// so do it manually
-						Stream<InstallablePackage> pckgStream = packages.stream();
+						Predicate<InstallablePackage> packageFilter;
 						if (filter.contains("*")) {
-							pckgStream = pckgStream.filter(p -> p.getName().matches(filter.replace("*", ".*?")));
+							packageFilter = p -> p.getName().matches(filter.replace("*", ".*?"));
 						} else {
-							pckgStream = pckgStream.filter(p -> p.getName().startsWith(filter));
+							packageFilter = p -> p.getName().startsWith(filter);
 						}
-						packages = pckgStream.collect(Collectors.toList());
+						packages = packages.stream().filter(packageFilter).collect(Collectors.toList());
 					}
 					data.setPage(packages, fp.getPageable());
 				}
@@ -453,9 +452,8 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link Packages}-object from a certain repository. {@link Packages}
-	 * are made available to other appNG instances via the
-	 * {@link RepositoryService}.
+	 * Returns a {@link Packages}-object from a certain repository. {@link Packages} are made available to other appNG
+	 * instances via the {@link RepositoryService}.
 	 */
 	public Packages searchPackages(Environment environment, FieldProcessor fp, String repositoryName, String digest,
 			String packageName) throws BusinessException {
@@ -469,9 +467,8 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link PackageVersions}-object from a certain repository.
-	 * {@link PackageVersions} are made available to other appNG instances via the
-	 * {@link RepositoryService}.
+	 * Returns a {@link PackageVersions}-object from a certain repository. {@link PackageVersions} are made available to
+	 * other appNG instances via the {@link RepositoryService}.
 	 */
 	public PackageVersions searchPackageVersions(Environment environment, FieldProcessor fp, String repositoryName,
 			String packageName, String digest) throws BusinessException {
@@ -1600,12 +1597,11 @@ public class ManagerService extends CoreService implements Service {
 					throw new BusinessException(e);
 				}
 			} else {
-				fp.addErrorMessage(
-						request.getMessage(MessageConstants.SITE_START_NOT_ACTIVE, activeSite.getName()));
+				fp.addErrorMessage(request.getMessage(MessageConstants.SITE_START_NOT_ACTIVE, activeSite.getName()));
 			}
 		} else {
-			fp.addErrorMessage(
-					request.getMessage(MessageConstants.SITE_START_IS_RUNNING, activeSite.getName(), activeSite.getState()));
+			fp.addErrorMessage(request.getMessage(MessageConstants.SITE_START_IS_RUNNING, activeSite.getName(),
+					activeSite.getState()));
 		}
 		return null;
 	}

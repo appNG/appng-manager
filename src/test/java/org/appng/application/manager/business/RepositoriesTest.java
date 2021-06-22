@@ -78,7 +78,7 @@ public class RepositoriesTest extends AbstractTest {
 		CallableDataSource siteDatasource = getDataSource("repository").withParam("repositoryid", "1")
 				.getCallableDataSource();
 		siteDatasource.perform("test");
-		
+
 		XPathDifferenceHandler differenceListener = new XPathDifferenceHandler(false);
 		differenceListener.ignoreDifference("/datasource[1]/data[1]/result[1]/field[3]/value[1]/text()[1]");
 		differenceListener.ignoreDifference("/datasource[1]/data[1]/result[1]/field[4]/value[1]/text()[1]");
@@ -107,7 +107,7 @@ public class RepositoriesTest extends AbstractTest {
 
 		CallableAction callableAction = getAction(REPO_EVENT, "update").withParam("repositoryid", "1")
 				.withParam(FORM_ACTION, "update").getCallableAction(repoForm);
-		
+
 		XPathDifferenceHandler differenceListener = new XPathDifferenceHandler(false);
 		differenceListener.ignoreDifference("/action[1]/data[1]/result[1]/field[3]/value[1]/text()[1]");
 		differenceListener.ignoreDifference("/action[1]/data[1]/result[1]/field[4]/value[1]/text()[1]");
@@ -145,5 +145,14 @@ public class RepositoriesTest extends AbstractTest {
 			// ignore
 		}
 		repoRepository.save(realRepository);
+	}
+
+	@Test
+	public void testPackages() throws Exception {
+		RepositoryCacheFactory.init(null, null, null, null, false);
+		CallableDataSource packages = getDataSource("packages").withParam("repositoryid", "1")
+				.withParam("packageFilter", "*").getCallableDataSource();
+		packages.perform("");
+		validate(packages.getDatasource());
 	}
 }
