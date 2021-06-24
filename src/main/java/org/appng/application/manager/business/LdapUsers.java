@@ -62,9 +62,9 @@ public class LdapUsers implements DataProvider {
 		Boolean ldapDisabled = site.getProperties().getBoolean(LdapService.LDAP_DISABLED);
 		if ("settings".equals(mode)) {
 			List<Property> ldapProps = new ArrayList<>();
+			ldapProps.add(getProperty(siteProps, LdapService.LDAP_DISABLED));
 			SimpleProperty ldapHost = getProperty(siteProps, LdapService.LDAP_HOST);
 			ldapProps.add(ldapHost);
-			ldapProps.add(getProperty(siteProps, LdapService.LDAP_DISABLED));
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_DOMAIN));
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_GROUP_BASE_DN));
 			SimpleProperty ldapUser = getProperty(siteProps, LdapService.LDAP_USER);

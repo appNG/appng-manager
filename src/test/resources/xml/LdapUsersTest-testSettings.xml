@@ -15,18 +15,18 @@
 		<resultset chunk="0" chunkname="ldapSettings" chunksize="8" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="8">
 			<result>
 				<field name="name" type="text">
-					<value>ldapHost</value>
-				</field>
-				<field name="value" type="text">
-					<value>ldap://localhost:389</value>
-				</field>
-			</result>
-			<result>
-				<field name="name" type="text">
 					<value>ldapDisabled</value>
 				</field>
 				<field name="value" type="text">
 					<value>true</value>
+				</field>
+			</result>
+			<result>
+				<field name="name" type="text">
+					<value>ldapHost</value>
+				</field>
+				<field name="value" type="text">
+					<value>ldap://localhost:389</value>
 				</field>
 			</result>
 			<result>
