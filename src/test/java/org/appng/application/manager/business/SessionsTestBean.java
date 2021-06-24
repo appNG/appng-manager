@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.catalina.Manager;
-import org.appng.api.Environment;
+import org.appng.api.FieldProcessor;
+import org.appng.api.Request;
 import org.appng.core.controller.Session;
 import org.mockito.Mockito;
 
@@ -28,7 +29,7 @@ public class SessionsTestBean extends Sessions {
 	public static List<Session> SESSIONS;
 
 	@Override
-	protected List<Session> getSessionsFromManager(Environment env) {
+	protected List<Session> getSessionsFromManager(Request request, FieldProcessor fp) {
 		return SESSIONS;
 	}
 

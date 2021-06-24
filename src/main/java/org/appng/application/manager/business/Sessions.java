@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 
 import org.apache.catalina.Manager;
+import org.apache.catalina.StoreManager;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +58,7 @@ import org.appng.xml.platform.Selection;
 import org.appng.xml.platform.SelectionGroup;
 import org.appng.xml.platform.SelectionType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
@@ -76,6 +78,8 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 	private static final String F_LGN = "fLgn";
 	private static final String MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
 	private final FastDateFormat hourMinutes = FastDateFormat.getInstance(MM_DD_HH_MM);
+	@Value("${maxSessions:250}")
+	private int maxSessions;
 
 	@Autowired
 	private SelectionFactory selectionFactory;
@@ -87,7 +91,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 		Integer siteId = options.getInteger("site", "id");
 		String siteName = null == siteId ? null : getService().getNameForSite(siteId);
 		if (null == sessionId) {
-			List<Session> sessions = getSessionsFromManager(environment);
+			List<Session> sessions = getSessionsFromManager(request, fp);
 			int cnt = 0;
 			for (Session session : sessions) {
 				if (expire(currentSession, session.getId(), siteName, getManager(environment))) {
@@ -112,9 +116,9 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 	}
 
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
-			Request request, FieldProcessor fieldProcessor) {
-		DataContainer dataContainer = new DataContainer(fieldProcessor);
-		List<Session> immutableSessions = getSessionsFromManager(environment);
+			Request request, FieldProcessor fp) {
+		DataContainer dataContainer = new DataContainer(fp);
+		List<Session> immutableSessions = getSessionsFromManager(request, fp);
 
 		String fDmn = request.getParameter(F_DMN);
 		String fSess = request.getParameter(F_SESS);
@@ -129,17 +133,38 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 		Boolean currentSiteOnly = options.getBoolean("site", "currentSiteOnly");
 		List<Session> sessions = getSessions(options, request, currentSiteOnly, immutableSessions, userAgents, fDmn,
 				fSess, fAgnt, fUsr, getDate(fCrBf), getDate(fCrAf), fLgn);
+		if (getManager(environment).getActiveSessions() <= maxSessions) {
+			addFilters(request, currentSiteOnly, dataContainer, userAgents, fAgnt, fDmn, fUsr);
+		}
 
-		addFilters(request, currentSiteOnly, dataContainer, userAgents, fAgnt, fDmn, fUsr);
-
-		dataContainer.setPage(sessions, fieldProcessor.getPageable());
+		dataContainer.setPage(sessions, fp.getPageable());
 		return dataContainer;
 	}
 
-	protected List<Session> getSessionsFromManager(Environment env) {
+	protected List<Session> getSessionsFromManager(Request request, FieldProcessor fp) {
 		List<Session> immutableSessions = new ArrayList<>();
-		for (org.apache.catalina.Session session : getManager(env).findSessions()) {
-			immutableSessions.add(getSessionMetaData(session));
+		Manager manager = getManager(request.getEnvironment());
+		int activeSessions = manager.getActiveSessions();
+		if (activeSessions > maxSessions) {
+			if (manager instanceof StoreManager) {
+				try {
+					String[] sessionsKeys = StoreManager.class.cast(manager).getStore().keys();
+					for (int i = 0; i < maxSessions; i++) {
+						immutableSessions.add(getSessionMetaData(manager.findSession(sessionsKeys[i])));
+					}
+					fp.addNoticeMessage(request.getMessage(MessageConstants.SESSIONS_SHOWING_MAX, maxSessions,
+							sessionsKeys.length));
+				} catch (IOException e) {
+					log.error("error while retrieving sessions keys from store", e);
+					fp.addErrorMessage(request.getMessage(MessageConstants.SESSIONS_READ_ERROR));
+				}
+			} else {
+				fp.addErrorMessage(request.getMessage(MessageConstants.SESSIONS_TOO_MANY, activeSessions, maxSessions));
+			}
+		} else {
+			for (org.apache.catalina.Session session : manager.findSessions()) {
+				immutableSessions.add(getSessionMetaData(session));
+			}
 		}
 		return immutableSessions;
 	}
