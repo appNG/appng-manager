@@ -70,6 +70,68 @@
 		</bean>
 	</datasource>
 
+	<datasource id="node-properties">
+		<config>
+			<title>node.properties</title>
+			<permissions>
+				<permission ref="node.properties" mode="set" />
+			</permissions>
+			<params>
+				<param name="nodeId" />
+				<param name="propertyId" />
+			</params>
+			<meta-data bindClass="org.appng.api.model.Property" result-selector="${current.name eq propertyId}">
+				<field name="shortName" type="text" displayLength="50">
+					<sort name="name" />
+					<label>name</label>
+				</field>
+				<field name="displayValue" type="longtext" displayLength="120">
+					<label>activeValue</label>
+				</field>
+				<field name="description" type="text" displayLength="400">
+					<label>description</label>
+				</field>
+				<field name="changedValue" type="image">
+					<label></label>
+					<icon condition="${!current.changedValue}">led_orange</icon>
+					<icon condition="${current.changedValue}">led_green</icon>
+				</field>
+				<field type="linkpanel" name="actions">
+					<label>actions</label>
+				</field>
+			</meta-data>
+			<linkpanel id="other" location="both">
+				<link mode="intern" target="/system/node/update/${nodeId}/node-property/create#tab_clusterState">
+					<label>property.create</label>
+					<icon>new</icon>
+					<permissions>
+						<permission ref="node.property.create" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/system/node/update/${nodeId}/node-property/update/${current.name}#tab_clusterState" default="true">
+					<label>edit</label>
+					<icon>edit</icon>
+					<permissions>
+						<permission ref="node.property.edit" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/system/node/update/${nodeId}/node-property/delete-node-property/${current.name}#tab_clusterState">
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="property.delete.confirm" params="#{shortName}" />
+					<permissions>
+						<permission ref="node.property.delete" mode="set" />
+					</permissions>
+				</link>
+			</linkpanel>
+		</config>
+		<bean id="properties">
+			<option name="properties" nodeId="${nodeId}" />
+		</bean>
+	</datasource>
+
 	<datasource id="site-properties">
 		<config>
 			<title>site.properties</title>

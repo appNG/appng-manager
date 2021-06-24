@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<messages xmlns="http://www.appng.org/schema/platform" ref="update-node-property">
+    <message ref="update-node-property" class="OK">Property has been updated.</message>
+</messages>

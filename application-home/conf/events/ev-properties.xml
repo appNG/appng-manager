@@ -61,6 +61,65 @@
 		</bean>
 	</action>
 
+	<!-- node properties -->
+	<action id="create-node-property">
+		<config>
+			<title>property.create</title>
+			<permissions>
+				<permission ref="node.property.create" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="nodeId" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'create-node-property' and not empty nodeId}" />
+		<datasource id="new-property" />
+		<bean id="properties">
+			<option name="action" id="create" />
+			<option name="properties" nodeId="${nodeId}" />
+		</bean>
+	</action>
+	<action id="update-node-property">
+		<config>
+			<title>property.edit</title>
+			<permissions>
+				<permission ref="node.property.edit" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="propertyId" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'update-node-property' and not empty propertyId}" />
+		<datasource id="property">
+			<params>
+				<param name="id">${propertyId}</param>
+			</params>
+		</datasource>
+		<bean id="properties">
+			<option name="property" id="${propertyId}" />
+			<option name="action" id="update" />
+		</bean>
+	</action>
+	<action id="delete-node-property">
+		<config>
+			<title>property.delete</title>
+			<permissions>
+				<permission ref="node.property.delete" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="propertyId" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'delete-node-property' and not empty propertyId}" />
+		<bean id="properties">
+			<option name="property" id="${propertyId}" />
+			<option name="action" id="delete" />
+		</bean>
+	</action>
+
 	<!-- site properties -->
 	<action id="create-site-property">
 		<config>

@@ -118,6 +118,11 @@
 			<permission id="cache.elements.list" />
 			<permission id="cache.statistics.clear" />
 			<permission id="cache.statistics.list" />
+			<!-- node -->
+			<permission id="node.properties" />
+			<permission id="node.property.create" />
+			<permission id="node.property.edit" />
+			<permission id="node.property.delete" />
 		</role>
 
 		<role>
@@ -316,6 +321,11 @@
 		<permission id="cache.elements.list">Show a list of cached elements per site</permission>
 		<permission id="cache.statistics.clear">Clear cache statistics</permission>
 		<permission id="cache.statistics.list">Show cache statistics per site</permission>
+		<!-- node -->
+		<permission id="node.properties">Show a node's properties</permission>
+		<permission id="node.property.create">Create a node property</permission>
+		<permission id="node.property.edit">Edit a node property</permission>
+		<permission id="node.property.delete">Delete a node property</permission>
 	</permissions>
 
 	<properties>

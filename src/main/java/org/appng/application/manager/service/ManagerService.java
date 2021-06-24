@@ -1485,7 +1485,7 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	public DataContainer searchProperties(FieldProcessor fp, Integer siteId, Integer appId, String propertyName)
+	public DataContainer searchProperties(FieldProcessor fp, String nodeId, Integer siteId, Integer appId, String propertyName)
 			throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (propertyName != null && propertyName.length() > 0) {
@@ -1498,21 +1498,31 @@ public class ManagerService extends CoreService implements Service {
 			}
 			data.setItem(new PropertyForm(property));
 		} else {
-			Page<PropertyImpl> properties = getProperties(siteId, appId, fp.getPageable());
+			Page<PropertyImpl> properties;
+			Pageable pageable = fp.getPageable();
+			if (nodeId != null) {
+				properties = getNodeProperties(nodeId, pageable);
+			} else {
+				properties = getProperties(siteId, appId, pageable);
+			}
 			data.setPage(properties);
 		}
 		return data;
 	}
 
-	public void createProperty(Request request, PropertyForm propertyForm, Integer siteId, Integer appId,
+	public void createProperty(Request request, PropertyForm propertyForm, String nodeId, Integer siteId, Integer appId,
 			FieldProcessor fp) throws BusinessException {
 		try {
 			PropertyImpl property = propertyForm.getProperty();
-			if (checkPropertyExists(siteId, appId, property)) {
-				fp.addErrorMessage(request.getMessage(MessageConstants.PROPERTY_EXISTS));
-				throw new BusinessException("property already exists!");
+			if (nodeId != null) {
+				createNodeProperty(nodeId, property);
 			} else {
-				createProperty(siteId, appId, property);
+				if (checkPropertyExists(siteId, appId, property)) {
+					fp.addErrorMessage(request.getMessage(MessageConstants.PROPERTY_EXISTS));
+					throw new BusinessException("property already exists!");
+				} else {
+					createProperty(siteId, appId, property);
+				}
 			}
 		} catch (Exception e) {
 			request.handleException(fp, e);
