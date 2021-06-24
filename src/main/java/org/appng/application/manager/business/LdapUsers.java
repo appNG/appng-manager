@@ -59,10 +59,12 @@ public class LdapUsers implements DataProvider {
 		LdapService ldapService = new LdapService();
 
 		Properties siteProps = site.getProperties();
+		Boolean ldapDisabled = site.getProperties().getBoolean(LdapService.LDAP_DISABLED);
 		if ("settings".equals(mode)) {
 			List<Property> ldapProps = new ArrayList<>();
 			SimpleProperty ldapHost = getProperty(siteProps, LdapService.LDAP_HOST);
 			ldapProps.add(ldapHost);
+			ldapProps.add(getProperty(siteProps, LdapService.LDAP_DISABLED));
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_DOMAIN));
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_GROUP_BASE_DN));
 			SimpleProperty ldapUser = getProperty(siteProps, LdapService.LDAP_USER);
@@ -71,14 +73,17 @@ public class LdapUsers implements DataProvider {
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_PRINCIPAL_SCHEME));
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_START_TLS));
 			dataContainer.setItems(ldapProps);
-			char[] ldapPw = siteProps.getString(LdapService.LDAP_PASSWORD, StringUtils.EMPTY).toCharArray();
-			boolean adminLoginOk = ldapService.loginUser(site, ldapUser.getString(), ldapPw);
-			if (!adminLoginOk) {
-				fp.addErrorMessage(request.getMessage(MessageConstants.LDAP_NOT_WORKING, ldapHost.getString()));
+
+			if (!ldapDisabled) {
+				char[] ldapPw = siteProps.getString(LdapService.LDAP_PASSWORD, StringUtils.EMPTY).toCharArray();
+				boolean adminLoginOk = ldapService.loginUser(site, ldapUser.getString(), ldapPw);
+				if (!adminLoginOk) {
+					fp.addErrorMessage(request.getMessage(MessageConstants.LDAP_NOT_WORKING, ldapHost.getString()));
+				}
 			}
 		} else {
 			List<LdapUser> users = new ArrayList<>();
-			if (site.getProperties().getBoolean(LdapService.LDAP_DISABLED)) {
+			if (ldapDisabled) {
 				fp.addInvalidMessage(request.getMessage(MessageConstants.LDAP_DISABLED, LdapService.LDAP_DISABLED));
 			} else {
 				List<SubjectImpl> globalGroups = coreService.getSubjectsByType(UserType.GLOBAL_GROUP);
