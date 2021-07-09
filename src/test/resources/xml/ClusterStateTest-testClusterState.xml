@@ -4,7 +4,7 @@
     <params>
         <param name="nodeId"/>
     </params>
-    <meta-data bindClass="org.appng.application.manager.business.ClusterState.LocalNodeState" result-selector="${current.nodeId eq nodeId}">
+    <meta-data bindClass="org.appng.application.manager.business.ClusterState$LocalNodeState" result-selector="${current.nodeId eq nodeId}">
         <field name="nodeId" type="text" binding="nodeId">
             <sort/>
             <label id="nodeId">Node ID</label>

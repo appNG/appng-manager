@@ -3,7 +3,7 @@
     <config>
         <title id="ldap.users">LDAP Users</title>
         <params/>
-        <meta-data bindClass="org.appng.application.manager.business.LdapUsers.LdapUser">
+        <meta-data bindClass="org.appng.application.manager.business.LdapUsers$LdapUser">
             <field name="name" type="text" binding="name">
                 <label id="name">Name</label>
             </field>

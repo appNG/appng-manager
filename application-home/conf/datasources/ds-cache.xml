@@ -10,7 +10,7 @@
 			<params>
 				<param name="siteid" />
 			</params>
-			<meta-data bindClass="java.util.Map.Entry">
+			<meta-data bindClass="java.util.Map$Entry">
 				<field name="key" type="longtext">
 					<label>name</label>
 				</field>
