@@ -102,7 +102,7 @@
 							<param name="version">${packageversion}</param>
 							<param name="timestamp">${packagetimestamp}</param>
 						</params>
-						<condition expression="${not empty form_action and not empty repositoryid}" />
+						<condition expression="${not empty form_action and not empty id}" />
 					</action>
 				</element>
 			</section>
