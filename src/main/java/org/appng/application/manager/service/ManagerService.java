@@ -463,7 +463,7 @@ public class ManagerService extends CoreService implements Service {
 		} catch (Exception e) {
 			logger.error("error retrieving packages", e);
 		}
-		return null;
+		return new Packages();
 	}
 
 	/**
@@ -478,7 +478,7 @@ public class ManagerService extends CoreService implements Service {
 		} catch (Exception e) {
 			logger.error("error retrieving package versions", e);
 		}
-		return null;
+		return new PackageVersions();
 	}
 
 	public PackageArchive getPackageArchive(Environment environment, String repositoryName, String name, String version,
