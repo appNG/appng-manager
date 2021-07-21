@@ -105,6 +105,7 @@ public class Installation extends ServiceAware implements DataProvider, ActionPr
 				data = service.searchPackageVersions(request, fp, repositoryId, applicationName);
 			}
 		} catch (BusinessException ex) {
+			log.error("Error while retrieving packages from repository", ex);
 			data.setPage(new ArrayList<>(), fp.getPageable());
 		}
 		return data;
