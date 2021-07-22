@@ -15,7 +15,7 @@
 					<url-param name="id" />
 				</url-params>
 				<get-params>
-					<get-param name="form_action" />
+					<get-param name="act" />
 					<get-param name="userid" />
 					<get-param name="groupid" />
 					<get-param name="f_type" />
@@ -110,7 +110,7 @@
 					<action eventId="subjectEvent" id="delete" onSuccess="/users">
 						<params>
 							<param name="userId">${userid}</param>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 						</params>
 					</action>
 				</element>
@@ -118,7 +118,7 @@
 					<action eventId="groupEvent" id="deleteGroup" onSuccess="/users#tab_groups">
 						<params>
 							<param name="groupid">${groupid}</param>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 						</params>
 					</action>
 				</element>

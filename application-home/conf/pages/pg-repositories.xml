@@ -15,7 +15,7 @@
 					<url-param name="entity2id" />
 				</url-params>
 				<get-params>
-					<get-param name="form_action" />
+					<get-param name="act" />
 					<get-param name="repositoryid" />
 					<get-param name="propertyid" />
 					<get-param name="packageversion" />
@@ -96,7 +96,7 @@
 				<element>
 					<action id="install" eventId="repositoryEvent" onSuccess="/repositories/installation/${id}/${packagename}#tab_packages" forceForward="true">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="repositoryid">${id}</param>
 							<param name="name">${packagename}</param>
 							<param name="version">${packageversion}</param>
@@ -113,7 +113,7 @@
 					<action id="reload" eventId="repositoryEvent" onSuccess="/repositories" forceForward="true">
 						<params>
 							<param name="repositoryid">${id}</param>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 						</params>
 						<condition expression="${form_action eq 'reload' and not empty repositoryid}" />
 					</action>
@@ -125,7 +125,7 @@
 				<element>
 					<action eventId="repositoryEvent" id="delete" onSuccess="/repositories">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="repositoryid">${repositoryid}</param>
 						</params>
 					</action>
@@ -133,7 +133,7 @@
 				<element>
 					<action eventId="repositoryEvent" id="delete-package" onSuccess="/repositories/installation/${id}/${packagename}#tab_packages">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="repositoryid">${id}</param>
 							<param name="name">${packagename}</param>
 							<param name="version">${packageversion}</param>

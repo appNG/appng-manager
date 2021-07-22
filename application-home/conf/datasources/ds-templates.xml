@@ -26,7 +26,7 @@
 				</field>
 			</meta-data>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/applications&#63;form_action=deleteTemplate&#38;name=#{name}">
+				<link mode="intern" target="/applications&#63;act=deleteTemplate&#38;name=#{name}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="template.delete.confirm" params="#{name}"></confirmation>

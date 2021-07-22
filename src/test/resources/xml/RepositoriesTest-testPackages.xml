@@ -44,13 +44,13 @@
 				<icon>edit</icon>
 			</link>
 			<link id="actions[2]" mode="intern"
-				target="/repositories/installation/1?form_action=install&amp;packagename=#{name}&amp;packageversion=#{latestRelease}" show-disabled="true">
+				target="/repositories/installation/1?act=install&amp;packagename=#{name}&amp;packageversion=#{latestRelease}" show-disabled="true">
 				<condition expression="${(current.installedVersion ne current.latestRelease) and (not empty current.latestRelease)}" />
 				<label id="install.latestrelease">Install latest release</label>
 				<icon>d_release</icon>
 			</link>
 			<link id="actions[3]" mode="intern"
-				target="/repositories/installation/1?form_action=install&amp;packagename=#{name}&amp;packageversion=#{latestSnapshot}" show-disabled="true">
+				target="/repositories/installation/1?act=install&amp;packagename=#{name}&amp;packageversion=#{latestSnapshot}" show-disabled="true">
 				<condition expression="${not empty current.latestSnapshot}" />
 				<label id="install.latestsnapshot">Install latest snapshot</label>
 				<icon>d_snapshot</icon>

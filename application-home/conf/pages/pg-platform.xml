@@ -15,7 +15,7 @@
 					<url-param name="id" />
 				</url-params>
 				<get-params>
-					<get-param name="form_action" />
+					<get-param name="act" />
 					<get-param name="propertyid" />
 					<get-param name="id" />
 					<get-param name="expandSql" />
@@ -90,8 +90,7 @@
 					</datasource>
 				</element>
 				<element folded="${expandSql ne 'true'}" passive="true">
-					<action eventId="databaseConnectionEvent" id="executeSql"
-						onSuccess="/platform/connection/update/${id}&#63;expandSql=true#tab_databaseConnections">
+					<action eventId="databaseConnectionEvent" id="executeSql" onSuccess="/platform/connection/update/${id}&#63;expandSql=true#tab_databaseConnections">
 						<params>
 							<param name="id">${id}</param>
 							<param name="form_action">${form_action}</param>
@@ -106,7 +105,7 @@
 					<datasource id="databaseConnections">
 						<params>
 							<param name="editLink">/platform/connection/update/</param>
-							<param name="testLink">/platform&#63;form_action=testConnection&#38;id=</param>
+							<param name="testLink">/platform&#63;act=testConnection&#38;id=</param>
 							<param name="linkTab">#tab_databaseConnections</param>
 							<param name="editTab">#tab_databaseConnections</param>
 						</params>
@@ -151,7 +150,7 @@
 				<element>
 					<action eventId="databaseConnectionEvent" id="testConnection" onSuccess="/platform#tab_databaseConnections">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="id">${id}</param>
 						</params>
 						<permissions>
@@ -162,7 +161,7 @@
 				<element>
 					<action eventId="propertyEvent" id="delete-platform-property" onSuccess="/platform#tab_platformProperties">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="propertyid">${propertyid}</param>
 						</params>
 					</action>
@@ -174,7 +173,7 @@
 					<!-- this needs to be the very last action, because the old site and application have been destroyed after execution! -->
 					<action eventId="platformEvent" id="reloadPlatform" onSuccess="/platform#tab_platformProperties">
 						<params>
-							<param name="action">${form_action}</param>
+							<param name="action">${act}</param>
 						</params>
 					</action>
 				</element>

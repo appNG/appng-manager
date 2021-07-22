@@ -57,7 +57,7 @@
 				<icon>edit</icon>
 			</link>
 			<link id="actions[2]" mode="intern"
-				target="/repositories?form_action=delete-repository&amp;repositoryid=${current.id}">
+				target="/repositories?act=delete-repository&amp;repositoryid=${current.id}">
 				<permissions>
 					<permission ref="repository.delete" mode="set"></permission>
 				</permissions>
@@ -66,7 +66,7 @@
 				<confirmation id="repository.delete.confirm" params="#{name}">Do you really want to delete the repository
 					"#{name}"?</confirmation>
 			</link>
-			<link id="actions[3]" mode="intern" target="/repositories/installation/${current.id}?form_action=reload">
+			<link id="actions[3]" mode="intern" target="/repositories/installation/${current.id}?act=reload">
 				<condition expression="${current.active}" />
 				<permissions>
 					<permission ref="repository.reload" mode="set"></permission>
@@ -116,7 +116,7 @@
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[2]" mode="intern" target="/repositories?form_action=delete-repository&amp;repositoryid=1">
+					<link id="actions[2]" mode="intern" target="/repositories?act=delete-repository&amp;repositoryid=1">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="repository.delete.confirm" params="#{name}">Do you really want to delete the repository
@@ -150,13 +150,13 @@
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[2]" mode="intern" target="/repositories?form_action=delete-repository&amp;repositoryid=3">
+					<link id="actions[2]" mode="intern" target="/repositories?act=delete-repository&amp;repositoryid=3">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="repository.delete.confirm" params="#{name}">Do you really want to delete the repository
 							"Delete me"?</confirmation>
 					</link>
-					<link id="actions[3]" mode="intern" target="/repositories/installation/3?form_action=reload">
+					<link id="actions[3]" mode="intern" target="/repositories/installation/3?act=reload">
 						<label id="reload">Reload</label>
 						<icon>reload</icon>
 						<confirmation id="repository.reload.confirm" params="#{name}">Do you really want to reload the repository

@@ -18,7 +18,7 @@
 					<url-param name="subentityid2" />
 				</url-params>
 				<get-params>
-					<get-param name="form_action" />
+					<get-param name="act" />
 					<get-param name="selectedappid" />
 					<get-param name="appid" />
 					<get-param name="siteid" />
@@ -26,7 +26,6 @@
 					<get-param name="conId" />
 					<get-param name="propertyid" />
 					<get-param name="expandSql" />
-					<get-param name="action" />
 					<get-param name="sessid" />
 					<get-param name="cacheElement" />
 					<!-- filter params -->
@@ -257,8 +256,8 @@
 						<params>
 							<param name="siteid">${siteid}</param>
 							<param name="editLink">/sites/update/${siteid}/database/update/</param>
-							<param name="testLink">/sites/update/${siteid}&#63;form_action=testConnection&#38;conId=</param>
-							<param name="resetLink">/sites/update/${siteid}&#63;form_action=resetConnection&#38;conId=</param>
+							<param name="testLink">/sites/update/${siteid}&#63;act=testConnection&#38;conId=</param>
+							<param name="resetLink">/sites/update/${siteid}&#63;act=resetConnection&#38;conId=</param>
 							<param name="linkTab">#tab_databaseConnections</param>
 							<param name="editTab">#tab_databaseConnections</param>
 						</params>
@@ -284,8 +283,8 @@
 					<datasource id="cacheElements">
 						<params>
 							<param name="siteid">${siteid}</param>
-							<param name="deleteLink">/sites/update/${siteid}&#63;action=expireCacheElement&#38;cacheElement=</param>
-							<param name="clearLink">/sites/update/${siteid}&#63;action=clearCache</param>
+							<param name="deleteLink">/sites/update/${siteid}&#63;act=expireCacheElement&#38;cacheElement=</param>
+							<param name="clearLink">/sites/update/${siteid}&#63;act=clearCache</param>
 						</params>
 						<condition expression="${not empty siteid}" />
 					</datasource>
@@ -298,7 +297,7 @@
 						<params>
 							<param name="currentSiteOnly">true</param>
 							<param name="siteid">${siteid}</param>
-							<param name="deleteLink">/sites/update/${siteid}&#63;action=expire&#38;sessid=</param>
+							<param name="deleteLink">/sites/update/${siteid}&#63;act=expire&#38;sessid=</param>
 						</params>
 						<condition expression="${not empty siteid}" />
 					</datasource>
@@ -310,7 +309,7 @@
 					<action eventId="databaseConnectionEvent" id="delete"
 						onSuccess="/sites/update/${siteid}#tab_databaseConnections">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="id">${conId}</param>
 						</params>
 						<permissions>
@@ -322,7 +321,7 @@
 					<action eventId="databaseConnectionEvent" id="testConnection"
 						onSuccess="/sites/update/${siteid}#tab_databaseConnections">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="id">${conId}</param>
 						</params>
 						<permissions>
@@ -334,7 +333,7 @@
 					<action eventId="databaseConnectionEvent" id="resetConnection"
 						onSuccess="/sites/update/${siteid}#tab_databaseConnections">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="id">${conId}</param>
 						</params>
 						<permissions>
@@ -345,7 +344,7 @@
 				<element>
 					<action eventId="siteEvent" id="delete" onSuccess="/sites">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="siteid">${siteid}</param>
 						</params>
 					</action>
@@ -353,7 +352,7 @@
 				<element>
 					<action id="start" eventId="siteEvent" onSuccess="/sites" forceForward="true">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="siteid">${siteid}</param>
 						</params>
 					</action>
@@ -361,7 +360,7 @@
 				<element>
 					<action id="stop" eventId="siteEvent" onSuccess="/sites" forceForward="true">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="siteid">${siteid}</param>
 						</params>
 					</action>
@@ -369,7 +368,7 @@
 				<element>
 					<action id="reload" eventId="siteEvent" onSuccess="/sites" forceForward="true">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="siteid">${siteid}</param>
 						</params>
 					</action>
@@ -380,7 +379,7 @@
 						<params>
 							<param name="siteid">${siteid}</param>
 							<param name="appid">${appid}</param>
-							<param name="applicationstate">${form_action}</param>
+							<param name="applicationstate">${act}</param>
 						</params>
 					</action>
 				</element>
@@ -388,7 +387,7 @@
 					<action eventId="propertyEvent" id="delete-site-property"
 						onSuccess="/sites/update/${siteid}#tab_site-properties">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="propertyid">${propertyid}</param>
 						</params>
 					</action>
@@ -397,7 +396,7 @@
 					<action eventId="propertyEvent" id="delete-site-application-property"
 						onSuccess="/sites/update/${siteid}?selectedappid=${selectedappid}#tab_select-site-application">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="propertyid">${propertyid}</param>
 						</params>
 					</action>
@@ -405,7 +404,7 @@
 				<element>
 					<action id="expire" eventId="sessionEvent" onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
 						<params>
-							<param name="action">${action}</param>
+							<param name="action">${act}</param>
 							<param name="sessid">${sessid}</param>
 						</params>
 					</action>
@@ -413,7 +412,7 @@
 				<element>
 					<action id="expireAll" eventId="sessionEvent" onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
 						<params>
-							<param name="action">${action}</param>
+							<param name="action">${act}</param>
 							<param name="siteid">${siteid}</param>
 						</params>
 					</action>
@@ -421,7 +420,7 @@
 				<element>
 					<action id="clearCache" eventId="cacheEvent" onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
 						<params>
-							<param name="action">${action}</param>
+							<param name="action">${act}</param>
 							<param name="siteid">${siteid}</param>
 						</params>
 					</action>
@@ -429,7 +428,7 @@
 				<element>
 					<action id="expireCacheElement" eventId="cacheEvent" onSuccess="/sites/update/${siteid}#tab_cacheStatistics">
 						<params>
-							<param name="action">${action}</param>
+							<param name="action">${act}</param>
 							<param name="cacheElement">${cacheElement}</param>
 							<param name="siteid">${siteid}</param>
 						</params>

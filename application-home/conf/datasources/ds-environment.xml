@@ -57,7 +57,7 @@
 				</field>
 			</meta-data>
 			<linkpanel id="links" location="top">
-				<link mode="intern" target="/system&#63;form_action=reloadPlatform">
+				<link mode="intern" target="/system&#63;act=reloadPlatform">
 					<label>platform.reload</label>
 					<icon>reload</icon>
 					<confirmation id="platform.reload.confirm" />

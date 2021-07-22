@@ -18,9 +18,8 @@
 					<url-param name="id2" />
 				</url-params>
 				<get-params>
-					<get-param name="action" />
+					<get-param name="act" />
 					<get-param name="sessid" />
-					<get-param name="form_action" />
 					<get-param name="id" />
 					<!-- session filtering -->
 					<get-param name="fSess" />
@@ -73,7 +72,7 @@
 				<element>
 					<datasource id="sessions">
 						<params>
-							<param name="deleteLink">/system&#63;action=expire&#38;sessid=</param>
+							<param name="deleteLink">/system&#63;act=expire&#38;sessid=</param>
 						</params>
 					</datasource>
 				</element>
@@ -155,7 +154,7 @@
 				<element>
 					<action id="expire" eventId="sessionEvent" onSuccess="/system#tab_memory">
 						<params>
-							<param name="action">${action}</param>
+							<param name="action">${act}</param>
 							<param name="sessid">${sessid}</param>
 						</params>
 					</action>
@@ -163,7 +162,7 @@
 				<element>
 					<action id="expireAll" eventId="sessionEvent" onSuccess="/system#tab_memory">
 						<params>
-							<param name="action">${action}</param>
+							<param name="action">${act}</param>
 						</params>
 					</action>
 				</element>
@@ -171,7 +170,7 @@
 					<!-- this needs to be the very last action, because the old site and application have been destroyed after execution! -->
 					<action eventId="platformEvent" id="reloadPlatform" onSuccess="/system">
 						<params>
-							<param name="action">${form_action}</param>
+							<param name="action">${act}</param>
 						</params>
 					</action>
 				</element>

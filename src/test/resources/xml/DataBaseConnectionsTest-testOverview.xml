@@ -9,6 +9,7 @@
 			<param name="deleteLink" />
 			<param name="testLink" />
 			<param name="resetLink" />
+			<param name="repairLink" />
 			<param name="linkTab" />
 			<param name="editTab" />
 		</params>
@@ -53,11 +54,16 @@
 				<label id="test">Test</label>
 				<icon>start</icon>
 			</link>
+			<link id="repair" mode="intern" target="${current.item.id}">
+				<condition expression="${current.item.active and current.pendingMigrations}" />
+				<label id="repair">repair</label>
+				<icon>repair</icon>
+				<confirmation id="connection.confirm.repair">connection.confirm.repair</confirmation>
+			</link>
 		</linkpanel>
 	</config>
 	<data>
-		<resultset chunk="0" chunkname="databaseConnections" chunksize="10" nextchunk="0" previouschunk="0"
-			firstchunk="0" lastchunk="0" hits="1">
+		<resultset chunk="0" chunkname="databaseConnections" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="1">
 			<result>
 				<field name="type" type="text">
 					<value>HSQL</value>
@@ -90,6 +96,11 @@
 					<link id="actions[3]" mode="intern" target="1">
 						<label id="test">Test</label>
 						<icon>start</icon>
+					</link>
+					<link id="repair" mode="intern" target="1">
+						<label id="repair">repair</label>
+						<icon>repair</icon>
+						<confirmation id="connection.confirm.repair">connection.confirm.repair</confirmation>
 					</link>
 				</linkpanel>
 			</result>

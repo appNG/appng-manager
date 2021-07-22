@@ -57,7 +57,7 @@
 				</link>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
-				<link mode="intern" target="/sites&#63;form_action=start&#38;siteid=${current.id}">
+				<link mode="intern" target="/sites&#63;act=start&#38;siteid=${current.id}">
 					<label>start</label>
 					<icon>activate</icon>
 					<condition expression="${current.active and current.state.name() eq 'STOPPED'}" />
@@ -65,7 +65,7 @@
 						<permission ref="site.reload" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/sites&#63;form_action=stop&#38;siteid=${current.id}">
+				<link mode="intern" target="/sites&#63;act=stop&#38;siteid=${current.id}">
 					<label>stop</label>
 					<icon>deactivate</icon>
 					<condition expression="${current.active and current.running}" />
@@ -80,7 +80,7 @@
 						<permission ref="site.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/sites&#63;form_action=delete&#38;siteid=${current.id}">
+				<link mode="intern" target="/sites&#63;act=delete&#38;siteid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="site.delete.confirm" params="#{name}" />
@@ -88,7 +88,7 @@
 						<permission ref="site.delete" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/sites&#63;form_action=reload&#38;siteid=${current.id}" show-disabled="true">
+				<link mode="intern" target="/sites&#63;act=reload&#38;siteid=${current.id}" show-disabled="true">
 					<label>reload</label>
 					<icon>reload</icon>
 					<condition expression="${current.active}" />

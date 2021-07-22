@@ -44,7 +44,7 @@
 					</permissions>
 				</link>
 				<link mode="intern"
-					target="/applications/update/${appid}&#63;form_action=delete-permission&#38;permissionid=${current.id}#tab_permissions">
+					target="/applications/update/${appid}&#63;act=delete-permission&#38;permissionid=${current.id}#tab_permissions">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="permission.delete.confirm" params="#{name}"/>

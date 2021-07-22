@@ -53,7 +53,7 @@
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[2]" mode="intern" target="/users?form_action=delete&amp;userid=${current.id}">
+			<link id="actions[2]" mode="intern" target="/users?act=delete&amp;userid=${current.id}">
 				<permissions>
 					<permission ref="subject.delete" mode="set"></permission>
 				</permissions>
@@ -124,7 +124,7 @@
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[2]" mode="intern" target="/users?form_action=delete&amp;userid=1">
+					<link id="actions[2]" mode="intern" target="/users?act=delete&amp;userid=1">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="subject.delete.confirm" params="#{name}">Do you really want to delete the user "admin"?</confirmation>

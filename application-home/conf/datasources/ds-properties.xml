@@ -39,7 +39,7 @@
 						<permission ref="platform.property.create" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/platform&#63;form_action=reloadPlatform">
+				<link mode="intern" target="/platform&#63;act=reloadPlatform">
 					<label>platform.reload</label>
 					<icon>reload</icon>
 					<confirmation id="platform.reload.confirm" />
@@ -56,7 +56,7 @@
 						<permission ref="platform.property.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/platform&#63;form_action=delete-platform-property&#38;propertyid=${current.name}#tab_platformProperties">
+				<link mode="intern" target="/platform&#63;act=delete-platform-property&#38;propertyid=${current.name}#tab_platformProperties">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="property.delete.confirm" params="#{shortName}" />
@@ -180,7 +180,7 @@
 					</permissions>
 				</link>
 				<link mode="intern"
-					target="/sites/update/${siteid}&#63;form_action=delete-site-property&#38;propertyid=${current.name}#tab_site-properties">
+					target="/sites/update/${siteid}&#63;act=delete-site-property&#38;propertyid=${current.name}#tab_site-properties">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="property.delete.confirm" params="#{shortName}" />
@@ -243,7 +243,7 @@
 					</permissions>
 				</link>
 				<link mode="intern"
-					target="/applications/update/${appid}&#63;form_action=delete-application-property&#38;propertyid=${current.name}#tab_application-properties">
+					target="/applications/update/${appid}&#63;act=delete-application-property&#38;propertyid=${current.name}#tab_application-properties">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="property.delete.confirm" params="#{shortName}" />
@@ -307,7 +307,7 @@
 					</permissions>
 				</link>
 				<link mode="intern"
-					target="/sites/update/${siteid}/app-property&#63;form_action=delete-site-application-property&#38;propertyid=${current.name}#tab_select-site-application">
+					target="/sites/update/${siteid}/app-property&#63;act=delete-site-application-property&#38;propertyid=${current.name}#tab_select-site-application">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="property.delete.confirm" params="#{shortName}" />

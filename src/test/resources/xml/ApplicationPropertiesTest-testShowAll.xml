@@ -48,7 +48,7 @@
 				<icon>edit</icon>
 			</link>
 			<link id="actions[2]" mode="intern"
-				target="/applications/update/1?form_action=delete-application-property&amp;propertyid=${current.name}#tab_application-properties">
+				target="/applications/update/1?act=delete-application-property&amp;propertyid=${current.name}#tab_application-properties">
 				<permissions>
 					<permission ref="application.property.delete" mode="set"></permission>
 				</permissions>
@@ -84,7 +84,7 @@
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/applications/update/1?form_action=delete-application-property&amp;propertyid=platform.application.manager.anotherproperty#tab_application-properties">
+						target="/applications/update/1?act=delete-application-property&amp;propertyid=platform.application.manager.anotherproperty#tab_application-properties">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
@@ -114,7 +114,7 @@
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/applications/update/1?form_action=delete-application-property&amp;propertyid=platform.application.manager.testproperty#tab_application-properties">
+						target="/applications/update/1?act=delete-application-property&amp;propertyid=platform.application.manager.testproperty#tab_application-properties">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property

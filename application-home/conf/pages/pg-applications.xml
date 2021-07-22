@@ -17,7 +17,7 @@
 					<url-param name="subentityid" />
 				</url-params>
 				<get-params>
-					<get-param name="form_action" />
+					<get-param name="act" />
 					<get-param name="appid" />
 					<get-param name="roleid" />
 					<get-param name="propertyid" />
@@ -236,7 +236,7 @@
 					<action id="delete" eventId="applicationEvent" onSuccess="/applications">
 						<params>
 							<param name="appid">${appid}</param>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 						</params>
 					</action>
 				</element>
@@ -246,7 +246,7 @@
 						<params>
 							<param name="appid">${appid}</param>
 							<param name="roleid">${roleid}</param>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 						</params>
 					</action>
 				</element>
@@ -254,7 +254,7 @@
 					<action id="delete-application-property" eventId="propertyEvent"
 						onSuccess="/applications/update/${appid}#tab_application-properties">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="propertyid">${propertyid}</param>
 						</params>
 					</action>
@@ -263,7 +263,7 @@
 					<action id="delete-permission" eventId="permissionEvent"
 						onSuccess="/applications/update/${appid}#tab_permissions">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="appid">${appid}</param>
 							<param name="id">${permissionid}</param>
 						</params>
@@ -273,7 +273,7 @@
 					<action id="delete-resource" eventId="applicationResourceEvent"
 						onSuccess="/applications/update/${appid}#tab_resources">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="appid">${appid}</param>
 							<param name="id">${resourceid}</param>
 						</params>
@@ -282,7 +282,7 @@
 				<element>
 					<action id="delete" eventId="templateEvent" onSuccess="/applications#tab_templates">
 						<params>
-							<param name="form_action">${form_action}</param>
+							<param name="form_action">${act}</param>
 							<param name="name">${name}</param>
 						</params>
 					</action>
