@@ -9,7 +9,6 @@
 			<param name="deleteLink" />
 			<param name="testLink" />
 			<param name="resetLink" />
-			<param name="repairLink" />
 			<param name="linkTab" />
 			<param name="editTab" />
 		</params>
@@ -54,12 +53,6 @@
 				<label id="test">Test</label>
 				<icon>start</icon>
 			</link>
-			<link id="repair" mode="intern" target="${current.item.id}">
-				<condition expression="${current.item.active and current.pendingMigrations}" />
-				<label id="repair">repair</label>
-				<icon>repair</icon>
-				<confirmation id="connection.confirm.repair">connection.confirm.repair</confirmation>
-			</link>
 		</linkpanel>
 	</config>
 	<data>
@@ -96,11 +89,6 @@
 					<link id="actions[3]" mode="intern" target="1">
 						<label id="test">Test</label>
 						<icon>start</icon>
-					</link>
-					<link id="repair" mode="intern" target="1">
-						<label id="repair">repair</label>
-						<icon>repair</icon>
-						<confirmation id="connection.confirm.repair">connection.confirm.repair</confirmation>
 					</link>
 				</linkpanel>
 			</result>
