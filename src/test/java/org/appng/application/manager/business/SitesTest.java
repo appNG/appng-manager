@@ -26,6 +26,7 @@ import org.appng.application.manager.form.PropertyForm;
 import org.appng.application.manager.form.SiteForm;
 import org.appng.core.domain.PropertyImpl;
 import org.appng.core.domain.SiteImpl;
+import org.appng.testsupport.validation.WritingXmlValidator;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -33,12 +34,16 @@ import org.junit.runners.MethodSorters;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SitesTest extends AbstractTest {
 
+	static {
+		WritingXmlValidator.writeXml = false;
+	}
+
 	private static final String SITE_EVENT = "siteEvent";
 
 	@Test
 	public void testCreateSite() throws Exception {
 		propertyRepository.save(new PropertyImpl("platform." + Platform.Property.MESSAGING_ENABLED, null, "false"));
-		
+
 		SiteImpl siteToCreate = new SiteImpl();
 		SiteForm siteForm = new SiteForm(siteToCreate);
 		siteToCreate.setName("localhost");
@@ -46,7 +51,7 @@ public class SitesTest extends AbstractTest {
 		siteToCreate.setDomain("localhost");
 		siteToCreate.setActive(true);
 
-		//prepares using appNG >= 1.19.1
+		// prepares using appNG >= 1.19.1
 		PropertyForm form = new PropertyForm();
 		form.getProperty().setName(Platform.Property.MESSAGING_ENABLED);
 		form.getProperty().setDefaultString(Boolean.FALSE.toString());

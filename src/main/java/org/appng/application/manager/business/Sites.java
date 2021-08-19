@@ -23,9 +23,11 @@ import org.appng.api.Environment;
 import org.appng.api.FieldProcessor;
 import org.appng.api.InvalidConfigurationException;
 import org.appng.api.Options;
+import org.appng.api.Platform;
 import org.appng.api.Request;
 import org.appng.api.Scope;
 import org.appng.api.model.Application;
+import org.appng.api.model.Properties;
 import org.appng.api.model.Site;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.form.SiteForm;
@@ -82,6 +84,11 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 				errorMessage = MessageConstants.SITE_RELOADED_ERROR;
 				service.reloadSite(request, application, siteId, fp);
 				okMessage = MessageConstants.SITE_RELOADED;
+			} else if (ACTION_RELOAD_TEMPLATE.equals(action)) {
+				Properties platformProps = environment.getAttribute(Scope.PLATFORM,
+						Platform.Environment.PLATFORM_CONFIG);
+				service.reloadTemplate(siteId, platformProps);
+				okMessage = MessageConstants.SITE_TEMPLATE_RELOADED;
 			} else if (ACTION_RELOAD_PLATFORM.equals(action)) {
 				errorMessage = MessageConstants.PLATFORM_RELOAD_ERROR;
 				reloadPlatform(site, application, request, fp);

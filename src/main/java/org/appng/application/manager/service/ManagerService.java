@@ -63,6 +63,7 @@ import org.appng.api.model.Identifier;
 import org.appng.api.model.NameProvider;
 import org.appng.api.model.Nameable;
 import org.appng.api.model.Permission;
+import org.appng.api.model.Properties;
 import org.appng.api.model.Property;
 import org.appng.api.model.Resource;
 import org.appng.api.model.ResourceType;
@@ -112,6 +113,7 @@ import org.appng.core.model.RepositoryType;
 import org.appng.core.model.RepositoryUtils;
 import org.appng.core.service.CoreService;
 import org.appng.core.service.InitializerService;
+import org.appng.core.service.PlatformProperties;
 import org.appng.core.service.MigrationService.MigrationStatus;
 import org.appng.core.service.PropertySupport;
 import org.appng.core.xml.repository.PackageVersions;
@@ -1485,8 +1487,8 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	public DataContainer searchProperties(FieldProcessor fp, String nodeId, Integer siteId, Integer appId, String propertyName)
-			throws BusinessException {
+	public DataContainer searchProperties(FieldProcessor fp, String nodeId, Integer siteId, Integer appId,
+			String propertyName) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (propertyName != null && propertyName.length() > 0) {
 			PropertyImpl property = propertyRepository.findOne(propertyName);
@@ -1826,6 +1828,13 @@ public class ManagerService extends CoreService implements Service {
 
 	public void resetConnection(Integer conId) {
 		resetConnection(null, conId);
+	}
+
+	@Override
+	public void reloadTemplate(Integer siteId, Properties platformConfig) {
+		SiteImpl site = siteRepository.findOne(siteId);
+		initSiteProperties(site);
+		refreshTemplate(site, PlatformProperties.get(platformConfig));
 	}
 
 	public SiteApplication getSiteApplication(Integer siteId, Integer appId) {

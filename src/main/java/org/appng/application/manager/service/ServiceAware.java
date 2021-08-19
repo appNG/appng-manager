@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Abstract baseclass used by the application's {@link ActionProvider}s and {@link DataProvider}s.
  * 
  * @author Matthias Müller
- * 
  */
 public abstract class ServiceAware {
 
@@ -36,6 +35,7 @@ public abstract class ServiceAware {
 	protected static final String ACTION_UPDATE = "update";
 	protected static final String ACTION_CREATE = "create";
 	protected static final String ACTION_ASSIGN = "assign";
+	protected static final String ACTION_RELOAD_TEMPLATE = "reloadTemplate";
 	protected static final String ACTION_RELOAD = "reload";
 	protected static final String ACTION_RELOAD_PLATFORM = "reloadPlatform";
 	protected static final String ACTION_ASSIGN_PERMISSIONS = "assignPermissions";

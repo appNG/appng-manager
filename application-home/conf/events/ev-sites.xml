@@ -79,6 +79,24 @@
 		</bean>
 	</action>
 
+	<action id="reloadTemplate">
+		<config>
+			<title>site.reload</title>
+			<permissions>
+				<permission ref="site.reload" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+				<param name="siteid" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'reloadTemplate'}" />
+		<bean id="sites">
+			<option name="site" id="${siteid}" />
+			<option name="action" id="reloadTemplate" />
+		</bean>
+	</action>
+
 	<action id="start">
 		<config>
 			<title>site.start</title>
