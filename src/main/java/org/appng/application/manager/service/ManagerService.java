@@ -1834,7 +1834,7 @@ public class ManagerService extends CoreService implements Service {
 	public void reloadTemplate(Integer siteId, Properties platformConfig) {
 		SiteImpl site = siteRepository.findOne(siteId);
 		initSiteProperties(site);
-		refreshTemplate(site.getProperties(), PlatformProperties.get(platformConfig));
+		refreshTemplate(site, PlatformProperties.get(platformConfig));
 	}
 
 	public SiteApplication getSiteApplication(Integer siteId, Integer appId) {
