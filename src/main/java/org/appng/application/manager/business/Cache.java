@@ -37,6 +37,7 @@ import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.api.support.SelectionFactory;
 import org.appng.api.support.SelectionFactory.Selection;
+import org.appng.application.manager.ManagerSettings;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.controller.CachedResponse;
@@ -44,13 +45,15 @@ import org.appng.core.controller.filter.PageCacheFilter;
 import org.appng.core.service.CacheService;
 import org.appng.xml.platform.SelectionGroup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 /**
  * Provides methods to interact with the page cache. Elements are stored in the cache by the {@link PageCacheFilter}.
  * 
  * @author Matthias Herlitzius
- * @author Matthias Müller
  */
 @Component
 public class Cache extends ServiceAware implements ActionProvider<Void>, DataProvider {
@@ -66,52 +69,64 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 	private SelectionFactory selectionFactory;
 
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
-			Request request, FieldProcessor fieldProcessor) {
-		String mode = options.getString("mode", ID);
-		Integer siteId = options.getInteger("site", ID);
-		DataContainer dataContainer = new DataContainer(fieldProcessor);
+			Request request, FieldProcessor fp) {
+		String mode = options.getOptionValue("mode", ID);
+		Integer siteId = request.convert(options.getOptionValue("site", ID), Integer.class);
+		DataContainer dataContainer = new DataContainer(fp);
+		Pageable pageable = fp.getPageable();
 		if (STATISTICS.equals(mode)) {
 			List<Entry<String, String>> result = new ArrayList<>();
 			Map<String, String> cacheStatistics = getService().getCacheStatistics(siteId);
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_NAME));
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_SIZE));
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_HITS));
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_HITS_PERCENT));
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_MISSES));
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_MISSES_PERCENT));
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_PUTS));
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_AVG_PUT_TIME));
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_GETS));
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_AVG_GET_TIME));
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_REMOVALS));
-			result.add(getStatEntry(request, cacheStatistics, CacheService.STATS_AVG_REMOVAL_TIME));
-			dataContainer.setItems(result);
-		} else if (ENTRIES.equals(mode)) {
-			List<CachedResponse> allCacheEntries = getService().getCacheEntries(siteId);
-			List<CacheEntry> cacheEntries = new ArrayList<>();
-			String entryName = request.getParameter(F_ETR);
-			String entryType = request.getParameter(F_CTYPE);
-			boolean filterName = StringUtils.isNotBlank(entryName);
-			boolean filterType = StringUtils.isNotBlank(entryType);
-
-			for (CachedResponse entry : allCacheEntries) {
-				String entryId = entry.getId();
-				boolean nameMatches = !filterName || FilenameUtils
-						.wildcardMatch(entryId.substring(entryId.indexOf('/')), entryName, IOCase.INSENSITIVE);
-				boolean typeMatches = !filterType
-						|| FilenameUtils.wildcardMatch(entry.getContentType(), entryType, IOCase.INSENSITIVE);
-				if (nameMatches && typeMatches) {
-					cacheEntries.add(new CacheEntry(entry));
+			for (Entry<String, String> e : cacheStatistics.entrySet()) {
+				result.add(e);
+			}
+			Collections.sort(result, new Comparator<Entry<String, String>>() {
+				public int compare(Entry<String, String> o1, Entry<String, String> o2) {
+					return o1.getKey().compareTo(o2.getKey());
 				}
+			});
+			dataContainer.setPage(result, pageable);
+		} else if (ENTRIES.equals(mode)) {
+			Integer maxCacheEntries = application.getProperties()
+					.getInteger(ManagerSettings.MAX_FILTERABLE_CACHE_ENTRIES);
+			List<AppngCache> allCacheEntries = getService().getCacheEntries(siteId);
+			List<CacheEntry> cacheEntries = new ArrayList<CacheEntry>();
+
+			int cacheSize = allCacheEntries.size();
+			if (cacheSize > maxCacheEntries) {
+				fp.getFields().forEach(f -> f.setSort(null));
+				for (int i = pageable.getOffset(); i < pageable.getOffset() + pageable.getPageSize(); i++) {
+					if (i < cacheSize) {
+						cacheEntries.add(new CacheEntry(allCacheEntries.get(i)));
+					}
+				}
+				dataContainer.setPage(new PageImpl<>(cacheEntries, pageable, cacheSize));
+			} else {
+				String entryName = request.getParameter(F_ETR);
+				String entryType = request.getParameter(F_CTYPE);
+				boolean filterName = StringUtils.isNotBlank(entryName);
+				boolean filterType = StringUtils.isNotBlank(entryType);
+
+				for (AppngCache entry : allCacheEntries) {
+					String entryId = entry.getId();
+					boolean nameMatches = !filterName || FilenameUtils
+							.wildcardMatch(entryId.substring(entryId.indexOf('/')), entryName, IOCase.INSENSITIVE);
+					boolean typeMatches = !filterType
+							|| FilenameUtils.wildcardMatch(entry.getContentType(), entryType, IOCase.INSENSITIVE);
+					if (nameMatches && typeMatches) {
+						cacheEntries.add(new CacheEntry(entry));
+					}
+				}
+
+				Selection nameSelection = selectionFactory.getTextSelection(F_ETR, MessageConstants.NAME, entryName);
+				Selection typeSelection = selectionFactory.getTextSelection(F_CTYPE, MessageConstants.TYPE, entryType);
+				SelectionGroup selectionGroup = new SelectionGroup();
+				selectionGroup.getSelections().add(nameSelection);
+				selectionGroup.getSelections().add(typeSelection);
+				dataContainer.getSelectionGroups().add(selectionGroup);
+				dataContainer.setPage(cacheEntries, pageable);
 			}
 
-			Selection nameSelection = selectionFactory.getTextSelection(F_ETR, MessageConstants.NAME, entryName);
-			Selection typeSelection = selectionFactory.getTextSelection(F_CTYPE, MessageConstants.TYPE, entryType);
-			SelectionGroup selectionGroup = new SelectionGroup();
-			selectionGroup.getSelections().add(nameSelection);
-			selectionGroup.getSelections().add(typeSelection);
-			dataContainer.getSelectionGroups().add(selectionGroup);
-			dataContainer.setPage(cacheEntries, fieldProcessor.getPageable());
 		}
 		return dataContainer;
 	}

@@ -334,6 +334,7 @@
 		<property id="databaseReportSender" description="the sender for the database report email">report@example.com</property>
 		<property id="databaseReportSubject" description="the subject for the database report email">appNG database report</property>
 		<property id="databaseReportText" description="the text for the database report email">See attached file for a report of the database related platform events.</property>
+		<property id="maxFilterableCacheEntries" description="The maximum number of cache entries that can be filtered/sorted">5000</property>
 	</properties>
 
 </application>
