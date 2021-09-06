@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<datasource xmlns="http://www.appng.org/schema/platform" id="cacheElements">
+	<config>
+		<title id="cache.elements">Cache elements</title>
+		<permissions>
+			<permission ref="cache.elements.list" mode="set"></permission>
+		</permissions>
+		<params>
+			<param name="siteid">1</param>
+			<param name="deleteLink" />
+			<param name="clearLink" />
+		</params>
+		<meta-data bindClass="org.appng.application.manager.business.Cache$CacheEntry">
+			<field name="id" type="text" displayLength="75" binding="id">
+				<sort />
+				<label id="id">ID</label>
+			</field>
+			<field name="type" type="text" binding="type">
+				<label id="type">Type</label>
+			</field>
+			<field name="size" type="decimal" format="#,##0 KB" binding="size">
+				<label id="size">Size</label>
+			</field>
+			<field name="hits" type="text" binding="hits">
+				<label id="hitCount">Hits</label>
+			</field>
+			<field name="created" type="date" format="HH:mm:ss" binding="created">
+				<label id="created">Created</label>
+			</field>
+			<field name="expires" type="date" format="HH:mm:ss" binding="expires">
+				<label id="expires">Expires</label>
+			</field>
+			<field name="actions" type="linkpanel" binding="actions">
+				<label id="actions">Actions</label>
+			</field>
+		</meta-data>
+		<linkpanel id="actions" location="inline">
+			<link id="actions[1]" mode="intern" target="${current.id}">
+				<permissions>
+					<permission ref="cache.element.expire" mode="set"></permission>
+				</permissions>
+				<label id="cache.element.expire">Remove element from cache</label>
+				<icon>delete</icon>
+			</link>
+			<link id="actions[2]" mode="extern" target="${current.path}">
+				<label id="show">show</label>
+				<icon>preview</icon>
+			</link>
+		</linkpanel>
+		<linkpanel id="other" location="bottom">
+			<link id="other[1]" mode="intern" target="">
+				<permissions>
+					<permission ref="cache.clear" mode="set"></permission>
+				</permissions>
+				<label id="cache.clear">Clear cache</label>
+				<icon>delete</icon>
+			</link>
+		</linkpanel>
+	</config>
+	<data>
+		<selectionGroup>
+			<selection id="fEtr" type="text">
+				<title id="name">Name</title>
+				<option value="" name="fEtr" />
+			</selection>
+		</selectionGroup>
+		<resultset chunk="0" chunkname="cacheElements" chunksize="10" nextchunk="1" previouschunk="0" firstchunk="0" lastchunk="100" hits="1001">
+			<result>
+				<field name="id" type="text">
+					<value>GET/foo/bar790.txt</value>
+				</field>
+				<field name="type" type="text">
+					<value>text/plain</value>
+				</field>
+				<field name="size" type="decimal">
+					<value>0 KB</value>
+				</field>
+				<field name="hits" type="text">
+					<value>0</value>
+				</field>
+				<field name="created" type="date">
+					<value>15:33:20</value>
+				</field>
+				<field name="expires" type="date">
+					<value>15:35:20</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="GET/foo/bar790.txt">
+						<label id="cache.element.expire">Remove element from cache</label>
+						<icon>delete</icon>
+					</link>
+					<link id="actions[2]" mode="extern" target="localhost/foo/bar790.txt">
+						<label id="show">show</label>
+						<icon>preview</icon>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="text">
+					<value>GET/foo/bar150.txt</value>
+				</field>
+				<field name="type" type="text">
+					<value>text/plain</value>
+				</field>
+				<field name="size" type="decimal">
+					<value>0 KB</value>
+				</field>
+				<field name="hits" type="text">
+					<value>0</value>
+				</field>
+				<field name="created" type="date">
+					<value>15:33:20</value>
+				</field>
+				<field name="expires" type="date">
+					<value>15:35:20</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="GET/foo/bar150.txt">
+						<label id="cache.element.expire">Remove element from cache</label>
+						<icon>delete</icon>
+					</link>
+					<link id="actions[2]" mode="extern" target="localhost/foo/bar150.txt">
+						<label id="show">show</label>
+						<icon>preview</icon>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="text">
+					<value>GET/foo/bar546.txt</value>
+				</field>
+				<field name="type" type="text">
+					<value>text/plain</value>
+				</field>
+				<field name="size" type="decimal">
+					<value>0 KB</value>
+				</field>
+				<field name="hits" type="text">
+					<value>0</value>
+				</field>
+				<field name="created" type="date">
+					<value>15:33:20</value>
+				</field>
+				<field name="expires" type="date">
+					<value>15:35:20</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="GET/foo/bar546.txt">
+						<label id="cache.element.expire">Remove element from cache</label>
+						<icon>delete</icon>
+					</link>
+					<link id="actions[2]" mode="extern" target="localhost/foo/bar546.txt">
+						<label id="show">show</label>
+						<icon>preview</icon>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="text">
+					<value>GET/foo/bar524.txt</value>
+				</field>
+				<field name="type" type="text">
+					<value>text/plain</value>
+				</field>
+				<field name="size" type="decimal">
+					<value>0 KB</value>
+				</field>
+				<field name="hits" type="text">
+					<value>0</value>
+				</field>
+				<field name="created" type="date">
+					<value>15:33:20</value>
+				</field>
+				<field name="expires" type="date">
+					<value>15:35:20</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="GET/foo/bar524.txt">
+						<label id="cache.element.expire">Remove element from cache</label>
+						<icon>delete</icon>
+					</link>
+					<link id="actions[2]" mode="extern" target="localhost/foo/bar524.txt">
+						<label id="show">show</label>
+						<icon>preview</icon>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="text">
+					<value>GET/foo/bar654.txt</value>
+				</field>
+				<field name="type" type="text">
+					<value>text/plain</value>
+				</field>
+				<field name="size" type="decimal">
+					<value>0 KB</value>
+				</field>
+				<field name="hits" type="text">
+					<value>0</value>
+				</field>
+				<field name="created" type="date">
+					<value>15:33:20</value>
+				</field>
+				<field name="expires" type="date">
+					<value>15:35:20</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="GET/foo/bar654.txt">
+						<label id="cache.element.expire">Remove element from cache</label>
+						<icon>delete</icon>
+					</link>
+					<link id="actions[2]" mode="extern" target="localhost/foo/bar654.txt">
+						<label id="show">show</label>
+						<icon>preview</icon>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="text">
+					<value>GET/foo/bar880.txt</value>
+				</field>
+				<field name="type" type="text">
+					<value>text/plain</value>
+				</field>
+				<field name="size" type="decimal">
+					<value>0 KB</value>
+				</field>
+				<field name="hits" type="text">
+					<value>0</value>
+				</field>
+				<field name="created" type="date">
+					<value>15:33:21</value>
+				</field>
+				<field name="expires" type="date">
+					<value>15:35:21</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="GET/foo/bar880.txt">
+						<label id="cache.element.expire">Remove element from cache</label>
+						<icon>delete</icon>
+					</link>
+					<link id="actions[2]" mode="extern" target="localhost/foo/bar880.txt">
+						<label id="show">show</label>
+						<icon>preview</icon>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="text">
+					<value>GET/foo/bar451.txt</value>
+				</field>
+				<field name="type" type="text">
+					<value>text/plain</value>
+				</field>
+				<field name="size" type="decimal">
+					<value>0 KB</value>
+				</field>
+				<field name="hits" type="text">
+					<value>0</value>
+				</field>
+				<field name="created" type="date">
+					<value>15:33:20</value>
+				</field>
+				<field name="expires" type="date">
+					<value>15:35:20</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="GET/foo/bar451.txt">
+						<label id="cache.element.expire">Remove element from cache</label>
+						<icon>delete</icon>
+					</link>
+					<link id="actions[2]" mode="extern" target="localhost/foo/bar451.txt">
+						<label id="show">show</label>
+						<icon>preview</icon>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="text">
+					<value>GET/foo/bar723.txt</value>
+				</field>
+				<field name="type" type="text">
+					<value>text/plain</value>
+				</field>
+				<field name="size" type="decimal">
+					<value>0 KB</value>
+				</field>
+				<field name="hits" type="text">
+					<value>0</value>
+				</field>
+				<field name="created" type="date">
+					<value>15:33:20</value>
+				</field>
+				<field name="expires" type="date">
+					<value>15:35:20</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="GET/foo/bar723.txt">
+						<label id="cache.element.expire">Remove element from cache</label>
+						<icon>delete</icon>
+					</link>
+					<link id="actions[2]" mode="extern" target="localhost/foo/bar723.txt">
+						<label id="show">show</label>
+						<icon>preview</icon>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="text">
+					<value>GET/foo/bar396.txt</value>
+				</field>
+				<field name="type" type="text">
+					<value>text/plain</value>
+				</field>
+				<field name="size" type="decimal">
+					<value>0 KB</value>
+				</field>
+				<field name="hits" type="text">
+					<value>0</value>
+				</field>
+				<field name="created" type="date">
+					<value>15:33:20</value>
+				</field>
+				<field name="expires" type="date">
+					<value>15:35:20</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="GET/foo/bar396.txt">
+						<label id="cache.element.expire">Remove element from cache</label>
+						<icon>delete</icon>
+					</link>
+					<link id="actions[2]" mode="extern" target="localhost/foo/bar396.txt">
+						<label id="show">show</label>
+						<icon>preview</icon>
+					</link>
+				</linkpanel>
+			</result>
+			<result>
+				<field name="id" type="text">
+					<value>GET/foo/bar837.txt</value>
+				</field>
+				<field name="type" type="text">
+					<value>text/plain</value>
+				</field>
+				<field name="size" type="decimal">
+					<value>0 KB</value>
+				</field>
+				<field name="hits" type="text">
+					<value>0</value>
+				</field>
+				<field name="created" type="date">
+					<value>15:33:21</value>
+				</field>
+				<field name="expires" type="date">
+					<value>15:35:21</value>
+				</field>
+				<linkpanel id="actions" location="inline">
+					<link id="actions[1]" mode="intern" target="GET/foo/bar837.txt">
+						<label id="cache.element.expire">Remove element from cache</label>
+						<icon>delete</icon>
+					</link>
+					<link id="actions[2]" mode="extern" target="localhost/foo/bar837.txt">
+						<label id="show">show</label>
+						<icon>preview</icon>
+					</link>
+				</linkpanel>
+			</result>
+		</resultset>
+	</data>
+</datasource>

@@ -15,13 +15,19 @@
  */
 package org.appng.application.manager.business;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -43,12 +49,19 @@ import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.controller.AppngCache;
 import org.appng.core.controller.filter.PageCacheFilter;
+import org.appng.core.service.CacheService;
 import org.appng.xml.platform.SelectionGroup;
+import org.appng.xml.platform.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
+import net.sf.ehcache.Element;
+import net.sf.ehcache.constructs.blocking.BlockingCache;
+import net.sf.ehcache.constructs.web.PageInfo;
 
 /**
  * Provides methods to interact with the page cache. Elements are stored in the cache by the {@link PageCacheFilter}.
@@ -56,6 +69,7 @@ import org.springframework.stereotype.Component;
  * @author Matthias Herlitzius
  */
 @Lazy
+@Slf4j
 @Component
 @org.springframework.context.annotation.Scope("request")
 public class Cache extends ServiceAware implements ActionProvider<Void>, DataProvider {
@@ -77,12 +91,14 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 		Integer siteId = request.convert(options.getOptionValue("site", ID), Integer.class);
 		DataContainer dataContainer = new DataContainer(fp);
 		Pageable pageable = fp.getPageable();
+
+		Site cacheSite = getService().getSite(siteId);
+		BlockingCache cache = CacheService.getBlockingCache(cacheSite);
+
 		if (STATISTICS.equals(mode)) {
-			List<Entry<String, String>> result = new ArrayList<Entry<String, String>>();
 			Map<String, String> cacheStatistics = getService().getCacheStatistics(siteId);
-			for (Entry<String, String> e : cacheStatistics.entrySet()) {
-				result.add(e);
-			}
+			cacheStatistics.put("Size", String.valueOf(cache.getKeys().size()));
+			List<Entry<String, String>> result = new ArrayList<>(cacheStatistics.entrySet());
 			Collections.sort(result, new Comparator<Entry<String, String>>() {
 				public int compare(Entry<String, String> o1, Entry<String, String> o2) {
 					return o1.getKey().compareTo(o2.getKey());
@@ -92,46 +108,83 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 		} else if (ENTRIES.equals(mode)) {
 			Integer maxCacheEntries = application.getProperties()
 					.getInteger(ManagerSettings.MAX_FILTERABLE_CACHE_ENTRIES);
-			List<AppngCache> allCacheEntries = getService().getCacheEntries(siteId);
+
+			@SuppressWarnings("unchecked")
+			List<String> keys = cache.getKeys();
 			List<CacheEntry> cacheEntries = new ArrayList<CacheEntry>();
 
-			int cacheSize = allCacheEntries.size();
-			if (cacheSize > maxCacheEntries) {
-				fp.getFields().forEach(f -> f.setSort(null));
-				for (int i = pageable.getOffset(); i < pageable.getOffset() + pageable.getPageSize(); i++) {
-					if (i < cacheSize) {
-						cacheEntries.add(new CacheEntry(allCacheEntries.get(i)));
+			SelectionGroup filter = new SelectionGroup();
+			String entryName = request.getParameter(F_ETR);
+			boolean filterName = StringUtils.isNotBlank(entryName);
+			Selection nameSelection = selectionFactory.getTextSelection(F_ETR, MessageConstants.NAME, entryName);
+
+			int cacheSize = keys.size();
+
+			if (cache.getSize() > maxCacheEntries) {
+				fp.getFields().stream().filter(f -> !"id".equals(f.getBinding())).forEach(f -> f.setSort(null));
+
+				Predicate<String> keyFilter = k -> matches(k.substring(k.indexOf('/')), entryName);
+				List<String> filteredKeys = filterName
+						? keys.stream().filter(keyFilter).map(Object::toString).collect(Collectors.toList())
+						: Arrays.asList(keys.toArray(new String[0]));
+				log.debug("Size: {}, Filtered Keys: {} (filtered? {})", cacheSize, filteredKeys.size(), filterName);
+
+				SortOrder idOrder = fp.getField("id").getSort().getOrder();
+				if (null != idOrder) {
+					Collections.sort(filteredKeys);
+					if (SortOrder.DESC.equals(idOrder)) {
+						Collections.reverse(filteredKeys);
 					}
 				}
-				dataContainer.setPage(new PageImpl<>(cacheEntries, pageable, cacheSize));
+
+				int toIndex = pageable.getOffset() + pageable.getPageSize();
+				if (toIndex > filteredKeys.size()) {
+					toIndex = filteredKeys.size();
+				}
+				filteredKeys.subList(pageable.getOffset(), toIndex)
+						.forEach(key -> getEntry(cacheSite, cache, key).ifPresent(cacheEntries::add));
+
+				dataContainer.setPage(new PageImpl<>(cacheEntries, pageable, filteredKeys.size()));
 			} else {
-				String entryName = request.getParameter(F_ETR);
 				String entryType = request.getParameter(F_CTYPE);
-				boolean filterName = StringUtils.isNotBlank(entryName);
 				boolean filterType = StringUtils.isNotBlank(entryType);
 
-				for (AppngCache entry : allCacheEntries) {
-					String entryId = entry.getId();
-					boolean nameMatches = !filterName || FilenameUtils
-							.wildcardMatch(entryId.substring(entryId.indexOf('/')), entryName, IOCase.INSENSITIVE);
+				for (String entryId : keys) {
+					Optional<CacheEntry> entry = getEntry(cacheSite, cache, entryId.toString());
+					boolean nameMatches = !filterName || matches(entryId.substring(entryId.indexOf('/')), entryName);
 					boolean typeMatches = !filterType
-							|| FilenameUtils.wildcardMatch(entry.getContentType(), entryType, IOCase.INSENSITIVE);
+							|| (entry.isPresent() && matches(entry.get().getType(), entryType));
 					if (nameMatches && typeMatches) {
-						cacheEntries.add(new CacheEntry(entry));
+						entry.ifPresent(cacheEntries::add);
 					}
 				}
 
-				Selection nameSelection = selectionFactory.getTextSelection(F_ETR, MessageConstants.NAME, entryName);
 				Selection typeSelection = selectionFactory.getTextSelection(F_CTYPE, MessageConstants.TYPE, entryType);
-				SelectionGroup selectionGroup = new SelectionGroup();
-				selectionGroup.getSelections().add(nameSelection);
-				selectionGroup.getSelections().add(typeSelection);
-				dataContainer.getSelectionGroups().add(selectionGroup);
+				filter.getSelections().add(typeSelection);
 				dataContainer.setPage(cacheEntries, pageable);
 			}
+			dataContainer.getSelectionGroups().add(filter);
+			filter.getSelections().add(nameSelection);
 
 		}
 		return dataContainer;
+	}
+
+	private boolean matches(String name, String matcher) {
+		return FilenameUtils.wildcardMatch(name, matcher, IOCase.INSENSITIVE);
+	}
+
+	protected Optional<CacheEntry> getEntry(Site cacheSite, BlockingCache cache, Serializable key) {
+		Element element = cache.getQuiet(key);
+		if (null != element && null != element.getObjectValue()) {
+			try {
+				PageInfo pageInfo = (PageInfo) element.getObjectValue();
+				return Optional.of(new CacheEntry(new AppngCache(key, cacheSite, pageInfo, element)));
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+		return Optional.empty();
 	}
 
 	public class CacheEntry {
