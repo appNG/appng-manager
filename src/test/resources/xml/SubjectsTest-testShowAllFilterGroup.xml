@@ -61,8 +61,8 @@
 	<data>
 		<selectionGroup>
 			<selection id="f_name" type="text">
-				<title id="name">Name</title>
-				<option value="" name="" selected="true" />
+				<title id="subject.search">Search by name, real name, description or e-mail</title>
+				<option value="admin" name="admin" selected="true" />
 			</selection>
 			<selection id="f_type" type="select">
 				<title id="type">Type</title>
@@ -78,8 +78,7 @@
 				<option value="2" name="users" selected="false" />
 			</selection>
 		</selectionGroup>
-		<resultset chunk="0" chunkname="users" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
-			lastchunk="0" hits="1">
+		<resultset chunk="0" chunkname="users" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="1">
 			<result>
 				<field name="name" type="text">
 					<value>admin</value>

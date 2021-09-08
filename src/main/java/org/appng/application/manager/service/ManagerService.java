@@ -108,7 +108,6 @@ import org.appng.core.model.RepositoryType;
 import org.appng.core.model.RepositoryUtils;
 import org.appng.core.service.CoreService;
 import org.appng.core.service.InitializerService;
-import org.appng.core.service.MigrationService;
 import org.appng.core.service.MigrationService.MigrationStatus;
 import org.appng.core.service.PropertySupport;
 import org.appng.core.xml.repository.PackageVersions;
@@ -1093,20 +1092,21 @@ public class ManagerService extends CoreService implements Service {
 			String filterParamType = "f_type";
 			String filterParamName = "f_name";
 			String filterParamGroup = "f_gid";
-			String typeFormRequest = request.getParameter(filterParamType);
-			UserType userType = null != typeFormRequest && UserType.names().contains(typeFormRequest)
-					? UserType.valueOf(typeFormRequest)
+			String typeFromRequest = request.getParameter(filterParamType);
+			UserType userType = null != typeFromRequest && UserType.names().contains(typeFromRequest)
+					? UserType.valueOf(typeFromRequest)
 					: null;
-			String name = request.getParameter(filterParamName);
+			String name = StringUtils.trimToEmpty(request.getParameter(filterParamName));
 
 			Pageable pageable = fp.getPageable();
 			SearchQuery<SubjectImpl> searchQuery = subjectRepository.createSearchQuery();
 			searchQuery.setAppendEntityAlias(false);
-			if (StringUtils.isNotBlank(name)) {
-				searchQuery.contains("e.name", name);
-			} else {
-				name = StringUtils.EMPTY;
+			if (StringUtils.isNotEmpty(name)) {
+				searchQuery.and(
+						"(e.name like :name or e.realname like :name or e.description like :name or e.email like :name)",
+						Collections.singletonMap("name", String.format("%%%s%%", name)));
 			}
+
 			if (null != userType) {
 				searchQuery.equals("e.userType", userType);
 			}
@@ -1127,7 +1127,7 @@ public class ManagerService extends CoreService implements Service {
 					UserType.values(), getUserTypeNameProvider(request), userType);
 			userTypes.getOptions().add(0, new Option());
 			userTypes.setType(SelectionType.SELECT);
-			Selection userName = selectionFactory.fromObjects(filterParamName, MessageConstants.NAME,
+			Selection userName = selectionFactory.fromObjects(filterParamName, MessageConstants.SUBJECT_SEARCH,
 					new String[] { name }, new String[] { name });
 			userName.setType(SelectionType.TEXT);
 
