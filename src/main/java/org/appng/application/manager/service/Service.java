@@ -240,4 +240,6 @@ public interface Service {
 
 	void createEvent(Type type, String message);
 
+	Site getSite(Integer siteId);
+
 }
