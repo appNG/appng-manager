@@ -16,12 +16,16 @@
 package org.appng.application.manager.business;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 
 import org.appng.api.FieldProcessor;
 import org.appng.api.Platform;
 import org.appng.api.ProcessingException;
+import org.appng.api.model.Property;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
+import org.appng.api.support.PropertyHolder;
 import org.appng.application.manager.form.PropertyForm;
 import org.appng.application.manager.form.SiteForm;
 import org.appng.core.domain.PropertyImpl;
@@ -30,8 +34,12 @@ import org.appng.testsupport.validation.WritingXmlValidator;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.mockito.Mockito;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ContextConfiguration(inheritInitializers = false, initializers = SitesTest.class)
 public class SitesTest extends AbstractTest {
 
 	static {
@@ -39,6 +47,25 @@ public class SitesTest extends AbstractTest {
 	}
 
 	private static final String SITE_EVENT = "siteEvent";
+
+	@Override
+	protected void mockSite(GenericApplicationContext applicationContext) {
+		if (null == site) {
+			site = Mockito.mock(SiteImpl.class);
+		}
+		Mockito.when(site.getName()).thenReturn("localhost");
+		Mockito.when(site.getDomain()).thenReturn("localhost");
+		Mockito.when(site.getHost()).thenReturn("localhost");
+		Mockito.when(site.getApplication("appng-manager")).thenReturn(application);
+		org.appng.api.support.SiteClassLoader siteClassLoader = new org.appng.api.support.SiteClassLoader(new URL[0],
+				this.getClass().getClassLoader(), site.getName());
+		Mockito.when(site.getSiteClassLoader()).thenReturn(siteClassLoader);
+		List<Property> siteProperties = getSiteProperties("platform.site.localhost.");
+		Mockito.when(site.getProperties()).thenReturn(new PropertyHolder("platform.site.localhost.", siteProperties));
+		if (null != applicationContext) {
+			applicationContext.addBeanFactoryPostProcessor(pp -> pp.registerSingleton("site", site));
+		}
+	}
 
 	@Test
 	public void testCreateSite() throws Exception {
