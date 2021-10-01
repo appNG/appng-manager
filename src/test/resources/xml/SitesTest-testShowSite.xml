@@ -18,7 +18,7 @@
 			<field name="description" type="longtext" binding="site.description">
 				<label id="description">Description</label>
 			</field>
-			<field name="active" type="checkbox" readonly="false" binding="site.active">
+			<field name="active" type="checkbox" readonly="true" binding="site.active">
 				<label id="active">Active</label>
 			</field>
 			<field name="template" type="list:radio" binding="template">
