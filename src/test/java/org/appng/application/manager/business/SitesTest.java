@@ -23,6 +23,7 @@ import org.appng.api.FieldProcessor;
 import org.appng.api.Platform;
 import org.appng.api.ProcessingException;
 import org.appng.api.model.Property;
+import org.appng.api.model.Site.SiteState;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.api.support.PropertyHolder;
@@ -54,6 +55,7 @@ public class SitesTest extends AbstractTest {
 			site = Mockito.mock(SiteImpl.class);
 		}
 		Mockito.when(site.getName()).thenReturn("localhost");
+		Mockito.when(site.getState()).thenReturn(SiteState.STARTED);
 		Mockito.when(site.getDomain()).thenReturn("localhost");
 		Mockito.when(site.getHost()).thenReturn("localhost");
 		Mockito.when(site.getApplication("appng-manager")).thenReturn(application);
