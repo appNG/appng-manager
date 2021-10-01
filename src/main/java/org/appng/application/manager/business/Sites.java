@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2020 the original author or authors.
+ * Copyright 2011-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,19 @@ import org.appng.api.Environment;
 import org.appng.api.FieldProcessor;
 import org.appng.api.InvalidConfigurationException;
 import org.appng.api.Options;
+import org.appng.api.Platform;
 import org.appng.api.Request;
 import org.appng.api.Scope;
 import org.appng.api.model.Application;
+import org.appng.api.model.Properties;
 import org.appng.api.model.Site;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.form.SiteForm;
 import org.appng.application.manager.form.SubjectForm;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
+import org.appng.core.controller.messaging.ReloadSiteEvent;
+import org.appng.core.controller.messaging.StopSiteEvent;
 import org.appng.core.domain.SiteImpl;
 import org.appng.core.service.InitializerService;
 import org.springframework.stereotype.Component;
@@ -48,6 +52,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class Sites extends ServiceAware implements DataProvider, ActionProvider<SiteForm> {
 
+	protected static final String ACTION_START = "start";
+	protected static final String ACTION_STOP = "stop";
 	public static final String SITE = "site";
 
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
@@ -78,17 +84,42 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 				errorMessage = MessageConstants.SITE_RELOADED_ERROR;
 				service.reloadSite(request, application, siteId, fp);
 				okMessage = MessageConstants.SITE_RELOADED;
+			} else if (ACTION_RELOAD_TEMPLATE.equals(action)) {
+				Properties platformProps = environment.getAttribute(Scope.PLATFORM,
+						Platform.Environment.PLATFORM_CONFIG);
+				service.reloadTemplate(siteId, platformProps);
+				okMessage = MessageConstants.SITE_TEMPLATE_RELOADED;
 			} else if (ACTION_RELOAD_PLATFORM.equals(action)) {
 				errorMessage = MessageConstants.PLATFORM_RELOAD_ERROR;
 				reloadPlatform(site, application, request, fp);
 				okMessage = MessageConstants.PLATFORM_RELOADED;
+			} else if (ACTION_START.equals(action)) {
+				errorMessage = MessageConstants.SITE_START_ERROR;
+				String siteName = service.startSite(request, application, siteId, fp);
+				if (null != siteName) {
+					site.sendEvent(new ReloadSiteEvent(siteName));
+				}
+			} else if (ACTION_STOP.equals(action)) {
+				if (!site.getId().equals(siteId)) {
+					errorMessage = MessageConstants.SITE_STOP_ERROR;
+					String siteName = service.stopSite(request, application, siteId, fp);
+					if (null != siteName) {
+						site.sendEvent(new StopSiteEvent(siteName));
+					}
+				} else {
+					fp.addErrorMessage(request.getMessage(MessageConstants.SITE_STOP_IS_CURRENT, site.getName()));
+				}
 			}
-			String message = request.getMessage(okMessage, siteId);
-			fp.addOkMessage(message);
+			if (null != okMessage) {
+				String message = request.getMessage(okMessage, siteId);
+				fp.addOkMessage(message);
+			}
 		} catch (BusinessException ex) {
-			String message = request.getMessage(errorMessage, siteId);
-			log.error("error during action '" + action + "': " + message, ex);
-			fp.addErrorMessage(message);
+			if (null != errorMessage) {
+				String message = request.getMessage(errorMessage, siteId);
+				log.error("error during action '" + action + "': " + message, ex);
+				fp.addErrorMessage(message);
+			}
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2020 the original author or authors.
+ * Copyright 2011-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.appng.api.auth.PasswordPolicy;
 import org.appng.api.model.Application;
 import org.appng.api.model.Identifier;
 import org.appng.api.model.Permission;
+import org.appng.api.model.Properties;
 import org.appng.api.model.ResourceType;
 import org.appng.api.model.Site;
 import org.appng.api.model.Subject;
@@ -61,7 +62,6 @@ import org.springframework.data.domain.Page;
  * Service-interface for the manager application.
  * 
  * @author Matthias Müller
- * 
  */
 public interface Service {
 
@@ -77,13 +77,14 @@ public interface Service {
 
 	void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp, PasswordPolicy policy) throws BusinessException;
 
-	void createProperty(Request request, PropertyForm propertyForm, Integer siteId, Integer appId, FieldProcessor fp)
+	void createProperty(Request request, PropertyForm propertyForm, String nodeId, Integer siteId, Integer appId, FieldProcessor fp)
 			throws BusinessException;
-
+	
 	void createPermission(Request request, PermissionImpl permission, Integer appId, FieldProcessor fp)
 			throws BusinessException;
 
-	DataContainer searchGroups(FieldProcessor fp, Site site, Integer siteId, Integer groupId, String groupName) throws BusinessException;
+	DataContainer searchGroups(FieldProcessor fp, Site site, Integer siteId, Integer groupId, String groupName)
+			throws BusinessException;
 
 	DataContainer searchApplications(FieldProcessor fp, Integer siteId, Integer appId, boolean assignedOnly)
 			throws BusinessException;
@@ -96,11 +97,11 @@ public interface Service {
 	DataContainer searchPackageVersions(Request request, FieldProcessor fp, Integer repositoryId, String packageName)
 			throws BusinessException;
 
-	Packages searchPackages(Environment env, FieldProcessor fp, String repositoryName, String digest, String packageName)
-			throws BusinessException;
+	Packages searchPackages(Environment env, FieldProcessor fp, String repositoryName, String digest,
+			String packageName) throws BusinessException;
 
-	PackageVersions searchPackageVersions(Environment environment, FieldProcessor fp, String repositoryName, String packageName,
-			String digest) throws BusinessException;
+	PackageVersions searchPackageVersions(Environment environment, FieldProcessor fp, String repositoryName,
+			String packageName, String digest) throws BusinessException;
 
 	PackageArchive getPackageArchive(Environment environment, String repositoryName, String packageName,
 			String packageVersion, String packageTimestamp, String diges) throws BusinessException;
@@ -110,14 +111,15 @@ public interface Service {
 
 	DataContainer searchRole(FieldProcessor fp, Integer roleId, Integer appId) throws BusinessException;
 
-	DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name, String domain) throws BusinessException;
+	DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name, String domain)
+			throws BusinessException;
 
 	DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
 			List<String> languages, Integer groupId) throws BusinessException;
 
 	DataContainer searchPermissions(FieldProcessor fp, Integer permissionId, Integer appId) throws BusinessException;
 
-	DataContainer searchProperties(FieldProcessor fp, Integer siteId, Integer appId, String propertyName)
+	DataContainer searchProperties(FieldProcessor fp, String nodeId, Integer siteId, Integer appId, String propertyName)
 			throws BusinessException;
 
 	void updateGroup(Request request, Site site, GroupForm groupForm, FieldProcessor fp) throws BusinessException;
@@ -171,6 +173,11 @@ public interface Service {
 
 	void reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
 			throws BusinessException;
+
+	String startSite(Request request, Application application, Integer siteId, FieldProcessor fp)
+			throws BusinessException;
+
+	String stopSite(Request request, Application application, Integer siteId, FieldProcessor fp) throws BusinessException;
 
 	DataContainer getNewSubject(Request request, FieldProcessor fp, String timezone, List<String> languages);
 
@@ -240,6 +247,6 @@ public interface Service {
 
 	void createEvent(Type type, String message);
 
-	Site getSite(Integer siteId);
+	void reloadTemplate(Integer siteId, Properties platformProps);
 
 }

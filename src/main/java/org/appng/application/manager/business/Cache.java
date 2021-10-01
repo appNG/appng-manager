@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2020 the original author or authors.
+ * Copyright 2011-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,7 @@ package org.appng.application.manager.business;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +52,6 @@ import org.appng.core.service.CacheService;
 import org.appng.xml.platform.SelectionGroup;
 import org.appng.xml.platform.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -86,14 +83,9 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 
 	public DataContainer getData(Site site, Application application, Environment environment, Options options,
 			Request request, FieldProcessor fp) {
-		String mode = options.getOptionValue("mode", ID);
-		Integer siteId = request.convert(options.getOptionValue("site", ID), Integer.class);
+		String mode = options.getString("mode", ID);
+		Integer siteId = options.getInteger("site", ID);
 		DataContainer dataContainer = new DataContainer(fp);
-		Pageable pageable = fp.getPageable();
-
-		Site cacheSite = getService().getSite(siteId);
-		BlockingCache cache = CacheService.getBlockingCache(cacheSite);
-
 		if (STATISTICS.equals(mode)) {
 			Map<String, String> cacheStatistics = getService().getCacheStatistics(siteId);
 			cacheStatistics.put("Size", String.valueOf(cache.getKeys().size()));
@@ -108,63 +100,53 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 			Integer maxCacheEntries = application.getProperties()
 					.getInteger(ManagerSettings.MAX_FILTERABLE_CACHE_ENTRIES);
 
-			@SuppressWarnings("unchecked")
-			List<String> keys = cache.getKeys();
-			List<CacheEntry> cacheEntries = new ArrayList<CacheEntry>();
+			List<CachedResponse> allCacheEntries = getService().getCacheEntries(siteId);
+			List<CacheEntry> cacheEntries = new ArrayList<>();
+			Pageable pageable = fp.getPageable();
 
-			SelectionGroup filter = new SelectionGroup();
-			String entryName = request.getParameter(F_ETR);
-			boolean filterName = StringUtils.isNotBlank(entryName);
-			Selection nameSelection = selectionFactory.getTextSelection(F_ETR, MessageConstants.NAME, entryName);
-
-			int cacheSize = keys.size();
-
-			if (cache.getSize() > maxCacheEntries) {
+			int cacheSize = allCacheEntries.size();
+			if (cacheSize > maxCacheEntries) {
 				fp.getFields().stream().filter(f -> !"id".equals(f.getBinding())).forEach(f -> f.setSort(null));
-
-				Predicate<String> keyFilter = k -> matches(k.substring(k.indexOf('/')), entryName);
-				List<String> filteredKeys = filterName
-						? keys.stream().filter(keyFilter).map(Object::toString).collect(Collectors.toList())
-						: Arrays.asList(keys.toArray(new String[0]));
-				log.debug("Size: {}, Filtered Keys: {} (filtered? {})", cacheSize, filteredKeys.size(), filterName);
+				for (int i = pageable.getOffset(); i < pageable.getOffset() + pageable.getPageSize(); i++) {
+					if (i < cacheSize) {
+						cacheEntries.add(new CacheEntry(allCacheEntries.get(i)));
+					}
+				}
 
 				SortOrder idOrder = fp.getField("id").getSort().getOrder();
 				if (null != idOrder) {
-					Collections.sort(filteredKeys);
+					Collections.sort(cacheEntries, (e1, e2) -> StringUtils.compare(e1.getId(), e2.getId()));
 					if (SortOrder.DESC.equals(idOrder)) {
-						Collections.reverse(filteredKeys);
+						Collections.reverse(cacheEntries);
 					}
 				}
 
-				int toIndex = pageable.getOffset() + pageable.getPageSize();
-				if (toIndex > filteredKeys.size()) {
-					toIndex = filteredKeys.size();
-				}
-				filteredKeys.subList(pageable.getOffset(), toIndex)
-						.forEach(key -> getEntry(cacheSite, cache, key).ifPresent(cacheEntries::add));
-
-				dataContainer.setPage(new PageImpl<>(cacheEntries, pageable, filteredKeys.size()));
+				dataContainer.setPage(new PageImpl<>(cacheEntries, pageable, cacheSize));
 			} else {
+				String entryName = request.getParameter(F_ETR);
 				String entryType = request.getParameter(F_CTYPE);
+				boolean filterName = StringUtils.isNotBlank(entryName);
 				boolean filterType = StringUtils.isNotBlank(entryType);
 
-				for (String entryId : keys) {
-					Optional<CacheEntry> entry = getEntry(cacheSite, cache, entryId.toString());
-					boolean nameMatches = !filterName || matches(entryId.substring(entryId.indexOf('/')), entryName);
+				for (CachedResponse entry : allCacheEntries) {
+					String entryId = entry.getId();
+					boolean nameMatches = !filterName || FilenameUtils
+							.wildcardMatch(entryId.substring(entryId.indexOf('/')), entryName, IOCase.INSENSITIVE);
 					boolean typeMatches = !filterType
-							|| (entry.isPresent() && matches(entry.get().getType(), entryType));
+							|| FilenameUtils.wildcardMatch(entry.getContentType(), entryType, IOCase.INSENSITIVE);
 					if (nameMatches && typeMatches) {
-						entry.ifPresent(cacheEntries::add);
+						cacheEntries.add(new CacheEntry(entry));
 					}
 				}
 
+				Selection nameSelection = selectionFactory.getTextSelection(F_ETR, MessageConstants.NAME, entryName);
 				Selection typeSelection = selectionFactory.getTextSelection(F_CTYPE, MessageConstants.TYPE, entryType);
-				filter.getSelections().add(typeSelection);
+				SelectionGroup selectionGroup = new SelectionGroup();
+				selectionGroup.getSelections().add(nameSelection);
+				selectionGroup.getSelections().add(typeSelection);
+				dataContainer.getSelectionGroups().add(selectionGroup);
 				dataContainer.setPage(cacheEntries, pageable);
 			}
-			dataContainer.getSelectionGroups().add(filter);
-			filter.getSelections().add(nameSelection);
-
 		}
 		return dataContainer;
 	}

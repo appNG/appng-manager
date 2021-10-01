@@ -8,7 +8,7 @@
 			<params>
 				<param name="nodeId" />
 			</params>
-			<meta-data bindClass="java.util.Map.Entry">
+			<meta-data bindClass="java.util.Map$Entry">
 				<field name="key" type="text" displayLength="60">
 					<label>name</label>
 				</field>
@@ -28,7 +28,7 @@
 			<params>
 				<param name="nodeId" />
 			</params>
-			<meta-data bindClass="java.util.Map.Entry">
+			<meta-data bindClass="java.util.Map$Entry">
 				<field name="key" type="text" displayLength="60">
 					<label>name</label>
 				</field>
@@ -49,7 +49,7 @@
 			<params>
 				<param name="nodeId" />
 			</params>
-			<meta-data bindClass="java.util.Map.Entry">
+			<meta-data bindClass="java.util.Map$Entry">
 				<field name="key" type="text">
 					<label id="name" />
 				</field>
@@ -75,7 +75,7 @@
 			<params>
 				<param name="nodeId" />
 			</params>
-			<meta-data bindClass="org.appng.application.manager.business.ClusterState.LocalNodeState" result-selector="${current.nodeId eq nodeId}">
+			<meta-data bindClass="org.appng.application.manager.business.ClusterState$LocalNodeState" result-selector="${current.nodeId eq nodeId}">
 				<field name="nodeId" type="text">
 					<sort ignore-case="true" order="asc" prio="0" />
 					<label id="nodeId" />
@@ -111,7 +111,7 @@
 				</field>
 			</meta-data>
 			<linkpanel location="inline" id="actions">
-				<link target="/system/${current.nodeId}#tab_clusterState" mode="intern" default="true">
+				<link target="/system/node/update/${current.nodeId}#tab_clusterState" mode="intern" default="true">
 					<icon>preview</icon>
 					<label id="show" />
 				</link>

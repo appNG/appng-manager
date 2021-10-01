@@ -42,7 +42,7 @@
 				<icon>edit</icon>
 			</link>
 			<link id="actions[2]" mode="intern"
-				target="/applications/update/1?form_action=delete-permission&amp;permissionid=${current.id}#tab_permissions">
+				target="/applications/update/1?act=delete-permission&amp;permissionid=${current.id}#tab_permissions">
 				<permissions>
 					<permission ref="permission.delete" mode="set"></permission>
 				</permissions>
@@ -73,7 +73,7 @@
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/applications/update/1?form_action=delete-permission&amp;permissionid=2#tab_permissions">
+						target="/applications/update/1?act=delete-permission&amp;permissionid=2#tab_permissions">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="permission.delete.confirm" params="#{name}">Do you really want to delete the permission
@@ -98,7 +98,7 @@
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/applications/update/1?form_action=delete-permission&amp;permissionid=1#tab_permissions">
+						target="/applications/update/1?act=delete-permission&amp;permissionid=1#tab_permissions">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="permission.delete.confirm" params="#{name}">Do you really want to delete the permission

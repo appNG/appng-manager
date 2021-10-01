@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2020 the original author or authors.
+ * Copyright 2011-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.appng.application.manager.business;
 import org.appng.api.Platform;
 import org.appng.api.Scope;
 import org.appng.api.messaging.Messaging;
+import org.appng.api.model.Site.SiteState;
 import org.appng.api.support.CallableDataSource;
 import org.appng.testsupport.validation.WritingXmlValidator;
 import org.junit.Test;
@@ -34,6 +35,7 @@ public class ClusterStateTest extends AbstractTest {
 		environment.setAttribute(Scope.PLATFORM, Platform.Environment.PLATFORM_CONFIG,
 				Mockito.mock(org.appng.api.model.Properties.class));
 		System.setProperty(Messaging.APPNG_NODE_ID, "node1");
+		Mockito.when(site.getState()).thenReturn(SiteState.STARTED);
 		CallableDataSource siteDatasource = getDataSource("clusterState").getCallableDataSource();
 		siteDatasource.perform("test");
 		validate(siteDatasource.getDatasource().getConfig());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2020 the original author or authors.
+ * Copyright 2011-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,16 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
+import org.apache.catalina.session.PersistentManagerBase;
 import org.apache.commons.lang3.time.DateUtils;
 import org.appng.api.Scope;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
+import org.appng.api.support.environment.DefaultEnvironment;
 import org.appng.core.controller.Session;
+import org.appng.core.controller.SessionListener;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -39,6 +44,10 @@ public class SessionsTest extends AbstractTest {
 	public void testShowSessions() throws Exception {
 		setSessions();
 		environment.setAttribute(Scope.SESSION, org.appng.api.Session.Environment.SID, "47124712");
+		ServletContext servletCtx = ((DefaultEnvironment) environment).getServletContext();
+		PersistentManagerBase manager = Mockito.mock(PersistentManagerBase.class);
+		Mockito.when(manager.getActiveSessions()).thenReturn(250);
+		servletCtx.setAttribute(SessionListener.SESSION_MANAGER, manager);
 		CallableDataSource siteDatasource = getDataSource("sessions")
 				.withParam("deleteLink", "/system?action=expire&sessid=").getCallableDataSource();
 		siteDatasource.perform("test");

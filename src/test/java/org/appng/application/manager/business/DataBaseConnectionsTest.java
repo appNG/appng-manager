@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2020 the original author or authors.
+ * Copyright 2011-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.appng.application.manager.business;
 
 import org.appng.api.support.CallableDataSource;
 import org.appng.testsupport.validation.WritingXmlValidator;
+import org.appng.xml.platform.Action;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -32,6 +33,13 @@ public class DataBaseConnectionsTest extends AbstractTest {
 		CallableDataSource connections = getDataSource("databaseConnections").getCallableDataSource();
 		connections.perform("");
 		validate(connections.getDatasource());
+	}
+
+	@Test
+	public void testUpdate() throws Exception {
+		Action action = getAction("databaseConnectionEvent", "updateConnection")
+				.withParam(FORM_ACTION, "updateConnection").withParam("id", "1").initialize();
+		validate(action);
 	}
 
 	@Test

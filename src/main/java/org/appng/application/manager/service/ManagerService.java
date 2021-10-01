@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2020 the original author or authors.
+ * Copyright 2011-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,10 +35,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
@@ -63,6 +63,7 @@ import org.appng.api.model.Identifier;
 import org.appng.api.model.NameProvider;
 import org.appng.api.model.Nameable;
 import org.appng.api.model.Permission;
+import org.appng.api.model.Properties;
 import org.appng.api.model.Property;
 import org.appng.api.model.Resource;
 import org.appng.api.model.ResourceType;
@@ -112,6 +113,7 @@ import org.appng.core.model.RepositoryType;
 import org.appng.core.model.RepositoryUtils;
 import org.appng.core.service.CoreService;
 import org.appng.core.service.InitializerService;
+import org.appng.core.service.PlatformProperties;
 import org.appng.core.service.MigrationService.MigrationStatus;
 import org.appng.core.service.PropertySupport;
 import org.appng.core.xml.repository.PackageVersions;
@@ -327,9 +329,8 @@ public class ManagerService extends CoreService implements Service {
 			}
 			data.setItem(new GroupForm(group));
 		} else {
-			Selection nameFilter = new SelectionBuilder<>(FILTER_GROUP_NAME)
-					.defaultOption(FILTER_GROUP_NAME, groupName).title(MessageConstants.NAME).type(SelectionType.TEXT)
-					.select(groupName).build();
+			Selection nameFilter = new SelectionBuilder<>(FILTER_GROUP_NAME).defaultOption(FILTER_GROUP_NAME, groupName)
+					.title(MessageConstants.NAME).type(SelectionType.TEXT).select(groupName).build();
 			SelectionGroup filter = new SelectionGroup();
 			filter.getSelections().add(nameFilter);
 			data.getSelectionGroups().add(filter);
@@ -392,9 +393,8 @@ public class ManagerService extends CoreService implements Service {
 			RepositoryImpl repository = repoRepository.findOne(repositoryId);
 			try {
 				if (null != repository) {
-					Page<ApplicationImpl> applications = applicationRepository.search(fp.getPageable());
-					List<Identifier> identifiers = new ArrayList<>(applications.getContent());
-
+					List<ApplicationImpl> applications = applicationRepository.findAll();
+					List<Identifier> identifiers = new ArrayList<>(applications);
 					List<Identifier> templates = getInstalledTemplates();
 					identifiers.addAll(templates);
 
@@ -403,13 +403,13 @@ public class ManagerService extends CoreService implements Service {
 					if (StringUtils.isNotBlank(filter)) {
 						// we can't rely on filtering being supported by the repository,
 						// so do it manually
-						Stream<InstallablePackage> pckgStream = packages.stream();
+						Predicate<InstallablePackage> packageFilter;
 						if (filter.contains("*")) {
-							pckgStream = pckgStream.filter(p -> p.getName().matches(filter.replace("*", ".*?")));
+							packageFilter = p -> p.getName().matches(filter.replace("*", ".*?"));
 						} else {
-							pckgStream = pckgStream.filter(p -> p.getName().startsWith(filter));
+							packageFilter = p -> p.getName().startsWith(filter);
 						}
-						packages = pckgStream.collect(Collectors.toList());
+						packages = packages.stream().filter(packageFilter).collect(Collectors.toList());
 					}
 					data.setPage(packages, fp.getPageable());
 				}
@@ -465,7 +465,7 @@ public class ManagerService extends CoreService implements Service {
 		} catch (Exception e) {
 			logger.error("error retrieving packages", e);
 		}
-		return null;
+		return new Packages();
 	}
 
 	/**
@@ -480,7 +480,7 @@ public class ManagerService extends CoreService implements Service {
 		} catch (Exception e) {
 			logger.error("error retrieving package versions", e);
 		}
-		return null;
+		return new PackageVersions();
 	}
 
 	public PackageArchive getPackageArchive(Environment environment, String repositoryName, String name, String version,
@@ -527,7 +527,7 @@ public class ManagerService extends CoreService implements Service {
 			String appngVer = request.getEnvironment().getAttribute(Scope.PLATFORM, Platform.Environment.APPNG_VERSION);
 			if (pkAppngVer.isPresent() && pkAppngVer.get().compareTo(appngVer) > 0) {
 				String versionMismatch = request.getMessage(MessageConstants.PACKAGE_APP_NG_VERSION_MISMATCH,
-						pkAppngVer, appngVer);
+						pkAppngVer.get(), appngVer);
 				fp.addNoticeMessage(versionMismatch);
 			}
 			installPackage(repositoryId, name, version, timestamp, false, false, isFilebased);
@@ -961,11 +961,13 @@ public class ManagerService extends CoreService implements Service {
 	public DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name,
 			String domain) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
+		Map<String, Site> siteMap = environment.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
 		if (siteId != null) {
 			SiteImpl site = siteRepository.findOne(siteId);
 			if (null == site) {
 				throw new BusinessException("no such site: " + siteId, MessageConstants.SITE_NOT_EXISTS);
 			}
+			setSiteState(siteMap, site);
 			addSelectionsForSite(site, data);
 			data.setItem(new SiteForm(site));
 		} else {
@@ -978,13 +980,8 @@ public class ManagerService extends CoreService implements Service {
 			}
 			Page<SiteImpl> sites = siteRepository.search(siteQuery, fp.getPageable());
 
-			Map<String, Site> siteMap = environment.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
 			for (SiteImpl siteImpl : sites) {
-				Site site = siteMap.get(siteImpl.getName());
-				if (null != site) {
-					siteImpl.setRunning(SiteState.STARTED.equals(site.getState()));
-					siteImpl.setStartupTime(site.getStartupTime());
-				}
+				setSiteState(siteMap, siteImpl);
 			}
 			Selection nameFilter = new SelectionBuilder<>(FILTER_SITE_NAME).defaultOption(FILTER_SITE_NAME, name)
 					.title(MessageConstants.NAME).type(SelectionType.TEXT).select(name).build();
@@ -998,6 +995,18 @@ public class ManagerService extends CoreService implements Service {
 			data.setPage(sites);
 		}
 		return data;
+	}
+
+	private void setSiteState(Map<String, Site> siteMap, SiteImpl siteImpl) {
+		Site site = siteMap.get(siteImpl.getName());
+		if (null != site) {
+			siteImpl.setState(site.getState());
+			siteImpl.setRunning(SiteState.STARTED.equals(site.getState()));
+			siteImpl.setStartupTime(site.getStartupTime());
+		} else {
+			siteImpl.setState(SiteState.STOPPED);
+			siteImpl.setRunning(false);
+		}
 	}
 
 	private void addSelectionsForSite(final SiteImpl site, DataContainer data) {
@@ -1299,7 +1308,8 @@ public class ManagerService extends CoreService implements Service {
 				}
 				if (!StringUtils.isEmpty(subjectForm.getPassword())
 						&& !StringUtils.isEmpty(subjectForm.getPasswordConfirmation())) {
-					passwordUpdated = updatePassword(policy, null, subjectForm.getPassword().toCharArray(), currentSubject).isValid();
+					passwordUpdated = updatePassword(policy, null, subjectForm.getPassword().toCharArray(),
+							currentSubject).isValid();
 				}
 				assignGroupsToSubject(request, subject.getId(), subjectForm.getGroupIds(), fp);
 				request.setPropertyValues(subjectForm, new SubjectForm(currentSubject), fp.getMetaData());
@@ -1377,6 +1387,9 @@ public class ManagerService extends CoreService implements Service {
 					break;
 				case DB_MIGRATED:
 					fp.addOkMessage(request.getMessage(MessageConstants.MIGRATION_SUCCESS));
+					break;
+				case DB_NOT_MIGRATED:
+					fp.addOkMessage(request.getMessage(MessageConstants.MIGRATION_DB_NOT_MIGRATED));
 					break;
 				case NO_DB_SUPPORTED:
 					fp.addOkMessage(request.getMessage(MessageConstants.MIGRATION_NO_DB_SUPPORTED));
@@ -1474,8 +1487,8 @@ public class ManagerService extends CoreService implements Service {
 		return data;
 	}
 
-	public DataContainer searchProperties(FieldProcessor fp, Integer siteId, Integer appId, String propertyName)
-			throws BusinessException {
+	public DataContainer searchProperties(FieldProcessor fp, String nodeId, Integer siteId, Integer appId,
+			String propertyName) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (propertyName != null && propertyName.length() > 0) {
 			PropertyImpl property = propertyRepository.findOne(propertyName);
@@ -1487,21 +1500,31 @@ public class ManagerService extends CoreService implements Service {
 			}
 			data.setItem(new PropertyForm(property));
 		} else {
-			Page<PropertyImpl> properties = getProperties(siteId, appId, fp.getPageable());
+			Page<PropertyImpl> properties;
+			Pageable pageable = fp.getPageable();
+			if (nodeId != null) {
+				properties = getNodeProperties(nodeId, pageable);
+			} else {
+				properties = getProperties(siteId, appId, pageable);
+			}
 			data.setPage(properties);
 		}
 		return data;
 	}
 
-	public void createProperty(Request request, PropertyForm propertyForm, Integer siteId, Integer appId,
+	public void createProperty(Request request, PropertyForm propertyForm, String nodeId, Integer siteId, Integer appId,
 			FieldProcessor fp) throws BusinessException {
 		try {
 			PropertyImpl property = propertyForm.getProperty();
-			if (checkPropertyExists(siteId, appId, property)) {
-				fp.addErrorMessage(request.getMessage(MessageConstants.PROPERTY_EXISTS));
-				throw new BusinessException("property already exists!");
+			if (nodeId != null) {
+				createNodeProperty(nodeId, property);
 			} else {
-				createProperty(siteId, appId, property);
+				if (checkPropertyExists(siteId, appId, property)) {
+					fp.addErrorMessage(request.getMessage(MessageConstants.PROPERTY_EXISTS));
+					throw new BusinessException("property already exists!");
+				} else {
+					createProperty(siteId, appId, property);
+				}
 			}
 		} catch (Exception e) {
 			request.handleException(fp, e);
@@ -1546,7 +1569,7 @@ public class ManagerService extends CoreService implements Service {
 	public void reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
 			throws BusinessException {
 		try {
-			InitializerService initializerService = application.getBean(InitializerService.class);
+			InitializerService initializerService = getInitializerService(application);
 			SiteImpl site = getSite(siteId);
 			if (null != site) {
 				String siteName = site.getName();
@@ -1564,6 +1587,56 @@ public class ManagerService extends CoreService implements Service {
 		} catch (Exception e) {
 			request.handleException(fp, e);
 		}
+	}
+
+	private InitializerService getInitializerService(Application application) {
+		return application.getBean(InitializerService.class);
+	}
+
+	public String startSite(Request request, Application application, Integer siteId, FieldProcessor fp)
+			throws BusinessException {
+		SiteImpl site = getSite(siteId);
+		Environment env = request.getEnvironment();
+		Map<String, Site> siteMap = env.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
+		Site activeSite = siteMap.get(site.getName());
+		if (null == activeSite || SiteState.STOPPED.equals(activeSite.getState())) {
+			if (site.isActive()) {
+				try {
+					getInitializerService(application).loadSite(env, site, true, fp);
+					fp.addOkMessage(request.getMessage(MessageConstants.SITE_STARTED, site.getName()));
+					return site.getName();
+				} catch (InvalidConfigurationException e) {
+					throw new BusinessException(e);
+				}
+			} else {
+				fp.addErrorMessage(request.getMessage(MessageConstants.SITE_START_NOT_ACTIVE, activeSite.getName()));
+			}
+		} else {
+			fp.addErrorMessage(request.getMessage(MessageConstants.SITE_START_IS_RUNNING, activeSite.getName(),
+					activeSite.getState()));
+		}
+		return null;
+	}
+
+	public String stopSite(Request request, Application application, Integer siteId, FieldProcessor fp)
+			throws BusinessException {
+		SiteImpl site = getSite(siteId);
+		Environment env = request.getEnvironment();
+		Map<String, Site> siteMap = env.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
+		Site activeSite = siteMap.get(site.getName());
+		if (null != activeSite) {
+			if (SiteState.STARTED.equals(activeSite.getState())) {
+				getInitializerService(application).shutDownSite(env, site, false);
+				fp.addOkMessage(request.getMessage(MessageConstants.SITE_STOPPED, site.getName()));
+				return site.getName();
+			} else {
+				fp.addErrorMessage(
+						request.getMessage(MessageConstants.SITE_STOP_NOT_STARTED, site.getName(), site.getState()));
+			}
+		} else {
+			fp.addErrorMessage(request.getMessage(MessageConstants.SITE_STOP_NOT_RUNNING, site.getName()));
+		}
+		return null;
 	}
 
 	public DataContainer getNewSubject(Request request, FieldProcessor fp, String timezone, List<String> languages) {
@@ -1757,6 +1830,13 @@ public class ManagerService extends CoreService implements Service {
 		resetConnection(null, conId);
 	}
 
+	@Override
+	public void reloadTemplate(Integer siteId, Properties platformConfig) {
+		SiteImpl site = siteRepository.findOne(siteId);
+		initSiteProperties(site);
+		refreshTemplate(site, PlatformProperties.get(platformConfig));
+	}
+
 	public SiteApplication getSiteApplication(Integer siteId, Integer appId) {
 		SiteApplication siteApplication = siteApplicationRepository.findOne(new SiteApplicationPK(siteId, appId));
 		siteApplication.getGrantedSites().size();
@@ -1797,7 +1877,8 @@ public class ManagerService extends CoreService implements Service {
 		siteApplication.getGrantedSites().addAll(sites);
 	}
 
-	public String addArchiveToRepository(Request request, Integer repositoryId, FormUpload archive, FieldProcessor fp) throws BusinessException {
+	public String addArchiveToRepository(Request request, Integer repositoryId, FormUpload archive, FieldProcessor fp)
+			throws BusinessException {
 		File file = archive.getFile();
 		String originalFilename = archive.getOriginalFilename();
 		RepositoryImpl repo = repoRepository.findOne(repositoryId);

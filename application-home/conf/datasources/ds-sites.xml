@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<datasources xmlns="http://www.appng.org/schema/platform"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
 
 	<datasource id="sites">
@@ -56,6 +57,23 @@
 				</link>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
+				<link mode="intern" target="/sites&#63;act=start&#38;siteid=${current.id}">
+					<label>site.start</label>
+					<icon>activate</icon>
+					<condition expression="${current.active and current.state.name() eq 'STOPPED'}" />
+					<permissions>
+						<permission ref="site.reload" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/sites&#63;act=stop&#38;siteid=${current.id}">
+					<label>site.stop</label>
+					<icon>deactivate</icon>
+					<condition expression="${current.state.name() eq 'STARTED'}" />
+					<confirmation id="site.stop.confirm" params="#{name}" />
+					<permissions>
+						<permission ref="site.reload" mode="set" />
+					</permissions>
+				</link>
 				<link mode="intern" target="/sites/update/${current.id}" default="true">
 					<label>edit</label>
 					<icon>edit</icon>
@@ -63,17 +81,28 @@
 						<permission ref="site.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/sites&#63;form_action=delete&#38;siteid=${current.id}">
+				<link mode="intern" target="/sites&#63;act=delete&#38;siteid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="site.delete.confirm" params="#{name}" />
+					<condition expression="${current.state.name() eq 'STOPPED'}" />
 					<permissions>
 						<permission ref="site.delete" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/sites&#63;form_action=reload&#38;siteid=${current.id}">
+				<link mode="intern" target="/sites&#63;act=reload&#38;siteid=${current.id}" show-disabled="true">
 					<label>reload</label>
 					<icon>reload</icon>
+					<condition expression="${current.state.name() eq 'STARTED'}" />
+					<confirmation id="site.reload.confirm" params="#{name}" />
+					<permissions>
+						<permission ref="site.reload" mode="set" />
+					</permissions>
+				</link>
+				<link mode="intern" target="/sites&#63;act=reloadTemplate&#38;siteid=${current.id}">
+					<label>reload.template</label>
+					<icon>reload</icon>
+					<condition expression="${current.state.name() eq 'STARTED'}" />
 					<permissions>
 						<permission ref="site.reload" mode="set" />
 					</permissions>
@@ -81,7 +110,7 @@
 			</linkpanel>
 		</config>
 		<bean id="sites">
-			<option name="site" siteName="${name}" siteDomain="${domain}"/>
+			<option name="site" siteName="${name}" siteDomain="${domain}" />
 		</bean>
 	</datasource>
 
@@ -104,7 +133,7 @@
 				<field name="description" type="longtext">
 					<label>description</label>
 				</field>
-				<field name="active" type="checkbox">
+				<field name="active" type="checkbox" readonly="${current.site.running}">
 					<label>active</label>
 				</field>
 				<field name="template" type="list:radio" binding="template">

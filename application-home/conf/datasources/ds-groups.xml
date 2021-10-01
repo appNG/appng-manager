@@ -42,7 +42,7 @@
 						<permission ref="group.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/users&#63;form_action=deleteGroup&#38;groupid=${current.id}">
+				<link mode="intern" target="/users&#63;act=deleteGroup&#38;groupid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<condition expression="${not current.defaultAdmin}" />

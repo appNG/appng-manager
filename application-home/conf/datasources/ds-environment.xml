@@ -8,7 +8,7 @@
 			<permissions>
 				<permission ref="platform.environment" mode="set" />
 			</permissions>
-			<meta-data bindClass="java.util.Map.Entry">
+			<meta-data bindClass="java.util.Map$Entry">
 				<field name="key" type="text" displayLength="60">
 					<label>name</label>
 				</field>
@@ -28,7 +28,7 @@
 			<permissions>
 				<permission ref="platform.environment" mode="set" />
 			</permissions>
-			<meta-data bindClass="java.util.Map.Entry">
+			<meta-data bindClass="java.util.Map$Entry">
 				<field name="key" type="text" displayLength="60">
 					<label>name</label>
 				</field>
@@ -48,7 +48,7 @@
 			<permissions>
 				<permission ref="platform.environment" mode="set" />
 			</permissions>
-			<meta-data bindClass="java.util.Map.Entry">
+			<meta-data bindClass="java.util.Map$Entry">
 				<field name="key" type="longtext">
 					<label>name</label>
 				</field>
@@ -57,7 +57,7 @@
 				</field>
 			</meta-data>
 			<linkpanel id="links" location="top">
-				<link mode="intern" target="/system&#63;form_action=reloadPlatform">
+				<link mode="intern" target="/system&#63;act=reloadPlatform">
 					<label>platform.reload</label>
 					<icon>reload</icon>
 					<confirmation id="platform.reload.confirm" />
@@ -85,7 +85,7 @@
 			<permissions>
 				<permission ref="platform.environment" mode="set"/>
 			</permissions>
-			<meta-data bindClass="java.util.Map.Entry">
+			<meta-data bindClass="java.util.Map$Entry">
 				<field name="key" type="longtext">
 					<label>name</label>
 				</field>
@@ -105,7 +105,7 @@
 			<permissions>
 				<permission ref="platform.environment" mode="set" />
 			</permissions>
-			<meta-data bindClass="java.util.Map.Entry">
+			<meta-data bindClass="java.util.Map$Entry">
 				<field name="key" type="longtext">
 					<label>name</label>
 				</field>

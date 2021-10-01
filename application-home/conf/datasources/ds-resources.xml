@@ -49,7 +49,7 @@
 					</permissions>
 				</link>
 				<link mode="intern"
-					target="/applications/update/${appid}&#63;form_action=delete-resource&#38;resourceid=${current.id}#tab_resources">
+					target="/applications/update/${appid}&#63;act=delete-resource&#38;resourceid=${current.id}#tab_resources">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="resource.delete.confirm" params="#{name}" />

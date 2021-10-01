@@ -118,6 +118,11 @@
 			<permission id="cache.elements.list" />
 			<permission id="cache.statistics.clear" />
 			<permission id="cache.statistics.list" />
+			<!-- node -->
+			<permission id="node.properties" />
+			<permission id="node.property.create" />
+			<permission id="node.property.edit" />
+			<permission id="node.property.delete" />
 		</role>
 
 		<role>
@@ -316,6 +321,11 @@
 		<permission id="cache.elements.list">Show a list of cached elements per site</permission>
 		<permission id="cache.statistics.clear">Clear cache statistics</permission>
 		<permission id="cache.statistics.list">Show cache statistics per site</permission>
+		<!-- node -->
+		<permission id="node.properties">Show a node's properties</permission>
+		<permission id="node.property.create">Create a node property</permission>
+		<permission id="node.property.edit">Edit a node property</permission>
+		<permission id="node.property.delete">Delete a node property</permission>
 	</permissions>
 
 	<properties>
@@ -334,7 +344,7 @@
 		<property id="databaseReportSender" description="the sender for the database report email">report@example.com</property>
 		<property id="databaseReportSubject" description="the subject for the database report email">appNG database report</property>
 		<property id="databaseReportText" description="the text for the database report email">See attached file for a report of the database related platform events.</property>
-		<property id="maxFilterableCacheEntries" description="The maximum number of cache entries that can be filtered/sorted">1000</property>
+		<property id="maxFilterableCacheEntries" description="The maximum number of cache entries that can be filtered/sorted">5000</property>
 	</properties>
 
 </application>

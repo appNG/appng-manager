@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<datasource xmlns="http://www.appng.org/schema/platform" id="property">
+    <config>
+        <title id="property">property</title>
+        <params>
+            <param name="id">platform.node.foobar.foo</param>
+        </params>
+        <meta-data binding="property" bindClass="org.appng.application.manager.form.PropertyForm">
+            <field name="type" type="text" hidden="true" binding="property.type"/>
+            <field name="value" type="text" binding="property.value">
+                <label id="value">foo</label>
+            </field>
+            <field name="defaultString" type="text" readonly="true" binding="property.defaultString">
+                <label id="defaultvalue">Default-Value</label>
+            </field>
+            <field name="description" type="longtext" readonly="true" binding="property.description">
+                <label id="description">Description</label>
+            </field>
+        </meta-data>
+    </config>
+    <data>
+        <result>
+            <field name="type" type="text">
+                <value>TEXT</value>
+            </field>
+            <field name="value" type="text">
+                <value>bar</value>
+            </field>
+            <field name="defaultString" type="text">
+                <value>bar</value>
+            </field>
+            <field name="description" type="longtext">
+                <value></value>
+            </field>
+        </result>
+    </data>
+</datasource>

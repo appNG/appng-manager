@@ -36,7 +36,7 @@
 				<label id="property.create">Create property</label>
 				<icon>new</icon>
 			</link>
-			<link id="other[2]" mode="intern" target="/platform?form_action=reloadPlatform">
+			<link id="other[2]" mode="intern" target="/platform?act=reloadPlatform">
 				<permissions>
 					<permission ref="platform.reload" mode="set"></permission>
 				</permissions>
@@ -55,7 +55,7 @@
 				<icon>edit</icon>
 			</link>
 			<link id="actions[2]" mode="intern"
-				target="/platform?form_action=delete-platform-property&amp;propertyid=${current.name}#tab_platformProperties">
+				target="/platform?act=delete-platform-property&amp;propertyid=${current.name}#tab_platformProperties">
 				<permissions>
 					<permission ref="platform.property.delete" mode="set"></permission>
 				</permissions>
@@ -90,7 +90,7 @@
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/platform?form_action=delete-platform-property&amp;propertyid=platform.anotherproperty#tab_platformProperties">
+						target="/platform?act=delete-platform-property&amp;propertyid=platform.anotherproperty#tab_platformProperties">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
@@ -119,7 +119,7 @@
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/platform?form_action=delete-platform-property&amp;propertyid=platform.booleanProp#tab_platformProperties">
+						target="/platform?act=delete-platform-property&amp;propertyid=platform.booleanProp#tab_platformProperties">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
@@ -150,7 +150,7 @@
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/platform?form_action=delete-platform-property&amp;propertyid=platform.multilineProp#tab_platformProperties">
+						target="/platform?act=delete-platform-property&amp;propertyid=platform.multilineProp#tab_platformProperties">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property
@@ -179,7 +179,7 @@
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/platform?form_action=delete-platform-property&amp;propertyid=platform.testproperty#tab_platformProperties">
+						target="/platform?act=delete-platform-property&amp;propertyid=platform.testproperty#tab_platformProperties">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="property.delete.confirm" params="#{shortName}">Do you really want to delete the property

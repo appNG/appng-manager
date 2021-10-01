@@ -42,7 +42,7 @@
 						<permission ref="application.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/applications&#63;form_action=delete&#38;appid=${current.id}">
+				<link mode="intern" target="/applications&#63;act=delete&#38;appid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="application.delete.confirm" params="#{name}"></confirmation>
@@ -188,7 +188,7 @@
 			</meta-data>
 			<linkpanel id="actions" location="inline">
 				<link mode="intern"
-					target="/sites/update/${siteid}?form_action=activateApplication&#38;appid=${current.application.id}#tab_site-applications">
+					target="/sites/update/${siteid}?act=activateApplication&#38;appid=${current.application.id}#tab_site-applications">
 					<condition expression="${!current.active}" />
 					<label>activate</label>
 					<icon>activate</icon>
@@ -197,7 +197,7 @@
 					</permissions>
 				</link>
 				<link mode="intern"
-					target="/sites/update/${siteid}?form_action=deactivateApplication&#38;appid=${current.application.id}#tab_site-applications">
+					target="/sites/update/${siteid}?act=deactivateApplication&#38;appid=${current.application.id}#tab_site-applications">
 					<condition expression="${current.active}" />
 					<label>deactivate</label>
 					<icon>deactivate</icon>
@@ -222,7 +222,7 @@
 				</link>
 			</linkpanel>
 			<linkpanel location="top" id="reload">
-				<link target="/sites?form_action=reload&#38;siteid=${siteid}" mode="intern">
+				<link target="/sites?act=reload&#38;siteid=${siteid}" mode="intern">
 					<label>site.reload</label>
 					<icon>reload</icon>
 					<permissions>

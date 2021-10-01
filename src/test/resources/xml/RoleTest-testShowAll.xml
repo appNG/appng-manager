@@ -43,7 +43,7 @@
 				<icon>edit</icon>
 			</link>
 			<link id="actions[2]" mode="intern"
-				target="/applications/update/1?form_action=delete-role&amp;roleid=${current.id}#tab_roles">
+				target="/applications/update/1?act=delete-role&amp;roleid=${current.id}#tab_roles">
 				<permissions>
 					<permission ref="role.delete" mode="set"></permission>
 				</permissions>
@@ -72,7 +72,7 @@
 						<icon>edit</icon>
 					</link>
 					<link id="actions[2]" mode="intern"
-						target="/applications/update/1?form_action=delete-role&amp;roleid=1#tab_roles">
+						target="/applications/update/1?act=delete-role&amp;roleid=1#tab_roles">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="role.delete.confirm" params="#{name}">Do you really want to delete the role "role1"?</confirmation>

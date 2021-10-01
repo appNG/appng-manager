@@ -38,7 +38,7 @@
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=${current.id}">
+			<link id="actions[2]" mode="intern" target="/users?act=deleteGroup&amp;groupid=${current.id}">
 				<condition expression="${not current.defaultAdmin}" />
 				<permissions>
 					<permission ref="group.delete" mode="set"></permission>
@@ -71,7 +71,7 @@
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[2]" mode="intern" target="/users?form_action=deleteGroup&amp;groupid=1">
+					<link id="actions[2]" mode="intern" target="/users?act=deleteGroup&amp;groupid=1">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
 						<confirmation id="group.delete.confirm" params="${current.name}">Do you really want to delete the group "admin"?</confirmation>

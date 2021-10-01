@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2020 the original author or authors.
+ * Copyright 2011-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,8 +59,10 @@ public class LdapUsers implements DataProvider {
 		LdapService ldapService = new LdapService();
 
 		Properties siteProps = site.getProperties();
+		Boolean ldapDisabled = site.getProperties().getBoolean(LdapService.LDAP_DISABLED);
 		if ("settings".equals(mode)) {
 			List<Property> ldapProps = new ArrayList<>();
+			ldapProps.add(getProperty(siteProps, LdapService.LDAP_DISABLED));
 			SimpleProperty ldapHost = getProperty(siteProps, LdapService.LDAP_HOST);
 			ldapProps.add(ldapHost);
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_DOMAIN));
@@ -71,29 +73,36 @@ public class LdapUsers implements DataProvider {
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_PRINCIPAL_SCHEME));
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_START_TLS));
 			dataContainer.setItems(ldapProps);
-			char[] ldapPw = siteProps.getString(LdapService.LDAP_PASSWORD, StringUtils.EMPTY).toCharArray();
-			boolean adminLoginOk = ldapService.loginUser(site, ldapUser.getString(), ldapPw);
-			if (!adminLoginOk) {
-				fp.addErrorMessage(request.getMessage(MessageConstants.LDAP_NOT_WORKING, ldapHost.getString()));
+
+			if (!ldapDisabled) {
+				char[] ldapPw = siteProps.getString(LdapService.LDAP_PASSWORD, StringUtils.EMPTY).toCharArray();
+				boolean adminLoginOk = ldapService.loginUser(site, ldapUser.getString(), ldapPw);
+				if (!adminLoginOk) {
+					fp.addErrorMessage(request.getMessage(MessageConstants.LDAP_NOT_WORKING, ldapHost.getString()));
+				}
 			}
 		} else {
-
 			List<LdapUser> users = new ArrayList<>();
-
-			List<SubjectImpl> globalGroups = coreService.getSubjectsByType(UserType.GLOBAL_GROUP);
-			for (SubjectImpl globalGroup : globalGroups) {
-				List<SubjectImpl> membersOfGroup = ldapService.getMembersOfGroup(site, globalGroup.getName());
-				users.addAll(membersOfGroup.stream().map(s -> new LdapUser(s.getName(), s.getEmail(), s.getRealname(),
-						UserType.GLOBAL_GROUP, globalGroup.getName())).collect(Collectors.toList()));
+			if (ldapDisabled) {
+				fp.addInvalidMessage(request.getMessage(MessageConstants.LDAP_DISABLED, LdapService.LDAP_DISABLED));
+			} else {
+				List<SubjectImpl> globalGroups = coreService.getSubjectsByType(UserType.GLOBAL_GROUP);
+				for (SubjectImpl globalGroup : globalGroups) {
+					List<SubjectImpl> membersOfGroup = ldapService.getMembersOfGroup(site, globalGroup.getName());
+					users.addAll(
+							membersOfGroup.stream()
+									.map(s -> new LdapUser(s.getName(), s.getEmail(), s.getRealname(),
+											UserType.GLOBAL_GROUP, globalGroup.getName()))
+									.collect(Collectors.toList()));
+				}
+				List<SubjectImpl> globalUsers = coreService.getSubjectsByType(UserType.GLOBAL_USER);
+				String userDn = siteProps.getString(LdapService.LDAP_ID_ATTRIBUTE) + "=%s,"
+						+ siteProps.getString(LdapService.LDAP_USER_BASE_DN);
+				users.addAll(globalUsers.stream().map(s -> {
+					return new LdapUser(s.getName(), s.getEmail(), s.getRealname(), s.getUserType(),
+							String.format(userDn, s.getName()));
+				}).collect(Collectors.toList()));
 			}
-			List<SubjectImpl> globalUsers = coreService.getSubjectsByType(UserType.GLOBAL_USER);
-			String userDn = siteProps.getString(LdapService.LDAP_ID_ATTRIBUTE) + "=%s,"
-					+ siteProps.getString(LdapService.LDAP_USER_BASE_DN);
-			users.addAll(globalUsers.stream().map(s -> {
-				return new LdapUser(s.getName(), s.getEmail(), s.getRealname(), s.getUserType(),
-						String.format(userDn, s.getName()));
-			}).collect(Collectors.toList()));
-
 			dataContainer.setPage(users, fp.getPageable(), true);
 		}
 		return dataContainer;

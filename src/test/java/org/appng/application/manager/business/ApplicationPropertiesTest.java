@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2020 the original author or authors.
+ * Copyright 2011-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,8 +44,8 @@ public class ApplicationPropertiesTest extends AbstractTest {
 		application.setName("manager");
 		applicationRepository.save(application);
 
-		ActionCall actionCall = getAction(PROPERTY_EVENT, "create-application-property").withParam(FORM_ACTION,
-				"create-application-property").withParam("appid", "1");
+		ActionCall actionCall = getAction(PROPERTY_EVENT, "create-application-property")
+				.withParam(FORM_ACTION, "create-application-property").withParam("appid", "1");
 		CallableAction action = actionCall.getCallableAction(new PropertyForm(new PropertyImpl(TESTPROPERTY, "5")));
 		FieldProcessor perform = action.perform();
 		validate(perform.getMessages());
@@ -79,13 +79,12 @@ public class ApplicationPropertiesTest extends AbstractTest {
 		PropertyImpl property = new PropertyImpl(TESTPROPERTY, "7", "9");
 		property.setType(Type.INT);
 		property.setClob("");
-		CallableAction action = actionCall
-				.getCallableAction(new PropertyForm(property));
+		CallableAction action = actionCall.getCallableAction(new PropertyForm(property));
 		FieldProcessor perform = action.perform();
 		validate(perform.getMessages());
 
-		CallableDataSource dataSource = getDataSource("property").withParam("appid", "1")
-				.withParam("id", PROPERTY_NAME).getCallableDataSource();
+		CallableDataSource dataSource = getDataSource("property").withParam("appid", "1").withParam("id", PROPERTY_NAME)
+				.getCallableDataSource();
 		dataSource.perform("test");
 		validate(dataSource.getDatasource(), "-data");
 	}

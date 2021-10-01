@@ -56,8 +56,7 @@
 		</linkpanel>
 	</config>
 	<data>
-		<resultset chunk="0" chunkname="databaseConnections" chunksize="10" nextchunk="0" previouschunk="0"
-			firstchunk="0" lastchunk="0" hits="1">
+		<resultset chunk="0" chunkname="databaseConnections" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="1">
 			<result>
 				<field name="type" type="text">
 					<value>HSQL</value>

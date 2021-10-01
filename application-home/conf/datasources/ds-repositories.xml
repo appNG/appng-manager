@@ -76,7 +76,7 @@
 						<permission ref="repository.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/repositories&#63;form_action=delete-repository&#38;repositoryid=${current.id}">
+				<link mode="intern" target="/repositories&#63;act=delete-repository&#38;repositoryid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="repository.delete.confirm" params="#{name}" />
@@ -84,7 +84,7 @@
 						<permission ref="repository.delete" mode="set" />
 					</permissions>
 				</link>
-				<link target="/repositories/installation/${current.id}&#63;form_action=reload" mode="intern">
+				<link target="/repositories/installation/${current.id}&#63;act=reload" mode="intern">
 					<label>reload</label>
 					<icon>reload</icon>
 					<confirmation id="repository.reload.confirm" params="#{name}" />
@@ -223,13 +223,13 @@
 					<icon>edit</icon>
 				</link>
 				<link mode="intern" show-disabled="true"
-					target="/repositories/installation/${repositoryid}&#63;form_action=install&#38;packagename=#{name}&#38;packageversion=#{latestRelease}">
+					target="/repositories/installation/${repositoryid}&#63;act=install&#38;packagename=#{name}&#38;packageversion=#{latestRelease}">
 					<condition expression="${(current.installedVersion ne current.latestRelease) and (not empty current.latestRelease)}" />
 					<label>install.latestrelease</label>
 					<icon>d_release</icon>
 				</link>
 				<link mode="intern" show-disabled="true"
-					target="/repositories/installation/${repositoryid}&#63;form_action=install&#38;packagename=#{name}&#38;packageversion=#{latestSnapshot}">
+					target="/repositories/installation/${repositoryid}&#63;act=install&#38;packagename=#{name}&#38;packageversion=#{latestSnapshot}">
 					<condition expression="${not empty current.latestSnapshot}" />
 					<label>install.latestsnapshot</label>
 					<icon>d_snapshot</icon>
@@ -282,13 +282,13 @@
 			</meta-data>
 			<linkpanel id="actions" location="inline">
 				<link mode="intern" show-disabled="true"
-					target="/repositories/installation/${repositoryid}&#63;form_action=install&#38;packagename=#{name}&#38;packageversion=#{packageVersion}&#38;packagetimestamp=#{timestamp}">
+					target="/repositories/installation/${repositoryid}&#63;act=install&#38;packagename=#{name}&#38;packageversion=#{packageVersion}&#38;packagetimestamp=#{timestamp}">
 					<condition expression="${not current.installed}" />
 					<label>install</label>
 					<icon>deploy</icon>
 				</link>
 				<link mode="intern" show-disabled="true"
-					target="/repositories/installation/${repositoryid}&#63;form_action=delete-package&#38;packagename=#{name}&#38;packageversion=#{packageVersion}&#38;packagetimestamp=#{timestamp}">
+					target="/repositories/installation/${repositoryid}&#63;act=delete-package&#38;packagename=#{name}&#38;packageversion=#{packageVersion}&#38;packagetimestamp=#{timestamp}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<condition expression="${not current.installed and current.deletable}" />

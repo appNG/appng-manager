@@ -56,7 +56,7 @@
 						<permission ref="subject.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/users&#63;form_action=delete&#38;userid=${current.id}">
+				<link mode="intern" target="/users&#63;act=delete&#38;userid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="subject.delete.confirm" params="#{name}" />

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2020 the original author or authors.
+ * Copyright 2011-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ public class LdapUsersTest extends AbstractTest {
 		siteProperties.add(new SimpleProperty(prefix + LdapService.LDAP_START_TLS, "false"));
 		siteProperties.add(new SimpleProperty(prefix + LdapService.LDAP_HOST, "ldap://localhost:389"));
 		siteProperties.add(new SimpleProperty(prefix + LdapService.LDAP_PRINCIPAL_SCHEME, "DN"));
+		siteProperties.add(new SimpleProperty(prefix + LdapService.LDAP_DISABLED, "true"));
 		return siteProperties;
 	}
 
