@@ -16,6 +16,7 @@
 package org.appng.application.manager.business;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ import org.appng.core.controller.CachedResponse;
 import org.appng.core.controller.filter.PageCacheFilter;
 import org.appng.core.service.CacheService;
 import org.appng.xml.platform.SelectionGroup;
+import org.appng.xml.platform.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -99,12 +101,21 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 
 			int cacheSize = allCacheEntries.size();
 			if (cacheSize > maxCacheEntries) {
-				fp.getFields().forEach(f -> f.setSort(null));
+				fp.getFields().stream().filter(f -> !"id".equals(f.getBinding())).forEach(f -> f.setSort(null));
 				for (int i = pageable.getOffset(); i < pageable.getOffset() + pageable.getPageSize(); i++) {
 					if (i < cacheSize) {
 						cacheEntries.add(new CacheEntry(allCacheEntries.get(i)));
 					}
 				}
+
+				SortOrder idOrder = fp.getField("id").getSort().getOrder();
+				if (null != idOrder) {
+					Collections.sort(cacheEntries, (e1, e2) -> StringUtils.compare(e1.getId(), e2.getId()));
+					if (SortOrder.DESC.equals(idOrder)) {
+						Collections.reverse(cacheEntries);
+					}
+				}
+
 				dataContainer.setPage(new PageImpl<>(cacheEntries, pageable, cacheSize));
 			} else {
 				String entryName = request.getParameter(F_ETR);
