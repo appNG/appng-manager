@@ -68,7 +68,7 @@
 				<link mode="intern" target="/sites&#63;act=stop&#38;siteid=${current.id}">
 					<label>site.stop</label>
 					<icon>deactivate</icon>
-					<condition expression="${current.active and current.state.name() eq 'STARTED'}" />
+					<condition expression="${current.state.name() eq 'STARTED'}" />
 					<confirmation id="site.stop.confirm" params="#{name}" />
 					<permissions>
 						<permission ref="site.reload" mode="set" />
@@ -81,11 +81,11 @@
 						<permission ref="site.edit" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/sites&#63;act=delete&#38;siteid=${current.id}" show-disabled="true">
+				<link mode="intern" target="/sites&#63;act=delete&#38;siteid=${current.id}">
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="site.delete.confirm" params="#{name}" />
-					<condition expression="${not current.active and current.state.name() eq 'STOPPED'}" />
+					<condition expression="${current.state.name() eq 'STOPPED'}" />
 					<permissions>
 						<permission ref="site.delete" mode="set" />
 					</permissions>
@@ -93,16 +93,16 @@
 				<link mode="intern" target="/sites&#63;act=reload&#38;siteid=${current.id}" show-disabled="true">
 					<label>reload</label>
 					<icon>reload</icon>
-					<condition expression="${current.active and current.state.name() eq 'STARTED'}" />
+					<condition expression="${current.state.name() eq 'STARTED'}" />
 					<confirmation id="site.reload.confirm" params="#{name}" />
 					<permissions>
 						<permission ref="site.reload" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/sites&#63;act=reloadTemplate&#38;siteid=${current.id}" show-disabled="true">
+				<link mode="intern" target="/sites&#63;act=reloadTemplate&#38;siteid=${current.id}">
 					<label>reload.template</label>
 					<icon>reload</icon>
-					<condition expression="${current.active and current.state.name() eq 'STARTED'}" />
+					<condition expression="${current.state.name() eq 'STARTED'}" />
 					<permissions>
 						<permission ref="site.reload" mode="set" />
 					</permissions>
