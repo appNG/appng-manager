@@ -67,6 +67,7 @@ public class LdapUsers implements DataProvider {
 			ldapProps.add(ldapHost);
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_DOMAIN));
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_GROUP_BASE_DN));
+			ldapProps.add(getProperty(siteProps, LdapService.LDAP_USER_BASE_DN));
 			SimpleProperty ldapUser = getProperty(siteProps, LdapService.LDAP_USER);
 			ldapProps.add(ldapUser);
 			ldapProps.add(getProperty(siteProps, LdapService.LDAP_ID_ATTRIBUTE));
