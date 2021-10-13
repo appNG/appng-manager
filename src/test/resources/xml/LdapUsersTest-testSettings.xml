@@ -12,7 +12,7 @@
 		</meta-data>
 	</config>
 	<data paginate="false">
-		<resultset chunk="0" chunkname="ldapSettings" chunksize="8" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="8">
+		<resultset chunk="0" chunkname="ldapSettings" chunksize="9" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="9">
 			<result>
 				<field name="name" type="text">
 					<value>ldapDisabled</value>
@@ -40,6 +40,14 @@
 			<result>
 				<field name="name" type="text">
 					<value>ldapGroupBaseDn</value>
+				</field>
+				<field name="value" type="text">
+					<value></value>
+				</field>
+			</result>
+			<result>
+				<field name="name" type="text">
+					<value>ldapUserBaseDn</value>
 				</field>
 				<field name="value" type="text">
 					<value></value>
