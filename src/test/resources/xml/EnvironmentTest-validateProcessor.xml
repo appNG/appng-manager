@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<datasource xmlns="http://www.appng.org/schema/platform" id="processor">
+	<config>
+		<title id="Processor">Processor</title>
+		<permissions>
+			<permission ref="platform.environment" mode="set"></permission>
+		</permissions>
+		<meta-data bindClass="java.util.Map$Entry">
+			<field name="key" type="longtext" binding="key">
+				<label id="name">Name</label>
+			</field>
+			<field name="value" type="text" binding="value">
+				<label id="value">Value</label>
+			</field>
+		</meta-data>
+	</config>
+	<data />
+</datasource>
