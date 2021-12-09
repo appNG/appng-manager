@@ -29,6 +29,7 @@ import org.appng.api.SiteProperties;
 import org.appng.api.model.Property;
 import org.appng.api.model.SimpleProperty;
 import org.appng.api.support.environment.DefaultEnvironment;
+import org.appng.application.manager.ManagerSettings;
 import org.appng.core.repository.ApplicationRepository;
 import org.appng.core.repository.GroupRepository;
 import org.appng.core.repository.PermissionRepository;
@@ -115,6 +116,7 @@ public class AbstractTest extends TestBase {
 		properties.put("platform.platformRootPath", "target/ROOT");
 		properties.put("site.mailHost", "localHost");
 		properties.put("site.mailPort", "25");
+		properties.put(ManagerSettings.MAX_FILTERABLE_CACHE_ENTRIES, "50");
 		return properties;
 	}
 
@@ -132,6 +134,9 @@ public class AbstractTest extends TestBase {
 		siteProperties.add(new SimpleProperty(prefix + SiteProperties.SERVICE_PATH, "services"));
 		siteProperties.add(new SimpleProperty(prefix + SiteProperties.MANAGER_PATH, "ws"));
 		siteProperties.add(new SimpleProperty(prefix + SiteProperties.DEFAULT_PAGE_SIZE, "10"));
+		siteProperties.add(new SimpleProperty(prefix + SiteProperties.CACHE_TIME_TO_LIVE, "36000"));
+		siteProperties.add(new SimpleProperty(prefix + SiteProperties.CACHE_STATISTICS, "true"));
+		siteProperties.add(new SimpleProperty(prefix + SiteProperties.CACHE_ENABLED, "true"));
 		return siteProperties;
 	}
 

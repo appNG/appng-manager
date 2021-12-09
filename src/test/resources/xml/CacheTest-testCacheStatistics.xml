@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<datasource xmlns="http://www.appng.org/schema/platform" id="cacheStatistics">
+	<config>
+		<title id="cache.statistics">Cache statistics</title>
+		<permissions>
+			<permission ref="cache.statistics.list" mode="set"></permission>
+		</permissions>
+		<params>
+			<param name="siteid">1</param>
+			<param name="clearLink" />
+		</params>
+		<meta-data bindClass="java.util.Map$Entry">
+			<field name="key" type="longtext" binding="key">
+				<label id="name">Name</label>
+			</field>
+			<field name="value" type="text" displayLength="1000" binding="value">
+				<label id="value">Value</label>
+			</field>
+		</meta-data>
+		<linkpanel id="other" location="bottom">
+			<link id="other[1]" mode="intern" target="">
+				<permissions>
+					<permission ref="cache.clear" mode="set"></permission>
+				</permissions>
+				<label id="cache.clear">Clear cache</label>
+				<icon>delete</icon>
+			</link>
+		</linkpanel>
+	</config>
+	<data paginate="false">
+		<resultset chunk="0" chunkname="cacheStatistics" chunksize="12" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="12">
+			<result>
+				<field name="key" type="longtext">
+					<value>Name</value>
+				</field>
+				<field name="value" type="text">
+					<value>pageCache-localhost</value>
+				</field>
+			</result>
+			<result>
+				<field name="key" type="longtext">
+					<value>Size</value>
+				</field>
+				<field name="value" type="text">
+					<value>500</value>
+				</field>
+			</result>
+			<result>
+				<field name="key" type="longtext">
+					<value>Hits</value>
+				</field>
+				<field name="value" type="text">
+					<value>51</value>
+				</field>
+			</result>
+			<result>
+				<field name="key" type="longtext">
+					<value>Hits %</value>
+				</field>
+				<field name="value" type="text">
+					<value>100.0</value>
+				</field>
+			</result>
+			<result>
+				<field name="key" type="longtext">
+					<value>Misses</value>
+				</field>
+				<field name="value" type="text">
+					<value>0</value>
+				</field>
+			</result>
+			<result>
+				<field name="key" type="longtext">
+					<value>Misses %</value>
+				</field>
+				<field name="value" type="text">
+					<value>0.0</value>
+				</field>
+			</result>
+			<result>
+				<field name="key" type="longtext">
+					<value>Puts</value>
+				</field>
+				<field name="value" type="text">
+					<value>500</value>
+				</field>
+			</result>
+			<result>
+				<field name="key" type="longtext">
+					<value>Average put time (ms)</value>
+				</field>
+				<field name="value" type="text">
+					<value>0.045708846</value>
+				</field>
+			</result>
+			<result>
+				<field name="key" type="longtext">
+					<value>Gets</value>
+				</field>
+				<field name="value" type="text">
+					<value>51</value>
+				</field>
+			</result>
+			<result>
+				<field name="key" type="longtext">
+					<value>Average get time (ms)</value>
+				</field>
+				<field name="value" type="text">
+					<value>0.024403412</value>
+				</field>
+			</result>
+			<result>
+				<field name="key" type="longtext">
+					<value>Removals</value>
+				</field>
+				<field name="value" type="text">
+					<value>0</value>
+				</field>
+			</result>
+			<result>
+				<field name="key" type="longtext">
+					<value>Average removal time (ms)</value>
+				</field>
+				<field name="value" type="text">
+					<value>0.0</value>
+				</field>
+			</result>
+		</resultset>
+	</data>
+</datasource>
