@@ -113,6 +113,8 @@ public class AbstractTest extends TestBase {
 		properties.put("hibernate.show_sql", "false");
 		properties.put("hibernate.format_sql", "false");
 		properties.put("platform.platformRootPath", "target/ROOT");
+		properties.put("site.mailHost", "localHost");
+		properties.put("site.mailPort", "25");
 		return properties;
 	}
 

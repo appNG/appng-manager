@@ -15,6 +15,7 @@
 			<description>Administrator with all permissions</description>
 			<permission id="output-format.html" />
 			<permission id="output-type.webgui" />
+			<permission id="mail.send" />
 			<!-- site -->
 			<permission id="site.list" />
 			<permission id="site.create" />
@@ -218,6 +219,7 @@
 		<permission id="debug">debug view</permission>
 		<permission id="output-format.html">HTML Format</permission>
 		<permission id="output-type.webgui">Web-GUI type</permission>
+		<permission id="mail.send">Send a test E-mail</permission>
 		<!-- site -->
 		<permission id="site.list">List all sites</permission>
 		<permission id="site.create">Create a new site</permission>
@@ -337,8 +339,7 @@
 		<property id="eventReportSender" description="the sender for the event report email">report@example.com</property>
 		<property id="eventReportSubject" description="the subject for the event report email">appNG event report</property>
 		<property id="eventReportText" description="the text for the event report email">See attached file for a report of the recent appNG platform events.</property>
-		<property id="eventReportTypes"
-			description="the event types to be included in the even report email (CREATE, UPDATE, DELETE, INFO, ERROR, WARN)">CREATE UPDATE DELETE INFO ERROR WARN</property>
+		<property id="eventReportTypes" description="the event types to be included in the even report email (CREATE, UPDATE, DELETE, INFO, ERROR, WARN)">CREATE UPDATE DELETE INFO ERROR WARN</property>
 		<property id="databaseReportReceivers"
 			description="a semicolon separted list of receviers for DatabaseReportJob, additional to all users with role 'Database report receiver'"></property>
 		<property id="databaseReportSender" description="the sender for the database report email">report@example.com</property>

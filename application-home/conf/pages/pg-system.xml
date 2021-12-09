@@ -145,6 +145,11 @@
 					</datasource>
 				</element>
 			</section>
+			<section>
+				<element>
+					<action id="sendMail" onSuccess="/system#tab_sendMail" eventId="mailEvent" />
+				</element>
+			</section>
 
 			<!-- hidden inline actions -->
 			<section hidden="true">
