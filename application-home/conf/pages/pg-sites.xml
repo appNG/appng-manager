@@ -275,6 +275,7 @@
 					<datasource id="cacheStatistics">
 						<params>
 							<param name="siteid">${siteid}</param>
+							<param name="clearLink">/sites/update/${siteid}&#63;act=clearCache</param>
 						</params>
 						<condition expression="${not empty siteid}" />
 					</datasource>
