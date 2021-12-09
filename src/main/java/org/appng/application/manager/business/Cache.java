@@ -109,21 +109,22 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 				List<CacheEntry> cacheEntries = new ArrayList<>();
 
 				javax.cache.Cache<String, CachedResponse> cache = CacheService.getCache(cacheSite.get());
-				int cacheSize = cache.unwrap(ICache.class).size();
+				@SuppressWarnings("unchecked")
+				ICache<String, CachedResponse> icache = cache.unwrap(ICache.class);
+				int cacheSize = icache.size();
 
 				if (cacheSize > maxCacheEntries) {
-					Iterator<javax.cache.Cache.Entry<String, CachedResponse>> elements = cache.iterator();
 					int idx = 0;
 					int startIdx = pageable.getOffset();
 					int endIdx = pageable.getOffset() + pageable.getPageSize();
+
+					Iterator<javax.cache.Cache.Entry<String, CachedResponse>> elements = icache.iterator(endIdx);
 					while (elements.hasNext()) {
 						javax.cache.Cache.Entry<java.lang.String, CachedResponse> entry = elements.next();
 						if (idx >= startIdx && idx < endIdx) {
 							cacheEntries.add(new CacheEntry(entry.getValue()));
 						}
-						if (idx++ >= endIdx) {
-							break;
-						}
+						idx++;
 					}
 
 					fp.getFields().stream().filter(f -> !"id".equals(f.getBinding())).forEach(f -> f.setSort(null));
