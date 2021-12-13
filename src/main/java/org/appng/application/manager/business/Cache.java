@@ -111,9 +111,9 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 				List<CacheEntry> cacheEntries = new ArrayList<>();
 
 				javax.cache.Cache<String, CachedResponse> cache = CacheService.getCache(cacheSite.get());
-
+				int cacheSize = 0;
 				if (null != cache) {
-					int cacheSize = cache.unwrap(ICache.class).size();
+					cacheSize = cache.unwrap(ICache.class).size();
 
 					if (cacheSize > maxCacheEntries) {
 						Iterator<javax.cache.Cache.Entry<String, CachedResponse>> elements = cache.iterator();
@@ -138,8 +138,6 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 								Collections.reverse(cacheEntries);
 							}
 						}
-
-						dataContainer.setPage(new PageImpl<>(cacheEntries, pageable, cacheSize));
 
 					} else {
 						String entryName = request.getParameter(F_ETR);
@@ -168,7 +166,7 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 						dataContainer.getSelectionGroups().add(selectionGroup);
 					}
 				}
-				dataContainer.setPage(cacheEntries, pageable);
+				dataContainer.setPage(new PageImpl<>(cacheEntries, pageable, cacheSize));
 			}
 		}
 		return dataContainer;
