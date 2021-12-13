@@ -91,79 +91,84 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 			if (STATISTICS.equals(mode)) {
 				List<Entry<String, String>> result = new ArrayList<>();
 				Map<String, String> stats = CacheService.getCacheStatistics(cacheSite.get());
-				result.add(getStatEntry(request, stats, CacheService.STATS_NAME));
-				result.add(getStatEntry(request, stats, CacheService.STATS_SIZE));
-				result.add(getStatEntry(request, stats, CacheService.STATS_HITS));
-				result.add(getStatEntry(request, stats, CacheService.STATS_HITS_PERCENT));
-				result.add(getStatEntry(request, stats, CacheService.STATS_MISSES));
-				result.add(getStatEntry(request, stats, CacheService.STATS_MISSES_PERCENT));
-				result.add(getStatEntry(request, stats, CacheService.STATS_PUTS));
-				result.add(getStatEntry(request, stats, CacheService.STATS_AVG_PUT_TIME));
-				result.add(getStatEntry(request, stats, CacheService.STATS_GETS));
-				result.add(getStatEntry(request, stats, CacheService.STATS_AVG_GET_TIME));
-				result.add(getStatEntry(request, stats, CacheService.STATS_REMOVALS));
-				result.add(getStatEntry(request, stats, CacheService.STATS_AVG_REMOVAL_TIME));
+				if (!stats.isEmpty()) {
+					result.add(getStatEntry(request, stats, CacheService.STATS_NAME));
+					result.add(getStatEntry(request, stats, CacheService.STATS_SIZE));
+					result.add(getStatEntry(request, stats, CacheService.STATS_HITS));
+					result.add(getStatEntry(request, stats, CacheService.STATS_HITS_PERCENT));
+					result.add(getStatEntry(request, stats, CacheService.STATS_MISSES));
+					result.add(getStatEntry(request, stats, CacheService.STATS_MISSES_PERCENT));
+					result.add(getStatEntry(request, stats, CacheService.STATS_PUTS));
+					result.add(getStatEntry(request, stats, CacheService.STATS_AVG_PUT_TIME));
+					result.add(getStatEntry(request, stats, CacheService.STATS_GETS));
+					result.add(getStatEntry(request, stats, CacheService.STATS_AVG_GET_TIME));
+					result.add(getStatEntry(request, stats, CacheService.STATS_REMOVALS));
+					result.add(getStatEntry(request, stats, CacheService.STATS_AVG_REMOVAL_TIME));
+				}
 				dataContainer.setItems(result);
 			} else if (ENTRIES.equals(mode)) {
 				Pageable pageable = fp.getPageable();
 				List<CacheEntry> cacheEntries = new ArrayList<>();
 
 				javax.cache.Cache<String, CachedResponse> cache = CacheService.getCache(cacheSite.get());
-				int cacheSize = cache.unwrap(ICache.class).size();
 
-				if (cacheSize > maxCacheEntries) {
-					Iterator<javax.cache.Cache.Entry<String, CachedResponse>> elements = cache.iterator();
-					int idx = 0;
-					int startIdx = pageable.getOffset();
-					int endIdx = pageable.getOffset() + pageable.getPageSize();
-					while (elements.hasNext()) {
-						javax.cache.Cache.Entry<java.lang.String, CachedResponse> entry = elements.next();
-						if (idx >= startIdx && idx < endIdx) {
-							cacheEntries.add(new CacheEntry(entry.getValue()));
+				if (null != cache) {
+					int cacheSize = cache.unwrap(ICache.class).size();
+
+					if (cacheSize > maxCacheEntries) {
+						Iterator<javax.cache.Cache.Entry<String, CachedResponse>> elements = cache.iterator();
+						int idx = 0;
+						int startIdx = pageable.getOffset();
+						int endIdx = pageable.getOffset() + pageable.getPageSize();
+						while (elements.hasNext()) {
+							javax.cache.Cache.Entry<java.lang.String, CachedResponse> entry = elements.next();
+							if (idx >= startIdx && idx < endIdx) {
+								cacheEntries.add(new CacheEntry(entry.getValue()));
+							}
+							if (idx++ >= endIdx) {
+								break;
+							}
 						}
-						if (idx++ >= endIdx) {
-							break;
+
+						fp.getFields().stream().filter(f -> !"id".equals(f.getBinding())).forEach(f -> f.setSort(null));
+						SortOrder idOrder = fp.getField("id").getSort().getOrder();
+						if (null != idOrder) {
+							Collections.sort(cacheEntries, (e1, e2) -> StringUtils.compare(e1.getId(), e2.getId()));
+							if (SortOrder.DESC.equals(idOrder)) {
+								Collections.reverse(cacheEntries);
+							}
 						}
+
+						dataContainer.setPage(new PageImpl<>(cacheEntries, pageable, cacheSize));
+
+					} else {
+						String entryName = request.getParameter(F_ETR);
+						String entryType = request.getParameter(F_CTYPE);
+						boolean filterName = StringUtils.isNotBlank(entryName);
+						boolean filterType = StringUtils.isNotBlank(entryType);
+						for (javax.cache.Cache.Entry<String, CachedResponse> entry : cache) {
+							String entryId = entry.getKey();
+							CachedResponse cachedResponse = entry.getValue();
+							boolean nameMatches = !filterName || FilenameUtils.wildcardMatch(
+									entryId.substring(entryId.indexOf('/')), entryName, IOCase.INSENSITIVE);
+							boolean typeMatches = !filterType || FilenameUtils
+									.wildcardMatch(cachedResponse.getContentType(), entryType, IOCase.INSENSITIVE);
+							if (nameMatches && typeMatches) {
+								cacheEntries.add(new CacheEntry(cachedResponse));
+							}
+						}
+
+						Selection nameSelection = selectionFactory.getTextSelection(F_ETR, MessageConstants.NAME,
+								entryName);
+						Selection typeSelection = selectionFactory.getTextSelection(F_CTYPE, MessageConstants.TYPE,
+								entryType);
+						SelectionGroup selectionGroup = new SelectionGroup();
+						selectionGroup.getSelections().add(nameSelection);
+						selectionGroup.getSelections().add(typeSelection);
+						dataContainer.getSelectionGroups().add(selectionGroup);
 					}
-
-					fp.getFields().stream().filter(f -> !"id".equals(f.getBinding())).forEach(f -> f.setSort(null));
-					SortOrder idOrder = fp.getField("id").getSort().getOrder();
-					if (null != idOrder) {
-						Collections.sort(cacheEntries, (e1, e2) -> StringUtils.compare(e1.getId(), e2.getId()));
-						if (SortOrder.DESC.equals(idOrder)) {
-							Collections.reverse(cacheEntries);
-						}
-					}
-
-					dataContainer.setPage(new PageImpl<>(cacheEntries, pageable, cacheSize));
-
-				} else {
-					String entryName = request.getParameter(F_ETR);
-					String entryType = request.getParameter(F_CTYPE);
-					boolean filterName = StringUtils.isNotBlank(entryName);
-					boolean filterType = StringUtils.isNotBlank(entryType);
-					for (javax.cache.Cache.Entry<String, CachedResponse> entry : cache) {
-						String entryId = entry.getKey();
-						CachedResponse cachedResponse = entry.getValue();
-						boolean nameMatches = !filterName || FilenameUtils
-								.wildcardMatch(entryId.substring(entryId.indexOf('/')), entryName, IOCase.INSENSITIVE);
-						boolean typeMatches = !filterType || FilenameUtils
-								.wildcardMatch(cachedResponse.getContentType(), entryType, IOCase.INSENSITIVE);
-						if (nameMatches && typeMatches) {
-							cacheEntries.add(new CacheEntry(cachedResponse));
-						}
-					}
-
-					Selection nameSelection = selectionFactory.getTextSelection(F_ETR, MessageConstants.NAME,
-							entryName);
-					Selection typeSelection = selectionFactory.getTextSelection(F_CTYPE, MessageConstants.TYPE,
-							entryType);
-					SelectionGroup selectionGroup = new SelectionGroup();
-					selectionGroup.getSelections().add(nameSelection);
-					selectionGroup.getSelections().add(typeSelection);
-					dataContainer.getSelectionGroups().add(selectionGroup);
-					dataContainer.setPage(cacheEntries, pageable);
 				}
+				dataContainer.setPage(cacheEntries, pageable);
 			}
 		}
 		return dataContainer;
