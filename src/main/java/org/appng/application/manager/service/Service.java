@@ -75,11 +75,12 @@ public interface Service {
 
 	void createSite(Request request, SiteForm sitesForm, FieldProcessor fp) throws BusinessException;
 
-	void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp, PasswordPolicy policy) throws BusinessException;
-
-	void createProperty(Request request, PropertyForm propertyForm, String nodeId, Integer siteId, Integer appId, FieldProcessor fp)
+	void createSubject(Request request, Locale locale, SubjectForm form, FieldProcessor fp, PasswordPolicy policy)
 			throws BusinessException;
-	
+
+	void createProperty(Request request, PropertyForm propertyForm, String nodeId, Integer siteId, Integer appId,
+			FieldProcessor fp) throws BusinessException;
+
 	void createPermission(Request request, PermissionImpl permission, Integer appId, FieldProcessor fp)
 			throws BusinessException;
 
@@ -111,8 +112,8 @@ public interface Service {
 
 	DataContainer searchRole(FieldProcessor fp, Integer roleId, Integer appId) throws BusinessException;
 
-	DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name, String domain)
-			throws BusinessException;
+	DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name, String domain,
+			String active) throws BusinessException;
 
 	DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
 			List<String> languages, Integer groupId) throws BusinessException;
@@ -133,7 +134,8 @@ public interface Service {
 
 	void updateSite(Request request, SiteForm sitesForm, FieldProcessor fp) throws BusinessException;
 
-	Boolean updateSubject(Request request, SubjectForm form, FieldProcessor fp, PasswordPolicy policy) throws BusinessException;
+	Boolean updateSubject(Request request, SubjectForm form, FieldProcessor fp, PasswordPolicy policy)
+			throws BusinessException;
 
 	void updateProperty(Request request, PropertyForm propertyForm, FieldProcessor fp) throws BusinessException;
 
@@ -177,7 +179,8 @@ public interface Service {
 	String startSite(Request request, Application application, Integer siteId, FieldProcessor fp)
 			throws BusinessException;
 
-	String stopSite(Request request, Application application, Integer siteId, FieldProcessor fp) throws BusinessException;
+	String stopSite(Request request, Application application, Integer siteId, FieldProcessor fp)
+			throws BusinessException;
 
 	DataContainer getNewSubject(Request request, FieldProcessor fp, String timezone, List<String> languages);
 
@@ -227,7 +230,8 @@ public interface Service {
 
 	void grantSites(Integer siteId, Integer appId, Set<Integer> grantedSiteIds);
 
-	String addArchiveToRepository(Request request, Integer repositoryId, FormUpload archive, FieldProcessor fp) throws BusinessException;
+	String addArchiveToRepository(Request request, Integer repositoryId, FormUpload archive, FieldProcessor fp)
+			throws BusinessException;
 
 	RepositoryImpl getRepository(Integer repositoryId);
 

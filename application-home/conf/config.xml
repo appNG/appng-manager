@@ -38,6 +38,10 @@
 				<session-param name="eU" />
 				<session-param name="eH" />
 				<session-param name="eN" />
+				<!-- site filtering -->
+				<session-param name="f_sn" />
+				<session-param name="f_sd" />
+				<session-param name="f_sa" />
 			</session-params>
 		</session>
 	</config>

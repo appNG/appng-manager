@@ -8,6 +8,7 @@
 		<params>
 			<param name="name">site</param>
 			<param name="domain">example</param>
+			<param name="active">true</param>
 		</params>
 		<meta-data bindClass="org.appng.api.model.Site">
 			<field name="name" type="text" binding="name">
@@ -115,6 +116,12 @@
 				<title id="domain">Domain</title>
 				<option value="example" name="f_sd" />
 			</selection>
+			<selection id="f_sa" type="radio">
+                <title id="active">Active</title>
+                <option value="" name="all" selected="false"/>
+                <option value="true" name="yes" selected="true"/>
+                <option value="false" name="no" selected="false"/>
+            </selection>
 		</selectionGroup>
 		<resultset chunk="0" chunkname="sites" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="1">
 			<result>

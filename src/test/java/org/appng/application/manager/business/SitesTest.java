@@ -142,7 +142,7 @@ public class SitesTest extends AbstractTest {
 	@Test
 	public void testShowSitesFiltered() throws Exception {
 		CallableDataSource siteDatasource = getDataSource("sites").withParam("name", "site")
-				.withParam("domain", "example").getCallableDataSource();
+				.withParam("domain", "example").withParam("active", "true").getCallableDataSource();
 		siteDatasource.perform("test");
 
 		validate(siteDatasource.getDatasource());
