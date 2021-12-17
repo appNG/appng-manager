@@ -19,12 +19,14 @@
 				<label id="realname">Real name</label>
 			</field>
 			<field name="email" type="text" binding="email">
+				<sort />
 				<label id="email">E-mail</label>
 			</field>
 			<field name="typeName" type="text" binding="typeName">
 				<label id="userType">Type</label>
 			</field>
 			<field name="description" type="text" displayLength="40" binding="description">
+				<sort />
 				<label id="description">Description</label>
 			</field>
 			<field name="locked" type="image" binding="locked">

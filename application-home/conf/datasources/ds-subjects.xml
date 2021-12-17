@@ -22,12 +22,14 @@
 					<label>realname</label>
 				</field>
 				<field name="email" type="text">
+					<sort ignore-case="true" />
 					<label>email</label>
 				</field>
 				<field name="typeName" type="text">
 					<label>userType</label>
 				</field>
 				<field name="description" type="text" displayLength="40">
+					<sort ignore-case="true" />
 					<label>description</label>
 				</field>
 				<field name="locked" type="image">
@@ -67,7 +69,7 @@
 			</linkpanel>
 		</config>
 		<bean id="subjects">
-			<option name="subject" groupId="${groupId}"/>
+			<option name="subject" groupId="${groupId}" />
 		</bean>
 	</datasource>
 
