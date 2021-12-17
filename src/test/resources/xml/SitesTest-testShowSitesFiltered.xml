@@ -118,7 +118,7 @@
 			</selection>
 			<selection id="f_sa" type="radio">
                 <title id="active">Active</title>
-                <option value="" name="all" selected="false"/>
+                <option value="all" name="all" selected="false"/>
                 <option value="true" name="yes" selected="true"/>
                 <option value="false" name="no" selected="false"/>
             </selection>

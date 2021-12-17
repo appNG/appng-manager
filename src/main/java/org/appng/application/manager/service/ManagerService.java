@@ -979,7 +979,7 @@ public class ManagerService extends CoreService implements Service {
 			if (StringUtils.isNotBlank(domain)) {
 				siteQuery.contains("domain", domain);
 			}
-			if (StringUtils.isNotBlank(active)) {
+			if (!"all".equals(active)) {
 				siteQuery.equals("active", Boolean.valueOf(active));
 			}
 			Page<SiteImpl> sites = siteRepository.search(siteQuery, fp.getPageable());
@@ -996,7 +996,7 @@ public class ManagerService extends CoreService implements Service {
 					.select(domain).build();
 
 			Map<String, String> activeValues = new HashMap<>();
-			activeValues.put("", "all");
+			activeValues.put("all", "all");
 			activeValues.put("true", "yes");
 			activeValues.put("false", "no");
 			Selection activeFilter = selectionFactory.fromObjects(FILTER_SITE_ACTIVE, MessageConstants.ACTIVE,
