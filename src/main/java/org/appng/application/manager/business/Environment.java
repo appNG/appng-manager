@@ -25,11 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.management.MBeanException;
+import javax.management.JMException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.management.OperationsException;
-import javax.management.ReflectionException;
 import javax.management.openmbean.CompositeData;
 
 import org.apache.commons.collections.keyvalue.DefaultMapEntry;
@@ -45,6 +43,9 @@ import org.appng.api.model.Site;
 import org.appng.tools.ui.StringNormalizer;
 import org.springframework.stereotype.Component;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -56,16 +57,19 @@ public class Environment implements DataProvider {
 
 	public DataContainer getData(Site site, Application app, org.appng.api.Environment env, Options opts,
 			Request request, FieldProcessor fp) {
-		String action = opts.getOptionValue("mode", "id");
-		DataContainer dataContainer = new DataContainer(fp);
+		String action = opts.getString("mode", "id");
 		Map<?, ?> entryMap = null;
-		if ("env".equals(action)) {
+		boolean paginate = true;
+
+		switch (action) {
+		case "env":
 			entryMap = System.getenv();
-		} else if ("props".equals(action)) {
+			break;
+		case "props":
 			entryMap = System.getProperties();
-		} else if ("jvm".equals(action)) {
+			break;
+		case "jvm":
 			Map<String, String> jvm = new HashMap<String, String>();
-			entryMap = jvm;
 			List<String> inputArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
 			for (String arg : inputArguments) {
 				int idx = arg.indexOf('=');
@@ -77,21 +81,33 @@ public class Environment implements DataProvider {
 					jvm.replace(key, jvm.get(key) + StringUtils.LF + value);
 				}
 			}
-		} else if ("mem".equals(action)) {
+			entryMap = jvm;
+			break;
+		case "mem":
 			Map<String, LeveledEntry> memory = new HashMap<String, LeveledEntry>();
-			entryMap = memory;
 			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 			addUsage(memory, mBeanServer, "Heap", "Memory", null, "HeapMemoryUsage");
 			addUsage(memory, mBeanServer, "Metaspace", "MemoryPool", "Metaspace", "Usage");
-		} else if ("proc".equals(action)) {
+			entryMap = memory;
+			paginate = false;
+			break;
+		case "proc":
 			Map<String, String> proc = new HashMap<String, String>();
-			entryMap = proc;
 			OperatingSystemMXBean osMxBean = ManagementFactory.getOperatingSystemMXBean();
 			proc.put("Processors", Integer.toString(osMxBean.getAvailableProcessors()));
 			proc.put("Average Load", Double.toString(osMxBean.getSystemLoadAverage()));
+			entryMap = proc;
+			paginate = false;
+			break;
 		}
 
-		dataContainer.setPage(getSortedEntries(entryMap), fp.getPageable());
+		DataContainer dataContainer = new DataContainer(fp);
+		List<Entry<String, ?>> sortedEntries = getSortedEntries(entryMap);
+		if (paginate) {
+			dataContainer.setPage(sortedEntries, fp.getPageable());
+		} else {
+			dataContainer.setItems(sortedEntries);
+		}
 		return dataContainer;
 	}
 
@@ -115,7 +131,7 @@ public class Environment implements DataProvider {
 				entryMap.put(entryName + " Used (%)",
 						new LeveledEntry(new DecimalFormat("#0.00 %").format(percentage), level));
 			}
-		} catch (OperationsException | ReflectionException | MBeanException e) {
+		} catch (JMException e) {
 			log.error("error adding memory usage", e);
 		}
 	}
@@ -140,30 +156,16 @@ public class Environment implements DataProvider {
 		return entries;
 	}
 
+	@Getter
+	@AllArgsConstructor
+	@RequiredArgsConstructor
 	public class LeveledEntry {
 		public static final int LOW = 1;
 		public static final int MED = 2;
 		public static final int HIGH = 3;
 
-		private String value;
+		private final String value;
 		private int level = 0;
-
-		public LeveledEntry(String value) {
-			this.value = value;
-		}
-
-		public LeveledEntry(String value, int level) {
-			this.value = value;
-			this.level = level;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public int getLevel() {
-			return level;
-		}
 	}
 
 }

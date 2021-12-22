@@ -29,5 +29,5 @@
 			</link>
 		</linkpanel>
 	</config>
-	<data />
+	<data paginate="false" />
 </datasource>
