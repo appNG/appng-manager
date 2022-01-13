@@ -122,11 +122,17 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 						int endIdx = pageable.getOffset() + pageable.getPageSize();
 						while (elements.hasNext()) {
 							javax.cache.Cache.Entry<java.lang.String, CachedResponse> entry = elements.next();
-							if (idx >= startIdx && idx < endIdx) {
-								cacheEntries.add(new CacheEntry(entry.getValue()));
-							}
-							if (idx++ >= endIdx) {
-								break;
+							CachedResponse cachedResponse = entry.getValue();
+							// entry may have been removed meanwhile
+							if (null != cachedResponse) {
+								if (idx >= startIdx && idx < endIdx) {
+									cacheEntries.add(new CacheEntry(cachedResponse));
+								}
+								if (idx++ >= endIdx) {
+									break;
+								}
+							} else {
+								endIdx++;
 							}
 						}
 
@@ -147,12 +153,15 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 						for (javax.cache.Cache.Entry<String, CachedResponse> entry : cache) {
 							String entryId = entry.getKey();
 							CachedResponse cachedResponse = entry.getValue();
-							boolean nameMatches = !filterName || FilenameUtils.wildcardMatch(
-									entryId.substring(entryId.indexOf('/')), entryName, IOCase.INSENSITIVE);
-							boolean typeMatches = !filterType || FilenameUtils
-									.wildcardMatch(cachedResponse.getContentType(), entryType, IOCase.INSENSITIVE);
-							if (nameMatches && typeMatches) {
-								cacheEntries.add(new CacheEntry(cachedResponse));
+							// entry may have been removed meanwhile
+							if (null != cachedResponse) {
+								boolean nameMatches = !filterName || FilenameUtils.wildcardMatch(
+										entryId.substring(entryId.indexOf('/')), entryName, IOCase.INSENSITIVE);
+								boolean typeMatches = !filterType || FilenameUtils
+										.wildcardMatch(cachedResponse.getContentType(), entryType, IOCase.INSENSITIVE);
+								if (nameMatches && typeMatches) {
+									cacheEntries.add(new CacheEntry(cachedResponse));
+								}
 							}
 						}
 
