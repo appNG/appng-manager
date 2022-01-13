@@ -39,6 +39,7 @@
 					<get-param name="fCtpe" />
 					<get-param name="f_sn" />
 					<get-param name="f_sd" />
+					<get-param name="f_sa" />
 				</get-params>
 				<post-params>
 					<post-param name="form_action" />
@@ -55,6 +56,7 @@
 						<params>
 							<param name="name">${f_sn}</param>
 							<param name="domain">${f_sd}</param>
+							<param name="active">${f_sa}</param>
 						</params>
 					</datasource>
 				</element>
@@ -275,6 +277,7 @@
 					<datasource id="cacheStatistics">
 						<params>
 							<param name="siteid">${siteid}</param>
+							<param name="clearLink">/sites/update/${siteid}&#63;act=clearCache</param>
 						</params>
 						<condition expression="${not empty siteid}" />
 					</datasource>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<datasource xmlns="http://www.appng.org/schema/platform" id="memory">
+	<config>
+		<title id="memory">Memory</title>
+		<permissions>
+			<permission ref="platform.environment" mode="set"></permission>
+		</permissions>
+		<meta-data bindClass="java.util.Map$Entry">
+			<field name="key" type="longtext" binding="key">
+				<label id="name">Name</label>
+			</field>
+			<field name="value.value" type="text" binding="value.value">
+				<label id="value">Value</label>
+			</field>
+			<field name="value.level" type="image" binding="value.level">
+				<icon condition="${current.value.level == 0}">spacer</icon>
+				<icon condition="${current.value.level == 1}">led_green</icon>
+				<icon condition="${current.value.level == 2}">led_orange</icon>
+				<icon condition="${current.value.level == 3}">led_red</icon>
+			</field>
+		</meta-data>
+		<linkpanel id="links" location="top">
+			<link id="links[1]" mode="webservice" target="/service/localhost/appng-manager/webservice/threadViewer">
+				<permissions>
+					<permission ref="platform.threads" mode="set"></permission>
+				</permissions>
+				<label id="threads">Threads</label>
+				<icon>goto</icon>
+			</link>
+		</linkpanel>
+	</config>
+	<data paginate="false" />
+</datasource>

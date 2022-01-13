@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<action xmlns="http://www.appng.org/schema/platform" id="sendMail" eventId="mailEvent" async="false">
+    <config>
+        <title id="mail.test">Send E-mail</title>
+        <permissions>
+            <permission ref="mail.send" mode="set"></permission>
+        </permissions>
+        <params>
+            <param name="form_action">sendMail</param>
+        </params>
+        <meta-data bindClass="org.appng.application.manager.form.MailForm">
+            <field name="mailHostAndPort" type="text" readonly="true" binding="mailHostAndPort">
+                <label id="mail.host">Host</label>
+            </field>
+            <field name="senderName" type="text" binding="senderName">
+                <label id="mail.sender.name">Sender name</label>
+            </field>
+            <field name="senderAddress" type="text" binding="senderAddress">
+                <label id="mail.sender.email">Sender address</label>
+                <validation>
+                    <notNull>
+                        <message ref="senderAddress" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+                    </notNull>
+                </validation>
+            </field>
+            <field name="receiverName" type="text" binding="receiverName">
+                <label id="mail.receiver.name">Receiver name</label>
+            </field>
+            <field name="receiverAddress" type="text" binding="receiverAddress">
+                <label id="mail.receiver.email">Receiver address</label>
+                <validation>
+                    <notNull>
+                        <message ref="receiverAddress" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+                    </notNull>
+                </validation>
+            </field>
+            <field name="subject" type="text" binding="subject">
+                <label id="mail.subject">Subject</label>
+                <validation>
+                    <notNull>
+                        <message ref="subject" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+                    </notNull>
+                </validation>
+            </field>
+            <field name="textContent" type="longtext" binding="textContent">
+                <label id="mail.content.text">Text content</label>
+                <validation>
+                    <notNull>
+                        <message ref="textContent" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
+                    </notNull>
+                </validation>
+            </field>
+            <field name="htmlContent" type="richtext" binding="htmlContent">
+                <label id="mail.content.html">HTML content</label>
+            </field>
+            <field name="attachment" type="file" binding="attachment">
+                <label id="mail.attachment">Attachment</label>
+                <validation>
+                    <fileUpload minCount="0" maxCount="1" minSize="0" maxSize="10" unit="MB" fileTypes="jpg, png, txt, pdf, xls, xlsx, doc, docx">
+                        <message ref="attachment" class="ERROR" code="{validation.file.invalid}">Please upload a file of the following types: jpg, png, txt, pdf, xls, xlsx, doc, docx</message>
+                    </fileUpload>
+                </validation>
+            </field>
+        </meta-data>
+    </config>
+    <condition expression="${form_action eq 'sendMail'}"/>
+    <messages>
+        <message ref="sendMail" class="NOTICE">Sending E-Mails is disabled by site-property mailDisabled!</message>
+    </messages>
+    <datasource id="mailForm"/>
+    <data>
+        <result>
+            <field name="mailHostAndPort" type="text">
+                <value>localHost:25</value>
+            </field>
+            <field name="senderName" type="text">
+                <value>appNG 1.23 on appng.org</value>
+            </field>
+            <field name="senderAddress" type="text">
+                <value>appNG_1.23@appng.org</value>
+            </field>
+            <field name="receiverName" type="text">
+                <value>John Doe</value>
+            </field>
+            <field name="receiverAddress" type="text">
+                <value>john@appng.org</value>
+            </field>
+            <field name="subject" type="text">
+                <value>Testmail from appng.org</value>
+            </field>
+            <field name="textContent" type="longtext">
+                <value>A test.</value>
+            </field>
+            <field name="htmlContent" type="richtext">
+                <value>&lt;p&gt;A &lt;strong&gt;test&lt;/strong&gt;.&lt;/p&gt;</value>
+            </field>
+            <field name="attachment" type="file">
+                <value></value>
+            </field>
+        </result>
+    </data>
+    <bean id="mailer"/>
+</action>

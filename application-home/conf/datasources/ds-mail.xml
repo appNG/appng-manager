@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<datasource id="mailForm">
+		<config>
+			<title>mailer</title>
+			<params>
+				<param name="siteid" />
+			</params>
+			<meta-data bindClass="org.appng.application.manager.form.MailForm">
+				<field name="mailHostAndPort" type="text" readonly="true">
+					<label id="mail.host" />
+				</field>
+				<field name="senderName" type="text">
+					<label id="mail.sender.name"/>
+				</field>
+				<field name="senderAddress" type="text">
+					<label id="mail.sender.email"/>
+				</field>
+				<field name="receiverName" type="text">
+					<label id="mail.receiver.name"/>
+				</field>
+				<field name="receiverAddress" type="text">
+					<label id="mail.receiver.email"/>
+				</field>
+				<field name="subject" type="text">
+					<label id="mail.subject"/>
+				</field>
+				<field name="textContent" type="longtext">
+					<label id="mail.content.text"/>
+				</field>
+				<field name="htmlContent" type="richtext">
+					<label id="mail.content.html"/>
+				</field>
+				<field name="attachment" type="file">
+					<label id="mail.attachment"/>
+				</field>
+			</meta-data>
+		</config>
+		<bean id="mailer" />
+	</datasource>
+
+</datasources>

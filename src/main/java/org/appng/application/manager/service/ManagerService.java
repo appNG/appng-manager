@@ -151,6 +151,7 @@ public class ManagerService extends CoreService implements Service {
 	private static final String FILTER_GROUP_NAME = "f_gn";
 	private static final String FILTER_SITE_NAME = "f_sn";
 	private static final String FILTER_SITE_DOMAIN = "f_sd";
+	private static final String FILTER_SITE_ACTIVE = "f_sa";
 
 	private SelectionFactory selectionFactory;
 	private OptionGroupFactory optionGroupFactory;
@@ -959,7 +960,7 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	public DataContainer searchSites(Environment environment, FieldProcessor fp, Integer siteId, String name,
-			String domain) throws BusinessException {
+			String domain, String active) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		Map<String, Site> siteMap = environment.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
 		if (siteId != null) {
@@ -978,19 +979,34 @@ public class ManagerService extends CoreService implements Service {
 			if (StringUtils.isNotBlank(domain)) {
 				siteQuery.contains("domain", domain);
 			}
+			if (!"all".equals(active)) {
+				siteQuery.equals("active", Boolean.valueOf(active));
+			}
 			Page<SiteImpl> sites = siteRepository.search(siteQuery, fp.getPageable());
 
 			for (SiteImpl siteImpl : sites) {
 				setSiteState(siteMap, siteImpl);
 			}
+
 			Selection nameFilter = new SelectionBuilder<>(FILTER_SITE_NAME).defaultOption(FILTER_SITE_NAME, name)
 					.title(MessageConstants.NAME).type(SelectionType.TEXT).select(name).build();
+
 			Selection domainFilter = new SelectionBuilder<>(FILTER_SITE_DOMAIN)
 					.defaultOption(FILTER_SITE_DOMAIN, domain).title(MessageConstants.DOMAIN).type(SelectionType.TEXT)
 					.select(domain).build();
+
+			Map<String, String> activeValues = new HashMap<>();
+			activeValues.put("all", "all");
+			activeValues.put("true", "yes");
+			activeValues.put("false", "no");
+			Selection activeFilter = selectionFactory.fromObjects(FILTER_SITE_ACTIVE, MessageConstants.ACTIVE,
+					activeValues.keySet().toArray(), s -> activeValues.get(s), active);
+			activeFilter.setType(SelectionType.RADIO);
+
 			SelectionGroup filter = new SelectionGroup();
 			filter.getSelections().add(nameFilter);
 			filter.getSelections().add(domainFilter);
+			filter.getSelections().add(activeFilter);
 			data.getSelectionGroups().add(filter);
 			data.setPage(sites);
 		}

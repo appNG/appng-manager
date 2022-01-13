@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event id="mailEvent" xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
+
+	<config />
+
+	<action id="sendMail">
+		<config>
+			<title id="mail.test" />
+			<permissions>
+				<permission ref="mail.send" mode="set" />
+			</permissions>
+			<params>
+				<param name="form_action" />
+			</params>
+		</config>
+		<condition expression="${form_action eq 'sendMail'}" />
+		<datasource id="mailForm" />
+		<bean id="mailer" />
+	</action>
+
+</event>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<datasource xmlns="http://www.appng.org/schema/platform" id="jvmArguments">
+	<config>
+		<title id="jvmArguments">JVM Arguments</title>
+		<permissions>
+			<permission ref="platform.environment" mode="set"></permission>
+		</permissions>
+		<meta-data bindClass="java.util.Map$Entry">
+			<field name="key" type="longtext" binding="key">
+				<label id="name">Name</label>
+			</field>
+			<field name="value" type="text" displayLength="1000" binding="value">
+				<label id="value">Value</label>
+			</field>
+		</meta-data>
+		<linkpanel id="links" location="top">
+			<link id="links[1]" mode="intern" target="/system?act=reloadPlatform">
+				<permissions>
+					<permission ref="platform.reload" mode="set"></permission>
+				</permissions>
+				<label id="platform.reload">Reload platform</label>
+				<icon>reload</icon>
+				<confirmation id="platform.reload.confirm">Do you really want to reload the platform?</confirmation>
+			</link>
+			<link id="links[2]" mode="webservice" target="/service/localhost/appng-manager/webservice/systemReport">
+				<permissions>
+					<permission ref="platform.report" mode="set"></permission>
+				</permissions>
+				<label id="systemReport">System Report</label>
+				<icon>goto</icon>
+			</link>
+		</linkpanel>
+	</config>
+	<data />
+</datasource>

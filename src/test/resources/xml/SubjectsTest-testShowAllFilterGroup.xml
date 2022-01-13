@@ -18,14 +18,16 @@
 				<sort />
 				<label id="realname">Real name</label>
 			</field>
-			<field name="description" type="text" binding="description">
-				<label id="description">Description</label>
+			<field name="email" type="text" binding="email">
+				<sort />
+				<label id="email">E-mail</label>
 			</field>
 			<field name="typeName" type="text" binding="typeName">
 				<label id="userType">Type</label>
 			</field>
-			<field name="language" type="text" binding="language">
-				<label id="language">Language</label>
+			<field name="description" type="text" displayLength="40" binding="description">
+				<sort />
+				<label id="description">Description</label>
 			</field>
 			<field name="locked" type="image" binding="locked">
 				<label id="locked">Locked</label>
@@ -97,8 +99,7 @@
 				<option value="false" name="No" selected="false" />
 			</selection>
 		</selectionGroup>
-		<resultset chunk="0" chunkname="users" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
-			lastchunk="0" hits="1">
+		<resultset chunk="0" chunkname="users" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="1">
 			<result>
 				<field name="name" type="text">
 					<value>admin</value>
@@ -106,14 +107,14 @@
 				<field name="realname" type="text">
 					<value>John Doe</value>
 				</field>
-				<field name="description" type="text">
-					<value></value>
+				<field name="email" type="text">
+					<value>foo@example.com</value>
 				</field>
 				<field name="typeName" type="text">
 					<value>Local User</value>
 				</field>
-				<field name="language" type="text">
-					<value>en</value>
+				<field name="description" type="text">
+					<value></value>
 				</field>
 				<field name="locked" type="image">
 					<value>false</value>

@@ -12,6 +12,7 @@
 			<params>
 				<param name="name" />
 				<param name="domain" />
+				<param name="active" />
 			</params>
 			<meta-data bindClass="org.appng.api.model.Site">
 				<field name="name" type="text">
@@ -110,7 +111,7 @@
 			</linkpanel>
 		</config>
 		<bean id="sites">
-			<option name="site" siteName="${name}" siteDomain="${domain}" />
+			<option name="site" siteName="${name}" siteDomain="${domain}" siteActive="${active}"/>
 		</bean>
 	</datasource>
 

@@ -25,14 +25,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.management.MBeanException;
+import javax.management.JMException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.management.OperationsException;
-import javax.management.ReflectionException;
 import javax.management.openmbean.CompositeData;
 
 import org.apache.commons.collections.keyvalue.DefaultMapEntry;
+import org.apache.commons.lang3.StringUtils;
 import org.appng.api.DataContainer;
 import org.appng.api.DataProvider;
 import org.appng.api.FieldProcessor;
@@ -44,80 +43,95 @@ import org.appng.api.model.Site;
 import org.appng.tools.ui.StringNormalizer;
 import org.springframework.stereotype.Component;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component("env")
 public class Environment implements DataProvider {
 
-	@SuppressWarnings("unchecked")
-	public DataContainer getData(Site site, Application application, org.appng.api.Environment environment,
-			Options options, Request request, FieldProcessor fieldProcessor) {
-		String action = options.getOptionValue("mode", "id");
-		DataContainer dataContainer = new DataContainer(fieldProcessor);
+	private static final double HIGH_TRESHOLD = 0.85d;
+	private static final double MEDIUM_TRESHOLD = 0.75d;
+
+	public DataContainer getData(Site site, Application app, org.appng.api.Environment env, Options opts,
+			Request request, FieldProcessor fp) {
+		String action = opts.getString("mode", "id");
 		Map<?, ?> entryMap = null;
-		if ("env".equals(action)) {
+		boolean paginate = true;
+
+		switch (action) {
+		case "env":
 			entryMap = System.getenv();
-		} else if ("props".equals(action)) {
+			break;
+		case "props":
 			entryMap = System.getProperties();
-		} else if ("jvm".equals(action)) {
-			entryMap = new HashMap<String, String>();
+			break;
+		case "jvm":
+			Map<String, String> jvm = new HashMap<String, String>();
 			List<String> inputArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
 			for (String arg : inputArguments) {
 				int idx = arg.indexOf('=');
-				String key = arg;
-				String value = "";
-				if (idx > 0) {
-					key = arg.substring(0, idx);
-					value = arg.substring(idx + 1);
+				String key = idx > 0 ? arg.substring(0, idx) : arg;
+				String value = idx > 0 ? arg.substring(idx + 1) : StringUtils.EMPTY;
+				if (!jvm.containsKey(key)) {
+					jvm.put(key, value);
+				} else {
+					jvm.replace(key, jvm.get(key) + StringUtils.LF + value);
 				}
-				((Map<String, String>) entryMap).put(key, value);
 			}
-		} else if ("mem".equals(action)) {
-			entryMap = new HashMap<String, LeveledEntry>();
-			Unit unit = Unit.KB;
-			long factor = unit.getFactor();
-			DecimalFormat format = new DecimalFormat("  #,###,000  " + unit.name());
-			DecimalFormat percentFormat = new DecimalFormat("#0.00 %");
-
+			entryMap = jvm;
+			break;
+		case "mem":
+			Map<String, LeveledEntry> memory = new HashMap<String, LeveledEntry>();
 			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-			addUsage((Map<String, LeveledEntry>) entryMap, factor, format, percentFormat, mBeanServer, "Heap", "Memory",
-					null, "HeapMemoryUsage");
-			addUsage((Map<String, LeveledEntry>) entryMap, factor, format, percentFormat, mBeanServer, "Metaspace",
-					"MemoryPool", "Metaspace", "Usage");
-		} else if ("proc".equals(action)) {
-			entryMap = new HashMap<String, String>();
+			addUsage(memory, mBeanServer, "Heap", "Memory", null, "HeapMemoryUsage");
+			addUsage(memory, mBeanServer, "Metaspace", "MemoryPool", "Metaspace", "Usage");
+			entryMap = memory;
+			paginate = false;
+			break;
+		case "proc":
+			Map<String, String> proc = new HashMap<String, String>();
 			OperatingSystemMXBean osMxBean = ManagementFactory.getOperatingSystemMXBean();
-			int procs = osMxBean.getAvailableProcessors();
-			double load = osMxBean.getSystemLoadAverage();
-			((Map<String, String>) entryMap).put("Processors", Integer.toString(procs));
-			((Map<String, String>) entryMap).put("Average Load", Double.toString(load));
+			proc.put("Processors", Integer.toString(osMxBean.getAvailableProcessors()));
+			proc.put("Average Load", Double.toString(osMxBean.getSystemLoadAverage()));
+			entryMap = proc;
+			paginate = false;
+			break;
 		}
 
-		List<Entry<String, ?>> entries = getSortedEntries(entryMap);
-		dataContainer.setPage(entries, fieldProcessor.getPageable());
+		DataContainer dataContainer = new DataContainer(fp);
+		List<Entry<String, ?>> sortedEntries = getSortedEntries(entryMap);
+		if (paginate) {
+			dataContainer.setPage(sortedEntries, fp.getPageable());
+		} else {
+			dataContainer.setItems(sortedEntries);
+		}
 		return dataContainer;
 	}
 
-	protected void addUsage(Map<String, LeveledEntry> entryMap, long factor, DecimalFormat format,
-			DecimalFormat percentFormat, MBeanServer mBeanServer, String entryName, String type, String name,
-			String attributeName) {
+	protected void addUsage(Map<String, LeveledEntry> entryMap, MBeanServer mBeanServer, String entryName, String type,
+			String name, String attributeName) {
 		try {
+			DecimalFormat format = new DecimalFormat("  #,###,000  " + Unit.KB.name());
 			ObjectName objectName = new ObjectName("java.lang:type=" + type + (null == name ? "" : (",name=" + name)));
 			CompositeData attribute = (CompositeData) mBeanServer.getAttribute(objectName, attributeName);
 			long committed = (long) attribute.get("committed");
 			long max = (long) attribute.get("max");
 			long used = (long) attribute.get("used");
+			long factor = Unit.KB.getFactor();
 			entryMap.put(entryName + " Size", new LeveledEntry(format.format((double) committed / factor)));
 			entryMap.put(entryName + " Max", new LeveledEntry(max < 0 ? "?" : format.format((double) max / factor)));
 			entryMap.put(entryName + " Used", new LeveledEntry(format.format((double) used / factor)));
 			if (max > 0) {
 				double percentage = (double) used / (double) max;
-				int level = percentage < 0.75d ? LeveledEntry.LOW
-						: (percentage < 0.85d ? LeveledEntry.MED : LeveledEntry.HIGH);
-				entryMap.put(entryName + " Used (%)", new LeveledEntry(percentFormat.format(percentage), level));
+				int level = percentage < MEDIUM_TRESHOLD ? LeveledEntry.LOW
+						: (percentage < HIGH_TRESHOLD ? LeveledEntry.MED : LeveledEntry.HIGH);
+				entryMap.put(entryName + " Used (%)",
+						new LeveledEntry(new DecimalFormat("#0.00 %").format(percentage), level));
 			}
-		} catch (OperationsException | ReflectionException | MBeanException e) {
+		} catch (JMException e) {
 			log.error("error adding memory usage", e);
 		}
 	}
@@ -142,30 +156,16 @@ public class Environment implements DataProvider {
 		return entries;
 	}
 
+	@Getter
+	@AllArgsConstructor
+	@RequiredArgsConstructor
 	public class LeveledEntry {
 		public static final int LOW = 1;
 		public static final int MED = 2;
 		public static final int HIGH = 3;
 
-		private String value;
+		private final String value;
 		private int level = 0;
-
-		public LeveledEntry(String value) {
-			this.value = value;
-		}
-
-		public LeveledEntry(String value, int level) {
-			this.value = value;
-			this.level = level;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public int getLevel() {
-			return level;
-		}
 	}
 
 }

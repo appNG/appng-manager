@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 the original author or authors.
+ * Copyright 2011-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,55 +15,71 @@
  */
 package org.appng.application.manager.business;
 
-import org.appng.api.Platform;
+import java.util.List;
+
+import javax.cache.Cache;
+
 import org.appng.api.support.CallableDataSource;
-import org.appng.application.manager.form.PropertyForm;
-import org.appng.application.manager.form.SiteForm;
-import org.appng.core.domain.SiteImpl;
+import org.appng.core.controller.CachedResponse;
+import org.appng.core.service.CacheService;
+import org.appng.testsupport.validation.DateFieldDifferenceHandler;
+import org.appng.testsupport.validation.WritingXmlValidator;
 import org.appng.testsupport.validation.XPathDifferenceHandler;
+import org.appng.xml.platform.Datasource;
+import org.appng.xml.platform.Result;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
+import org.springframework.http.MediaType;
 
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
-import net.sf.ehcache.constructs.blocking.BlockingCache;
-import net.sf.ehcache.constructs.web.PageInfo;
+import com.hazelcast.config.ClasspathXmlConfig;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CacheTest extends AbstractTest {
 
-	@Test
-	public void testCacheElements() throws Exception {
-		// prepares using appNG >= 1.19.1
-		PropertyForm form = new PropertyForm();
-		form.getProperty().setName(Platform.Property.MESSAGING_ENABLED);
-		form.getProperty().setDefaultString(Boolean.FALSE.toString());
-		getAction("propertyEvent", "create-platform-property").withParam(FORM_ACTION, "create-platform-property")
-				.getCallableAction(form).perform();
+	static HazelcastInstance hz;
 
-		SiteImpl siteToCreate = new SiteImpl();
-		SiteForm siteForm = new SiteForm(siteToCreate);
-		siteToCreate.setName("localhost");
-		siteToCreate.setHost("localhost");
-		siteToCreate.setDomain("localhost");
-		siteToCreate.setActive(true);
-
-		getAction("siteEvent", "create").withParam(FORM_ACTION, "create").getCallableAction(siteForm).perform();
-
-		CacheManager cacheManager = CacheManager.getInstance();
-		Ehcache cache = cacheManager.addCacheIfAbsent("pageCache-localhost");
-		BlockingCache blockingCache = new BlockingCache(cache);
-		String cacheKey = "GET/foo/bar.txt";
-		PageInfo pageInfo = new PageInfo(200, "text/plain", null, "appNG rocks!".getBytes(), false, 120, null);
-		for (int i = 0; i < 1001; i++) {
-			blockingCache.put(new Element("GET/foo/bar" + i + ".txt", pageInfo));
-		}
-		cacheManager.replaceCacheWithDecoratedCache(cache, blockingCache);
-
-		CallableDataSource callableDataSource = getDataSource("cacheElements").withParam("siteid", "1")
-				.getCallableDataSource();
-		callableDataSource.perform("");
-		XPathDifferenceHandler diffHandler = new XPathDifferenceHandler();
-		diffHandler.ignoreDifference("/datasource/data/resultset/result/field/value/text()");
-		validate(callableDataSource.getDatasource(), diffHandler);
+	static {
+		WritingXmlValidator.writeXml = false;
+		hz = Hazelcast.getOrCreateHazelcastInstance(new ClasspathXmlConfig("hazelcast-test.xml"));
+		CacheService.createCacheManager(hz, false);
 	}
+
+	@Test
+	public void testCache() throws Exception {
+		Cache<String, CachedResponse> cache = CacheService.createCache(site);
+
+		for (int i = 0; i < 500; i++) {
+			String key = "/element/" + i;
+			cache.put(key, new CachedResponse(key, site, servletRequest, 200, MediaType.TEXT_PLAIN_VALUE, new byte[0],
+					null, 3600));
+		}
+
+		addParameter("sortCacheElements", "pageSize:10;page:4");
+		initParameters();
+		CallableDataSource ds = getDataSource("cacheElements").withParam("siteid", "1").getCallableDataSource();
+		ds.perform("");
+
+		Datasource datasource = ds.getDatasource();
+		List<Result> results = datasource.getData().getResultset().getResults();
+		for (int i = 0; i < 10;) {
+			results.get(i).getFields().get(0).setValue("/element/" + String.valueOf(++i));
+		}
+		validate(datasource, new DateFieldDifferenceHandler());
+	}
+
+	@Test
+	public void testCacheStatistics() throws Exception {
+		CallableDataSource ds = getDataSource("cacheStatistics").withParam("siteid", "1").getCallableDataSource();
+		ds.perform("");
+		Datasource datasource = ds.getDatasource();
+		XPathDifferenceHandler dh = new XPathDifferenceHandler(false);
+		// avg put/get times
+		dh.ignoreDifference("/datasource[1]/data[1]/resultset[1]/result[8]/field[2]/value[1]/text()[1]");
+		dh.ignoreDifference("/datasource[1]/data[1]/resultset[1]/result[10]/field[2]/value[1]/text()[1]");
+		validate(datasource, dh);
+	}
+
 }
