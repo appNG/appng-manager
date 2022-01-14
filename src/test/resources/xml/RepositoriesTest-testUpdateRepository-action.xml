@@ -51,7 +51,7 @@
 			</field>
 		</meta-data>
 	</config>
-	<condition expression="${form_action eq 'update'}" />
+	<condition expression="${form_action eq 'update' and not empty repositoryid}" />
 	<messages>
 		<message ref="update" class="OK">Repository has been updated.</message>
 	</messages>
@@ -80,10 +80,10 @@
 				<value>local repo</value>
 			</field>
 			<field name="version" type="date">
-				<value>2019-07-30 15:14:44</value>
+				<value>2022-01-14 12:14:44</value>
 			</field>
 			<field name="uri" type="text">
-				<value>file:///home/mm/workspace/appng/appng-manager/target/</value>
+				<value>file:///home/mm/workspace/appng/appng-manager-1.17.x/target/</value>
 			</field>
 			<field name="repositoryMode" type="list:select">
 				<value>ALL</value>
