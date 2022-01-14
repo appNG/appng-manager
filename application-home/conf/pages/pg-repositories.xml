@@ -102,7 +102,7 @@
 							<param name="version">${packageversion}</param>
 							<param name="timestamp">${packagetimestamp}</param>
 						</params>
-						<condition expression="${not empty form_action and not empty id}" />
+						<condition expression="${not empty act and not empty id and not empty packagename and not empty packageversion and not empty packagetimestamp}" />
 					</action>
 				</element>
 			</section>
@@ -115,7 +115,7 @@
 							<param name="repositoryid">${id}</param>
 							<param name="form_action">${act}</param>
 						</params>
-						<condition expression="${form_action eq 'reload' and not empty repositoryid}" />
+						<condition expression="${act eq 'reload' and not empty id}" />
 					</action>
 				</element>
 			</section>
