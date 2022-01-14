@@ -102,7 +102,7 @@
 							<param name="version">${packageversion}</param>
 							<param name="timestamp">${packagetimestamp}</param>
 						</params>
-						<condition expression="${not empty act and not empty id and not empty packagename and not empty packageversion}" />
+						<condition expression="${not empty act and not empty id and not empty packagename and not empty packageversion and not empty packagetimestamp}" />
 					</action>
 				</element>
 			</section>
