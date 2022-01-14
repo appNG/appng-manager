@@ -117,7 +117,7 @@
 				<param name="timestamp" />
 			</params>
 		</config>
-		<condition expression="${form_action eq 'install' and not empty repositoryid and not empty name and not empty version and not empty timestamp}" />
+		<condition expression="${form_action eq 'install' and not empty repositoryid and not empty name and not empty version}" />
 		<bean id="installation">
 			<option name="repository" id="${repositoryid}" />
 			<option name="package" packageName="${name}" packageVersion="${version}" packageTimestamp="${timestamp}" />
