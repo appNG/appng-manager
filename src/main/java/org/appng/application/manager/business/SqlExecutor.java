@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2021 the original author or authors.
+ * Copyright 2011-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.appng.application.manager.business;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,9 +39,7 @@ import org.appng.core.domain.DatabaseConnection.DatabaseType;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.flywaydb.core.internal.database.hsqldb.HSQLDBParser;
-import org.flywaydb.core.internal.database.mysql.MySQLParser;
 import org.flywaydb.core.internal.database.postgresql.PostgreSQLParser;
-import org.flywaydb.core.internal.database.sqlserver.SQLServerParser;
 import org.flywaydb.core.internal.parser.Parser;
 import org.flywaydb.core.internal.parser.ParsingContext;
 import org.flywaydb.core.internal.resource.StringResource;
@@ -54,13 +53,16 @@ import org.springframework.jdbc.support.rowset.ResultSetWrappingSqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ClassUtils;
 
 import com.google.common.collect.Streams;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class SqlExecutor extends ServiceAware implements DataProvider, ActionProvider<SqlStatement> {
 
@@ -161,24 +163,41 @@ public class SqlExecutor extends ServiceAware implements DataProvider, ActionPro
 	public List<String> getQueries(String sql, DatabaseConnection conn) {
 		Configuration configuration = new FluentConfiguration().dataSource(conn.getJdbcUrl(), conn.getUserName(),
 				conn.getPasswordPlain());
-		Parser parser = getParser(conn.getType(), configuration);
-		SqlScript sqlScript = new ParserSqlScript(parser, new StringResource(sql), null, false);
-		return Streams.stream(sqlScript.getSqlStatements())
-				.map(org.flywaydb.core.internal.sqlscript.SqlStatement::getSql).collect(Collectors.toList());
+		try {
+			Parser parser = getParser(conn.getType(), configuration);
+			SqlScript sqlScript = new ParserSqlScript(parser, new StringResource(sql), null, false);
+			return Streams.stream(sqlScript.getSqlStatements())
+					.map(org.flywaydb.core.internal.sqlscript.SqlStatement::getSql).collect(Collectors.toList());
+		} catch (ReflectiveOperationException e) {
+			log.error("failed creating parser", e);
+		}
+		return new ArrayList<>();
 	}
 
-	protected Parser getParser(DatabaseType type, Configuration configuration) {
-		ParsingContext parsingContext = new ParsingContext();
+	protected Parser getParser(DatabaseType type, Configuration configuration) throws ReflectiveOperationException {
 		switch (type) {
 		case MYSQL:
-			return new MySQLParser(configuration, parsingContext);
+			if (configuration.getUrl().contains(":mariadb:")) {
+				return createParser("mysql.mariadb.MariaDBDatabaseType", configuration);
+			} else {
+				return createParser("mysql.MySQLDatabaseType", configuration);
+			}
 		case MSSQL:
-			return new SQLServerParser(configuration, parsingContext);
+			return createParser("sqlserver.SQLServerDatabaseType", configuration);
 		case POSTGRESQL:
-			return new PostgreSQLParser(configuration, parsingContext);
+			return new PostgreSQLParser(configuration, new ParsingContext());
 		default:
-			return new HSQLDBParser(configuration, parsingContext);
+			return new HSQLDBParser(configuration, new ParsingContext());
 		}
+	}
+
+	private Parser createParser(String className, Configuration configuration) throws ReflectiveOperationException {
+		String packagePrefix = "org.flywaydb.database.";
+		if (!ClassUtils.isPresent(packagePrefix + className, getClass().getClassLoader())) {
+			packagePrefix = "org.flywaydb.core.internal.database.";
+		}
+		return ((org.flywaydb.core.internal.database.DatabaseType) Class.forName(packagePrefix + className)
+				.newInstance()).createParser(configuration, null, new ParsingContext());
 	}
 
 }

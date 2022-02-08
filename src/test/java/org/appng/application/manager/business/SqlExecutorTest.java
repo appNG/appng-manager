@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2021 the original author or authors.
+ * Copyright 2011-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,10 @@
 package org.appng.application.manager.business;
 
 import org.appng.api.support.CallableAction;
+import org.appng.core.domain.DatabaseConnection.DatabaseType;
+import org.flywaydb.core.api.configuration.ClassicConfiguration;
+import org.flywaydb.core.internal.parser.Parser;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -32,6 +36,23 @@ public class SqlExecutorTest extends AbstractTest {
 
 		callableAction.perform();
 		validate(callableAction.getAction());
+	}
+
+	@Test
+	public void testParser() throws ReflectiveOperationException {
+		assertType("MySQLParser", "jdbc:mysql://localhost", DatabaseType.MYSQL);
+		assertType("MariaDBParser", "jdbc:mariadb://localhost", DatabaseType.MYSQL);
+		assertType("SQLServerParser", "jdbc:sqlserver://localhost", DatabaseType.MSSQL);
+		assertType("PostgreSQLParser", "jdbc:postgresql://localhost", DatabaseType.POSTGRESQL);
+		assertType("HSQLDBParser", "jdbc:hsqldb:hsql://localhost", DatabaseType.HSQL);
+	}
+
+	private void assertType(String className, String url, DatabaseType type) throws ReflectiveOperationException {
+		ClassicConfiguration cfg = new ClassicConfiguration();
+		cfg.setDataSource(url, null, null);
+		Parser parser = new SqlExecutor().getParser(type, cfg);
+		Assert.assertNotNull(parser);
+		Assert.assertEquals(className, parser.getClass().getSimpleName());
 	}
 
 }
