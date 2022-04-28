@@ -1,3 +1,49 @@
+Release Notes - appNG Manager - Version 1.19.1 (2022-02-08)
+-----------------------------------------------------------
+* [MGR-133] - Include-condition for actions "install" and "reload" is wrong
+* [MGR-134] - Update license header
+* [MGR-135] - Support Flyway 8
+
+Release Notes - appNG Manager - Version 1.19.0 (2022-01-13)
+-----------------------------------------------------------
+* [MGR-126] - System -> Environment -> JVM Arguments does not show multi-valued arguments
+* [MGR-128] - Cache-Overview: Avoid retrieving whole Cache
+* [MGR-129] - Allow clearing Cache also from Cache-Statistics
+* [MGR-132] - Avoid possible NPE while iterating over cache elements
+* [MGR-127] - Create an action to test sending e-mails
+* [MGR-131] - Add email to user's overview, remove language
+* [MGR-130] - Enhancements for site-filter
+
+Release Notes - appNG Manager - Version 1.18.1 (2021-10-13)
+-----------------------------------------------------------
+* [MGR-125] - LDAP Settings is missing "ldapUserBaseDn"
+
+Release Notes - appNG Manager - Version 1.18.0 (2021-10-01)
+-----------------------------------------------------------
+* [MGR-106] - Fix message shown when appNG Version of package is newer
+* [MGR-107] - SqlExecutor does not work with MariaDB
+* [MGR-108] - Repository packages do not show installed version
+* [MGR-116] - Names of nested bind classes
+* [MGR-117] - Include-condition for action="install" is wrong on page repositories
+* [MGR-118] - Exception must be logged when installing packages fails
+* [MGR-119] - RepositoryService#getPackages and #searchPackageVersions must return non-null values
+* [MGR-86] - Provide dedicated actions for starting and stopping sites
+* [MGR-111] - For the appNG Root Connection, all fields must not be writable
+* [MGR-113] - Show a message when LDAP is disabled
+* [MGR-114] - Allow managing node specific properties
+* [MGR-115] - Avoid loading all sessions from Tomcat's Manager
+* [MGR-121] - Support reloading only the template for a site, not the applications
+* [MGR-122] - Add a confirmation when reloading a site
+* [MGR-123] - Limit the number of filterable/sortable cache elements
+* [MGR-104] - Show a message for MigrationStatus.DB_NOT_MIGRATED
+* [MGR-120] - Avoid overloading the form_action post parameter as a get parameter
+* [MGR-110] - Upgrade to Flyway 7
+* [MGR-112] - Update license headers
+
+Release Notes - appNG Manager - Version 1.17.2 (2021-10-20)
+-----------------------------------------------------------
+* [MGR-107] - SqlExecutor does not work with MariaDB
+
 Release Notes - appNG Manager - Version 1.17.0 (2020-04-06)
 -----------------------------------------------------------
 * [MGR-102] - Provide an overview of LDAP users
