@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 
 import org.apache.catalina.Manager;
+import org.apache.catalina.Store;
 import org.apache.catalina.StoreManager;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOCase;
@@ -105,12 +107,11 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 			}
 		} else {
 			boolean expired = expire(currentSession, sessionId, siteName, getManager(environment));
+			String shortId = new Session(sessionId).getShortId();
 			if (expired) {
-				fp.addOkMessage(
-						request.getMessage(MessageConstants.SESSION_EXPIRED, new Session(sessionId).getShortId()));
+				fp.addOkMessage(request.getMessage(MessageConstants.SESSION_EXPIRED, shortId));
 			} else {
-				fp.addErrorMessage(
-						request.getMessage(MessageConstants.SESSION_EXPIRED_FAIL, new Session(sessionId).getShortId()));
+				fp.addErrorMessage(request.getMessage(MessageConstants.SESSION_EXPIRED_FAIL, shortId));
 			}
 		}
 	}
@@ -144,37 +145,51 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 	protected List<Session> getSessionsFromManager(Request request, FieldProcessor fp) {
 		List<Session> immutableSessions = new ArrayList<>();
 		Manager manager = getManager(request.getEnvironment());
-		int activeSessions = manager.getActiveSessions();
-		if (activeSessions > maxSessions) {
+		try {
 			if (manager instanceof StoreManager) {
-				try {
-					String[] sessionsKeys = StoreManager.class.cast(manager).getStore().keys();
-					for (int i = 0; i < maxSessions; i++) {
-						immutableSessions.add(getSessionMetaData(manager.findSession(sessionsKeys[i])));
-					}
+				Store store = StoreManager.class.cast(manager).getStore();
+				int sessionCount = store.getSize();
+				String[] sessionsKeys = store.keys();
+				if (sessionCount > maxSessions) {
+					sessionCount = maxSessions;
 					fp.addNoticeMessage(request.getMessage(MessageConstants.SESSIONS_SHOWING_MAX, maxSessions,
 							sessionsKeys.length));
-				} catch (IOException e) {
-					log.error("error while retrieving sessions keys from store", e);
-					fp.addErrorMessage(request.getMessage(MessageConstants.SESSIONS_READ_ERROR));
+				}
+				for (int i = 0; i < sessionCount && i < sessionsKeys.length;) {
+					Optional<Session> sessionMetaData = getSessionMetaData(manager.findSession(sessionsKeys[i]));
+					if (sessionMetaData.isPresent()) {
+						immutableSessions.add(sessionMetaData.get());
+						i++;
+					}
+				}
+
+			} else if (maxSessions <= manager.getActiveSessions()) {
+				for (org.apache.catalina.Session session : manager.findSessions()) {
+					Optional<Session> sessionMetaData = getSessionMetaData(session);
+					if (sessionMetaData.isPresent()) {
+						immutableSessions.add(sessionMetaData.get());
+					}
 				}
 			} else {
-				fp.addErrorMessage(request.getMessage(MessageConstants.SESSIONS_TOO_MANY, activeSessions, maxSessions));
+				fp.addErrorMessage(request.getMessage(MessageConstants.SESSIONS_TOO_MANY, manager.getActiveSessions(),
+						maxSessions));
 			}
-		} else {
-			for (org.apache.catalina.Session session : manager.findSessions()) {
-				immutableSessions.add(getSessionMetaData(session));
-			}
+		} catch (IOException e) {
+			log.error("error while retrieving sessions keys from store", e);
+			fp.addErrorMessage(request.getMessage(MessageConstants.SESSIONS_READ_ERROR));
 		}
 		return immutableSessions;
 	}
 
-	private Session getSessionMetaData(org.apache.catalina.Session session) {
-		Session metaData = (Session) session.getSession().getAttribute(SessionListener.META_DATA);
-		if (null == metaData) {
-			metaData = new Session(session.getId());
+	private Optional<Session> getSessionMetaData(org.apache.catalina.Session session) {
+		Session metaData = null;
+		if (null != session) {
+			metaData = (Session) session.getSession().getAttribute(SessionListener.META_DATA);
+			if (null == metaData) {
+				metaData = new Session(session.getId());
+			}
 		}
-		return metaData;
+		return Optional.ofNullable(metaData);
 	}
 
 	private Manager getManager(Environment environment) {
@@ -300,13 +315,12 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 	}
 
 	protected boolean expire(String currentSession, String sessionId, String siteName, Manager manager) {
-		Session sessionMetaData = null;
 		try {
 			org.apache.catalina.Session session = manager.findSession(sessionId);
 			if (null != session) {
-				sessionMetaData = getSessionMetaData(session);
-				if (!sessionMetaData.getId().equals(currentSession)
-						&& (siteName == null || sessionMetaData.getSite().equals(siteName))) {
+				Optional<Session> sessionMetaData = getSessionMetaData(session);
+				if (sessionMetaData.isPresent() && !sessionMetaData.get().getId().equals(currentSession)
+						&& (siteName == null || sessionMetaData.get().getSite().equals(siteName))) {
 					session.expire();
 					return true;
 				}
