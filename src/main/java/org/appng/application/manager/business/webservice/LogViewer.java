@@ -16,11 +16,8 @@
 package org.appng.application.manager.business.webservice;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,8 +29,6 @@ import org.appng.api.Webservice;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.api.model.Subject;
-import org.appng.application.manager.business.LogConfig;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -48,25 +43,11 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class LogViewer implements Webservice, InitializingBean {
+public class LogViewer implements Webservice {
 
-	private static final String WEBAPP_ROOT = "${webapp.root}";
-	private static final String APPNG_APPENDER = "log4j.appender.appng.File";
 	protected static final String PERM_LOG_VIEWER = "platform.logfile";
-
-	@Value("${platform." + Platform.Property.PLATFORM_ROOT_PATH + "}")
-	private String rootPath;
-
-	private String logFileLocation;
-
-	public void afterPropertiesSet() throws Exception {
-		try (InputStream propsIs = new FileInputStream(new File(rootPath, LogConfig.LOG4J_PROPS))) {
-			Properties log4jProps = new Properties();
-			log4jProps.load(propsIs);
-			logFileLocation = log4jProps.getProperty(APPNG_APPENDER);
-			logFileLocation = logFileLocation.replace(WEBAPP_ROOT, rootPath);
-		}
-	}
+	private @Value("${loggingFile:WEB-INF/log/appNG.log}") String logPath;
+	private @Value("${platform." + Platform.Property.PLATFORM_ROOT_PATH + "}") String rootPath;
 
 	public byte[] processRequest(Site site, Application application, Environment environment, Request request)
 			throws BusinessException {
@@ -76,7 +57,6 @@ public class LogViewer implements Webservice, InitializingBean {
 		if (subject != null && subject.isAuthenticated()
 				&& request.getPermissionProcessor().hasPermission(PERM_LOG_VIEWER)) {
 			File logFile = getLogfile();
-
 			int maxLines = 1000;
 			String parameter = request.getParameter("lines");
 			String find = request.getParameter("find");
@@ -96,9 +76,7 @@ public class LogViewer implements Webservice, InitializingBean {
 						}
 					}
 				}
-			} catch (
-
-			IOException e) {
+			} catch (IOException e) {
 				throw new BusinessException(e);
 			}
 		}
@@ -107,7 +85,7 @@ public class LogViewer implements Webservice, InitializingBean {
 	}
 
 	File getLogfile() {
-		return new File(logFileLocation);
+		return new File(rootPath, logPath);
 	}
 
 	public String getContentType() {

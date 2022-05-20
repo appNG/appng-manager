@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.appng.api.ActionProvider;
 import org.appng.api.ApplicationException;
 import org.appng.api.DataContainer;
@@ -40,10 +41,12 @@ import org.appng.core.domain.PlatformEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import lombok.Data;
+
 @Component
 public class LogConfig extends ServiceAware implements DataProvider, ActionProvider<LogFile> {
 
-	public static final String LOG4J_PROPS = "WEB-INF/conf/log4j.properties";
+	public @Value("${loggingConfig:WEB-INF/conf/log4j.properties}") String logConfigFile;
 
 	@Value("${platform." + Platform.Property.PLATFORM_ROOT_PATH + "}")
 	private String rootPath;
@@ -58,7 +61,6 @@ public class LogConfig extends ServiceAware implements DataProvider, ActionProvi
 				File configFile = getConfigFile();
 				String content = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
 				logFile.setContent(content);
-				getService().createEvent(PlatformEvent.Type.INFO, "Changed " + LOG4J_PROPS);
 			} catch (IOException e) {
 				throw new ApplicationException(e);
 			}
@@ -67,7 +69,7 @@ public class LogConfig extends ServiceAware implements DataProvider, ActionProvi
 	}
 
 	public File getConfigFile() {
-		return new File(rootPath, LOG4J_PROPS);
+		return new File(rootPath, logConfigFile);
 	}
 
 	public void perform(Site site, Application application, Environment environment, Options options, Request request,
@@ -75,14 +77,16 @@ public class LogConfig extends ServiceAware implements DataProvider, ActionProvi
 		File configFile = getConfigFile();
 		try {
 			String currentContent = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
-			String newContent = formBean.getContent();
+			String content = formBean.getContent();
 			String separator = System.lineSeparator();
-			newContent = newContent.replaceAll("\r\n", separator);
+			if(StringUtils.LF.equals(separator)) {
+				content = content.replaceAll("\r\n", separator);
+			}
 
-			LogConfigChangedEvent logConfigChangedEvent = new LogConfigChangedEvent(site.getName(), newContent,
-					configFile.getAbsolutePath());
-
-			if (!currentContent.equals(newContent)) {
+			if (!currentContent.equals(content)) {
+				getService().createEvent(PlatformEvent.Type.INFO, "Changed " + configFile);
+				LogConfigChangedEvent logConfigChangedEvent = new LogConfigChangedEvent(site.getName(), content,
+						configFile.getAbsolutePath());
 				logConfigChangedEvent.perform(environment, site);
 				if (formBean.clusterWide) {
 					site.sendEvent(logConfigChangedEvent);
@@ -96,27 +100,10 @@ public class LogConfig extends ServiceAware implements DataProvider, ActionProvi
 		}
 	}
 
+	@Data
 	public static class LogFile {
-		private String content;
+		private @NotNull String content;
 		private boolean clusterWide = false;
-
-		@NotNull
-		public String getContent() {
-			return content;
-		}
-
-		public void setContent(String content) {
-			this.content = content;
-		}
-
-		public boolean isClusterWide() {
-			return clusterWide;
-		}
-
-		public void setClusterWide(boolean clusterWide) {
-			this.clusterWide = clusterWide;
-		}
-
 	}
 
 }
