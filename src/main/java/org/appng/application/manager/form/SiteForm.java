@@ -15,6 +15,12 @@
  */
 package org.appng.application.manager.form;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.appng.core.domain.SiteImpl;
@@ -53,6 +59,26 @@ public class SiteForm {
 
 	public void setTemplate(String template) {
 		this.template = template;
+	}
+
+	public String getHostAliases() {
+		List<String> hostAliases = site.getHostNames().stream().sorted().filter(
+			p -> !site.getHost().equals(p)).collect(Collectors.toList()
+		);
+		return String.join(System.lineSeparator(), hostAliases);
+	}
+
+	public void setHostAliases(String hostAliases) {
+		Set<String> hostnames = new HashSet<>();
+		hostnames.add(site.getHost());
+
+		Pattern splitPattern = Pattern.compile("^[ \t]*(.+?)[ \t]*$", Pattern.MULTILINE);
+		Matcher splitMatcher = splitPattern.matcher(hostAliases);
+		while(splitMatcher.find()) {
+			hostnames.add(splitMatcher.group(1));
+		}
+
+		site.setHostNames(hostnames);
 	}
 
 }
