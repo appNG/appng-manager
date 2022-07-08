@@ -70,14 +70,11 @@ public class SiteForm {
 
 	public void setHostAliases(String hostAliases) {
 		Set<String> hostnames = new HashSet<>();
-		hostnames.add(site.getHost());
-
 		Pattern splitPattern = Pattern.compile("^[ \t]*(.+?)[ \t]*$", Pattern.MULTILINE);
 		Matcher splitMatcher = splitPattern.matcher(hostAliases);
 		while(splitMatcher.find()) {
 			hostnames.add(splitMatcher.group(1));
 		}
-
 		site.setHostNames(hostnames);
 	}
 
