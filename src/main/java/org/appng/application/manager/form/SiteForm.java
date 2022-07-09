@@ -15,6 +15,7 @@
  */
 package org.appng.application.manager.form;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +24,16 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 
+import org.appng.api.Environment;
+import org.appng.api.FieldProcessor;
+import org.appng.api.FormValidator;
+import org.appng.api.Options;
+import org.appng.api.Request;
+import org.appng.api.model.Application;
+import org.appng.api.model.Site;
+import org.appng.application.manager.MessageConstants;
 import org.appng.core.domain.SiteImpl;
+import org.appng.core.domain.ValidationPatterns;
 
 /**
  * Bindclass used for creating/updating a {@link SiteImpl}.
@@ -31,7 +41,7 @@ import org.appng.core.domain.SiteImpl;
  * @author Matthias Müller
  * 
  */
-public class SiteForm {
+public class SiteForm implements FormValidator {
 
 	private SiteImpl site;
 	private String template;
@@ -61,21 +71,34 @@ public class SiteForm {
 		this.template = template;
 	}
 
+	private List<String> _getHostAliases() {
+		return site.getHostNames().stream().filter(hn -> !site.getHost().equals(hn)).sorted()
+				.collect(Collectors.toList());
+	}
+
 	public String getHostAliases() {
-		List<String> hostAliases = site.getHostNames().stream().sorted().filter(
-			p -> !site.getHost().equals(p)).collect(Collectors.toList()
-		);
-		return String.join(System.lineSeparator(), hostAliases);
+		return String.join(System.lineSeparator(), _getHostAliases());
 	}
 
 	public void setHostAliases(String hostAliases) {
-		Set<String> hostnames = new HashSet<>();
+		Set<String> hostnames = new HashSet<String>();
+		hostnames.add(site.getHost());
+
 		Pattern splitPattern = Pattern.compile("^[ \t]*(.+?)[ \t]*$", Pattern.MULTILINE);
 		Matcher splitMatcher = splitPattern.matcher(hostAliases);
 		while(splitMatcher.find()) {
 			hostnames.add(splitMatcher.group(1));
 		}
 		site.setHostNames(hostnames);
+	}
+
+	public void validate(Site site, Application application, Environment environment, Options options, Request request,
+			FieldProcessor fp) {
+		for (String name : _getHostAliases()) {
+			if (! Pattern.matches(ValidationPatterns.HOST_PATTERN, name))
+				fp.addErrorMessage(fp.getField("hostAliases"),
+						request.getMessage(MessageConstants.SITE_HOSTALIAS_INVALID, name));
+		}
 	}
 
 }
