@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<datasources xmlns="http://www.appng.org/schema/platform"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
 
 	<datasource id="sites">
@@ -49,69 +48,139 @@
 				</field>
 			</meta-data>
 			<linkpanel id="other" location="both">
-				<link mode="intern" target="/sites/create">
-					<label>site.create</label>
-					<icon>new</icon>
+				<!--link mode="intern" target="/sites/create">
 					<permissions>
 						<permission ref="site.create" mode="set" />
 					</permissions>
-				</link>
+					<label>site.create</label>
+					<icon>new</icon>
+				</link-->
+				<action event-id="siteEvent" id="create" interactive="true">
+					<permissions>
+						<permission ref="site.create" mode="set" />
+					</permissions>
+					<label>site.create</label>
+					<icon>new</icon>
+					<params>
+						<param name="form_action">create</param>
+					</params>
+				</action>
 			</linkpanel>
 			<linkpanel id="actions" location="inline">
 				<link mode="intern" target="/sites&#63;act=start&#38;siteid=${current.id}">
-					<label>site.start</label>
-					<icon>activate</icon>
 					<condition expression="${current.active and current.state.name() eq 'STOPPED'}" />
 					<permissions>
 						<permission ref="site.reload" mode="set" />
 					</permissions>
+					<label>site.start</label>
+					<icon>activate</icon>
 				</link>
 				<link mode="intern" target="/sites&#63;act=stop&#38;siteid=${current.id}">
-					<label>site.stop</label>
-					<icon>deactivate</icon>
 					<condition expression="${current.state.name() eq 'STARTED'}" />
-					<confirmation id="site.stop.confirm" params="#{name}" />
 					<permissions>
 						<permission ref="site.reload" mode="set" />
 					</permissions>
+					<label>site.stop</label>
+					<icon>deactivate</icon>
+					<confirmation id="site.stop.confirm" params="#{name}" />
 				</link>
-				<link mode="intern" target="/sites/update/${current.id}" default="true">
-					<label>edit</label>
-					<icon>edit</icon>
+				<action event-id="siteEvent" id="update" interactive="true">
+					<condition expression="${current.state.name() eq 'STARTED'}" />
 					<permissions>
 						<permission ref="site.edit" mode="set" />
 					</permissions>
+					<label>edit</label>
+					<icon>edit</icon>
+					<params>
+						<param name="siteid">${current.id}</param>
+					</params>
+				</action>
+				<link mode="intern" target="/sites/update/${current.id}" default="true">
+					<permissions>
+						<permission ref="site.edit" mode="set" />
+					</permissions>
+					<label>edit</label>
+					<icon>edit</icon>
 				</link>
-				<link mode="intern" target="/sites&#63;act=delete&#38;siteid=${current.id}">
-					<label>delete</label>
-					<icon>delete</icon>
-					<confirmation id="site.delete.confirm" params="#{name}" />
+				<!--link mode="intern" target="/sites&#63;act=delete&#38;siteid=${current.id}">
 					<condition expression="${current.state.name() eq 'STOPPED'}" />
 					<permissions>
 						<permission ref="site.delete" mode="set" />
 					</permissions>
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="site.delete.confirm" params="#{name}" />
 				</link>
-				<link mode="intern" target="/sites&#63;act=reload&#38;siteid=${current.id}" show-disabled="true">
+				<link mode="rest" target="/openapi/action/siteEvent/delete&#63;siteid=${current.id}">
+					<condition expression="${current.state.name() eq 'STOPPED'}" />
+					<permissions>
+						<permission ref="site.delete" mode="set" />
+					</permissions>
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="site.delete.confirm" params="#{name}" />
+				</link-->
+
+				<action event-id="siteEvent" id="delete" interactive="false">
+					<condition expression="${current.state.name() eq 'STARTED'}" />
+					<permissions>
+						<permission ref="site.reload" mode="set" />
+					</permissions>
+					<label>delete</label>
+					<icon>delete</icon>
+					<confirmation id="site.delete.confirm" params="#{name}" />
+					<params>
+						<param name="form_action">delete</param>
+						<param name="siteid">${current.id}</param>
+					</params>
+				</action>
+				<action event-id="siteEvent" id="reload" interactive="false">
+					<condition expression="${current.state.name() eq 'STARTED'}" />
+					<permissions>
+						<permission ref="site.reload" mode="set" />
+					</permissions>
 					<label>reload</label>
 					<icon>reload</icon>
-					<condition expression="${current.state.name() eq 'STARTED'}" />
 					<confirmation id="site.reload.confirm" params="#{name}" />
+					<params>
+						<param name="form_action">reload</param>
+						<param name="siteid">${current.id}</param>
+					</params>
+				</action>
+				<!-- link mode="intern" target="/sites&#63;act=reload&#38;siteid=${current.id}" show-disabled="true">
+					<condition expression="${current.state.name() eq 'STARTED'}" />
 					<permissions>
 						<permission ref="site.reload" mode="set" />
 					</permissions>
-				</link>
-				<link mode="intern" target="/sites&#63;act=reloadTemplate&#38;siteid=${current.id}">
+					<label>reload</label>
+					<icon>reload</icon>
+					<confirmation id="site.reload.confirm" params="#{name}" />
+				</link-->
+				<!--link mode="intern" target="/sites&#63;act=reloadTemplate&#38;siteid=${current.id}">
+					<condition expression="${current.state.name() eq 'STARTED'}" />
+					<permissions>
+						<permission ref="site.reload" mode="set" />
+					</permissions>
 					<label>reload.template</label>
 					<icon>reload</icon>
+				</link-->
+				
+				<action event-id="siteEvent" id="reloadTemplate" interactive="false">
 					<condition expression="${current.state.name() eq 'STARTED'}" />
 					<permissions>
 						<permission ref="site.reload" mode="set" />
 					</permissions>
-				</link>
+					<label>reload.template</label>
+					<icon>reload</icon>
+					<params>
+						<param name="form_action">reloadTemplate</param>
+						<param name="siteid">${current.id}</param>
+					</params>
+				</action>
 			</linkpanel>
 		</config>
 		<bean id="sites">
-			<option name="site" siteName="${name}" siteDomain="${domain}" siteActive="${active}"/>
+			<option name="site" siteName="${name}" siteDomain="${domain}" siteActive="${active}" />
 		</bean>
 	</datasource>
 
