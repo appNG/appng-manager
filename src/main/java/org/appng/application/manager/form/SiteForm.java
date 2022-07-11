@@ -15,13 +15,11 @@
  */
 package org.appng.application.manager.form;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.appng.api.Environment;
@@ -71,30 +69,23 @@ public class SiteForm implements FormValidator {
 		this.template = template;
 	}
 
-	private List<String> _getHostAliases() {
-		return site.getHostNames().stream().filter(hn -> !site.getHost().equals(hn)).sorted()
-				.collect(Collectors.toList());
-	}
-
 	public String getHostAliases() {
-		return String.join(System.lineSeparator(), _getHostAliases());
+		return String.join(System.lineSeparator(), site.getHostAliases());
 	}
 
 	public void setHostAliases(String hostAliases) {
 		Set<String> hostnames = new HashSet<String>();
-		hostnames.add(site.getHost());
-
 		Pattern splitPattern = Pattern.compile("^[ \t]*(.+?)[ \t]*$", Pattern.MULTILINE);
 		Matcher splitMatcher = splitPattern.matcher(hostAliases);
 		while(splitMatcher.find()) {
 			hostnames.add(splitMatcher.group(1));
 		}
-		site.setHostNames(hostnames);
+		site.setHostAliases(hostnames);
 	}
 
 	public void validate(Site site, Application application, Environment environment, Options options, Request request,
 			FieldProcessor fp) {
-		for (String name : _getHostAliases()) {
+		for (String name : this.site.getHostAliases()) {
 			if (! Pattern.matches(ValidationPatterns.HOST_PATTERN, name))
 				fp.addErrorMessage(fp.getField("hostAliases"),
 						request.getMessage(MessageConstants.SITE_HOSTALIAS_INVALID, name));

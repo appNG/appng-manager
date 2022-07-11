@@ -1086,16 +1086,18 @@ public class ManagerService extends CoreService implements Service {
 		if (fp.hasField("site.name") && !siteRepository.isUnique(site.getId(), "name", site.getName())) {
 			fp.addErrorMessage(fp.getField("site.name"), request.getMessage(MessageConstants.SITE_NAME_EXISTS));
 		}
-		List<SiteImpl> hostNameOverlapSites = siteRepository.findSitesForHostNames(site.getHostNames());
-		for (SiteImpl ovlSite : hostNameOverlapSites) {
-			if (site.getId() == ovlSite.getId()) continue;
+		Set<String>hostnames = new HashSet<String>(site.getHostAliases());
+		hostnames.add(site.getHost());
+		List<SiteImpl> hostOverlapSites = siteRepository.findSitesForHostNames(hostnames);
+		for (SiteImpl ovlpSite : hostOverlapSites) {
+			if (site.getId() == ovlpSite.getId()) continue;
 			else {
-				if (ovlSite.getHostNames().contains(site.getHost()))
+				if (ovlpSite.getHost().equals(site.getHost()) || ovlpSite.getHostAliases().contains(site.getHost()))
 					fp.addErrorMessage(fp.getField("site.host"), request.getMessage(MessageConstants.SITE_HOST_EXISTS,
-							ovlSite.getName()));
+							ovlpSite.getName()));
 				else
-					fp.addErrorMessage(fp.getField("hostAliases"), request.getMessage(MessageConstants.SITE_HOSTALIAS_EXISTS,
-							ovlSite.getName()));
+					fp.addErrorMessage(fp.getField("hostAliases"),
+							request.getMessage(MessageConstants.SITE_HOSTALIAS_EXISTS, ovlpSite.getName()));
 			}
 		}
 		if (!siteRepository.isUnique(site.getId(), "domain", site.getDomain())) {
