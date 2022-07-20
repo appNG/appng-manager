@@ -17,7 +17,7 @@
 			</field>
 			<field name="host" type="text" binding="host">
 				<sort />
-				<label id="host">Host</label>
+				<label id="host">Hostname</label>
 			</field>
 			<field name="domain" type="text" binding="domain">
 				<sort />

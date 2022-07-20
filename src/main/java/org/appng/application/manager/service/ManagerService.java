@@ -1086,15 +1086,16 @@ public class ManagerService extends CoreService implements Service {
 		if (fp.hasField("site.name") && !siteRepository.isUnique(site.getId(), "name", site.getName())) {
 			fp.addErrorMessage(fp.getField("site.name"), request.getMessage(MessageConstants.SITE_NAME_EXISTS));
 		}
-		Set<String>hostnames = new HashSet<String>(site.getHostAliases());
+		Set<String> hostnames = new HashSet<String>(site.getHostAliases());
 		hostnames.add(site.getHost());
 		List<SiteImpl> hostOverlapSites = siteRepository.findSitesForHostNames(hostnames);
 		for (SiteImpl ovlpSite : hostOverlapSites) {
-			if (site.getId() == ovlpSite.getId()) continue;
+			if (site.getId() == ovlpSite.getId())
+				continue;
 			else {
 				if (ovlpSite.getHost().equals(site.getHost()) || ovlpSite.getHostAliases().contains(site.getHost()))
-					fp.addErrorMessage(fp.getField("site.host"), request.getMessage(MessageConstants.SITE_HOST_EXISTS,
-							ovlpSite.getName()));
+					fp.addErrorMessage(fp.getField("site.host"),
+							request.getMessage(MessageConstants.SITE_HOST_EXISTS, ovlpSite.getName()));
 				else
 					fp.addErrorMessage(fp.getField("hostAliases"),
 							request.getMessage(MessageConstants.SITE_HOSTALIAS_EXISTS, ovlpSite.getName()));
