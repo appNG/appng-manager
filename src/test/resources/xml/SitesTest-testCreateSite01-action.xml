@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<action xmlns="http://www.appng.org/schema/platform" id="create" eventId="siteEvent">
+<action xmlns="http://www.appng.org/schema/platform" id="create" eventId="siteEvent" async="false">
 	<config>
 		<title id="site.create">Create site</title>
 		<permissions>
@@ -23,12 +23,9 @@
 							numbers and hyphens</message>
 					</pattern>
 				</validation>
-				<messages ref="site.name">
-					<message ref="site.name" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
-				</messages>
 			</field>
 			<field name="host" type="text" binding="site.host">
-				<label id="host">Host</label>
+				<label id="host">Hostname</label>
 				<validation>
 					<notNull>
 						<message ref="site.host" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
@@ -39,9 +36,9 @@
 							some.example.com)</message>
 					</pattern>
 				</validation>
-				<messages ref="site.host">
-					<message ref="site.host" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
-				</messages>
+			</field>
+			<field name="hostAliases" type="longtext" binding="hostAliases">
+				<label id="hostAliases">Hostname aliases (one per line)</label>
 			</field>
 			<field name="domain" type="text" binding="site.domain">
 				<label id="domain">Domain</label>
@@ -55,9 +52,6 @@
 							http://www.example.com example.com localhost:8080)</message>
 					</pattern>
 				</validation>
-				<messages ref="site.domain">
-					<message ref="site.domain" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
-				</messages>
 			</field>
 			<field name="description" type="longtext" binding="site.description">
 				<label id="description">Description</label>
@@ -79,8 +73,10 @@
 		</meta-data>
 	</config>
 	<condition expression="${form_action eq 'create'}" />
+	<messages>
+		<message ref="create" class="OK">Site has been created.</message>
+	</messages>
 	<datasource id="new-site" />
-	<userdata />
 	<data>
 		<selection id="template">
 			<title id="template">Template</title>
@@ -90,6 +86,9 @@
 				<value></value>
 			</field>
 			<field name="host" type="text">
+				<value></value>
+			</field>
+			<field name="hostAliases" type="longtext">
 				<value></value>
 			</field>
 			<field name="domain" type="text">

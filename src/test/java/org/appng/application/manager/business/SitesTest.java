@@ -17,6 +17,8 @@ package org.appng.application.manager.business;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.appng.api.FieldProcessor;
@@ -70,14 +72,15 @@ public class SitesTest extends AbstractTest {
 	}
 
 	@Test
-	public void testCreateSite() throws Exception {
+	public void testCreateSite01() throws Exception {
 		propertyRepository.save(new PropertyImpl("platform." + Platform.Property.MESSAGING_ENABLED, null, "false"));
 
 		SiteImpl siteToCreate = new SiteImpl();
 		SiteForm siteForm = new SiteForm(siteToCreate);
-		siteToCreate.setName("localhost");
-		siteToCreate.setHost("localhost");
-		siteToCreate.setDomain("localhost");
+		siteToCreate.setName("site1");
+		siteToCreate.setHost("hostname1.domain.tld");
+		siteToCreate.setHostAliases(new HashSet<>(Arrays.asList("doppeltes", "lottchen")));
+		siteToCreate.setDomain("https://hostname1.domain.tld");
 		siteToCreate.setActive(true);
 
 		// prepares using appNG >= 1.19.1
@@ -96,9 +99,55 @@ public class SitesTest extends AbstractTest {
 	}
 
 	@Test
-	public void testCreateSiteValidationFail() throws Exception {
+	public void testCreateSite02ValidationFail() throws Exception {
 		SiteImpl siteToCreate = new SiteImpl();
 		SiteForm siteForm = new SiteForm(siteToCreate);
+		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
+				.getCallableAction(siteForm);
+		callableAction.perform();
+		validate(callableAction.getAction());
+	}
+
+	@Test
+	public void testCreateSite03NameDuplicateFail() throws Exception {
+		SiteImpl siteToCreate = new SiteImpl();
+		SiteForm siteForm = new SiteForm(siteToCreate);
+		siteToCreate.setName("site1");
+		siteToCreate.setHost("other-hostname.domain.tld");
+		siteToCreate.setDomain("https://other-hostname.domain.tld");
+		siteToCreate.setActive(true);
+
+		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
+				.getCallableAction(siteForm);
+		callableAction.perform();
+		validate(callableAction.getAction());
+	}
+
+	@Test
+	public void testCreateSite04HostDuplicateFail() throws Exception {
+		SiteImpl siteToCreate = new SiteImpl();
+		SiteForm siteForm = new SiteForm(siteToCreate);
+		siteToCreate.setName("other-site");
+		siteToCreate.setHost("lottchen");
+		siteToCreate.setDomain("https://other-hostname.domain.tld");
+		siteToCreate.setActive(true);
+
+		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
+				.getCallableAction(siteForm);
+		callableAction.perform();
+		validate(callableAction.getAction());
+	}
+
+	@Test
+	public void testCreateSite05AliasDuplicateFail() throws Exception {
+		SiteImpl siteToCreate = new SiteImpl();
+		SiteForm siteForm = new SiteForm(siteToCreate);
+		siteToCreate.setName("other-site");
+		siteToCreate.setHost("other-hostname.domain.tld");
+		siteToCreate.setHostAliases(new HashSet<>(Arrays.asList("", "hostname1.domain.tld")));
+		siteToCreate.setDomain("https://other-hostname.domain.tld");
+		siteToCreate.setActive(true);
+
 		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
 				.getCallableAction(siteForm);
 		callableAction.perform();

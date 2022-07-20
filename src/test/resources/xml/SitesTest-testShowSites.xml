@@ -126,13 +126,13 @@
 		<resultset chunk="0" chunkname="sites" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="2">
 			<result>
 				<field name="name" type="text">
-					<value>localhost</value>
+					<value>site1</value>
 				</field>
 				<field name="host" type="text">
-					<value>localhost</value>
+					<value>hostname1.domain.tld</value>
 				</field>
 				<field name="domain" type="text">
-					<value>localhost</value>
+					<value>https://hostname1.domain.tld</value>
 				</field>
 				<field name="description" type="text">
 					<value></value>
