@@ -100,7 +100,7 @@
 						<permission ref="site.reload" mode="set" />
 					</permissions>
 				</link>
-				<link mode="intern" target="/sites&#63;act=reloadTemplate&#38;siteid=${current.id}">
+				<link mode="intern" target="/sites&#63;act=reloadTemplate&#38;sitename=${current.name}">
 					<label>reload.template</label>
 					<icon>reload</icon>
 					<condition expression="${current.state.name() eq 'STARTED'}" />
