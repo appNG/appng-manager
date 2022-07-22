@@ -51,26 +51,6 @@ public class SitesTest extends AbstractTest {
 
 	private static final String SITE_EVENT = "siteEvent";
 
-	@Override
-	protected void mockSite(GenericApplicationContext applicationContext) {
-		if (null == site) {
-			site = Mockito.mock(SiteImpl.class);
-		}
-		Mockito.when(site.getName()).thenReturn("localhost");
-		Mockito.when(site.getState()).thenReturn(SiteState.STARTED);
-		Mockito.when(site.getDomain()).thenReturn("localhost");
-		Mockito.when(site.getHost()).thenReturn("localhost");
-		Mockito.when(site.getApplication("appng-manager")).thenReturn(application);
-		org.appng.api.support.SiteClassLoader siteClassLoader = new org.appng.api.support.SiteClassLoader(new URL[0],
-				this.getClass().getClassLoader(), site.getName());
-		Mockito.when(site.getSiteClassLoader()).thenReturn(siteClassLoader);
-		List<Property> siteProperties = getSiteProperties("platform.site.localhost.");
-		Mockito.when(site.getProperties()).thenReturn(new PropertyHolder("platform.site.localhost.", siteProperties));
-		if (null != applicationContext) {
-			applicationContext.addBeanFactoryPostProcessor(pp -> pp.registerSingleton("site", site));
-		}
-	}
-
 	@Test
 	public void testCreateSite01() throws Exception {
 		propertyRepository.save(new PropertyImpl("platform." + Platform.Property.MESSAGING_ENABLED, null, "false"));
