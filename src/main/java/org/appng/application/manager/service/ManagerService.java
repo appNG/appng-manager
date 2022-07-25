@@ -63,7 +63,6 @@ import org.appng.api.model.Identifier;
 import org.appng.api.model.NameProvider;
 import org.appng.api.model.Nameable;
 import org.appng.api.model.Permission;
-import org.appng.api.model.Properties;
 import org.appng.api.model.Property;
 import org.appng.api.model.Resource;
 import org.appng.api.model.ResourceType;
@@ -113,8 +112,8 @@ import org.appng.core.model.RepositoryType;
 import org.appng.core.model.RepositoryUtils;
 import org.appng.core.service.CoreService;
 import org.appng.core.service.InitializerService;
-import org.appng.core.service.PlatformProperties;
 import org.appng.core.service.MigrationService.MigrationStatus;
+import org.appng.core.service.PlatformProperties;
 import org.appng.core.service.PropertySupport;
 import org.appng.core.xml.repository.PackageVersions;
 import org.appng.core.xml.repository.Packages;
@@ -1625,8 +1624,7 @@ public class ManagerService extends CoreService implements Service {
 			throws BusinessException {
 		SiteImpl site = getSite(siteId);
 		Environment env = request.getEnvironment();
-		Map<String, Site> siteMap = env.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
-		Site activeSite = siteMap.get(site.getName());
+		Site activeSite = RequestUtil.getSiteByName(env, site.getName());
 		if (null == activeSite || SiteState.STOPPED.equals(activeSite.getState())) {
 			if (site.isActive()) {
 				try {
@@ -1650,8 +1648,7 @@ public class ManagerService extends CoreService implements Service {
 			throws BusinessException {
 		SiteImpl site = getSite(siteId);
 		Environment env = request.getEnvironment();
-		Map<String, Site> siteMap = env.getAttribute(Scope.PLATFORM, Platform.Environment.SITES);
-		Site activeSite = siteMap.get(site.getName());
+		Site activeSite = RequestUtil.getSiteByName(env, site.getName());
 		if (null != activeSite) {
 			if (SiteState.STARTED.equals(activeSite.getState())) {
 				getInitializerService(application).shutDownSite(env, site, false);
@@ -1859,10 +1856,8 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	@Override
-	public void reloadTemplate(Integer siteId, Properties platformConfig) {
-		SiteImpl site = siteRepository.findOne(siteId);
-		initSiteProperties(site);
-		refreshTemplate(site, PlatformProperties.get(platformConfig));
+	public void reloadTemplate(Environment env, String siteName) {
+		refreshTemplate(RequestUtil.getSiteByName(env, siteName), PlatformProperties.get(env));
 	}
 
 	public SiteApplication getSiteApplication(Integer siteId, Integer appId) {

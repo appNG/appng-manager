@@ -30,7 +30,6 @@ import org.appng.api.auth.PasswordPolicy;
 import org.appng.api.model.Application;
 import org.appng.api.model.Identifier;
 import org.appng.api.model.Permission;
-import org.appng.api.model.Properties;
 import org.appng.api.model.ResourceType;
 import org.appng.api.model.Site;
 import org.appng.api.model.Subject;
@@ -251,6 +250,6 @@ public interface Service {
 
 	void createEvent(Type type, String message);
 
-	void reloadTemplate(Integer siteId, Properties platformProps);
+	void reloadTemplate(Environment env, String siteName);
 
 }
