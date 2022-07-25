@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<datasource xmlns="http://www.appng.org/schema/platform" id="sites">
+<datasource xmlns="http://www.appng.org/schema/platform"
+	id="sites">
 	<config>
 		<title id="sites">Sites</title>
 		<permissions>
@@ -37,7 +38,8 @@
 				<icon condition="${current.running}">led_green</icon>
 				<icon condition="${!current.running}">led_red</icon>
 			</field>
-			<field name="startupTime" type="date" format="yyyy-MM-dd HH:mm:ss" binding="startupTime">
+			<field name="startupTime" type="date"
+				format="yyyy-MM-dd HH:mm:ss" binding="startupTime">
 				<label id="startupTime">Startup time</label>
 			</field>
 			<field name="actions" type="linkpanel" binding="actions">
@@ -54,50 +56,65 @@
 			</link>
 		</linkpanel>
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="/sites?act=start&amp;siteid=${current.id}">
-				<condition expression="${current.active and current.state.name() eq 'STOPPED'}" />
+			<link id="actions[1]" mode="intern"
+				target="/sites?act=start&amp;siteid=${current.id}">
+				<condition
+					expression="${current.active and current.state.name() eq 'STOPPED'}" />
 				<permissions>
 					<permission ref="site.reload" mode="set"></permission>
 				</permissions>
 				<label id="site.start">Start</label>
 				<icon>activate</icon>
 			</link>
-			<link id="actions[2]" mode="intern" target="/sites?act=stop&amp;siteid=${current.id}">
-				<condition expression="${current.state.name() eq 'STARTED'}" />
+			<link id="actions[2]" mode="intern"
+				target="/sites?act=stop&amp;siteid=${current.id}">
+				<condition
+					expression="${current.state.name() eq 'STARTED'}" />
 				<permissions>
 					<permission ref="site.reload" mode="set"></permission>
 				</permissions>
 				<label id="site.stop">Stop</label>
 				<icon>deactivate</icon>
-				<confirmation id="site.stop.confirm" params="#{name}">Stop site #{name}?</confirmation>
+				<confirmation id="site.stop.confirm" params="#{name}">Stop site
+					#{name}?</confirmation>
 			</link>
-			<link id="actions[3]" mode="intern" target="/sites/update/${current.id}" default="true">
+			<link id="actions[3]" mode="intern"
+				target="/sites/update/${current.id}" default="true">
 				<permissions>
 					<permission ref="site.edit" mode="set"></permission>
 				</permissions>
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[4]" mode="intern" target="/sites?act=delete&amp;siteid=${current.id}">
-				<condition expression="${current.state.name() eq 'STOPPED'}" />
+			<link id="actions[4]" mode="intern"
+				target="/sites?act=delete&amp;siteid=${current.id}">
+				<condition
+					expression="${current.state.name() eq 'STOPPED'}" />
 				<permissions>
 					<permission ref="site.delete" mode="set"></permission>
 				</permissions>
 				<label id="delete">Delete</label>
 				<icon>delete</icon>
-				<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "#{name}"?</confirmation>
+				<confirmation id="site.delete.confirm" params="#{name}">Do you
+					really want to delete the site "#{name}"?</confirmation>
 			</link>
-			<link id="actions[5]" mode="intern" target="/sites?act=reload&amp;siteid=${current.id}" show-disabled="true">
-				<condition expression="${current.state.name() eq 'STARTED'}" />
+			<link id="actions[5]" mode="intern"
+				target="/sites?act=reload&amp;siteid=${current.id}"
+				show-disabled="true">
+				<condition
+					expression="${current.state.name() eq 'STARTED'}" />
 				<permissions>
 					<permission ref="site.reload" mode="set"></permission>
 				</permissions>
 				<label id="reload">Reload</label>
 				<icon>reload</icon>
-				<confirmation id="site.reload.confirm" params="#{name}">Reload site #{name}?</confirmation>
+				<confirmation id="site.reload.confirm" params="#{name}">Reload
+					site #{name}?</confirmation>
 			</link>
-			<link id="actions[6]" mode="intern" target="/sites?act=reloadTemplate&amp;siteid=${current.id}">
-				<condition expression="${current.state.name() eq 'STARTED'}" />
+			<link id="actions[6]" mode="intern"
+				target="/sites?act=reloadTemplate&amp;sitename=${current.name}">
+				<condition
+					expression="${current.state.name() eq 'STARTED'}" />
 				<permissions>
 					<permission ref="site.reload" mode="set"></permission>
 				</permissions>
@@ -123,7 +140,8 @@
 				<option value="false" name="no" selected="false" />
 			</selection>
 		</selectionGroup>
-		<resultset chunk="0" chunkname="sites" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="2">
+		<resultset chunk="0" chunkname="sites" chunksize="10"
+			nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="2">
 			<result>
 				<field name="name" type="text">
 					<value>site1</value>
@@ -142,29 +160,33 @@
 					<icon type="class">led_green</icon>
 				</field>
 				<field name="running" type="image">
-					<value>true</value>
-					<icon type="class">led_green</icon>
+					<value>false</value>
+					<icon type="class">led_red</icon>
 				</field>
 				<field name="startupTime" type="date">
 					<value></value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[2]" mode="intern" target="/sites?act=stop&amp;siteid=1">
-						<label id="site.stop">Stop</label>
-						<icon>deactivate</icon>
-						<confirmation id="site.stop.confirm" params="#{name}">Stop site localhost?</confirmation>
+					<link id="actions[1]" mode="intern"
+						target="/sites?act=start&amp;siteid=1">
+						<label id="site.start">Start</label>
+						<icon>activate</icon>
 					</link>
-					<link id="actions[3]" mode="intern" target="/sites/update/1" default="true">
+					<link id="actions[3]" mode="intern" target="/sites/update/1"
+						default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[5]" mode="intern" target="/sites?act=reload&amp;siteid=1">
-						<label id="reload">Reload</label>
-						<icon>reload</icon>
-						<confirmation id="site.reload.confirm" params="#{name}">Reload site localhost?</confirmation>
+					<link id="actions[4]" mode="intern"
+						target="/sites?act=delete&amp;siteid=1">
+						<label id="delete">Delete</label>
+						<icon>delete</icon>
+						<confirmation id="site.delete.confirm"
+							params="#{name}">Do you really want to delete the site "site1"?
+						</confirmation>
 					</link>
-					<link id="actions[6]" mode="intern" target="/sites?act=reloadTemplate&amp;siteid=1">
-						<label id="reload.template">Reload Template</label>
+					<link id="actions[5]" mode="intern" target="" disabled="true">
+						<label id="reload">Reload</label>
 						<icon>reload</icon>
 					</link>
 				</linkpanel>
@@ -194,18 +216,23 @@
 					<value></value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="/sites?act=start&amp;siteid=3">
+					<link id="actions[1]" mode="intern"
+						target="/sites?act=start&amp;siteid=3">
 						<label id="site.start">Start</label>
 						<icon>activate</icon>
 					</link>
-					<link id="actions[3]" mode="intern" target="/sites/update/3" default="true">
+					<link id="actions[3]" mode="intern" target="/sites/update/3"
+						default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[4]" mode="intern" target="/sites?act=delete&amp;siteid=3">
+					<link id="actions[4]" mode="intern"
+						target="/sites?act=delete&amp;siteid=3">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
-						<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "site2"?</confirmation>
+						<confirmation id="site.delete.confirm"
+							params="#{name}">Do you really want to delete the site "site2"?
+						</confirmation>
 					</link>
 					<link id="actions[5]" mode="intern" target="" disabled="true">
 						<label id="reload">Reload</label>
