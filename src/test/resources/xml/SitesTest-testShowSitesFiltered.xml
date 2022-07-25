@@ -12,22 +12,22 @@
         </params>
         <meta-data bindClass="org.appng.api.model.Site">
             <field name="name" type="text" binding="name">
-                <sort />
+                <sort/>
                 <label id="name">Name</label>
             </field>
             <field name="host" type="text" binding="host">
-                <sort />
+                <sort/>
                 <label id="host">Hostname</label>
             </field>
             <field name="domain" type="text" binding="domain">
-                <sort />
+                <sort/>
                 <label id="domain">Domain</label>
             </field>
             <field name="description" type="text" binding="description">
                 <label id="description">Description</label>
             </field>
             <field name="active" type="image" binding="active">
-                <sort />
+                <sort/>
                 <label id="active">Active</label>
                 <icon condition="${current.active}">led_green</icon>
                 <icon condition="${!current.active}">led_red</icon>
@@ -55,7 +55,7 @@
         </linkpanel>
         <linkpanel id="actions" location="inline">
             <link id="actions[1]" mode="intern" target="/sites?act=start&amp;siteid=${current.id}">
-                <condition expression="${current.active and current.state.name() eq 'STOPPED'}" />
+                <condition expression="${current.active and current.state.name() eq 'STOPPED'}"/>
                 <permissions>
                     <permission ref="site.reload" mode="set"></permission>
                 </permissions>
@@ -63,7 +63,7 @@
                 <icon>activate</icon>
             </link>
             <link id="actions[2]" mode="intern" target="/sites?act=stop&amp;siteid=${current.id}">
-                <condition expression="${current.state.name() eq 'STARTED'}" />
+                <condition expression="${current.state.name() eq 'STARTED'}"/>
                 <permissions>
                     <permission ref="site.reload" mode="set"></permission>
                 </permissions>
@@ -79,7 +79,7 @@
                 <icon>edit</icon>
             </link>
             <link id="actions[4]" mode="intern" target="/sites?act=delete&amp;siteid=${current.id}">
-                <condition expression="${current.state.name() eq 'STOPPED'}" />
+                <condition expression="${current.state.name() eq 'STOPPED'}"/>
                 <permissions>
                     <permission ref="site.delete" mode="set"></permission>
                 </permissions>
@@ -88,7 +88,7 @@
                 <confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "#{name}"?</confirmation>
             </link>
             <link id="actions[5]" mode="intern" target="/sites?act=reload&amp;siteid=${current.id}" show-disabled="true">
-                <condition expression="${current.state.name() eq 'STARTED'}" />
+                <condition expression="${current.state.name() eq 'STARTED'}"/>
                 <permissions>
                     <permission ref="site.reload" mode="set"></permission>
                 </permissions>
@@ -97,7 +97,7 @@
                 <confirmation id="site.reload.confirm" params="#{name}">Reload site #{name}?</confirmation>
             </link>
             <link id="actions[6]" mode="intern" target="/sites?act=reloadTemplate&amp;siteid=${current.id}">
-                <condition expression="${current.state.name() eq 'STARTED'}" />
+                <condition expression="${current.state.name() eq 'STARTED'}"/>
                 <permissions>
                     <permission ref="site.reload" mode="set"></permission>
                 </permissions>
@@ -110,11 +110,11 @@
         <selectionGroup>
             <selection id="f_sn" type="text">
                 <title id="name">Name</title>
-                <option value="site" name="f_sn" />
+                <option value="site" name="f_sn"/>
             </selection>
             <selection id="f_sd" type="text">
                 <title id="domain">Domain</title>
-                <option value="example" name="f_sd" />
+                <option value="example" name="f_sd"/>
             </selection>
             <selection id="f_sa" type="radio">
                 <title id="active">Active</title>
