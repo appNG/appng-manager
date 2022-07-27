@@ -87,12 +87,12 @@
 			</permissions>
 			<params>
 				<param name="form_action" />
-				<param name="siteid" />
+				<param name="sitename" />
 			</params>
 		</config>
 		<condition expression="${form_action eq 'reloadTemplate'}" />
 		<bean id="sites">
-			<option name="site" id="${siteid}" />
+			<option name="site" sitename="${sitename}" />
 			<option name="action" id="reloadTemplate" />
 		</bean>
 	</action>

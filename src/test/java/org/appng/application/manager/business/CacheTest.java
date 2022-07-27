@@ -71,6 +71,15 @@ public class CacheTest extends AbstractTest {
 	}
 
 	@Test
+	public void testCacheNoSite() throws Exception {
+		addParameter("sortCacheElements", "pageSize:25;page:0");
+		initParameters();
+		CallableDataSource ds = getDataSource("cacheElements").withParam("siteid", "42").getCallableDataSource();
+		ds.perform("");
+		validate(ds.getDatasource());
+	}
+
+	@Test
 	public void testCacheStatistics() throws Exception {
 		CallableDataSource ds = getDataSource("cacheStatistics").withParam("siteid", "1").getCallableDataSource();
 		ds.perform("");

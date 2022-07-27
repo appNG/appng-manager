@@ -380,7 +380,7 @@
 					<action id="reloadTemplate" eventId="siteEvent" onSuccess="/sites" forceForward="true">
 						<params>
 							<param name="form_action">${act}</param>
-							<param name="siteid">${siteid}</param>
+							<param name="sitename">${sitename}</param>
 						</params>
 					</action>
 				</element>
