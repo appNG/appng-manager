@@ -128,6 +128,9 @@
 				<field name="host" type="text">
 					<label>host</label>
 				</field>
+				<field name="hostAliases" type="longtext" binding="hostAliases">
+					<label>hostAliases</label>
+				</field>
 				<field name="domain" type="text">
 					<label>domain</label>
 				</field>
@@ -157,6 +160,9 @@
 				</field>
 				<field name="host" type="text">
 					<label>host</label>
+				</field>
+				<field name="hostAliases" type="longtext" binding="hostAliases">
+					<label>hostAliases</label>
 				</field>
 				<field name="domain" type="text">
 					<label>domain</label>

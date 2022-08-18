@@ -10,7 +10,10 @@
 				<label id="name">Name</label>
 			</field>
 			<field name="host" type="text" binding="site.host">
-				<label id="host">Host</label>
+				<label id="host">Hostname</label>
+			</field>
+			<field name="hostAliases" type="longtext" binding="hostAliases">
+				<label id="hostAliases">Hostname aliases (one per line)</label>
 			</field>
 			<field name="domain" type="text" binding="site.domain">
 				<label id="domain">Domain</label>
@@ -18,7 +21,7 @@
 			<field name="description" type="longtext" binding="site.description">
 				<label id="description">Description</label>
 			</field>
-			<field name="active" type="checkbox" readonly="true" binding="site.active">
+			<field name="active" type="checkbox" readonly="false" binding="site.active">
 				<label id="active">Active</label>
 			</field>
 			<field name="template" type="list:radio" binding="template">
@@ -32,13 +35,17 @@
 		</selection>
 		<result>
 			<field name="name" type="text">
-				<value>localhost</value>
+				<value>site1</value>
 			</field>
-			<field name="host" type="text">
-				<value>localhost</value>
+            <field name="host" type="text">
+                <value>hostname1.domain.tld</value>
+            </field>
+			<field name="hostAliases" type="longtext">
+			<value>lottchen
+doppeltes</value>
 			</field>
 			<field name="domain" type="text">
-				<value>localhost</value>
+				<value>https://hostname1.domain.tld</value>
 			</field>
 			<field name="description" type="longtext">
 				<value></value>
