@@ -150,9 +150,9 @@ public class ManagerService extends CoreService implements Service {
 
 	private Logger logger = LoggerFactory.getLogger(ManagerService.class);
 	private static final String FILTER_GROUP_NAME = "f_gn";
-	private static final String FILTER_SITE_NAME = "f_sn";
-	private static final String FILTER_SITE_DOMAIN = "f_sd";
-	private static final String FILTER_SITE_ACTIVE = "f_sa";
+	public static final String FILTER_SITE_NAME = "f_sn";
+	public static final String FILTER_SITE_DOMAIN = "f_sd";
+	public static final String FILTER_SITE_ACTIVE = "f_sa";
 
 	private SelectionFactory selectionFactory;
 	private OptionGroupFactory optionGroupFactory;

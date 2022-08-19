@@ -53,11 +53,6 @@
 				<element>
 					<datasource id="sites">
 						<condition expression="${empty action}" />
-						<params>
-							<param name="name">${f_sn}</param>
-							<param name="domain">${f_sd}</param>
-							<param name="active">${f_sa}</param>
-						</params>
 					</datasource>
 				</element>
 			</section>

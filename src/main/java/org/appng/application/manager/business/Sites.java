@@ -29,6 +29,7 @@ import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.form.SiteForm;
+import org.appng.application.manager.service.ManagerService;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.controller.messaging.ReloadSiteEvent;
@@ -127,9 +128,9 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 			data = service.getNewSite(fp);
 		} else {
 			try {
-				String name = options.getString(SITE, "siteName");
-				String domain = options.getString(SITE, "siteDomain");
-				String active = StringUtils.trimToNull(options.getString(SITE, "siteActive"));
+				String name = request.getParameter(ManagerService.FILTER_SITE_NAME);
+				String domain = request.getParameter(ManagerService.FILTER_SITE_DOMAIN);
+				String active = StringUtils.trimToNull(request.getParameter(ManagerService.FILTER_SITE_ACTIVE));
 				data = service.searchSites(environment, fp, siteId, name, domain,
 						StringUtils.defaultString(active, "all"));
 			} catch (BusinessException e) {

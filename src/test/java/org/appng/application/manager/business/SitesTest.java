@@ -25,6 +25,7 @@ import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.PropertyForm;
 import org.appng.application.manager.form.SiteForm;
+import org.appng.application.manager.service.ManagerService;
 import org.appng.core.domain.PropertyImpl;
 import org.appng.core.domain.SiteImpl;
 import org.appng.testsupport.validation.WritingXmlValidator;
@@ -149,8 +150,11 @@ public class SitesTest extends AbstractTest {
 
 	@Test
 	public void testShowSitesFiltered() throws Exception {
-		CallableDataSource siteDatasource = getDataSource("sites").withParam("name", "site")
-				.withParam("domain", "example").withParam("active", "true").getCallableDataSource();
+		addParameter(ManagerService.FILTER_SITE_NAME, "site");
+		addParameter(ManagerService.FILTER_SITE_DOMAIN, "example");
+		addParameter(ManagerService.FILTER_SITE_ACTIVE, "true");
+		initParameters();
+		CallableDataSource siteDatasource = getDataSource("sites").getCallableDataSource();
 		siteDatasource.perform("test");
 
 		validate(siteDatasource.getDatasource());
