@@ -22,9 +22,6 @@
 						<message ref="site.name" class="ERROR" code="{validation.nameStrict}">Please enter a valid name, which may only consist of letters, numbers and hyphens</message>
 					</pattern>
 				</validation>
-				<messages ref="name">
-					<message ref="name" class="ERROR">A different site with this name already exists!</message>
-				</messages>
 			</field>
 			<field name="host" type="text" binding="site.host">
 				<label id="host">Hostname</label>
@@ -39,6 +36,9 @@
 			</field>
 			<field name="hostAliases" type="longtext" binding="hostAliases">
 				<label id="hostAliases">Hostname aliases (one per line)</label>
+				<messages ref="hostAliases">
+					<message ref="hostAliases" class="ERROR">The following aliases are used by site 'site1': 'lottchen', 'doppeltes'</message>
+				</messages>
 			</field>
 			<field name="domain" type="text" binding="site.domain">
 				<label id="domain">Domain</label>

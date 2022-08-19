@@ -16,19 +16,13 @@
 package org.appng.application.manager.business;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Set;
 
 import org.appng.api.FieldProcessor;
 import org.appng.api.Platform;
 import org.appng.api.ProcessingException;
-import org.appng.api.model.Property;
-import org.appng.api.model.Site.SiteState;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
-import org.appng.api.support.PropertyHolder;
 import org.appng.application.manager.form.PropertyForm;
 import org.appng.application.manager.form.SiteForm;
 import org.appng.core.domain.PropertyImpl;
@@ -37,9 +31,9 @@ import org.appng.testsupport.validation.WritingXmlValidator;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.mockito.Mockito;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
+
+import com.google.common.collect.Sets;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(inheritInitializers = false, initializers = SitesTest.class)
@@ -55,14 +49,6 @@ public class SitesTest extends AbstractTest {
 	public void testCreateSite01() throws Exception {
 		propertyRepository.save(new PropertyImpl("platform." + Platform.Property.MESSAGING_ENABLED, null, "false"));
 
-		SiteImpl siteToCreate = new SiteImpl();
-		SiteForm siteForm = new SiteForm(siteToCreate);
-		siteToCreate.setName("site1");
-		siteToCreate.setHost("hostname1.domain.tld");
-		siteToCreate.setHostAliases(new HashSet<>(Arrays.asList("doppeltes", "lottchen")));
-		siteToCreate.setDomain("https://hostname1.domain.tld");
-		siteToCreate.setActive(true);
-
 		// prepares using appNG >= 1.19.1
 		PropertyForm form = new PropertyForm();
 		form.getProperty().setName(Platform.Property.MESSAGING_ENABLED);
@@ -70,6 +56,8 @@ public class SitesTest extends AbstractTest {
 		getAction("propertyEvent", "create-platform-property").withParam(FORM_ACTION, "create-platform-property")
 				.getCallableAction(form).perform();
 
+		SiteForm siteForm = getSiteForm("site1", "hostname1.domain.tld", "https://hostname1.domain.tld",
+				Sets.newHashSet("doppeltes", "lottchen"));
 		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
 				.getCallableAction(siteForm);
 
@@ -90,13 +78,8 @@ public class SitesTest extends AbstractTest {
 
 	@Test
 	public void testCreateSite03NameDuplicateFail() throws Exception {
-		SiteImpl siteToCreate = new SiteImpl();
-		SiteForm siteForm = new SiteForm(siteToCreate);
-		siteToCreate.setName("site1");
-		siteToCreate.setHost("other-hostname.domain.tld");
-		siteToCreate.setDomain("https://other-hostname.domain.tld");
-		siteToCreate.setActive(true);
-
+		SiteForm siteForm = getSiteForm("site1", "other-hostname.domain.tld", "https://other-hostname.domain.tld",
+				null);
 		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
 				.getCallableAction(siteForm);
 		callableAction.perform();
@@ -105,13 +88,7 @@ public class SitesTest extends AbstractTest {
 
 	@Test
 	public void testCreateSite04HostDuplicateFail() throws Exception {
-		SiteImpl siteToCreate = new SiteImpl();
-		SiteForm siteForm = new SiteForm(siteToCreate);
-		siteToCreate.setName("other-site");
-		siteToCreate.setHost("lottchen");
-		siteToCreate.setDomain("https://other-hostname.domain.tld");
-		siteToCreate.setActive(true);
-
+		SiteForm siteForm = getSiteForm("other-site", "lottchen", "https://other-hostname.domain.tld", null);
 		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
 				.getCallableAction(siteForm);
 		callableAction.perform();
@@ -120,14 +97,18 @@ public class SitesTest extends AbstractTest {
 
 	@Test
 	public void testCreateSite05AliasDuplicateFail() throws Exception {
-		SiteImpl siteToCreate = new SiteImpl();
-		SiteForm siteForm = new SiteForm(siteToCreate);
-		siteToCreate.setName("other-site");
-		siteToCreate.setHost("other-hostname.domain.tld");
-		siteToCreate.setHostAliases(new HashSet<>(Arrays.asList("", "hostname1.domain.tld")));
-		siteToCreate.setDomain("https://other-hostname.domain.tld");
-		siteToCreate.setActive(true);
+		SiteForm siteForm = getSiteForm("other-site", "other-hostname.domain.tld", "https://other-hostname.domain.tld",
+				Sets.newHashSet("", "hostname1.domain.tld"));
+		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
+				.getCallableAction(siteForm);
+		callableAction.perform();
+		validate(callableAction.getAction());
+	}
 
+	@Test
+	public void testCreateSite06AliasDuplicateFail() throws Exception {
+		SiteForm siteForm = getSiteForm("other-site", "other-hostname.domain.tld", "https://other-hostname.domain.tld",
+				Sets.newHashSet("doppeltes", "lottchen"));
 		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
 				.getCallableAction(siteForm);
 		callableAction.perform();
@@ -161,10 +142,8 @@ public class SitesTest extends AbstractTest {
 	@Test
 	public void testShowSites() throws Exception {
 		createSite();
-
 		CallableDataSource siteDatasource = getDataSource("sites").getCallableDataSource();
 		siteDatasource.perform("test");
-
 		validate(siteDatasource.getDatasource());
 	}
 
@@ -175,6 +154,18 @@ public class SitesTest extends AbstractTest {
 		siteDatasource.perform("test");
 
 		validate(siteDatasource.getDatasource());
+	}
+
+	private SiteForm getSiteForm(String name, String host, String domain, Set<String> aliases) {
+		SiteImpl siteToCreate = new SiteImpl();
+		siteToCreate.setName(name);
+		siteToCreate.setHost(host);
+		if (null != aliases) {
+			siteToCreate.setHostAliases(aliases);
+		}
+		siteToCreate.setDomain(domain);
+		siteToCreate.setActive(true);
+		return new SiteForm(siteToCreate);
 	}
 
 	private void createSite() {
