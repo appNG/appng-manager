@@ -34,7 +34,7 @@
 					</pattern>
 				</validation>
 				<messages ref="host">
-					<message ref="host" class="ERROR">Hostname 'lottchen' is used as an alias by site 'site1'!</message>
+					<message ref="host" class="ERROR">Hostname is used as an alias by site 'site1'!</message>
 				</messages>
 			</field>
 			<field name="hostAliases" type="longtext" binding="hostAliases">

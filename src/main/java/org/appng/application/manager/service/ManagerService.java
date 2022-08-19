@@ -40,7 +40,6 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
@@ -122,7 +121,6 @@ import org.appng.core.xml.repository.PackageVersions;
 import org.appng.core.xml.repository.Packages;
 import org.appng.forms.FormUpload;
 import org.appng.persistence.repository.SearchQuery;
-import org.appng.xml.platform.FieldDef;
 import org.appng.xml.platform.Label;
 import org.appng.xml.platform.Option;
 import org.appng.xml.platform.Selection;
@@ -1094,27 +1092,27 @@ public class ManagerService extends CoreService implements Service {
 		List<SiteImpl> hostOverlapSites = siteRepository.findSitesForHostNames(hostnames);
 		for (SiteImpl ovlpSite : hostOverlapSites) {
 			if (!Objects.equals(site.getId(), ovlpSite.getId())) {
-				FieldDef field = fp.getField("site.host");
-				Object arg = site.getHost();
-				String messageKey;
 				if (ovlpSite.getHost().equals(site.getHost())) {
-					messageKey = MessageConstants.SITE_HOST_IN_USE;
-				} else if (ovlpSite.getHostAliases().contains(site.getHost())) {
-					messageKey = MessageConstants.SITE_HOST_IS_ALIAS;
-				} else {
-					field = fp.getField("hostAliases");
-					if (site.getHostAliases().contains(ovlpSite.getHost())) {
-						messageKey = MessageConstants.SITE_HOSTALIAS_IS_HOSTNAME;
-						arg = ovlpSite.getHost();
-					} else {
-						messageKey = MessageConstants.SITE_HOSTALIAS_IN_USE;
-						Stream<String> aliasesInUse = CollectionUtils
-								.intersection(site.getHostAliases(), ovlpSite.getHostAliases()).stream()
-								.map(s -> String.format("'%s'", s));
-						arg = StringUtils.join(aliasesInUse.iterator(), ", ");
-					}
+					fp.addErrorMessage(fp.getField("site.host"),
+							request.getMessage(MessageConstants.SITE_HOST_IN_USE, ovlpSite.getName()));
 				}
-				fp.addErrorMessage(field, request.getMessage(messageKey, arg, ovlpSite.getName()));
+				if (ovlpSite.getHostAliases().contains(site.getHost())) {
+					fp.addErrorMessage(fp.getField("site.host"),
+							request.getMessage(MessageConstants.SITE_HOST_IS_ALIAS, ovlpSite.getName()));
+				}
+				if (site.getHostAliases().contains(ovlpSite.getHost())) {
+					fp.addErrorMessage(fp.getField("hostAliases"), request.getMessage(
+							MessageConstants.SITE_HOSTALIAS_IS_HOSTNAME, ovlpSite.getHost(), ovlpSite.getName()));
+				}
+				Collection<String> aliasOverlaps = CollectionUtils.intersection(site.getHostAliases(),
+						ovlpSite.getHostAliases());
+				if (!aliasOverlaps.isEmpty()) {
+					fp.addErrorMessage(fp.getField("hostAliases"),
+							request.getMessage(MessageConstants.SITE_HOSTALIAS_IN_USE,
+									StringUtils.join(
+											aliasOverlaps.stream().map(s -> String.format("'%s'", s)).iterator(), ", "),
+									ovlpSite.getName()));
+				}
 			}
 		}
 		if (!siteRepository.isUnique(site.getId(), "domain", site.getDomain())) {
