@@ -1124,7 +1124,7 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	public DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
-			List<String> languages, Integer groupId) throws BusinessException {
+			List<String> languages) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (subjectId != null) {
 			SubjectImpl subject = subjectRepository.findOne(subjectId);
@@ -1137,19 +1137,20 @@ public class ManagerService extends CoreService implements Service {
 			String timeZone = subject.getTimeZone();
 			addSelectionsForSubject(request, data, subject, timeZone == null ? defaultTimezone : timeZone, languages);
 		} else {
-			Page<SubjectImpl> subjects = searchSubjects(request, data, fp, groupId);
+			Page<SubjectImpl> subjects = searchSubjects(request, data, fp);
 			data.setPage(subjects);
 		}
 		return data;
 	}
 
-	private Page<SubjectImpl> searchSubjects(Request request, DataContainer data, FieldProcessor fp, Integer groupId) {
+	private Page<SubjectImpl> searchSubjects(Request request, DataContainer data, FieldProcessor fp) {
 		String filterParamType = "f_type";
 		String filterParamName = "f_name";
 		String filterParamRealName = "f_rlnme";
 		String filterParamGroup = "f_gid";
 		String filterParamLocked = "f_lckd";
 		String filterParamEmail = "f_eml";
+		String filterParamGroupId = "f_gid";
 		String typeFromRequest = request.getParameter(filterParamType);
 		String locked = request.getParameter(filterParamLocked);
 		UserType userType = null != typeFromRequest && UserType.names().contains(typeFromRequest)
@@ -1186,9 +1187,10 @@ public class ManagerService extends CoreService implements Service {
 		} else if ("false".equalsIgnoreCase(locked)) {
 			searchQuery.equals("e.locked", false);
 		}
+		String groupId = request.getParameter(filterParamGroupId);
 		if (null != groupId) {
 			searchQuery.join("join e.groups g");
-			searchQuery.equals("g.id", groupId);
+			searchQuery.equals("g.id", request.convert(groupId, Integer.class));
 			List<Order> orders = StreamSupport.stream(pageable.getSort().spliterator(), false)
 					.map(o -> new Order(o.getDirection(), "e." + o.getProperty())).collect(Collectors.toList());
 			pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders));

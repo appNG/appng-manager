@@ -10,7 +10,6 @@
 			</permissions>
 			<params>
 				<param name="userId" />
-				<param name="groupId" />
 			</params>
 			<meta-data bindClass="org.appng.api.model.Subject" result-selector="${current.id eq userId}">
 				<field name="name" type="text">
@@ -68,9 +67,7 @@
 				</link>
 			</linkpanel>
 		</config>
-		<bean id="subjects">
-			<option name="subject" groupId="${groupId}" />
-		</bean>
+		<bean id="subjects" />
 	</datasource>
 
 	<datasource id="user">
