@@ -76,10 +76,16 @@ public class LdapUsers implements DataProvider {
 			dataContainer.setItems(ldapProps);
 
 			if (!ldapDisabled) {
-				char[] ldapPw = siteProps.getString(LdapService.LDAP_PASSWORD, StringUtils.EMPTY).toCharArray();
-				boolean adminLoginOk = ldapService.loginUser(site, ldapUser.getString(), ldapPw);
-				if (!adminLoginOk) {
-					fp.addErrorMessage(request.getMessage(MessageConstants.LDAP_NOT_WORKING, ldapHost.getString()));
+				String ldapPassword = siteProps.getString(LdapService.LDAP_PASSWORD, StringUtils.EMPTY);
+				if (StringUtils.isNotBlank(ldapPassword)) {
+					char[] ldapPw = ldapPassword.toCharArray();
+					boolean adminLoginOk = ldapService.loginUser(site, ldapUser.getString(), ldapPw);
+					if (!adminLoginOk) {
+						fp.addErrorMessage(request.getMessage(MessageConstants.LDAP_NOT_WORKING, ldapHost.getString()));
+					}
+				} else {
+					fp.addNoticeMessage(request.getMessage(MessageConstants.LDAP_NO_ADMIN_PASSWORD,
+							ldapUser.getString(), LdapService.LDAP_PASSWORD));
 				}
 			}
 		} else {
