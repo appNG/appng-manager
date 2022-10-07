@@ -163,7 +163,7 @@ public class Sessions extends ServiceAware implements ActionProvider<Void>, Data
 					}
 				}
 
-			} else if (maxSessions <= manager.getActiveSessions()) {
+			} else if (maxSessions >= manager.getActiveSessions()) {
 				for (org.apache.catalina.Session session : manager.findSessions()) {
 					Optional<Session> sessionMetaData = getSessionMetaData(session);
 					if (sessionMetaData.isPresent()) {
