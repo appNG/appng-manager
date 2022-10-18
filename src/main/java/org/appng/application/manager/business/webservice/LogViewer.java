@@ -51,20 +51,17 @@ import org.springframework.stereotype.Component;
 public class LogViewer implements Webservice, InitializingBean {
 
 	private static final String WEBAPP_ROOT = "${webapp.root}";
-	private static final String APPNG_APPENDER = "log4j.appender.appng.File";
 	protected static final String PERM_LOG_VIEWER = "platform.logfile";
 
 	@Value("${platform." + Platform.Property.PLATFORM_ROOT_PATH + "}")
 	private String rootPath;
 
-	private String logFileLocation;
+	private Properties log4jProps;
 
 	public void afterPropertiesSet() throws Exception {
 		try (InputStream propsIs = new FileInputStream(new File(rootPath, LogConfig.LOG4J_PROPS))) {
-			Properties log4jProps = new Properties();
+			log4jProps = new Properties();
 			log4jProps.load(propsIs);
-			logFileLocation = log4jProps.getProperty(APPNG_APPENDER);
-			logFileLocation = logFileLocation.replace(WEBAPP_ROOT, rootPath);
 		}
 	}
 
@@ -75,7 +72,7 @@ public class LogViewer implements Webservice, InitializingBean {
 		Subject subject = environment.getSubject();
 		if (subject != null && subject.isAuthenticated()
 				&& request.getPermissionProcessor().hasPermission(PERM_LOG_VIEWER)) {
-			File logFile = getLogfile();
+			File logFile = getLogfile(request.getParameter("appender"));
 
 			int maxLines = 1000;
 			String parameter = request.getParameter("lines");
@@ -96,9 +93,7 @@ public class LogViewer implements Webservice, InitializingBean {
 						}
 					}
 				}
-			} catch (
-
-			IOException e) {
+			} catch (IOException e) {
 				throw new BusinessException(e);
 			}
 		}
@@ -106,8 +101,17 @@ public class LogViewer implements Webservice, InitializingBean {
 
 	}
 
-	File getLogfile() {
-		return new File(logFileLocation);
+	File getLogfile(String appenderName) {
+		String path = getAppenderPath(appenderName);
+		if (null == path) {
+			path = getAppenderPath("appng");
+		}
+		return new File(path);
+	}
+
+	public String getAppenderPath(String appenderName) {
+		return log4jProps.getProperty(String.format("log4j.appender.%s.File", appenderName)).replace(WEBAPP_ROOT,
+				rootPath);
 	}
 
 	public String getContentType() {

@@ -39,6 +39,7 @@ public class LogViewerTest extends LogViewer {
 		PermissionProcessor permissionProcessor = Mockito.mock(PermissionProcessor.class);
 		Mockito.when(request.getPermissionProcessor()).thenReturn(permissionProcessor);
 		Mockito.when(request.getParameter("lines")).thenReturn("2");
+		Mockito.when(request.getParameter("appender")).thenReturn("appng");
 		Mockito.when(permissionProcessor.hasPermission(PERM_LOG_VIEWER)).thenReturn(true);
 		byte[] processRequest = processRequest(null, null, environment, request);
 		String result = new String(processRequest);
@@ -46,7 +47,8 @@ public class LogViewerTest extends LogViewer {
 	}
 
 	@Override
-	File getLogfile() {
+	File getLogfile(String appender) {
+		Assert.assertEquals("appng", appender);
 		try {
 			return new File(getClass().getClassLoader().getResource("log4j.properties").toURI());
 		} catch (URISyntaxException e) {
