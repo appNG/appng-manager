@@ -16,19 +16,14 @@
 package org.appng.application.manager.business;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
 import org.appng.api.FieldProcessor;
 import org.appng.api.Platform;
 import org.appng.api.ProcessingException;
-import org.appng.api.model.Property;
-import org.appng.api.model.Site.SiteState;
 import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
-import org.appng.api.support.PropertyHolder;
 import org.appng.application.manager.form.PropertyForm;
 import org.appng.application.manager.form.SiteForm;
 import org.appng.core.domain.PropertyImpl;
@@ -37,8 +32,6 @@ import org.appng.testsupport.validation.WritingXmlValidator;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.mockito.Mockito;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
