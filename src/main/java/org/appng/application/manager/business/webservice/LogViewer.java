@@ -50,6 +50,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogViewer implements Webservice, InitializingBean {
 
+	private static final String APPNG_APPENDER = "appng";
 	private static final String WEBAPP_ROOT = "${webapp.root}";
 	protected static final String PERM_LOG_VIEWER = "platform.logfile";
 
@@ -102,9 +103,9 @@ public class LogViewer implements Webservice, InitializingBean {
 	}
 
 	File getLogfile(String appenderName) {
-		String path = getAppenderPath(appenderName);
+		String path = getAppenderPath(StringUtils.defaultString(appenderName, APPNG_APPENDER));
 		if (null == path) {
-			path = getAppenderPath("appng");
+			path = getAppenderPath(APPNG_APPENDER);
 		}
 		return new File(path);
 	}
