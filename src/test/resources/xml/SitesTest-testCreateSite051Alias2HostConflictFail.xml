@@ -33,12 +33,12 @@
                         <message ref="site.host" class="ERROR" code="{validation.host}">Please enter a valid host (examples: localhost example.com some.example.com)</message>
                     </pattern>
                 </validation>
-                <messages ref="host">
-                    <message ref="host" class="ERROR">Hostname overlaps with hostnames of site "site1"!</message>
-                </messages>
             </field>
             <field name="hostAliases" type="longtext" binding="hostAliases">
                 <label id="hostAliases">Hostname aliases (one per line)</label>
+                <messages ref="hostAliases">
+                    <message ref="hostAliases" class="ERROR">The following aliases are used as host or alias by site 'site1': hostname1.domain.tld</message>
+                </messages>
             </field>
             <field name="domain" type="text" binding="site.domain">
                 <label id="domain">Domain</label>

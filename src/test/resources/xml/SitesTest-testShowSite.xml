@@ -41,8 +41,10 @@
                 <value>hostname1.domain.tld</value>
             </field>
             <field name="hostAliases" type="longtext">
-                <value>doppeltes
-lottchen</value>
+                <value>alias1
+alias2
+alias3
+alias4-stays-unique</value>
             </field>
             <field name="domain" type="text">
                 <value>https://hostname1.domain.tld</value>

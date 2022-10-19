@@ -22,9 +22,6 @@
                         <message ref="site.name" class="ERROR" code="{validation.nameStrict}">Please enter a valid name, which may only consist of letters, numbers and hyphens</message>
                     </pattern>
                 </validation>
-                <messages ref="name">
-                    <message ref="name" class="ERROR">A different site with this name already exists!</message>
-                </messages>
             </field>
             <field name="host" type="text" binding="site.host">
                 <label id="host">Hostname</label>
@@ -36,6 +33,9 @@
                         <message ref="site.host" class="ERROR" code="{validation.host}">Please enter a valid host (examples: localhost example.com some.example.com)</message>
                     </pattern>
                 </validation>
+                <messages ref="host">
+                    <message ref="host" class="ERROR">Hostname 'hostname1.domain.tld' is already used as hostname or alias by site 'site1'!</message>
+                </messages>
             </field>
             <field name="hostAliases" type="longtext" binding="hostAliases">
                 <label id="hostAliases">Hostname aliases (one per line)</label>
