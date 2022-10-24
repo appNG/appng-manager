@@ -185,8 +185,8 @@ public class ManagerService extends CoreService implements Service {
 			if (null != permission) {
 				Application application = permission.getApplication();
 				if (application.getPermissions().remove(permission)) {
-					logger.debug(
-							"removed permission '" + permission.getName() + "' from Application " + application.getName());
+					logger.debug("removed permission '" + permission.getName() + "' from Application "
+							+ application.getName());
 				}
 
 				for (Role role : application.getRoles()) {
@@ -454,8 +454,9 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link Packages}-object from a certain repository. {@link Packages} are made available to other appNG
-	 * instances via the {@link RepositoryService}.
+	 * Returns a {@link Packages}-object from a certain repository. {@link Packages}
+	 * are made available to other appNG instances via the
+	 * {@link RepositoryService}.
 	 */
 	public Packages searchPackages(Environment environment, FieldProcessor fp, String repositoryName, String digest,
 			String packageName) throws BusinessException {
@@ -469,8 +470,9 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link PackageVersions}-object from a certain repository. {@link PackageVersions} are made available to
-	 * other appNG instances via the {@link RepositoryService}.
+	 * Returns a {@link PackageVersions}-object from a certain repository.
+	 * {@link PackageVersions} are made available to other appNG instances via the
+	 * {@link RepositoryService}.
 	 */
 	public PackageVersions searchPackageVersions(Environment environment, FieldProcessor fp, String repositoryName,
 			String packageName, String digest) throws BusinessException {
@@ -496,8 +498,8 @@ public class ManagerService extends CoreService implements Service {
 			if (null != repository && repository.isPublished()) {
 				boolean digestOk = false;
 				if (StringUtils.isBlank(repository.getDigest())) {
-					String defaultDigest = getPlatformConfig(environment).getString(
-							Platform.Property.REPOSITORY_DEFAULT_DIGEST);
+					String defaultDigest = getPlatformConfig(environment)
+							.getString(Platform.Property.REPOSITORY_DEFAULT_DIGEST);
 					digestOk = StringUtils.equals(StringUtils.trimToEmpty(defaultDigest),
 							StringUtils.trimToEmpty(digest));
 				} else {
@@ -517,12 +519,13 @@ public class ManagerService extends CoreService implements Service {
 	public void installPackage(Request request, Integer repositoryId, String name, String version, String timestamp,
 			FieldProcessor fp) throws BusinessException {
 		try {
-			Boolean isFilebased = getPlatformConfig(request.getEnvironment()).getBoolean(
-					Platform.Property.FILEBASED_DEPLOYMENT);
+			Boolean isFilebased = getPlatformConfig(request.getEnvironment())
+					.getBoolean(Platform.Property.FILEBASED_DEPLOYMENT);
 			PackageVersions packageVersions = getRepository(repositoryId).getPackageVersions(name);
 			Optional<String> pkAppngVer = packageVersions.getPackage().stream()
-					.filter(p -> p.getVersion().equals(version) && (StringUtils.isBlank(timestamp) || p.getTimestamp()
-							.equals(timestamp))).limit(1).map(p -> p.getAppngVersion()).findFirst();
+					.filter(p -> p.getVersion().equals(version)
+							&& (StringUtils.isBlank(timestamp) || p.getTimestamp().equals(timestamp)))
+					.limit(1).map(p -> p.getAppngVersion()).findFirst();
 			String appngVer = request.getEnvironment().getAttribute(Scope.PLATFORM, Platform.Environment.APPNG_VERSION);
 			if (pkAppngVer.isPresent() && pkAppngVer.get().compareTo(appngVer) > 0) {
 				String versionMismatch = request.getMessage(MessageConstants.PACKAGE_APP_NG_VERSION_MISMATCH,
@@ -770,8 +773,8 @@ public class ManagerService extends CoreService implements Service {
 						permissionsFromRole);
 				permissionSelection.getOptionGroups().add(group);
 			} else {
-				List<Option> options = selectionFactory.fromNamed(permissionGroup, permissionGroup, permissions,
-						permissionsFromRole).getOptions();
+				List<Option> options = selectionFactory
+						.fromNamed(permissionGroup, permissionGroup, permissions, permissionsFromRole).getOptions();
 				permissionSelection.getOptions().addAll(options);
 			}
 		}
@@ -989,8 +992,9 @@ public class ManagerService extends CoreService implements Service {
 			Selection nameFilter = new SelectionBuilder<>(FILTER_SITE_NAME).defaultOption(FILTER_SITE_NAME, name)
 					.title(MessageConstants.NAME).type(SelectionType.TEXT).select(name).build();
 
-			Selection domainFilter = new SelectionBuilder<>(FILTER_SITE_DOMAIN).defaultOption(FILTER_SITE_DOMAIN,
-					domain).title(MessageConstants.DOMAIN).type(SelectionType.TEXT).select(domain).build();
+			Selection domainFilter = new SelectionBuilder<>(FILTER_SITE_DOMAIN)
+					.defaultOption(FILTER_SITE_DOMAIN, domain).title(MessageConstants.DOMAIN).type(SelectionType.TEXT)
+					.select(domain).build();
 
 			Map<String, String> activeValues = new HashMap<>();
 			activeValues.put("all", "all");
@@ -1127,9 +1131,9 @@ public class ManagerService extends CoreService implements Service {
 		String filterParamEmail = "f_eml";
 		String typeFromRequest = request.getParameter(filterParamType);
 		String locked = request.getParameter(filterParamLocked);
-		UserType userType = null != typeFromRequest && UserType.names().contains(typeFromRequest) ?
-				UserType.valueOf(typeFromRequest) :
-				null;
+		UserType userType = null != typeFromRequest && UserType.names().contains(typeFromRequest)
+				? UserType.valueOf(typeFromRequest)
+				: null;
 		String userName = request.getParameter(filterParamName);
 		String realName = request.getParameter(filterParamRealName);
 		String email = request.getParameter(filterParamEmail);
@@ -1231,8 +1235,8 @@ public class ManagerService extends CoreService implements Service {
 				languages.toArray(), subject.getLanguage());
 		data.getSelections().add(localeSelection);
 
-		Selection pwPolicySelection = new SelectionBuilder<PasswordChangePolicy>("passwordChangePolicy").title(
-						MessageConstants.PASSWORD_CHANGE_POLICY).type(SelectionType.RADIO)
+		Selection pwPolicySelection = new SelectionBuilder<PasswordChangePolicy>("passwordChangePolicy")
+				.title(MessageConstants.PASSWORD_CHANGE_POLICY).type(SelectionType.RADIO)
 				.options(Arrays.asList(PasswordChangePolicy.values())).select(subject.getPasswordChangePolicy())
 				.name(p -> request.getMessage(PasswordChangePolicy.class.getSimpleName() + "." + p.name())).build();
 		data.getSelections().add(pwPolicySelection);
@@ -1323,8 +1327,8 @@ public class ManagerService extends CoreService implements Service {
 				if (null == currentSubject) {
 					fp.addErrorMessage(request.getMessage(MessageConstants.SUBJECT_NOT_EXISTS));
 				}
-				if (!StringUtils.isEmpty(subjectForm.getPassword()) && !StringUtils.isEmpty(
-						subjectForm.getPasswordConfirmation())) {
+				if (!StringUtils.isEmpty(subjectForm.getPassword())
+						&& !StringUtils.isEmpty(subjectForm.getPasswordConfirmation())) {
 					passwordUpdated = updatePassword(policy, null, subjectForm.getPassword().toCharArray(),
 							currentSubject).isValid();
 				}
@@ -1439,9 +1443,8 @@ public class ManagerService extends CoreService implements Service {
 					break;
 				}
 			} else {
-				auditableListener.createEvent(Type.INFO,
-						String.format("Removed application %s from site %s", siteApplication.getApplication().getName(),
-								site.getName()));
+				auditableListener.createEvent(Type.INFO, String.format("Removed application %s from site %s",
+						siteApplication.getApplication().getName(), site.getName()));
 				siteApplication.setActive(false);
 				siteApplication.setMarkedForDeletion(true);
 				siteApplication.setReloadRequired(!siteApplication.isReloadRequired());
@@ -1481,9 +1484,8 @@ public class ManagerService extends CoreService implements Service {
 				new Object[] { name, permission.getApplication().getId() });
 		if (!isUnique) {
 			fp.addErrorMessage(fp.getField("name"), request.getMessage(MessageConstants.PERMISSION_EXISTS));
-			throw new BusinessException(
-					"a permission named '" + permission.getName() + "' already exists for application '" + permission.getApplication()
-							.getName() + "'");
+			throw new BusinessException("a permission named '" + permission.getName()
+					+ "' already exists for application '" + permission.getApplication().getName() + "'");
 		}
 	}
 
@@ -1498,8 +1500,8 @@ public class ManagerService extends CoreService implements Service {
 			}
 			data.setItem(permission);
 		} else {
-			SearchQuery<PermissionImpl> query = new SearchQuery<PermissionImpl>(PermissionImpl.class).equals(
-					"application.id", appId);
+			SearchQuery<PermissionImpl> query = new SearchQuery<PermissionImpl>(PermissionImpl.class)
+					.equals("application.id", appId);
 			Page<PermissionImpl> permissions = permissionRepository.search(query, fp.getPageable());
 			data.setPage(permissions);
 		}
@@ -1868,8 +1870,8 @@ public class ManagerService extends CoreService implements Service {
 		List<SiteImpl> allSites = siteRepository.findAll(new Sort("name"));
 		allSites.remove(grantedSite);
 		for (SiteImpl site : new ArrayList<>(allSites)) {
-			SiteApplication granted = siteApplicationRepository.findByApplicationNameAndGrantedSitesName(
-					application.getName(), site.getName());
+			SiteApplication granted = siteApplicationRepository
+					.findByApplicationNameAndGrantedSitesName(application.getName(), site.getName());
 			if (null != granted && !granted.equals(siteApplication)) {
 				allSites.remove(site);
 				grantedBy.add(site);
