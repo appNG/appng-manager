@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <datasource xmlns="http://www.appng.org/schema/platform" id="ldapUsers">
-    <config>
-        <title id="ldap.users">LDAP Users</title>
-        <params/>
-        <meta-data bindClass="org.appng.application.manager.business.LdapUsers$LdapUser">
-            <field name="name" type="text" binding="name">
-                <label id="name">Name</label>
-            </field>
-            <field name="realname" type="text" binding="realname">
-                <label id="realname">Real name</label>
-            </field>
-            <field name="type" type="text" binding="type">
-                <label id="type">Type</label>
-            </field>
-            <field name="dn" type="text" displayLength="80" binding="dn">
-                <label id="distinguishedName">Distinguished Name</label>
-            </field>
-        </meta-data>
-    </config>
-    <messages ref="ldapUsers">
-        <message ref="ldapUsers" class="INVALID">LDAP Authentication is disabled. Set site property 'ldapDisabled' to 'false' to enable.</message>
-    </messages>
-    <data>
-        <resultset chunk="0" chunkname="ldapUsers" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="-1" hits="0"/>
-    </data>
+	<config>
+		<title id="ldap.users">LDAP Users</title>
+		<params />
+		<meta-data bindClass="org.appng.application.manager.business.LdapUsers$LdapUser">
+			<field name="name" type="text" binding="name">
+				<label id="name">Name</label>
+			</field>
+			<field name="realname" type="text" binding="realname">
+				<label id="realname">Real name</label>
+			</field>
+			<field name="type" type="text" binding="type">
+				<label id="type">Type</label>
+			</field>
+			<field name="dn" type="text" displayLength="80" binding="dn">
+				<label id="distinguishedName">Distinguished Name</label>
+			</field>
+		</meta-data>
+	</config>
+	<messages ref="ldapUsers">
+		<message ref="ldapUsers" class="INVALID">LDAP Authentication is disabled via site property 'ldapDisabled'.</message>
+	</messages>
+	<data>
+		<resultset chunk="0" chunkname="ldapUsers" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="-1" hits="0" />
+	</data>
 </datasource>

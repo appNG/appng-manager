@@ -160,7 +160,9 @@ public class SubjectsTest extends AbstractTest {
 
 	@Test
 	public void testShowAllFilterGroup() throws Exception {
-		CallableDataSource siteDatasource = getDataSource("users").withParam("groupId", "1").getCallableDataSource();
+		addParameter("f_gid", "1");
+		initParameters();
+		CallableDataSource siteDatasource = getDataSource("users").getCallableDataSource();
 		siteDatasource.perform("test");
 		validate(siteDatasource.getDatasource());
 	}

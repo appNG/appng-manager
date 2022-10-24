@@ -115,7 +115,7 @@ public interface Service {
 			String active) throws BusinessException;
 
 	DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
-			List<String> languages, Integer groupId) throws BusinessException;
+			List<String> languages) throws BusinessException;
 
 	DataContainer searchPermissions(FieldProcessor fp, Integer permissionId, Integer appId) throws BusinessException;
 

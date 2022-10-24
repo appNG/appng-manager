@@ -16,6 +16,7 @@
 package org.appng.application.manager.business;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -26,6 +27,7 @@ import org.appng.api.support.CallableAction;
 import org.appng.api.support.CallableDataSource;
 import org.appng.application.manager.form.PropertyForm;
 import org.appng.application.manager.form.SiteForm;
+import org.appng.application.manager.service.ManagerService;
 import org.appng.core.domain.PropertyImpl;
 import org.appng.core.domain.SiteImpl;
 import org.appng.testsupport.validation.WritingXmlValidator;
@@ -45,7 +47,7 @@ public class SitesTest extends AbstractTest {
 	private static final String SITE_EVENT = "siteEvent";
 
 	@Test
-	public void testCreateSite01() throws Exception {
+	public void testCreateSite() throws Exception {
 		propertyRepository.save(new PropertyImpl("platform." + Platform.Property.MESSAGING_ENABLED, null, "false"));
 
 		SiteImpl siteToCreate = new SiteImpl();
@@ -56,7 +58,6 @@ public class SitesTest extends AbstractTest {
 		siteToCreate.setDomain("https://hostname1.domain.tld");
 		siteToCreate.setActive(true);
 
-		// prepares using appNG >= 1.19.1
 		PropertyForm form = new PropertyForm();
 		form.getProperty().setName(Platform.Property.MESSAGING_ENABLED);
 		form.getProperty().setDefaultString(Boolean.FALSE.toString());
@@ -187,20 +188,33 @@ public class SitesTest extends AbstractTest {
 	@Test
 	public void testShowSites() throws Exception {
 		createSite();
+		CallableDataSource siteDatasource = getDataSource("sites").getCallableDataSource();
+		siteDatasource.perform("test");
+		validate(siteDatasource.getDatasource());
+	}
 
+	@Test
+	public void testShowSitesFiltered() throws Exception {
+		addParameter(ManagerService.FILTER_SITE_NAME, "site");
+		addParameter(ManagerService.FILTER_SITE_DOMAIN, "example");
+		addParameter(ManagerService.FILTER_SITE_ACTIVE, "true");
+		initParameters();
 		CallableDataSource siteDatasource = getDataSource("sites").getCallableDataSource();
 		siteDatasource.perform("test");
 
 		validate(siteDatasource.getDatasource());
 	}
 
-	@Test
-	public void testShowSitesFiltered() throws Exception {
-		CallableDataSource siteDatasource = getDataSource("sites").withParam("name", "site")
-				.withParam("domain", "example").withParam("active", "true").getCallableDataSource();
-		siteDatasource.perform("test");
-
-		validate(siteDatasource.getDatasource());
+	private SiteForm getSiteForm(String name, String host, String domain, Set<String> aliases) {
+		SiteImpl siteToCreate = new SiteImpl();
+		siteToCreate.setName(name);
+		siteToCreate.setHost(host);
+		if (null != aliases) {
+			siteToCreate.setHostAliases(aliases);
+		}
+		siteToCreate.setDomain(domain);
+		siteToCreate.setActive(true);
+		return new SiteForm(siteToCreate);
 	}
 
 	private void createSite() {

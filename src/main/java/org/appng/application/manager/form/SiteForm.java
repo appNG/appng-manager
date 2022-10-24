@@ -75,7 +75,7 @@ public class SiteForm implements FormValidator {
 	}
 
 	public void setHostAliases(String hostAliases) {
-		Set<String> hostnames = new HashSet<String>();
+		Set<String> hostnames = new HashSet<>();
 		Pattern splitPattern = Pattern.compile("^[ \t]*(.+?)[ \t]*$", Pattern.MULTILINE);
 		Matcher splitMatcher = splitPattern.matcher(hostAliases);
 		while (splitMatcher.find()) {

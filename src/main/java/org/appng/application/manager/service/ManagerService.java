@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
@@ -42,6 +43,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.appng.api.ApplicationException;
@@ -140,7 +142,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The {@link Service}-implementation extending {@link CoreService}.
- *
+ * 
  * @author Matthias Müller
  */
 @Transactional(rollbackFor = BusinessException.class)
@@ -148,9 +150,9 @@ public class ManagerService extends CoreService implements Service {
 
 	private Logger logger = LoggerFactory.getLogger(ManagerService.class);
 	private static final String FILTER_GROUP_NAME = "f_gn";
-	private static final String FILTER_SITE_NAME = "f_sn";
-	private static final String FILTER_SITE_DOMAIN = "f_sd";
-	private static final String FILTER_SITE_ACTIVE = "f_sa";
+	public static final String FILTER_SITE_NAME = "f_sn";
+	public static final String FILTER_SITE_DOMAIN = "f_sd";
+	public static final String FILTER_SITE_ACTIVE = "f_sa";
 
 	private SelectionFactory selectionFactory;
 	private OptionGroupFactory optionGroupFactory;
@@ -454,9 +456,8 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link Packages}-object from a certain repository. {@link Packages}
-	 * are made available to other appNG instances via the
-	 * {@link RepositoryService}.
+	 * Returns a {@link Packages}-object from a certain repository. {@link Packages} are made available to other appNG
+	 * instances via the {@link RepositoryService}.
 	 */
 	public Packages searchPackages(Environment environment, FieldProcessor fp, String repositoryName, String digest,
 			String packageName) throws BusinessException {
@@ -470,9 +471,8 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	/**
-	 * Returns a {@link PackageVersions}-object from a certain repository.
-	 * {@link PackageVersions} are made available to other appNG instances via the
-	 * {@link RepositoryService}.
+	 * Returns a {@link PackageVersions}-object from a certain repository. {@link PackageVersions} are made available to
+	 * other appNG instances via the {@link RepositoryService}.
 	 */
 	public PackageVersions searchPackageVersions(Environment environment, FieldProcessor fp, String repositoryName,
 			String packageName, String digest) throws BusinessException {
@@ -1103,7 +1103,7 @@ public class ManagerService extends CoreService implements Service {
 	}
 
 	public DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
-			List<String> languages, Integer groupId) throws BusinessException {
+			List<String> languages) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (subjectId != null) {
 			SubjectImpl subject = subjectRepository.findOne(subjectId);
@@ -1116,19 +1116,20 @@ public class ManagerService extends CoreService implements Service {
 			String timeZone = subject.getTimeZone();
 			addSelectionsForSubject(request, data, subject, timeZone == null ? defaultTimezone : timeZone, languages);
 		} else {
-			Page<SubjectImpl> subjects = searchSubjects(request, data, fp, groupId);
+			Page<SubjectImpl> subjects = searchSubjects(request, data, fp);
 			data.setPage(subjects);
 		}
 		return data;
 	}
 
-	private Page<SubjectImpl> searchSubjects(Request request, DataContainer data, FieldProcessor fp, Integer groupId) {
+	private Page<SubjectImpl> searchSubjects(Request request, DataContainer data, FieldProcessor fp) {
 		String filterParamType = "f_type";
 		String filterParamName = "f_name";
 		String filterParamRealName = "f_rlnme";
 		String filterParamGroup = "f_gid";
 		String filterParamLocked = "f_lckd";
 		String filterParamEmail = "f_eml";
+		String filterParamGroupId = "f_gid";
 		String typeFromRequest = request.getParameter(filterParamType);
 		String locked = request.getParameter(filterParamLocked);
 		UserType userType = null != typeFromRequest && UserType.names().contains(typeFromRequest)
@@ -1165,9 +1166,10 @@ public class ManagerService extends CoreService implements Service {
 		} else if ("false".equalsIgnoreCase(locked)) {
 			searchQuery.equals("e.locked", false);
 		}
+		String groupId = request.getParameter(filterParamGroupId);
 		if (null != groupId) {
 			searchQuery.join("join e.groups g");
-			searchQuery.equals("g.id", groupId);
+			searchQuery.equals("g.id", request.convert(groupId, Integer.class));
 			List<Order> orders = StreamSupport.stream(pageable.getSort().spliterator(), false)
 					.map(o -> new Order(o.getDirection(), "e." + o.getProperty())).collect(Collectors.toList());
 			pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders));
