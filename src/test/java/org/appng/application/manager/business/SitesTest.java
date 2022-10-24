@@ -47,7 +47,7 @@ public class SitesTest extends AbstractTest {
 	private static final String SITE_EVENT = "siteEvent";
 
 	@Test
-	public void testCreateSite() throws Exception {
+	public void testCreateSite01() throws Exception {
 		propertyRepository.save(new PropertyImpl("platform." + Platform.Property.MESSAGING_ENABLED, null, "false"));
 
 		SiteImpl siteToCreate = new SiteImpl();

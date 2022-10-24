@@ -5,11 +5,6 @@
         <permissions>
             <permission ref="site.list" mode="set"></permission>
         </permissions>
-        <params>
-            <param name="name"/>
-            <param name="domain"/>
-            <param name="active"/>
-        </params>
         <meta-data bindClass="org.appng.api.model.Site">
             <field name="name" type="text" binding="name">
                 <sort/>
@@ -45,7 +40,7 @@
             </field>
         </meta-data>
         <linkpanel id="other" location="both">
-            <link id="other[1]" mode="intern" target="/sites/create">
+            <link id="other[1]" target="/sites/create" mode="intern">
                 <permissions>
                     <permission ref="site.create" mode="set"></permission>
                 </permissions>
@@ -54,7 +49,7 @@
             </link>
         </linkpanel>
         <linkpanel id="actions" location="inline">
-            <link id="actions[1]" mode="intern" target="/sites?act=start&amp;siteid=${current.id}">
+            <link id="actions[1]" target="/sites?act=start&amp;siteid=${current.id}" mode="intern">
                 <condition expression="${current.active and current.state.name() eq 'STOPPED'}"/>
                 <permissions>
                     <permission ref="site.reload" mode="set"></permission>
@@ -62,7 +57,7 @@
                 <label id="site.start">Start</label>
                 <icon>activate</icon>
             </link>
-            <link id="actions[2]" mode="intern" target="/sites?act=stop&amp;siteid=${current.id}">
+            <link id="actions[2]" target="/sites?act=stop&amp;siteid=${current.id}" mode="intern">
                 <condition expression="${current.state.name() eq 'STARTED'}"/>
                 <permissions>
                     <permission ref="site.reload" mode="set"></permission>
@@ -71,14 +66,14 @@
                 <icon>deactivate</icon>
                 <confirmation id="site.stop.confirm" params="#{name}">Stop site #{name}?</confirmation>
             </link>
-            <link id="actions[3]" mode="intern" target="/sites/update/${current.id}" default="true">
+            <link id="actions[3]" target="/sites/update/${current.id}" mode="intern" default="true">
                 <permissions>
                     <permission ref="site.edit" mode="set"></permission>
                 </permissions>
                 <label id="edit">Edit</label>
                 <icon>edit</icon>
             </link>
-            <link id="actions[4]" mode="intern" target="/sites?act=delete&amp;siteid=${current.id}">
+            <link id="actions[4]" target="/sites?act=delete&amp;siteid=${current.id}" mode="intern">
                 <condition expression="${current.state.name() eq 'STOPPED'}"/>
                 <permissions>
                     <permission ref="site.delete" mode="set"></permission>
@@ -87,7 +82,7 @@
                 <icon>delete</icon>
                 <confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "#{name}"?</confirmation>
             </link>
-            <link id="actions[5]" mode="intern" target="/sites?act=reload&amp;siteid=${current.id}" show-disabled="true">
+            <link id="actions[5]" target="/sites?act=reload&amp;siteid=${current.id}" mode="intern" show-disabled="true">
                 <condition expression="${current.state.name() eq 'STARTED'}"/>
                 <permissions>
                     <permission ref="site.reload" mode="set"></permission>
@@ -96,7 +91,7 @@
                 <icon>reload</icon>
                 <confirmation id="site.reload.confirm" params="#{name}">Reload site #{name}?</confirmation>
             </link>
-            <link id="actions[6]" mode="intern" target="/sites?act=reloadTemplate&amp;sitename=${current.name}">
+            <link id="actions[6]" target="/sites?act=reloadTemplate&amp;sitename=${current.name}" mode="intern">
                 <condition expression="${current.state.name() eq 'STARTED'}"/>
                 <permissions>
                     <permission ref="site.reload" mode="set"></permission>
@@ -110,11 +105,11 @@
         <selectionGroup>
             <selection id="f_sn" type="text">
                 <title id="name">Name</title>
-                <option value="" name="f_sn"/>
+                <option name="f_sn"/>
             </selection>
             <selection id="f_sd" type="text">
                 <title id="domain">Domain</title>
-                <option value="" name="f_sd"/>
+                <option name="f_sd"/>
             </selection>
             <selection id="f_sa" type="radio">
                 <title id="active">Active</title>
@@ -149,20 +144,20 @@
                     <value></value>
                 </field>
                 <linkpanel id="actions" location="inline">
-                    <link id="actions[1]" mode="intern" target="/sites?act=start&amp;siteid=1">
+                    <link id="actions[1]" target="/sites?act=start&amp;siteid=1" mode="intern">
                         <label id="site.start">Start</label>
                         <icon>activate</icon>
                     </link>
-                    <link id="actions[3]" mode="intern" target="/sites/update/1" default="true">
+                    <link id="actions[3]" target="/sites/update/1" mode="intern" default="true">
                         <label id="edit">Edit</label>
                         <icon>edit</icon>
                     </link>
-                    <link id="actions[4]" mode="intern" target="/sites?act=delete&amp;siteid=1">
+                    <link id="actions[4]" target="/sites?act=delete&amp;siteid=1" mode="intern">
                         <label id="delete">Delete</label>
                         <icon>delete</icon>
                         <confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "site1"?</confirmation>
                     </link>
-                    <link id="actions[5]" mode="intern" target="" disabled="true">
+                    <link id="actions[5]" target="" mode="intern" disabled="true">
                         <label id="reload">Reload</label>
                         <icon>reload</icon>
                     </link>
@@ -193,20 +188,20 @@
                     <value></value>
                 </field>
                 <linkpanel id="actions" location="inline">
-                    <link id="actions[1]" mode="intern" target="/sites?act=start&amp;siteid=3">
+                    <link id="actions[1]" target="/sites?act=start&amp;siteid=3" mode="intern">
                         <label id="site.start">Start</label>
                         <icon>activate</icon>
                     </link>
-                    <link id="actions[3]" mode="intern" target="/sites/update/3" default="true">
+                    <link id="actions[3]" target="/sites/update/3" mode="intern" default="true">
                         <label id="edit">Edit</label>
                         <icon>edit</icon>
                     </link>
-                    <link id="actions[4]" mode="intern" target="/sites?act=delete&amp;siteid=3">
+                    <link id="actions[4]" target="/sites?act=delete&amp;siteid=3" mode="intern">
                         <label id="delete">Delete</label>
                         <icon>delete</icon>
                         <confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "site2"?</confirmation>
                     </link>
-                    <link id="actions[5]" mode="intern" target="" disabled="true">
+                    <link id="actions[5]" target="" mode="intern" disabled="true">
                         <label id="reload">Reload</label>
                         <icon>reload</icon>
                     </link>

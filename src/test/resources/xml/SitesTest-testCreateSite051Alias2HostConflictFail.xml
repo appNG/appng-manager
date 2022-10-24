@@ -37,7 +37,7 @@
             <field name="hostAliases" type="longtext" binding="hostAliases">
                 <label id="hostAliases">Hostname aliases (one per line)</label>
                 <messages ref="hostAliases">
-                    <message ref="hostAliases" class="ERROR">The following aliases are used as host or alias by site 'site1': hostname1.domain.tld</message>
+                    <message ref="hostAliases" class="ERROR">The following aliases are used as hostname or alias by site 'site1': hostname1.domain.tld</message>
                 </messages>
             </field>
             <field name="domain" type="text" binding="site.domain">
