@@ -29,6 +29,7 @@ import org.appng.core.domain.RepositoryImpl;
 import org.appng.core.model.RepositoryCacheFactory;
 import org.appng.core.model.RepositoryMode;
 import org.appng.core.model.RepositoryType;
+import org.appng.testsupport.validation.WritingXmlValidator;
 import org.appng.testsupport.validation.XPathDifferenceHandler;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -36,6 +37,10 @@ import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RepositoriesTest extends AbstractTest {
+
+	static {
+		WritingXmlValidator.writeXml = false;
+	}
 
 	private static final String REPO_PATH = new File("target").toPath().toUri().toString();
 	private static final String REPO_EVENT = "repositoryEvent";

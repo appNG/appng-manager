@@ -18,6 +18,9 @@
             </field>
         </meta-data>
     </config>
+    <messages ref="ldapUsers">
+        <message ref="ldapUsers" class="INVALID">LDAP Authentication is disabled. Set site property 'ldapDisabled' to 'false' to enable.</message>
+    </messages>
     <data>
         <resultset chunk="0" chunkname="ldapUsers" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="-1" hits="0"/>
     </data>
