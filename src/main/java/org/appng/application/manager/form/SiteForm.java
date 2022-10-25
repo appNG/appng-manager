@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.appng.api.Environment;
@@ -70,11 +71,11 @@ public class SiteForm implements FormValidator {
 	}
 
 	public String getHostAliases() {
-		return String.join(System.lineSeparator(), site.getHostAliases());
+		return site.getHostAliases().stream().sorted().collect(Collectors.joining(System.lineSeparator()));
 	}
 
 	public void setHostAliases(String hostAliases) {
-		Set<String> hostnames = new HashSet<String>();
+		Set<String> hostnames = new HashSet<>();
 		Pattern splitPattern = Pattern.compile("^[ \t]*(.+?)[ \t]*$", Pattern.MULTILINE);
 		Matcher splitMatcher = splitPattern.matcher(hostAliases);
 		while (splitMatcher.find()) {

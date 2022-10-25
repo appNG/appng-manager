@@ -1046,7 +1046,7 @@ public class ManagerService extends CoreService implements Service {
 	public void createSite(Request request, SiteForm siteForm, FieldProcessor fp) throws BusinessException {
 		try {
 			SiteImpl site = siteForm.getSite();
-			checkSite(request, site, fp, site);
+			checkSite(site, request, fp);
 			createSite(site, request.getEnvironment());
 			updateSiteTemplate(site, siteForm.getTemplate());
 		} catch (Exception e) {
@@ -1062,7 +1062,7 @@ public class ManagerService extends CoreService implements Service {
 			if (null == currentSite) {
 				throw new BusinessException("no such site:" + site.getId());
 			}
-			checkSite(request, site, fp, currentSite);
+			checkSite(site, request, fp);
 
 			boolean wasActiveBefore = currentSite.isActive();
 			request.setPropertyValues(form, new SiteForm(currentSite), fp.getMetaData());
@@ -1078,49 +1078,28 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
+	private void checkSite(Site site, Request request, FieldProcessor fp) throws BusinessException {
+		ArrayList<String> conflictMsgs = new ArrayList<>();
+		if (checkSiteNameConflicts(site, "name", request.getLocale(), conflictMsgs)) {
+			fp.addErrorMessage(fp.getField("site.name"), conflictMsgs.get(conflictMsgs.size() - 1));
+		}
+		if (checkSiteNameConflicts(site, "host", request.getLocale(), conflictMsgs)) {
+			fp.addErrorMessage(fp.getField("site.host"), conflictMsgs.get(conflictMsgs.size() - 1));
+		}
+		if (checkSiteNameConflicts(site, "hostAliases", request.getLocale(), conflictMsgs)) {
+			fp.addErrorMessage(fp.getField("hostAliases"), conflictMsgs.get(conflictMsgs.size() - 1));
+		}
+		if (checkSiteNameConflicts(site, "domain", request.getLocale(), conflictMsgs)) {
+			fp.addErrorMessage(fp.getField("site.domain"), conflictMsgs.get(conflictMsgs.size() - 1));
+		}
+		if (fp.hasErrors()) {
+			throw new BusinessException("Invalid name, host, host-aliases or domain");
+		}
+	}
+
 	private void updateSiteTemplate(SiteImpl currentSite, String template) {
 		String propertyName = PropertySupport.getPropertyName(currentSite, null, SiteProperties.TEMPLATE);
 		propertyRepository.findByName(propertyName).setString(template);
-	}
-
-	private void checkSite(Request request, Site site, FieldProcessor fp, Site currentSite) throws BusinessException {
-		if (fp.hasField("site.name") && !siteRepository.isUnique(site.getId(), "name", site.getName())) {
-			fp.addErrorMessage(fp.getField("site.name"), request.getMessage(MessageConstants.SITE_NAME_EXISTS));
-		}
-		Set<String> hostnames = new HashSet<>(site.getHostAliases());
-		hostnames.add(site.getHost());
-		List<SiteImpl> hostOverlapSites = siteRepository.findSitesForHostNames(hostnames);
-		for (SiteImpl ovlpSite : hostOverlapSites) {
-			if (!Objects.equals(site.getId(), ovlpSite.getId())) {
-				if (ovlpSite.getHost().equals(site.getHost())) {
-					fp.addErrorMessage(fp.getField("site.host"),
-							request.getMessage(MessageConstants.SITE_HOST_IN_USE, ovlpSite.getName()));
-				}
-				if (ovlpSite.getHostAliases().contains(site.getHost())) {
-					fp.addErrorMessage(fp.getField("site.host"),
-							request.getMessage(MessageConstants.SITE_HOST_IS_ALIAS, ovlpSite.getName()));
-				}
-				if (site.getHostAliases().contains(ovlpSite.getHost())) {
-					fp.addErrorMessage(fp.getField("hostAliases"), request.getMessage(
-							MessageConstants.SITE_HOSTALIAS_IS_HOSTNAME, ovlpSite.getHost(), ovlpSite.getName()));
-				}
-				Collection<String> aliasOverlaps = CollectionUtils.intersection(site.getHostAliases(),
-						ovlpSite.getHostAliases());
-				if (!aliasOverlaps.isEmpty()) {
-					fp.addErrorMessage(fp.getField("hostAliases"),
-							request.getMessage(MessageConstants.SITE_HOSTALIAS_IN_USE,
-									StringUtils.join(
-											aliasOverlaps.stream().map(s -> String.format("'%s'", s)).iterator(), ", "),
-									ovlpSite.getName()));
-				}
-			}
-		}
-		if (!siteRepository.isUnique(site.getId(), "domain", site.getDomain())) {
-			fp.addErrorMessage(fp.getField("site.domain"), request.getMessage(MessageConstants.SITE_DOMAIN_EXISTS));
-		}
-		if (fp.hasErrors()) {
-			throw new BusinessException("invalid name, host or domain");
-		}
 	}
 
 	public DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,

@@ -17,6 +17,8 @@ package org.appng.application.manager.business;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import org.appng.api.FieldProcessor;
 import org.appng.api.Platform;
@@ -34,8 +36,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.google.common.collect.Sets;
-
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(inheritInitializers = false, initializers = SitesTest.class)
 public class SitesTest extends AbstractTest {
@@ -50,15 +50,20 @@ public class SitesTest extends AbstractTest {
 	public void testCreateSite01() throws Exception {
 		propertyRepository.save(new PropertyImpl("platform." + Platform.Property.MESSAGING_ENABLED, null, "false"));
 
-		// prepares using appNG >= 1.19.1
+		SiteImpl siteToCreate = new SiteImpl();
+		SiteForm siteForm = new SiteForm(siteToCreate);
+		siteToCreate.setName("site1");
+		siteToCreate.setHost("hostname1.domain.tld");
+		siteToCreate.setHostAliases(new HashSet<>(Arrays.asList("alias1", "alias2", "alias3", "alias4-stays-unique")));
+		siteToCreate.setDomain("https://hostname1.domain.tld");
+		siteToCreate.setActive(true);
+
 		PropertyForm form = new PropertyForm();
 		form.getProperty().setName(Platform.Property.MESSAGING_ENABLED);
 		form.getProperty().setDefaultString(Boolean.FALSE.toString());
 		getAction("propertyEvent", "create-platform-property").withParam(FORM_ACTION, "create-platform-property")
 				.getCallableAction(form).perform();
 
-		SiteForm siteForm = getSiteForm("site1", "hostname1.domain.tld", "https://hostname1.domain.tld",
-				Sets.newHashSet("doppeltes", "lottchen"));
 		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
 				.getCallableAction(siteForm);
 
@@ -78,9 +83,14 @@ public class SitesTest extends AbstractTest {
 	}
 
 	@Test
-	public void testCreateSite03NameDuplicateFail() throws Exception {
-		SiteForm siteForm = getSiteForm("site1", "other-hostname.domain.tld", "https://other-hostname.domain.tld",
-				null);
+	public void testCreateSite03NameConflictFail() throws Exception {
+		SiteImpl siteToCreate = new SiteImpl();
+		SiteForm siteForm = new SiteForm(siteToCreate);
+		siteToCreate.setName("site1");
+		siteToCreate.setHost("other-hostname.domain.tld");
+		siteToCreate.setDomain("https://other-hostname.domain.tld");
+		siteToCreate.setActive(true);
+
 		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
 				.getCallableAction(siteForm);
 		callableAction.perform();
@@ -88,32 +98,67 @@ public class SitesTest extends AbstractTest {
 	}
 
 	@Test
-	public void testCreateSite04HostDuplicateFail() throws Exception {
-		SiteForm siteForm = getSiteForm("other-site", "lottchen", "https://other-hostname.domain.tld", null);
-		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
-				.getCallableAction(siteForm);
-		callableAction.perform();
-		validate(callableAction.getAction());
+	public void testCreateSite041Host2HostConflictFail() throws Exception {
+		SiteImpl siteH2HConflict = new SiteImpl();
+		SiteForm siteFormH2HConflict = new SiteForm(siteH2HConflict);
+		siteH2HConflict.setName("other-site");
+		siteH2HConflict.setHost("hostname1.domain.tld");
+		siteH2HConflict.setDomain("https://other-hostname.domain.tld");
+		siteH2HConflict.setActive(true);
+
+		CallableAction clbActionH2HConflict = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
+				.getCallableAction(siteFormH2HConflict);
+		clbActionH2HConflict.perform();
+		validate(clbActionH2HConflict.getAction());
 	}
 
 	@Test
-	public void testCreateSite05AliasDuplicateFail() throws Exception {
-		SiteForm siteForm = getSiteForm("other-site", "other-hostname.domain.tld", "https://other-hostname.domain.tld",
-				Sets.newHashSet("", "hostname1.domain.tld"));
-		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
-				.getCallableAction(siteForm);
-		callableAction.perform();
-		validate(callableAction.getAction());
+	public void testCreateSite041Host2AliasConflictFail() throws Exception {
+		SiteImpl siteH2AConflict = new SiteImpl();
+		SiteForm siteFormH2AConflict = new SiteForm(siteH2AConflict);
+		siteH2AConflict.setName("other-site");
+		siteH2AConflict.setHost("alias1");
+		siteH2AConflict.setDomain("https://other-hostname.domain.tld");
+		siteH2AConflict.setActive(true);
+
+		CallableAction clbActionH2AConflict = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
+				.getCallableAction(siteFormH2AConflict);
+		clbActionH2AConflict.perform();
+		validate(clbActionH2AConflict.getAction());
 	}
 
 	@Test
-	public void testCreateSite06AliasDuplicateFail() throws Exception {
-		SiteForm siteForm = getSiteForm("other-site", "other-hostname.domain.tld", "https://other-hostname.domain.tld",
-				Sets.newHashSet("doppeltes", "lottchen"));
-		CallableAction callableAction = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
-				.getCallableAction(siteForm);
-		callableAction.perform();
-		validate(callableAction.getAction());
+	public void testCreateSite051Alias2HostConflictFail() throws Exception {
+		SiteImpl siteA2HConflict = new SiteImpl();
+		SiteForm siteFormA2HConflict = new SiteForm(siteA2HConflict);
+		siteA2HConflict.setName("other-site");
+		siteA2HConflict.setHost("other-hostname.domain.tld");
+		siteA2HConflict.setHostAliases(new HashSet<>(Arrays.asList("", "hostname1.domain.tld")));
+		siteA2HConflict.setDomain("https://other-hostname.domain.tld");
+		siteA2HConflict.setActive(true);
+
+		CallableAction clbActionA2HConflict = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
+				.getCallableAction(siteFormA2HConflict);
+		clbActionA2HConflict.perform();
+		validate(clbActionA2HConflict.getAction());
+	}
+
+	@Test
+	public void testCreateSite052Alias2AliasConflictFail() throws Exception {
+		SiteImpl siteA2AConflict = new SiteImpl();
+		SiteForm siteFormA2AConflict = new SiteForm(siteA2AConflict);
+		siteA2AConflict.setName("other-site");
+		siteA2AConflict.setHost("other-hostname.domain.tld");
+		siteA2AConflict.setHostAliases(
+				new HashSet<>(Arrays.asList("alias1", "alias2", "alias3"))
+		);
+		siteA2AConflict.setDomain("https://other-hostname.domain.tld");
+		siteA2AConflict.setActive(true);
+
+		CallableAction clbActionA2AConflict = getAction(SITE_EVENT, "create").withParam(FORM_ACTION, "create")
+				.getCallableAction(siteFormA2AConflict);
+		clbActionA2AConflict.perform();
+		validate(clbActionA2AConflict.getAction());
 	}
 
 	@Test
