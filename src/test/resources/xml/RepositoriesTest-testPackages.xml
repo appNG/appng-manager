@@ -62,45 +62,6 @@
                 <option value="*" name="pf"/>
             </selection>
         </selectionGroup>
-        <resultset chunk="0" chunkname="packages" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="1">
-            <result>
-                <field name="name" type="text">
-                    <value>appng-manager</value>
-                </field>
-                <field name="displayName" type="text">
-                    <value>Manager</value>
-                </field>
-                <field name="type" type="text">
-                    <value>APPLICATION</value>
-                </field>
-                <field name="latestRelease" type="text">
-                    <value></value>
-                </field>
-                <field name="latestSnapshot" type="text">
-                    <value>1.20.0-SNAPSHOT</value>
-                </field>
-                <field name="installedVersion" type="text">
-                    <value></value>
-                </field>
-                <field name="installedVersion" type="image">
-                    <value></value>
-                    <icon type="class">led_red</icon>
-                </field>
-                <linkpanel id="actions" location="inline">
-                    <link id="actions[1]" target="/repositories/installation/1/appng-manager#tab_packages" mode="intern" default="true">
-                        <label id="package.showVersions">Show package versions</label>
-                        <icon>edit</icon>
-                    </link>
-                    <link id="actions[2]" target="" mode="intern" disabled="true">
-                        <label id="install.latestrelease">Install latest release</label>
-                        <icon>d_release</icon>
-                    </link>
-                    <link id="actions[3]" target="/repositories/installation/1?act=install&amp;packagename=appng-manager&amp;packageversion=1.20.0-SNAPSHOT" mode="intern">
-                        <label id="install.latestsnapshot">Install latest snapshot</label>
-                        <icon>d_snapshot</icon>
-                    </link>
-                </linkpanel>
-            </result>
-        </resultset>
+        <resultset chunk="0" chunkname="packages" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="-1" hits="0" />
     </data>
 </datasource>
