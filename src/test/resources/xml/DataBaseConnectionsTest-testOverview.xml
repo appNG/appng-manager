@@ -31,10 +31,10 @@
 			<field name="version" type="text" binding="version">
 				<label id="version">Version</label>
 			</field>
-			<field name="productName" type="text" binding="productName">
+			<field name="productName" type="text" binding="item.productName">
 				<label id="productName">Product Name</label>
 			</field>
-			<field name="productVersion" type="text" binding="productVersion">
+			<field name="productVersion" type="text" binding="item.productVersion">
 				<label id="productVersion">Product Version</label>
 			</field>
 			<field name="state" type="image" readonly="true" binding="state">
