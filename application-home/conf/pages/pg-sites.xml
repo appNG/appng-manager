@@ -212,6 +212,20 @@
 			<!-- Database Connections -->
 			<section>
 				<element passive="true">
+					<action eventId="databaseConnectionEvent" id="executeSql"
+						onSuccess="/sites/update/${siteid}/database/update/${subentityid1}&#63;expandSql=true#tab_databaseConnections">
+						<params>
+							<param name="id">${subentityid1}</param>
+							<param name="form_action">${form_action}</param>
+						</params>
+						<condition
+							expression="${action eq 'update' and not empty siteid and subentity1 eq 'database' and subaction1 eq 'update' and not empty subentityid1}" />
+						<permissions>
+							<permission ref="site.database.edit" mode="set" />
+						</permissions>
+					</action>
+				</element>
+				<element folded="true" passive="true">
 					<action eventId="databaseConnectionEvent" id="updateConnection"
 						onSuccess="/sites/update/${siteid}#tab_databaseConnections">
 						<params>
@@ -233,20 +247,6 @@
 						<condition
 							expression="${action eq 'update' and not empty siteid and subentity1 eq 'database' and subaction1 eq 'update' and not empty subentityid1}" />
 					</datasource>
-				</element>
-				<element passive="true" folded="${expandSql ne 'true'}">
-					<action eventId="databaseConnectionEvent" id="executeSql"
-						onSuccess="/sites/update/${siteid}/database/update/${subentityid1}&#63;expandSql=true#tab_databaseConnections">
-						<params>
-							<param name="id">${subentityid1}</param>
-							<param name="form_action">${form_action}</param>
-						</params>
-						<condition
-							expression="${action eq 'update' and not empty siteid and subentity1 eq 'database' and subaction1 eq 'update' and not empty subentityid1}" />
-						<permissions>
-							<permission ref="site.database.edit" mode="set" />
-						</permissions>
-					</action>
 				</element>
 				<element>
 					<datasource id="databaseConnections">

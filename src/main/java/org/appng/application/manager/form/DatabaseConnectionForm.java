@@ -15,6 +15,9 @@
  */
 package org.appng.application.manager.form;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import org.appng.core.domain.DatabaseConnection;
 import org.flywaydb.core.api.MigrationInfoService;
 
@@ -23,6 +26,7 @@ import lombok.Setter;
 
 public class DatabaseConnectionForm {
 
+	private static final String UNKNOWN = "UNKNOWN";
 	@Getter
 	@Setter
 	private DatabaseConnection item;
@@ -38,8 +42,30 @@ public class DatabaseConnectionForm {
 
 	public String getState() {
 		MigrationInfoService migrationInfoService = item.getMigrationInfoService();
-		return null == migrationInfoService || null == migrationInfoService.current() ? "UNKNOWN"
+		return null == migrationInfoService || null == migrationInfoService.current() ? UNKNOWN
 				: migrationInfoService.current().getState().name();
+	}
+
+	public String getVersion() {
+		MigrationInfoService migrationInfoService = item.getMigrationInfoService();
+		return null == migrationInfoService || null == migrationInfoService.current() ? UNKNOWN
+				: migrationInfoService.current().getVersion().getVersion();
+	}
+
+	public String getProductName() {
+		try (Connection connection = item.getConnection()) {
+			return connection.getMetaData().getDatabaseProductName();
+		} catch (SQLException e) {
+		}
+		return UNKNOWN;
+	}
+
+	public String getProductVersion() {
+		try (Connection connection = item.getConnection()) {
+			return connection.getMetaData().getDatabaseProductVersion();
+		} catch (SQLException e) {
+		}
+		return UNKNOWN;
 	}
 
 }

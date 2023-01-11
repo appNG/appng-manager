@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<datasources xmlns="http://www.appng.org/schema/platform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<datasources xmlns="http://www.appng.org/schema/platform"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.appng.org/schema/platform http://www.appng.org/schema/platform/appng-platform.xsd">
 
 	<datasource id="databaseConnections">
@@ -30,6 +31,15 @@
 				</field>
 				<field name="databaseSize" type="decimal">
 					<label id="sizeMB" />
+				</field>
+				<field name="version" binding="version" type="text">
+					<label id="version" />
+				</field>
+				<field name="productName" binding="productName" type="text">
+					<label id="productName" />
+				</field>
+				<field name="productVersion" binding="productVersion" type="text">
+					<label id="productVersion" />
 				</field>
 				<field name="state" binding="state" type="image" readonly="true">
 					<label id="status" />
@@ -178,7 +188,7 @@
 			<params>
 				<param name="connectionId" />
 			</params>
-			<meta-data bindClass="org.appng.application.manager.business.SqlExecutor$SqlStatement">
+			<meta-data bindClass="org.appng.application.manager.business.SqlExecutor$SqlStatement">				
 				<field name="content" type="longtext">
 					<label>sqlStatement</label>
 				</field>

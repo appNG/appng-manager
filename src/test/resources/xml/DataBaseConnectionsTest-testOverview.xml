@@ -28,6 +28,15 @@
 			<field name="databaseSize" type="decimal" format="#.##" binding="item.databaseSize">
 				<label id="sizeMB">Size (MB)</label>
 			</field>
+			<field name="version" type="text" binding="version">
+				<label id="version">Version</label>
+			</field>
+			<field name="productName" type="text" binding="productName">
+				<label id="productName">Product Name</label>
+			</field>
+			<field name="productVersion" type="text" binding="productVersion">
+				<label id="productVersion">Product Version</label>
+			</field>
 			<field name="state" type="image" readonly="true" binding="state">
 				<label id="status">Status</label>
 				<icon condition="${current.item.active and not current.pendingMigrations}">led_green</icon>
@@ -45,18 +54,19 @@
 		</meta-data>
 		<linkpanel id="create" location="both" />
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="${current.item.id}" default="true">
+			<link id="actions[1]" target="${current.item.id}" mode="intern" default="true">
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[3]" mode="intern" target="${current.item.id}">
+			<link id="actions[3]" target="${current.item.id}" mode="intern">
 				<label id="test">Test</label>
 				<icon>start</icon>
 			</link>
 		</linkpanel>
 	</config>
 	<data>
-		<resultset chunk="0" chunkname="databaseConnections" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="1">
+		<resultset chunk="0" chunkname="databaseConnections" chunksize="10" nextchunk="0" previouschunk="0"
+			firstchunk="0" lastchunk="0" hits="1">
 			<result>
 				<field name="type" type="text">
 					<value>HSQL</value>
@@ -73,6 +83,15 @@
 				<field name="databaseSize" type="decimal">
 					<value></value>
 				</field>
+				<field name="version" type="text">
+					<value>UNKNOWN</value>
+				</field>
+				<field name="productName" type="text">
+					<value>HSQL Database Engine</value>
+				</field>
+				<field name="productVersion" type="text">
+					<value>2.5.0</value>
+				</field>
 				<field name="state" type="image">
 					<value>UNKNOWN</value>
 					<icon type="class">led_red</icon>
@@ -82,11 +101,11 @@
 					<icon type="class">led_green</icon>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" mode="intern" target="1" default="true">
+					<link id="actions[1]" target="1" mode="intern" default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
 					</link>
-					<link id="actions[3]" mode="intern" target="1">
+					<link id="actions[3]" target="1" mode="intern">
 						<label id="test">Test</label>
 						<icon>start</icon>
 					</link>
