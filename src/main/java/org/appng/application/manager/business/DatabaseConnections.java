@@ -17,6 +17,7 @@ package org.appng.application.manager.business;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.appng.api.ActionProvider;
@@ -80,6 +81,7 @@ public class DatabaseConnections extends ServiceAware implements DataProvider, A
 			MigrationInfoService migrationInfoService = databaseConnection.getMigrationInfoService();
 			if (null != migrationInfoService) {
 				List<MigrationInfo> migrations = Arrays.asList(migrationInfoService.all());
+				Collections.reverse(migrations);
 				dataContainer.setItems(migrations);
 			} else {
 				dataContainer.setItems(new ArrayList<>());
