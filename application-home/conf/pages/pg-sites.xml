@@ -315,7 +315,7 @@
 						</permissions>
 					</action>
 				</element>
-				<element>
+				<!--element>
 					<action eventId="databaseConnectionEvent" id="testConnection"
 						onSuccess="/sites/update/${siteid}#tab_databaseConnections">
 						<params>
@@ -326,7 +326,7 @@
 							<permission ref="site.database.test" mode="set" />
 						</permissions>
 					</action>
-				</element>
+				</element-->
 				<element>
 					<action eventId="databaseConnectionEvent" id="resetConnection"
 						onSuccess="/sites/update/${siteid}#tab_databaseConnections">

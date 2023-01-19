@@ -58,10 +58,6 @@
 				<label id="edit">Edit</label>
 				<icon>edit</icon>
 			</link>
-			<link id="actions[3]" target="${current.item.id}" mode="intern">
-				<label id="test">Test</label>
-				<icon>start</icon>
-			</link>
 		</linkpanel>
 	</config>
 	<data>
@@ -104,10 +100,6 @@
 					<link id="actions[1]" target="1" mode="intern" default="true">
 						<label id="edit">Edit</label>
 						<icon>edit</icon>
-					</link>
-					<link id="actions[3]" target="1" mode="intern">
-						<label id="test">Test</label>
-						<icon>start</icon>
 					</link>
 				</linkpanel>
 			</result>

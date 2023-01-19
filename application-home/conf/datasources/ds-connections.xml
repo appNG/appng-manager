@@ -75,10 +75,10 @@
 					<condition expression="${not empty deleteLink}" />
 					<confirmation id="connection.delete.confirm" params="#{name}" />
 				</link>
-				<link mode="intern" target="${testLink}${current.item.id}${linkTab}">
+				<!--link mode="intern" target="${testLink}${current.item.id}${linkTab}">
 					<label>test</label>
 					<icon>start</icon>
-				</link>
+				</link-->
 				<link mode="intern" target="${resetLink}${current.item.id}">
 					<label>reset</label>
 					<icon>reload</icon>

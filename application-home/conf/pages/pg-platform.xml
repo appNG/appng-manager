@@ -147,7 +147,7 @@
 
 			<!-- hidden inline actions -->
 			<section hidden="true">
-				<element>
+				<!--element>
 					<action eventId="databaseConnectionEvent" id="testConnection" onSuccess="/platform#tab_databaseConnections">
 						<params>
 							<param name="form_action">${act}</param>
@@ -157,7 +157,7 @@
 							<permission ref="platform.database.test" mode="set" />
 						</permissions>
 					</action>
-				</element>
+				</element-->
 				<element>
 					<action eventId="propertyEvent" id="delete-platform-property" onSuccess="/platform#tab_platformProperties">
 						<params>
