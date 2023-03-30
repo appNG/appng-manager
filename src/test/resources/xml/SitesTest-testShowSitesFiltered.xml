@@ -27,10 +27,11 @@
 				<icon condition="${current.active}">led_green</icon>
 				<icon condition="${!current.active}">led_red</icon>
 			</field>
-			<field name="running" type="image" binding="running">
-				<label id="running">Running</label>
-				<icon condition="${current.running}">led_green</icon>
-				<icon condition="${!current.running}">led_red</icon>
+			<field name="state" type="image" binding="state">
+				<label id="status">Status</label>
+				<icon condition="${current.state.name() eq 'STARTED'}">led_green</icon>
+				<icon condition="${current.state.name() eq 'STARTING' or current.state.name() eq 'SUSPENDED' or current.state.name() eq 'STOPPING'}">led_orange</icon>
+				<icon condition="${current.state.name() eq 'STOPPED' or current.state.name() eq 'INACTIVE' or current.state.name() eq 'DELETED'}">led_red</icon>
 			</field>
 			<field name="startupTime" type="date" format="yyyy-MM-dd HH:mm:ss" binding="startupTime">
 				<label id="startupTime">Startup time</label>
@@ -80,7 +81,8 @@
 				</permissions>
 				<label id="delete">Delete</label>
 				<icon>delete</icon>
-				<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "#{name}"?</confirmation>
+				<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "#{name}"?
+				</confirmation>
 			</link>
 			<link id="actions[5]" target="/sites?act=reload&amp;siteid=${current.id}" mode="intern" show-disabled="true">
 				<condition expression="${current.state.name() eq 'STARTED'}" />
@@ -118,7 +120,8 @@
 				<option value="false" name="no" selected="false" />
 			</selection>
 		</selectionGroup>
-		<resultset chunk="0" chunkname="sites" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="1">
+		<resultset chunk="0" chunkname="sites" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0"
+			lastchunk="0" hits="1">
 			<result>
 				<field name="name" type="text">
 					<value>site2</value>
@@ -136,8 +139,8 @@
 					<value>true</value>
 					<icon type="class">led_green</icon>
 				</field>
-				<field name="running" type="image">
-					<value>false</value>
+				<field name="state" type="image">
+					<value>STOPPED</value>
 					<icon type="class">led_red</icon>
 				</field>
 				<field name="startupTime" type="date">
@@ -155,7 +158,8 @@
 					<link id="actions[4]" target="/sites?act=delete&amp;siteid=3" mode="intern">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
-						<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "site2"?</confirmation>
+						<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "site2"?
+						</confirmation>
 					</link>
 					<link id="actions[5]" target="" mode="intern" disabled="true">
 						<label id="reload">Reload</label>
