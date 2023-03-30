@@ -172,7 +172,7 @@ public interface Service {
 
 	void deleteProperty(Request request, String id, FieldProcessor fp) throws BusinessException;
 
-	void reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
+	boolean reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
 			throws BusinessException;
 
 	String startSite(Request request, Application application, Integer siteId, FieldProcessor fp)

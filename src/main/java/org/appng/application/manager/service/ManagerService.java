@@ -1589,7 +1589,7 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public void reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
+	public boolean reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
 			throws BusinessException {
 		try {
 			InitializerService initializerService = getInitializerService(application);
@@ -1599,17 +1599,25 @@ public class ManagerService extends CoreService implements Service {
 				if (site.isActive()) {
 					try {
 						initializerService.loadSite(request.getEnvironment(), site, fp);
-						logger.info("Site reloaded: " + siteName);
+						Site siteByName = RequestUtil.getSiteByName(request.getEnvironment(), siteName);
+						if (null == siteByName || !SiteState.STARTED.equals(siteByName.getState())) {
+							logger.info("Site not started: {}", siteName);
+						} else {
+							logger.info("Site reloaded: {}", siteName);
+							return true;
+						}
 					} catch (InvalidConfigurationException e) {
 						throw new BusinessException("Invalid configuration for site: " + siteName, e);
 					}
 				} else {
 					shutdownSite(request.getEnvironment(), siteName);
+					fp.addOkMessage(request.getMessage(MessageConstants.SITE_STOPPED, siteName));
 				}
 			}
 		} catch (Exception e) {
 			request.handleException(fp, e);
 		}
+		return false;
 	}
 
 	private InitializerService getInitializerService(Application application) {

@@ -80,8 +80,9 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 				okMessage = MessageConstants.SITE_DELETED;
 			} else if (ACTION_RELOAD.equals(action)) {
 				errorMessage = MessageConstants.SITE_RELOADED_ERROR;
-				service.reloadSite(request, application, siteId, fp);
-				okMessage = MessageConstants.SITE_RELOADED;
+				if (service.reloadSite(request, application, siteId, fp)) {
+					okMessage = MessageConstants.SITE_RELOADED;
+				}
 			} else if (ACTION_RELOAD_TEMPLATE.equals(action)) {
 				service.reloadTemplate(environment, options.getString(SITE, "sitename"));
 				okMessage = MessageConstants.SITE_TEMPLATE_RELOADED;
