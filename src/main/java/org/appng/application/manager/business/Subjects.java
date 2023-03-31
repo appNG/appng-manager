@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2022 the original author or authors.
+ * Copyright 2011-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,8 +102,7 @@ public class Subjects extends ServiceAware implements DataProvider, ActionProvid
 			data = service.getNewSubject(request, fp, defaultTimezone, languages);
 		} else {
 			try {
-				Integer groupId = options.getInteger(SUBJECT, "groupId");
-				data = service.searchSubjects(request, fp, subjectId, defaultTimezone, languages, groupId);
+				data = service.searchSubjects(request, fp, subjectId, defaultTimezone, languages);
 			} catch (BusinessException ex) {
 				String message = request.getMessage(ex.getMessageKey(), ex.getMessageArgs());
 				log.error(message, ex);

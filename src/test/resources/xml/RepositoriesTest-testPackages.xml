@@ -1,69 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <datasource xmlns="http://www.appng.org/schema/platform" id="packages">
-	<config>
-		<title id="packages">Packages</title>
-		<params>
-			<param name="repositoryid">1</param>
-			<param name="packagename" />
-			<param name="packageFilter">*</param>
-		</params>
-		<meta-data bindClass="org.appng.core.model.InstallablePackage" result-selector="${current.name eq packagename}">
-			<field name="name" type="text" displayLength="30" readonly="true" binding="name">
-				<sort />
-				<label id="name">Name</label>
-			</field>
-			<field name="displayName" type="text" displayLength="30" readonly="true" binding="displayName">
-				<sort />
-				<label id="displayName">Display name</label>
-			</field>
-			<field name="type" type="text" displayLength="30" readonly="true" binding="type">
-				<sort />
-				<label id="type">Type</label>
-			</field>
-			<field name="latestRelease" type="text" readonly="true" binding="latestRelease">
-				<label id="latestRelease">Latest release</label>
-			</field>
-			<field name="latestSnapshot" type="text" readonly="true" binding="latestSnapshot">
-				<label id="latestSnapshot">Latest snapshot</label>
-			</field>
-			<field name="installedVersion" type="text" readonly="true" binding="installedVersion">
-				<label id="installedVersion">Installed version</label>
-			</field>
-			<field name="installedVersion" type="image" binding="installedVersion">
-				<label></label>
-				<icon condition="${not empty current.installedVersion}">led_green</icon>
-				<icon condition="${empty current.installedVersion}">led_red</icon>
-			</field>
-			<field name="actions" type="linkpanel" binding="actions">
-				<label id="actions">Actions</label>
-			</field>
-		</meta-data>
-		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="/repositories/installation/1/#{name}#tab_packages" default="true">
-				<label id="package.showVersions">Show package versions</label>
-				<icon>edit</icon>
-			</link>
-			<link id="actions[2]" mode="intern"
-				target="/repositories/installation/1?act=install&amp;packagename=#{name}&amp;packageversion=#{latestRelease}" show-disabled="true">
-				<condition expression="${(current.installedVersion ne current.latestRelease) and (not empty current.latestRelease)}" />
-				<label id="install.latestrelease">Install latest release</label>
-				<icon>d_release</icon>
-			</link>
-			<link id="actions[3]" mode="intern"
-				target="/repositories/installation/1?act=install&amp;packagename=#{name}&amp;packageversion=#{latestSnapshot}" show-disabled="true">
-				<condition expression="${not empty current.latestSnapshot}" />
-				<label id="install.latestsnapshot">Install latest snapshot</label>
-				<icon>d_snapshot</icon>
-			</link>
-		</linkpanel>
-	</config>
-	<data>
-		<selectionGroup>
-			<selection id="pf" type="text">
-				<title id="name">Name</title>
-				<option value="*" name="pf" />
-			</selection>
-		</selectionGroup>
-		<resultset chunk="0" chunkname="packages" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="-1" hits="0" />
-	</data>
+    <config>
+        <title id="packages">Packages</title>
+        <params>
+            <param name="repositoryid">1</param>
+            <param name="packagename"/>
+            <param name="packageFilter">*</param>
+        </params>
+        <meta-data bindClass="org.appng.core.model.InstallablePackage" result-selector="${current.name eq packagename}">
+            <field name="name" type="text" displayLength="30" readonly="true" binding="name">
+                <sort/>
+                <label id="name">Name</label>
+            </field>
+            <field name="displayName" type="text" displayLength="30" readonly="true" binding="displayName">
+                <sort/>
+                <label id="displayName">Display name</label>
+            </field>
+            <field name="type" type="text" displayLength="30" readonly="true" binding="type">
+                <sort/>
+                <label id="type">Type</label>
+            </field>
+            <field name="latestRelease" type="text" readonly="true" binding="latestRelease">
+                <label id="latestRelease">Latest release</label>
+            </field>
+            <field name="latestSnapshot" type="text" readonly="true" binding="latestSnapshot">
+                <label id="latestSnapshot">Latest snapshot</label>
+            </field>
+            <field name="installedVersion" type="text" readonly="true" binding="installedVersion">
+                <label id="installedVersion">Installed version</label>
+            </field>
+            <field name="installedVersion" type="image" binding="installedVersion">
+                <label></label>
+                <icon condition="${not empty current.installedVersion}">led_green</icon>
+                <icon condition="${empty current.installedVersion}">led_red</icon>
+            </field>
+            <field name="actions" type="linkpanel" binding="actions">
+                <label id="actions">Actions</label>
+            </field>
+        </meta-data>
+        <linkpanel id="actions" location="inline">
+            <link id="actions[1]" target="/repositories/installation/1/#{name}#tab_packages" mode="intern" default="true">
+                <label id="package.showVersions">Show package versions</label>
+                <icon>edit</icon>
+            </link>
+            <link id="actions[2]" target="/repositories/installation/1?act=install&amp;packagename=#{name}&amp;packageversion=#{latestRelease}" mode="intern" show-disabled="true">
+                <condition expression="${(current.installedVersion ne current.latestRelease) and (not empty current.latestRelease)}"/>
+                <label id="install.latestrelease">Install latest release</label>
+                <icon>d_release</icon>
+            </link>
+            <link id="actions[3]" target="/repositories/installation/1?act=install&amp;packagename=#{name}&amp;packageversion=#{latestSnapshot}" mode="intern" show-disabled="true">
+                <condition expression="${not empty current.latestSnapshot}"/>
+                <label id="install.latestsnapshot">Install latest snapshot</label>
+                <icon>d_snapshot</icon>
+            </link>
+        </linkpanel>
+    </config>
+    <data>
+        <selectionGroup>
+            <selection id="pf" type="text">
+                <title id="name">Name</title>
+                <option value="*" name="pf"/>
+            </selection>
+        </selectionGroup>
+        <resultset chunk="0" chunkname="packages" chunksize="10" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="-1" hits="0" />
+    </data>
 </datasource>

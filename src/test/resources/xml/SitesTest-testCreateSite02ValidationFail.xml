@@ -28,7 +28,7 @@
 				</messages>
 			</field>
 			<field name="host" type="text" binding="site.host">
-				<label id="host">Host</label>
+				<label id="host">Hostname</label>
 				<validation>
 					<notNull>
 						<message ref="site.host" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
@@ -42,6 +42,9 @@
 				<messages ref="site.host">
 					<message ref="site.host" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
 				</messages>
+			</field>
+			<field name="hostAliases" type="longtext" binding="hostAliases">
+				<label id="hostAliases">Hostname aliases (one per line)</label>
 			</field>
 			<field name="domain" type="text" binding="site.domain">
 				<label id="domain">Domain</label>
@@ -90,6 +93,9 @@
 				<value></value>
 			</field>
 			<field name="host" type="text">
+				<value></value>
+			</field>
+			<field name="hostAliases" type="longtext">
 				<value></value>
 			</field>
 			<field name="domain" type="text">

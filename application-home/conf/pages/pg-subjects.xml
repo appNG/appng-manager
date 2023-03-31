@@ -58,7 +58,6 @@
 					<datasource id="users">
 						<params>
 							<param name="userId">${id}</param>
-							<param name="groupId">${f_gid}</param>
 						</params>
 					</datasource>
 				</element>

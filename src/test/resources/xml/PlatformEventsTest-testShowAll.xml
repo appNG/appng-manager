@@ -24,7 +24,7 @@
 				<label id="application">Application</label>
 			</field>
 			<field name="origin" type="text" binding="origin">
-				<label id="host">Host</label>
+				<label id="host">Hostname</label>
 			</field>
 			<field name="hostName" type="text" binding="hostName">
 				<label id="hostName">Host name</label>
@@ -70,7 +70,7 @@
 				<option value="" name="" />
 			</selection>
 			<selection id="eH" type="select">
-				<title id="host">Host</title>
+				<title id="host">Hostname</title>
 				<option value="" name="" />
 			</selection>
 			<selection id="eN" type="select">

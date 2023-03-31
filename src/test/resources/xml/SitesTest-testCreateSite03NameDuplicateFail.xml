@@ -19,23 +19,26 @@
 						<message ref="site.name" class="ERROR" code="{validation.string.max}">Enter at most 64 characters</message>
 					</size>
 					<pattern regexp="[a-zA-Z0-9\-]{3,}">
-						<message ref="site.name" class="ERROR" code="{validation.nameStrict}">Please enter a valid name, which may only consist of letters,
-							numbers and hyphens</message>
+						<message ref="site.name" class="ERROR" code="{validation.nameStrict}">Please enter a valid name, which may only consist of letters, numbers and hyphens</message>
 					</pattern>
 				</validation>
+				<messages ref="name">
+					<message ref="name" class="ERROR">A different site with this name already exists!</message>
+				</messages>
 			</field>
 			<field name="host" type="text" binding="site.host">
-				<label id="host">Host</label>
+				<label id="host">Hostname</label>
 				<validation>
 					<notNull>
 						<message ref="site.host" class="ERROR" code="{validation.notNull}">Field must not be empty</message>
 					</notNull>
-					<pattern
-						regexp="(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])">
-						<message ref="site.host" class="ERROR" code="{validation.host}">Please enter a valid host (examples: localhost example.com
-							some.example.com)</message>
+					<pattern regexp="(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])">
+						<message ref="site.host" class="ERROR" code="{validation.host}">Please enter a valid host (examples: localhost example.com some.example.com)</message>
 					</pattern>
 				</validation>
+			</field>
+			<field name="hostAliases" type="longtext" binding="hostAliases">
+				<label id="hostAliases">Hostname aliases (one per line)</label>
 			</field>
 			<field name="domain" type="text" binding="site.domain">
 				<label id="domain">Domain</label>
@@ -45,8 +48,7 @@
 					</notNull>
 					<pattern
 						regexp="(http(s?)(\://))?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(\:[0-9]+)?">
-						<message ref="site.domain" class="ERROR" code="{validation.domain}">Please enter a valid domain (examples:
-							http://www.example.com example.com localhost:8080)</message>
+						<message ref="site.domain" class="ERROR" code="{validation.domain}">Please enter a valid domain (examples: http://www.example.com example.com localhost:8080)</message>
 					</pattern>
 				</validation>
 			</field>
@@ -71,9 +73,10 @@
 	</config>
 	<condition expression="${form_action eq 'create'}" />
 	<messages>
-		<message ref="create" class="OK">Site has been created.</message>
+		<message ref="create" class="ERROR">Failed to create the site.</message>
 	</messages>
 	<datasource id="new-site" />
+	<userdata />
 	<data>
 		<selection id="template">
 			<title id="template">Template</title>
@@ -83,6 +86,9 @@
 				<value></value>
 			</field>
 			<field name="host" type="text">
+				<value></value>
+			</field>
+			<field name="hostAliases" type="longtext">
 				<value></value>
 			</field>
 			<field name="domain" type="text">

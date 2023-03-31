@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2022 the original author or authors.
+ * Copyright 2011-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.appng.core.domain.RepositoryImpl;
 import org.appng.core.model.RepositoryCacheFactory;
 import org.appng.core.model.RepositoryMode;
 import org.appng.core.model.RepositoryType;
+import org.appng.testsupport.validation.WritingXmlValidator;
 import org.appng.testsupport.validation.XPathDifferenceHandler;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -36,6 +37,10 @@ import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RepositoriesTest extends AbstractTest {
+
+	static {
+		WritingXmlValidator.writeXml = false;
+	}
 
 	private static final String REPO_PATH = new File("target").toPath().toUri().toString();
 	private static final String REPO_EVENT = "repositoryEvent";

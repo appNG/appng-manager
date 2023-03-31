@@ -7,7 +7,7 @@
 			<title id="logConfig.edit" />
 			<meta-data bindClass="org.appng.application.manager.business.LogConfig$LogFile">
 				<field name="content" type="longtext" format="auto">
-					<label>log4j.properties</label>
+					<label>Log4j Configuration</label>
 				</field>
 				<field name="clusterWide" type="checkbox">
 					<label>logconfig.spreadClusterWide</label>

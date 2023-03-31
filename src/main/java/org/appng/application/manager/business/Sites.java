@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2022 the original author or authors.
+ * Copyright 2011-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.appng.api.model.Application;
 import org.appng.api.model.Site;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.form.SiteForm;
+import org.appng.application.manager.service.ManagerService;
 import org.appng.application.manager.service.Service;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.controller.messaging.ReloadSiteEvent;
@@ -79,8 +80,9 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 				okMessage = MessageConstants.SITE_DELETED;
 			} else if (ACTION_RELOAD.equals(action)) {
 				errorMessage = MessageConstants.SITE_RELOADED_ERROR;
-				service.reloadSite(request, application, siteId, fp);
-				okMessage = MessageConstants.SITE_RELOADED;
+				if (service.reloadSite(request, application, siteId, fp)) {
+					okMessage = MessageConstants.SITE_RELOADED;
+				}
 			} else if (ACTION_RELOAD_TEMPLATE.equals(action)) {
 				service.reloadTemplate(environment, options.getString(SITE, "sitename"));
 				okMessage = MessageConstants.SITE_TEMPLATE_RELOADED;
@@ -127,9 +129,9 @@ public class Sites extends ServiceAware implements DataProvider, ActionProvider<
 			data = service.getNewSite(fp);
 		} else {
 			try {
-				String name = options.getString(SITE, "siteName");
-				String domain = options.getString(SITE, "siteDomain");
-				String active = StringUtils.trimToNull(options.getString(SITE, "siteActive"));
+				String name = request.getParameter(ManagerService.FILTER_SITE_NAME);
+				String domain = request.getParameter(ManagerService.FILTER_SITE_DOMAIN);
+				String active = StringUtils.trimToNull(request.getParameter(ManagerService.FILTER_SITE_ACTIVE));
 				data = service.searchSites(environment, fp, siteId, name, domain,
 						StringUtils.defaultString(active, "all"));
 			} catch (BusinessException e) {

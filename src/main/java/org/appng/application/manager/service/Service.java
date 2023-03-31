@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2022 the original author or authors.
+ * Copyright 2011-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,7 +115,7 @@ public interface Service {
 			String active) throws BusinessException;
 
 	DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
-			List<String> languages, Integer groupId) throws BusinessException;
+			List<String> languages) throws BusinessException;
 
 	DataContainer searchPermissions(FieldProcessor fp, Integer permissionId, Integer appId) throws BusinessException;
 
@@ -172,7 +172,7 @@ public interface Service {
 
 	void deleteProperty(Request request, String id, FieldProcessor fp) throws BusinessException;
 
-	void reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
+	boolean reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
 			throws BusinessException;
 
 	String startSite(Request request, Application application, Integer siteId, FieldProcessor fp)

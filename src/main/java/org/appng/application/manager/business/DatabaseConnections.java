@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2022 the original author or authors.
+ * Copyright 2011-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.appng.application.manager.business;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.appng.api.ActionProvider;
@@ -80,6 +81,7 @@ public class DatabaseConnections extends ServiceAware implements DataProvider, A
 			MigrationInfoService migrationInfoService = databaseConnection.getMigrationInfoService();
 			if (null != migrationInfoService) {
 				List<MigrationInfo> migrations = Arrays.asList(migrationInfoService.all());
+				Collections.reverse(migrations);
 				dataContainer.setItems(migrations);
 			} else {
 				dataContainer.setItems(new ArrayList<>());

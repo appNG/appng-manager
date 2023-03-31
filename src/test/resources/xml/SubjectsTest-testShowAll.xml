@@ -7,7 +7,6 @@
 		</permissions>
 		<params>
 			<param name="userId" />
-			<param name="groupId" />
 		</params>
 		<meta-data bindClass="org.appng.api.model.Subject" result-selector="${current.id eq userId}">
 			<field name="name" type="text" binding="name">

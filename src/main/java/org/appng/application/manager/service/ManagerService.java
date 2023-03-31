@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2022 the original author or authors.
+ * Copyright 2011-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
@@ -42,6 +43,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections.comparators.ComparatorChain;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.appng.api.ApplicationException;
@@ -148,9 +150,9 @@ public class ManagerService extends CoreService implements Service {
 
 	private Logger logger = LoggerFactory.getLogger(ManagerService.class);
 	private static final String FILTER_GROUP_NAME = "f_gn";
-	private static final String FILTER_SITE_NAME = "f_sn";
-	private static final String FILTER_SITE_DOMAIN = "f_sd";
-	private static final String FILTER_SITE_ACTIVE = "f_sa";
+	public static final String FILTER_SITE_NAME = "f_sn";
+	public static final String FILTER_SITE_DOMAIN = "f_sd";
+	public static final String FILTER_SITE_ACTIVE = "f_sa";
 
 	private SelectionFactory selectionFactory;
 	private OptionGroupFactory optionGroupFactory;
@@ -1044,7 +1046,7 @@ public class ManagerService extends CoreService implements Service {
 	public void createSite(Request request, SiteForm siteForm, FieldProcessor fp) throws BusinessException {
 		try {
 			SiteImpl site = siteForm.getSite();
-			checkSite(request, site, fp, site);
+			checkSite(site, request, fp);
 			createSite(site, request.getEnvironment());
 			updateSiteTemplate(site, siteForm.getTemplate());
 		} catch (Exception e) {
@@ -1060,7 +1062,7 @@ public class ManagerService extends CoreService implements Service {
 			if (null == currentSite) {
 				throw new BusinessException("no such site:" + site.getId());
 			}
-			checkSite(request, site, fp, currentSite);
+			checkSite(site, request, fp);
 
 			boolean wasActiveBefore = currentSite.isActive();
 			request.setPropertyValues(form, new SiteForm(currentSite), fp.getMetaData());
@@ -1076,28 +1078,32 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
+	private void checkSite(Site site, Request request, FieldProcessor fp) throws BusinessException {
+		ArrayList<String> conflictMsgs = new ArrayList<>();
+		if (checkSiteNameConflicts(site, "name", request.getLocale(), conflictMsgs)) {
+			fp.addErrorMessage(fp.getField("site.name"), conflictMsgs.get(conflictMsgs.size() - 1));
+		}
+		if (checkSiteNameConflicts(site, "host", request.getLocale(), conflictMsgs)) {
+			fp.addErrorMessage(fp.getField("site.host"), conflictMsgs.get(conflictMsgs.size() - 1));
+		}
+		if (checkSiteNameConflicts(site, "hostAliases", request.getLocale(), conflictMsgs)) {
+			fp.addErrorMessage(fp.getField("hostAliases"), conflictMsgs.get(conflictMsgs.size() - 1));
+		}
+		if (checkSiteNameConflicts(site, "domain", request.getLocale(), conflictMsgs)) {
+			fp.addErrorMessage(fp.getField("site.domain"), conflictMsgs.get(conflictMsgs.size() - 1));
+		}
+		if (fp.hasErrors()) {
+			throw new BusinessException("Invalid name, host, host-aliases or domain");
+		}
+	}
+
 	private void updateSiteTemplate(SiteImpl currentSite, String template) {
 		String propertyName = PropertySupport.getPropertyName(currentSite, null, SiteProperties.TEMPLATE);
 		propertyRepository.findByName(propertyName).setString(template);
 	}
 
-	private void checkSite(Request request, Site site, FieldProcessor fp, Site currentSite) throws BusinessException {
-		if (fp.hasField("site.name") && !siteRepository.isUnique(site.getId(), "name", site.getName())) {
-			fp.addErrorMessage(fp.getField("site.name"), request.getMessage(MessageConstants.SITE_NAME_EXISTS));
-		}
-		if (!siteRepository.isUnique(site.getId(), "host", site.getHost())) {
-			fp.addErrorMessage(fp.getField("site.host"), request.getMessage(MessageConstants.SITE_HOST_EXISTS));
-		}
-		if (!siteRepository.isUnique(site.getId(), "domain", site.getDomain())) {
-			fp.addErrorMessage(fp.getField("site.domain"), request.getMessage(MessageConstants.SITE_DOMAIN_EXISTS));
-		}
-		if (fp.hasErrors()) {
-			throw new BusinessException("invalid name, host or domain");
-		}
-	}
-
 	public DataContainer searchSubjects(Request request, FieldProcessor fp, Integer subjectId, String defaultTimezone,
-			List<String> languages, Integer groupId) throws BusinessException {
+			List<String> languages) throws BusinessException {
 		DataContainer data = new DataContainer(fp);
 		if (subjectId != null) {
 			SubjectImpl subject = subjectRepository.findOne(subjectId);
@@ -1110,19 +1116,20 @@ public class ManagerService extends CoreService implements Service {
 			String timeZone = subject.getTimeZone();
 			addSelectionsForSubject(request, data, subject, timeZone == null ? defaultTimezone : timeZone, languages);
 		} else {
-			Page<SubjectImpl> subjects = searchSubjects(request, data, fp, groupId);
+			Page<SubjectImpl> subjects = searchSubjects(request, data, fp);
 			data.setPage(subjects);
 		}
 		return data;
 	}
 
-	private Page<SubjectImpl> searchSubjects(Request request, DataContainer data, FieldProcessor fp, Integer groupId) {
+	private Page<SubjectImpl> searchSubjects(Request request, DataContainer data, FieldProcessor fp) {
 		String filterParamType = "f_type";
 		String filterParamName = "f_name";
 		String filterParamRealName = "f_rlnme";
 		String filterParamGroup = "f_gid";
 		String filterParamLocked = "f_lckd";
 		String filterParamEmail = "f_eml";
+		String filterParamGroupId = "f_gid";
 		String typeFromRequest = request.getParameter(filterParamType);
 		String locked = request.getParameter(filterParamLocked);
 		UserType userType = null != typeFromRequest && UserType.names().contains(typeFromRequest)
@@ -1159,9 +1166,10 @@ public class ManagerService extends CoreService implements Service {
 		} else if ("false".equalsIgnoreCase(locked)) {
 			searchQuery.equals("e.locked", false);
 		}
+		String groupId = request.getParameter(filterParamGroupId);
 		if (null != groupId) {
 			searchQuery.join("join e.groups g");
-			searchQuery.equals("g.id", groupId);
+			searchQuery.equals("g.id", request.convert(groupId, Integer.class));
 			List<Order> orders = StreamSupport.stream(pageable.getSort().spliterator(), false)
 					.map(o -> new Order(o.getDirection(), "e." + o.getProperty())).collect(Collectors.toList());
 			pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders));
@@ -1581,7 +1589,7 @@ public class ManagerService extends CoreService implements Service {
 		}
 	}
 
-	public void reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
+	public boolean reloadSite(Request request, Application application, Integer siteId, FieldProcessor fp)
 			throws BusinessException {
 		try {
 			InitializerService initializerService = getInitializerService(application);
@@ -1591,17 +1599,25 @@ public class ManagerService extends CoreService implements Service {
 				if (site.isActive()) {
 					try {
 						initializerService.loadSite(request.getEnvironment(), site, fp);
-						logger.info("Site reloaded: " + siteName);
+						Site siteByName = RequestUtil.getSiteByName(request.getEnvironment(), siteName);
+						if (null == siteByName || !SiteState.STARTED.equals(siteByName.getState())) {
+							logger.info("Site not started: {}", siteName);
+						} else {
+							logger.info("Site reloaded: {}", siteName);
+							return true;
+						}
 					} catch (InvalidConfigurationException e) {
 						throw new BusinessException("Invalid configuration for site: " + siteName, e);
 					}
 				} else {
 					shutdownSite(request.getEnvironment(), siteName);
+					fp.addOkMessage(request.getMessage(MessageConstants.SITE_STOPPED, siteName));
 				}
 			}
 		} catch (Exception e) {
 			request.handleException(fp, e);
 		}
+		return false;
 	}
 
 	private InitializerService getInitializerService(Application application) {
