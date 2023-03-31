@@ -30,8 +30,10 @@
 			<field name="state" type="image" binding="state">
 				<label id="status">Status</label>
 				<icon condition="${current.state.name() eq 'STARTED'}">led_green</icon>
-				<icon condition="${current.state.name() eq 'STARTING' or current.state.name() eq 'SUSPENDED' or current.state.name() eq 'STOPPING'}">led_orange</icon>
-				<icon condition="${current.state.name() eq 'STOPPED' or current.state.name() eq 'INACTIVE' or current.state.name() eq 'DELETED'}">led_red</icon>
+				<icon
+					condition="${current.state.name() eq 'STARTING' or current.state.name() eq 'SUSPENDED' or current.state.name() eq 'STOPPING'}">led_orange</icon>
+				<icon
+					condition="${current.state.name() eq 'STOPPED' or current.state.name() eq 'INACTIVE' or current.state.name() eq 'DELETED'}">led_red</icon>
 			</field>
 			<field name="startupTime" type="date" format="yyyy-MM-dd HH:mm:ss" binding="startupTime">
 				<label id="startupTime">Startup time</label>
@@ -75,14 +77,13 @@
 				<icon>edit</icon>
 			</link>
 			<link id="actions[4]" target="/sites?act=delete&amp;siteid=${current.id}" mode="intern">
-				<condition expression="${current.state.name() eq 'STOPPED'}" />
+				<condition expression="${current.state.name() eq 'STOPPED' or current.state.name() eq 'INACTIVE'}" />
 				<permissions>
 					<permission ref="site.delete" mode="set"></permission>
 				</permissions>
 				<label id="delete">Delete</label>
 				<icon>delete</icon>
-				<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "#{name}"?
-				</confirmation>
+				<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "#{name}"?</confirmation>
 			</link>
 			<link id="actions[5]" target="/sites?act=reload&amp;siteid=${current.id}" mode="intern" show-disabled="true">
 				<condition expression="${current.state.name() eq 'STARTED'}" />
@@ -158,8 +159,7 @@
 					<link id="actions[4]" target="/sites?act=delete&amp;siteid=1" mode="intern">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
-						<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "site1"?
-						</confirmation>
+						<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "site1"?</confirmation>
 					</link>
 					<link id="actions[5]" target="" mode="intern" disabled="true">
 						<label id="reload">Reload</label>
@@ -203,8 +203,7 @@
 					<link id="actions[4]" target="/sites?act=delete&amp;siteid=3" mode="intern">
 						<label id="delete">Delete</label>
 						<icon>delete</icon>
-						<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "site2"?
-						</confirmation>
+						<confirmation id="site.delete.confirm" params="#{name}">Do you really want to delete the site "site2"?</confirmation>
 					</link>
 					<link id="actions[5]" target="" mode="intern" disabled="true">
 						<label id="reload">Reload</label>

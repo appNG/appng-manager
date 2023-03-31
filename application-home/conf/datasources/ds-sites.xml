@@ -82,7 +82,7 @@
 					<label>delete</label>
 					<icon>delete</icon>
 					<confirmation id="site.delete.confirm" params="#{name}" />
-					<condition expression="${current.state.name() eq 'STOPPED'}" />
+					<condition expression="${current.state.name() eq 'STOPPED' or current.state.name() eq 'INACTIVE'}" />
 					<permissions>
 						<permission ref="site.delete" mode="set" />
 					</permissions>
