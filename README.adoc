@@ -1,7 +1,7 @@
 image::https://raw.githubusercontent.com/appNG/appng/appng-1.25.x/appng-logo.png[]
-:snapshot: 1.19.2-SNAPSHOT
-:stable: 1.19.1
-:docVersion: 1.19.x
+:snapshot: 1.20.0-SNAPSHOT
+:stable: 1.19.3
+:docVersion: 1.20.x
 
 == Welcome to appNG Manager
 

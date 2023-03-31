@@ -1,3 +1,42 @@
+Release Notes - appNG Manager - Version 1.20.0 (2023-03-31)
+-----------------------------------------------------------
+** Bug
+    * [MGR-137] - Avoid possible NPE when showing sessions
+    * [MGR-143] - Condition for displaying sessions is wrong
+    * [MGR-144] - Avoid showing an error message when no password is set for LDAP admin
+    * [MGR-149] - Can not delete an inactive site
+
+** Feature
+    * [MGR-136] - Support Log4j2
+    * [MGR-146] - Improvements in working with database connections
+    * [MGR-147] - Improve status icons in sites overview
+    * [MGR-148] - Show OK Message only if site actually has been reloaded
+
+** Improvement
+    * [MGR-138] - Related manager changes for hostname alias support (APPNG-2442)
+    * [MGR-142] - Make filtering sites and users work like every other filter
+
+** Task
+    * [MGR-135] - Support Flyway 8
+
+Release Notes - appNG Manager - Version 1.19.3 (2022-10-07)
+-----------------------------------------------------------
+** Bug
+    * [MGR-143] - Condition for displaying sessions is wrong
+    * [MGR-144] - Avoid showing an error message when no password is set for LDAP admin
+
+** Improvement
+    * [MGR-142] - Make filtering sites and users work like every other filter
+
+Release Notes - appNG Manager - Version 1.19.2 (2022-07-27)
+-----------------------------------------------------------
+** Bug
+    * [MGR-137] - Avoid possible NPE when showing sessions
+    * [MGR-139] - Reloading the template does not trigger a ReloadTemplateEvent
+    * [MGR-140] - Editing an inactive site leads to an ProcessingException
+** Task
+    * [MGR-141] - Upgrade version for maven-gpg-plugin
+
 Release Notes - appNG Manager - Version 1.19.1 (2022-02-08)
 -----------------------------------------------------------
 * [MGR-133] - Include-condition for actions "install" and "reload" is wrong
