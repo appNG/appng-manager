@@ -11,7 +11,7 @@
 			<param name="clearLink" />
 		</params>
 		<meta-data bindClass="org.appng.application.manager.business.Cache$CacheEntry">
-			<field name="id" type="text" displayLength="75" binding="id">
+			<field name="id" type="text" displayLength="150" binding="id">
 				<sort />
 				<label id="id">ID</label>
 			</field>
@@ -40,20 +40,20 @@
 			</field>
 		</meta-data>
 		<linkpanel id="actions" location="inline">
-			<link id="actions[1]" mode="intern" target="${current.id}">
+			<link id="actions[1]" target="${current.id}" mode="intern">
 				<permissions>
 					<permission ref="cache.element.expire" mode="set"></permission>
 				</permissions>
 				<label id="cache.element.expire">Remove element from cache</label>
 				<icon>delete</icon>
 			</link>
-			<link id="actions[2]" mode="extern" target="${current.path}">
+			<link id="actions[2]" target="${current.path}" mode="extern">
 				<label id="show">show</label>
 				<icon>preview</icon>
 			</link>
 		</linkpanel>
 		<linkpanel id="other" location="bottom">
-			<link id="other[1]" mode="intern" target="">
+			<link id="other[1]" target="" mode="intern">
 				<permissions>
 					<permission ref="cache.clear" mode="set"></permission>
 				</permissions>
@@ -63,6 +63,7 @@
 		</linkpanel>
 	</config>
 	<data>
-		<resultset chunk="0" chunkname="cacheElements" chunksize="25" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="-1" hits="0" />
+		<resultset chunk="0" chunkname="cacheElements" chunksize="25" nextchunk="0" previouschunk="0" firstchunk="0"
+			lastchunk="-1" hits="0" />
 	</data>
 </datasource>

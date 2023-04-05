@@ -46,7 +46,7 @@
 				<param name="clearLink" />
 			</params>
 			<meta-data bindClass="org.appng.application.manager.business.Cache$CacheEntry">
-				<field name="id" type="text" displayLength="75">
+				<field name="id" type="text" displayLength="150">
 					<sort />
 					<label>id</label>
 				</field>

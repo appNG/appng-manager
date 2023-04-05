@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.cache.Cache;
 
+import org.appng.api.ProcessingException;
 import org.appng.api.support.CallableDataSource;
 import org.appng.core.controller.CachedResponse;
 import org.appng.core.service.CacheService;
@@ -50,13 +51,29 @@ public class CacheTest extends AbstractTest {
 	@Test
 	public void testCache() throws Exception {
 		Cache<String, CachedResponse> cache = CacheService.createCache(site);
+		fillCache(cache, 0, 500);
+		Datasource datasource = getCacheDataSource();
+		validate(datasource, new DateFieldDifferenceHandler());
+	}
 
-		for (int i = 0; i < 500; i++) {
+	@Test
+	public void testCacheNoFilter() throws Exception {
+		Cache<String, CachedResponse> cache = CacheService.getCache(site);
+		fillCache(cache, 500, 700);
+		Datasource datasource = getCacheDataSource();
+		validate(datasource, new DateFieldDifferenceHandler());
+
+	}
+
+	private void fillCache(Cache<String, CachedResponse> cache, int start, int end) {
+		for (int i = start; i < end; i++) {
 			String key = "/element/" + i;
 			cache.put(key, new CachedResponse(key, site, servletRequest, 200, MediaType.TEXT_PLAIN_VALUE, new byte[0],
 					null, 3600));
 		}
+	}
 
+	public Datasource getCacheDataSource() throws ProcessingException {
 		addParameter("sortCacheElements", "pageSize:10;page:4");
 		initParameters();
 		CallableDataSource ds = getDataSource("cacheElements").withParam("siteid", "1").getCallableDataSource();
@@ -64,10 +81,12 @@ public class CacheTest extends AbstractTest {
 
 		Datasource datasource = ds.getDatasource();
 		List<Result> results = datasource.getData().getResultset().getResults();
+
+		// we can not predict order
 		for (int i = 0; i < 10;) {
 			results.get(i).getFields().get(0).setValue("/element/" + String.valueOf(++i));
 		}
-		validate(datasource, new DateFieldDifferenceHandler());
+		return datasource;
 	}
 
 	@Test

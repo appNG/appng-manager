@@ -130,12 +130,12 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 			javax.cache.Cache<String, CachedResponse> cache = CacheService.getCache(cacheSite.get());
 			if (null != cache) {
 				cacheSize = cache.unwrap(ICache.class).size();
+				int idx = 0;
+				int startIdx = pageable.getOffset();
+				int endIdx = pageable.getOffset() + pageable.getPageSize();
 
 				if (cacheSize > maxCacheEntries) {
 					Iterator<javax.cache.Cache.Entry<String, CachedResponse>> elements = cache.iterator();
-					int idx = 0;
-					int startIdx = pageable.getOffset();
-					int endIdx = pageable.getOffset() + pageable.getPageSize();
 					while (elements.hasNext()) {
 						javax.cache.Cache.Entry<java.lang.String, CachedResponse> entry = elements.next();
 						CachedResponse cachedResponse = entry.getValue();
@@ -175,8 +175,11 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 									entryId.substring(entryId.indexOf('/')), entryName, IOCase.INSENSITIVE);
 							boolean typeMatches = !filterType || FilenameUtils
 									.wildcardMatch(cachedResponse.getContentType(), entryType, IOCase.INSENSITIVE);
-							if (nameMatches && typeMatches) {
+							if (nameMatches && typeMatches && idx >= startIdx && idx < endIdx) {
 								cacheEntries.add(new CacheEntry(cachedResponse));
+							}
+							if (idx++ >= endIdx) {
+								break;
 							}
 						}
 					}

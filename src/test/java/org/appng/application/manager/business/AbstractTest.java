@@ -116,13 +116,13 @@ public class AbstractTest extends TestBase {
 		properties.put("platform.platformRootPath", "target/ROOT");
 		properties.put("site.mailHost", "localHost");
 		properties.put("site.mailPort", "25");
-		properties.put(ManagerSettings.MAX_FILTERABLE_CACHE_ENTRIES, "50");
+		properties.put(ManagerSettings.MAX_FILTERABLE_CACHE_ENTRIES, "600");
 		return properties;
 	}
 
 	@Override
 	protected List<Property> getPlatformProperties(String prefix) {
-		List<Property> platformProperties = super.getPlatformProperties(prefix);
+		List<Property> platformProperties = super.getPlatformProperties();
 		SimpleProperty templates = new SimpleProperty(prefix + Platform.Property.TEMPLATE_FOLDER, "templates");
 		platformProperties.add(templates);
 		return platformProperties;

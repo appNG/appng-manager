@@ -18,7 +18,7 @@
 			</field>
 		</meta-data>
 		<linkpanel id="other" location="bottom">
-			<link id="other[1]" mode="intern" target="">
+			<link id="other[1]" target="" mode="intern">
 				<permissions>
 					<permission ref="cache.clear" mode="set"></permission>
 				</permissions>
@@ -28,7 +28,8 @@
 		</linkpanel>
 	</config>
 	<data paginate="false">
-		<resultset chunk="0" chunkname="cacheStatistics" chunksize="12" nextchunk="0" previouschunk="0" firstchunk="0" lastchunk="0" hits="12">
+		<resultset chunk="0" chunkname="cacheStatistics" chunksize="12" nextchunk="0" previouschunk="0"
+			firstchunk="0" lastchunk="0" hits="12">
 			<result>
 				<field name="key" type="longtext">
 					<value>Name</value>
@@ -42,7 +43,7 @@
 					<value>Size</value>
 				</field>
 				<field name="value" type="text">
-					<value>500</value>
+					<value>700</value>
 				</field>
 			</result>
 			<result>
@@ -50,7 +51,7 @@
 					<value>Hits</value>
 				</field>
 				<field name="value" type="text">
-					<value>51</value>
+					<value>102</value>
 				</field>
 			</result>
 			<result>
@@ -82,7 +83,7 @@
 					<value>Puts</value>
 				</field>
 				<field name="value" type="text">
-					<value>500</value>
+					<value>700</value>
 				</field>
 			</result>
 			<result>
@@ -90,7 +91,7 @@
 					<value>Average put time (ms)</value>
 				</field>
 				<field name="value" type="text">
-					<value>0.045708846</value>
+					<value>0.21924323</value>
 				</field>
 			</result>
 			<result>
@@ -98,7 +99,7 @@
 					<value>Gets</value>
 				</field>
 				<field name="value" type="text">
-					<value>51</value>
+					<value>102</value>
 				</field>
 			</result>
 			<result>
@@ -106,7 +107,7 @@
 					<value>Average get time (ms)</value>
 				</field>
 				<field name="value" type="text">
-					<value>0.024403412</value>
+					<value>0.062000174</value>
 				</field>
 			</result>
 			<result>
