@@ -48,6 +48,7 @@ import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.controller.CachedResponse;
 import org.appng.core.controller.filter.PageCacheFilter;
 import org.appng.core.service.CacheService;
+import org.appng.xml.platform.Label;
 import org.appng.xml.platform.SelectionGroup;
 import org.appng.xml.platform.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,8 +187,14 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 
 					Selection nameSelection = selectionFactory.getTextSelection(F_ETR, MessageConstants.NAME,
 							entryName);
+					Label tooltip = new Label();
+					tooltip.setId(MessageConstants.CACHE_NAME_TOOLTIP);
+					nameSelection.setTooltip(tooltip);
 					Selection typeSelection = selectionFactory.getTextSelection(F_CTYPE, MessageConstants.TYPE,
 							entryType);
+					Label typeTooltip = new Label();
+					typeTooltip.setId(MessageConstants.CACHE_TYPE_TOOLTIP);
+					typeSelection.setTooltip(typeTooltip);
 					SelectionGroup selectionGroup = new SelectionGroup();
 					selectionGroup.getSelections().add(nameSelection);
 					selectionGroup.getSelections().add(typeSelection);

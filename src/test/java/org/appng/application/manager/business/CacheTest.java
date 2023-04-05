@@ -52,6 +52,8 @@ public class CacheTest extends AbstractTest {
 	public void testCache() throws Exception {
 		Cache<String, CachedResponse> cache = CacheService.createCache(site);
 		fillCache(cache, 0, 500);
+		addParameter("fEtr", "/element/*");
+		addParameter("fCtpe", "text/plain");
 		Datasource datasource = getCacheDataSource();
 		validate(datasource, new DateFieldDifferenceHandler());
 	}
@@ -67,7 +69,7 @@ public class CacheTest extends AbstractTest {
 
 	private void fillCache(Cache<String, CachedResponse> cache, int start, int end) {
 		for (int i = start; i < end; i++) {
-			String key = "/element/" + i;
+			String key = "GET/element/" + i;
 			cache.put(key, new CachedResponse(key, site, servletRequest, 200, MediaType.TEXT_PLAIN_VALUE, new byte[0],
 					null, 3600));
 		}

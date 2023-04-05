@@ -66,11 +66,13 @@
 		<selectionGroup>
 			<selection id="fEtr" type="text">
 				<title id="name">Name</title>
-				<option value="" name="fEtr" />
+				<tooltip id="cache.name.tooltip">Examples: /full/path/to/resource /path/to/resource/**</tooltip>
+				<option value="/element/*" name="fEtr" />
 			</selection>
 			<selection id="fCtpe" type="text">
 				<title id="type">Type</title>
-				<option value="" name="fCtpe" />
+				<tooltip id="cache.type.tooltip">Examples: image/jpg image/*</tooltip>
+				<option value="text/plain" name="fCtpe" />
 			</selection>
 		</selectionGroup>
 		<resultset chunk="4" chunkname="cacheElements" chunksize="10" nextchunk="5" previouschunk="3" firstchunk="0"
@@ -89,17 +91,17 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:21:35</value>
+					<value>12:56:28</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:21:35</value>
+					<value>13:56:28</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" target="/element/341" mode="intern">
+					<link id="actions[1]" target="GET/element/292" mode="intern">
 						<label id="cache.element.expire">Remove element from cache</label>
 						<icon>delete</icon>
 					</link>
-					<link id="actions[2]" target="localhost/element/341" mode="extern">
+					<link id="actions[2]" target="localhost/element/292" mode="extern">
 						<label id="show">show</label>
 						<icon>preview</icon>
 					</link>
@@ -119,17 +121,17 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:21:35</value>
+					<value>12:56:28</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:21:35</value>
+					<value>13:56:28</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" target="/element/277" mode="intern">
+					<link id="actions[1]" target="GET/element/120" mode="intern">
 						<label id="cache.element.expire">Remove element from cache</label>
 						<icon>delete</icon>
 					</link>
-					<link id="actions[2]" target="localhost/element/277" mode="extern">
+					<link id="actions[2]" target="localhost/element/120" mode="extern">
 						<label id="show">show</label>
 						<icon>preview</icon>
 					</link>
@@ -149,17 +151,17 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:21:35</value>
+					<value>12:56:28</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:21:35</value>
+					<value>13:56:28</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" target="/element/327" mode="intern">
+					<link id="actions[1]" target="GET/element/228" mode="intern">
 						<label id="cache.element.expire">Remove element from cache</label>
 						<icon>delete</icon>
 					</link>
-					<link id="actions[2]" target="localhost/element/327" mode="extern">
+					<link id="actions[2]" target="localhost/element/228" mode="extern">
 						<label id="show">show</label>
 						<icon>preview</icon>
 					</link>
@@ -179,17 +181,17 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:21:35</value>
+					<value>12:56:28</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:21:35</value>
+					<value>13:56:28</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" target="/element/232" mode="intern">
+					<link id="actions[1]" target="GET/element/106" mode="intern">
 						<label id="cache.element.expire">Remove element from cache</label>
 						<icon>delete</icon>
 					</link>
-					<link id="actions[2]" target="localhost/element/232" mode="extern">
+					<link id="actions[2]" target="localhost/element/106" mode="extern">
 						<label id="show">show</label>
 						<icon>preview</icon>
 					</link>
@@ -209,17 +211,17 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:21:34</value>
+					<value>12:56:28</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:21:34</value>
+					<value>13:56:28</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" target="/element/12" mode="intern">
+					<link id="actions[1]" target="GET/element/114" mode="intern">
 						<label id="cache.element.expire">Remove element from cache</label>
 						<icon>delete</icon>
 					</link>
-					<link id="actions[2]" target="localhost/element/12" mode="extern">
+					<link id="actions[2]" target="localhost/element/114" mode="extern">
 						<label id="show">show</label>
 						<icon>preview</icon>
 					</link>
@@ -239,17 +241,17 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:21:34</value>
+					<value>12:56:28</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:21:34</value>
+					<value>13:56:28</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" target="/element/36" mode="intern">
+					<link id="actions[1]" target="GET/element/90" mode="intern">
 						<label id="cache.element.expire">Remove element from cache</label>
 						<icon>delete</icon>
 					</link>
-					<link id="actions[2]" target="localhost/element/36" mode="extern">
+					<link id="actions[2]" target="localhost/element/90" mode="extern">
 						<label id="show">show</label>
 						<icon>preview</icon>
 					</link>
@@ -269,17 +271,17 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:21:35</value>
+					<value>12:56:29</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:21:35</value>
+					<value>13:56:29</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" target="/element/394" mode="intern">
+					<link id="actions[1]" target="GET/element/485" mode="intern">
 						<label id="cache.element.expire">Remove element from cache</label>
 						<icon>delete</icon>
 					</link>
-					<link id="actions[2]" target="localhost/element/394" mode="extern">
+					<link id="actions[2]" target="localhost/element/485" mode="extern">
 						<label id="show">show</label>
 						<icon>preview</icon>
 					</link>
@@ -299,17 +301,17 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:21:35</value>
+					<value>12:56:28</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:21:35</value>
+					<value>13:56:28</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" target="/element/268" mode="intern">
+					<link id="actions[1]" target="GET/element/61" mode="intern">
 						<label id="cache.element.expire">Remove element from cache</label>
 						<icon>delete</icon>
 					</link>
-					<link id="actions[2]" target="localhost/element/268" mode="extern">
+					<link id="actions[2]" target="localhost/element/61" mode="extern">
 						<label id="show">show</label>
 						<icon>preview</icon>
 					</link>
@@ -329,17 +331,17 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:21:36</value>
+					<value>12:56:29</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:21:36</value>
+					<value>13:56:29</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" target="/element/474" mode="intern">
+					<link id="actions[1]" target="GET/element/401" mode="intern">
 						<label id="cache.element.expire">Remove element from cache</label>
 						<icon>delete</icon>
 					</link>
-					<link id="actions[2]" target="localhost/element/474" mode="extern">
+					<link id="actions[2]" target="localhost/element/401" mode="extern">
 						<label id="show">show</label>
 						<icon>preview</icon>
 					</link>
@@ -359,17 +361,17 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:21:35</value>
+					<value>12:56:28</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:21:35</value>
+					<value>13:56:28</value>
 				</field>
 				<linkpanel id="actions" location="inline">
-					<link id="actions[1]" target="/element/116" mode="intern">
+					<link id="actions[1]" target="GET/element/44" mode="intern">
 						<label id="cache.element.expire">Remove element from cache</label>
 						<icon>delete</icon>
 					</link>
-					<link id="actions[2]" target="localhost/element/116" mode="extern">
+					<link id="actions[2]" target="localhost/element/44" mode="extern">
 						<label id="show">show</label>
 						<icon>preview</icon>
 					</link>
