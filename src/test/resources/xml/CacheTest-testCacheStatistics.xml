@@ -51,7 +51,7 @@
 					<value>Hits</value>
 				</field>
 				<field name="value" type="text">
-					<value>102</value>
+					<value>1200</value>
 				</field>
 			</result>
 			<result>
@@ -91,7 +91,7 @@
 					<value>Average put time (ms)</value>
 				</field>
 				<field name="value" type="text">
-					<value>0.21924323</value>
+					<value>0.21910003</value>
 				</field>
 			</result>
 			<result>
@@ -99,7 +99,7 @@
 					<value>Gets</value>
 				</field>
 				<field name="value" type="text">
-					<value>102</value>
+					<value>1200</value>
 				</field>
 			</result>
 			<result>
@@ -107,7 +107,7 @@
 					<value>Average get time (ms)</value>
 				</field>
 				<field name="value" type="text">
-					<value>0.062000174</value>
+					<value>0.016835632</value>
 				</field>
 			</result>
 			<result>

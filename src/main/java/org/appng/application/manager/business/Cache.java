@@ -16,6 +16,7 @@
 package org.appng.application.manager.business;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -40,16 +41,17 @@ import org.appng.api.Request;
 import org.appng.api.Scope;
 import org.appng.api.model.Application;
 import org.appng.api.model.Site;
+import org.appng.api.support.SelectionBuilder;
 import org.appng.api.support.SelectionFactory;
-import org.appng.api.support.SelectionFactory.Selection;
 import org.appng.application.manager.ManagerSettings;
 import org.appng.application.manager.MessageConstants;
 import org.appng.application.manager.service.ServiceAware;
 import org.appng.core.controller.CachedResponse;
 import org.appng.core.controller.filter.PageCacheFilter;
 import org.appng.core.service.CacheService;
-import org.appng.xml.platform.Label;
+import org.appng.xml.platform.Selection;
 import org.appng.xml.platform.SelectionGroup;
+import org.appng.xml.platform.SelectionType;
 import org.appng.xml.platform.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -127,6 +129,7 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 		Pageable pageable = fp.getPageable();
 		List<CacheEntry> cacheEntries = new ArrayList<>();
 		int cacheSize = 0;
+		int resultSize = 0;
 		if (cacheSite.isPresent()) {
 			javax.cache.Cache<String, CachedResponse> cache = CacheService.getCache(cacheSite.get());
 			if (null != cache) {
@@ -145,9 +148,8 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 							if (idx >= startIdx && idx < endIdx) {
 								cacheEntries.add(new CacheEntry(cachedResponse));
 							}
-							if (idx++ >= endIdx) {
-								break;
-							}
+							idx++;
+							resultSize++;
 						} else {
 							endIdx++;
 						}
@@ -179,30 +181,31 @@ public class Cache extends ServiceAware implements ActionProvider<Void>, DataPro
 							if (nameMatches && typeMatches && idx >= startIdx && idx < endIdx) {
 								cacheEntries.add(new CacheEntry(cachedResponse));
 							}
-							if (idx++ >= endIdx) {
-								break;
-							}
+							idx++;
+							resultSize++;
 						}
 					}
 
-					Selection nameSelection = selectionFactory.getTextSelection(F_ETR, MessageConstants.NAME,
-							entryName);
-					Label tooltip = new Label();
-					tooltip.setId(MessageConstants.CACHE_NAME_TOOLTIP);
-					nameSelection.setTooltip(tooltip);
-					Selection typeSelection = selectionFactory.getTextSelection(F_CTYPE, MessageConstants.TYPE,
-							entryType);
-					Label typeTooltip = new Label();
-					typeTooltip.setId(MessageConstants.CACHE_TYPE_TOOLTIP);
-					typeSelection.setTooltip(typeTooltip);
-					SelectionGroup selectionGroup = new SelectionGroup();
-					selectionGroup.getSelections().add(nameSelection);
-					selectionGroup.getSelections().add(typeSelection);
-					dataContainer.getSelectionGroups().add(selectionGroup);
+					addFilters(dataContainer, entryName, entryType);
 				}
 			}
 		}
-		return new PageImpl<>(cacheEntries, pageable, cacheSize);
+		return new PageImpl<>(cacheEntries, pageable, resultSize);
+	}
+
+	public void addFilters(DataContainer dataContainer, String entryName, String entryType) {
+		Selection nameSelection = new SelectionBuilder<String>(F_ETR).title(MessageConstants.NAME)
+				.options(Arrays.asList(entryName)).select(entryName).tooltipId(MessageConstants.CACHE_NAME_TOOLTIP)
+				.type(SelectionType.TEXT).build();
+
+		Selection typeSelection = new SelectionBuilder<String>(F_CTYPE).title(MessageConstants.TYPE)
+				.options(Arrays.asList(entryType)).select(entryType).tooltipId(MessageConstants.CACHE_TYPE_TOOLTIP)
+				.type(SelectionType.TEXT).build();
+
+		SelectionGroup selectionGroup = new SelectionGroup();
+		selectionGroup.getSelections().add(nameSelection);
+		selectionGroup.getSelections().add(typeSelection);
+		dataContainer.getSelectionGroups().add(selectionGroup);
 	}
 
 	private Entry<String, String> getStatEntry(Request request, Map<String, String> statistics, String statKey) {

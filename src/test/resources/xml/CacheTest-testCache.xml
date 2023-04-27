@@ -67,12 +67,12 @@
 			<selection id="fEtr" type="text">
 				<title id="name">Name</title>
 				<tooltip id="cache.name.tooltip">Examples: /full/path/to/resource /path/to/resource/**</tooltip>
-				<option value="/element/*" name="fEtr" />
+				<option value="/element/*" name="/element/*" selected="true" />
 			</selection>
 			<selection id="fCtpe" type="text">
 				<title id="type">Type</title>
 				<tooltip id="cache.type.tooltip">Examples: image/jpg image/*</tooltip>
-				<option value="text/plain" name="fCtpe" />
+				<option value="text/plain" name="text/plain" selected="true" />
 			</selection>
 		</selectionGroup>
 		<resultset chunk="4" chunkname="cacheElements" chunksize="10" nextchunk="5" previouschunk="3" firstchunk="0"
@@ -91,10 +91,10 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:56:28</value>
+					<value>16:27:40</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:56:28</value>
+					<value>17:27:40</value>
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" target="GET/element/292" mode="intern">
@@ -121,10 +121,10 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:56:28</value>
+					<value>16:27:40</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:56:28</value>
+					<value>17:27:40</value>
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" target="GET/element/120" mode="intern">
@@ -151,10 +151,10 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:56:28</value>
+					<value>16:27:40</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:56:28</value>
+					<value>17:27:40</value>
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" target="GET/element/228" mode="intern">
@@ -181,10 +181,10 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:56:28</value>
+					<value>16:27:40</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:56:28</value>
+					<value>17:27:40</value>
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" target="GET/element/106" mode="intern">
@@ -211,10 +211,10 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:56:28</value>
+					<value>16:27:40</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:56:28</value>
+					<value>17:27:40</value>
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" target="GET/element/114" mode="intern">
@@ -241,10 +241,10 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:56:28</value>
+					<value>16:27:40</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:56:28</value>
+					<value>17:27:40</value>
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" target="GET/element/90" mode="intern">
@@ -271,10 +271,10 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:56:29</value>
+					<value>16:27:40</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:56:29</value>
+					<value>17:27:40</value>
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" target="GET/element/485" mode="intern">
@@ -301,10 +301,10 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:56:28</value>
+					<value>16:27:39</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:56:28</value>
+					<value>17:27:39</value>
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" target="GET/element/61" mode="intern">
@@ -331,10 +331,10 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:56:29</value>
+					<value>16:27:40</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:56:29</value>
+					<value>17:27:40</value>
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" target="GET/element/401" mode="intern">
@@ -361,10 +361,10 @@
 					<value>0</value>
 				</field>
 				<field name="created" type="date">
-					<value>12:56:28</value>
+					<value>16:27:39</value>
 				</field>
 				<field name="expires" type="date">
-					<value>13:56:28</value>
+					<value>17:27:39</value>
 				</field>
 				<linkpanel id="actions" location="inline">
 					<link id="actions[1]" target="GET/element/44" mode="intern">
